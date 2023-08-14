@@ -64,6 +64,7 @@ namespace GameDirection
         {
             _mUIController = UIController.Instance;
             _mUIController.StartMainMenuUI();
+            
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
         }
