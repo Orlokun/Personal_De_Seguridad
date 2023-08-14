@@ -1,4 +1,5 @@
 using CameraManagement;
+using GameDirection;
 using UI;
 using UnityEngine;
 
@@ -8,18 +9,27 @@ namespace InputManagement
     {
         InGame,
         Pause,
-        InDialogue
+        InDialogue, 
+        MainMenu
     }
 
     public class GeneralPlayerInputManager : MonoBehaviour
     {
         private IGeneralGameStateManager _mGameStateManager;
+        private IHighLvlGameStateManager _highLvlGameState;
         private IGameCameraManager _mGameCameraManager;
         private IUIController _mUIController;
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(this);
+        }
+
         private void Start()
         {
             _mGameCameraManager = GameCameraManager.Instance;
             _mGameStateManager = GeneralGamePlayStateManager.Instance;
+            _highLvlGameState = GameDirector.Instance;
             _mUIController = UIController.Instance;
         }
         private void Update()
@@ -29,7 +39,8 @@ namespace InputManagement
         }
         private void ManageGameplayStateInput()
         {
-            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameStateManager.CurrentInputGameState != InputGameState.InGame)
+            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameStateManager.CurrentInputGameState != InputGameState.InGame
+                || _highLvlGameState.GetCurrentState == HighLevelGameStates.OfficeMidScene)
             {
                 return;
             }

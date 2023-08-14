@@ -7,15 +7,21 @@ namespace GameManagement.LevelManagement
 {
     public interface ILevelManager
     {
+        public void LoadOfficeLevel();
         public void LoadFirstLevel();
         public void LoadUIScene();
     }
     
     public class LevelManager : MonoBehaviour, ILevelManager
     {
-        public void LoadFirstLevel()
+        public void LoadOfficeLevel()
         {
             SceneManager.LoadScene(2, LoadSceneMode.Additive);
+            SceneManager.UnloadSceneAsync(0);
+        }
+        public void LoadFirstLevel()
+        {
+            SceneManager.LoadScene(3, LoadSceneMode.Additive);
             SceneManager.UnloadSceneAsync(0);
         }
 

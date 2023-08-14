@@ -29,7 +29,6 @@ namespace InputManagement
             get;
             private set;
         }
-        
         public InputGameState LastInputGameState
         {
             get;

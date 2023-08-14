@@ -14,8 +14,8 @@ namespace InputManagement
             GeneralGamePlayStateManager.Instance.OnGameStateChange += OnGameStateChange;
             _mGameCameraManager = GameCameraManager.Instance;
             _mUIController = UIController.Instance;
-            _mGameCameraManager.ChangeCameraState(GameCameraState.Level);
-            _mGameCameraManager.ActivateNewCamera(GameCameraState.Level, _currentCameraIndex);
+            //_mGameCameraManager.ChangeCameraState(GameCameraState.Level);
+            //_mGameCameraManager.ActivateNewCamera(GameCameraState.Level, _currentCameraIndex);
         }
     
         private void Update()

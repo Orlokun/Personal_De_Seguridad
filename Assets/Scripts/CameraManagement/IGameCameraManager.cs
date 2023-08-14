@@ -10,6 +10,8 @@ namespace CameraManagement
         public GameCameraState ActiveState();
         public void ChangeCameraState(GameCameraState newCameraState);
         public void SetDialogueFollowObjects(Transform targetInDialogue);
+        public void SetLevelCamerasParent(Transform camerasParentObject);
+        public void SetOfficeCamerasParent(Transform camerasParentObject);
         public Tuple<int, GameCameraState> GetCurrentCameraState();
     }
 }

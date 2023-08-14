@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/UI_Scene.unity
     guid: 1a08835735b9cff4598c64855e3c1f05
   - enabled: 1
+    path: Assets/Scenes/OfficeScene.unity
+    guid: d493b66d57194cb40a8e2a7f77112984
+  - enabled: 1
     path: Assets/Scenes/Level_One.unity
     guid: 5d5335ec5c641ef44848bdfceeb1285b
   m_configObjects: {}

@@ -18,7 +18,8 @@ namespace CameraManagement
         Office,
         Level,
         IsometricFollow,
-        InDialogue
+        InDialogue,
+        MainMenu
     }
     
     public class GameCameraManager : MonoBehaviour, IGameCameraManager
@@ -28,15 +29,15 @@ namespace CameraManagement
         /// <summary>
         /// Parents for camera objects
         /// </summary>
-        [SerializeField] private Transform levelCamerasParent;
-        [SerializeField] private Transform officeCamerasParent;
+        private Transform _levelCamerasParent;
+        private Transform _officeCamerasParent;
         [SerializeField] private Transform dialogueCamerasParent;
         
         private Transform isometricFollowTarget;
         //Currently active Cameras
         private Dictionary<int, GameObject> _mActiveCameras;
         private Tuple<int, GameCameraState> _mLastCameraState;
-        private GameCameraState _currentCameraState = GameCameraState.Level;
+        private GameCameraState _currentCameraState = GameCameraState.MainMenu;
         private bool _mInitialized = false;
 
         #region Public Functions
@@ -51,6 +52,15 @@ namespace CameraManagement
             }
             dialogueCamera.Follow = targetsInDialogue;
             dialogueCamera.LookAt = targetsInDialogue;
+        }
+        public void SetLevelCamerasParent(Transform camerasParentObject)
+        {
+            _levelCamerasParent = camerasParentObject;
+        }
+        public void SetOfficeCamerasParent(Transform camerasParentObject)
+        {
+            _officeCamerasParent = camerasParentObject;
+            RepopulateActiveCamerasDictionary(_officeCamerasParent);
         }
 
         public void ReturnToLastState()
@@ -95,19 +105,27 @@ namespace CameraManagement
             {
                 return;
             }
-            if (newCameraState != GameCameraState.InDialogue)
+            if (newCameraState != GameCameraState.InDialogue && _currentCameraState != GameCameraState.MainMenu)
             {
                 _mLastCameraState = GetCurrentCameraState();
             }
             TurnAnyActiveCameraOff();
             _currentCameraState = newCameraState;
-            PopulateCameras();
+            PopulateActiveCameras();
         }
         public Tuple<int, GameCameraState> GetCurrentCameraState()
         {
-            var cameraIndex = _mActiveCameras.SingleOrDefault(x => x.Value.activeInHierarchy).Key;
-            var currentCameraState = _currentCameraState;
-            return new Tuple<int, GameCameraState>(cameraIndex, currentCameraState);
+            try
+            {
+                var cameraIndex = _mActiveCameras.SingleOrDefault(x => x.Value.activeInHierarchy).Key;
+                var currentCameraState = _currentCameraState;
+                return new Tuple<int, GameCameraState>(cameraIndex, currentCameraState);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         #endregion
 
@@ -118,16 +136,21 @@ namespace CameraManagement
             {
                 Destroy(this);
             }
+            DontDestroyOnLoad(this);
             _instance = this;
-            _currentCameraState = GameCameraState.Level;
-            TurnCameraObjectsOff();
-            PopulateCameras();
+            _currentCameraState = GameCameraState.MainMenu;
+            //TurnCameraObjectsOff();
+            PopulateActiveCameras();
             _mInitialized = true;
         }
     
         #region Camera Objects Management
         private void TurnAnyActiveCameraOff()
         {
+            if (_mActiveCameras == null || _mActiveCameras.Count == 0)
+            {
+                return;
+            }
             foreach (var activeCamera in _mActiveCameras)
             {
                 if (activeCamera.Value.activeInHierarchy)
@@ -136,39 +159,55 @@ namespace CameraManagement
                 }
             }
         }
-        private void TurnCameraObjectsOff()
+
+        private void TurnLevelCameraParentsOff()
         {
             //Deactivate Level Camera Game Objects
-            for (var i = 0; i < levelCamerasParent.childCount;i++)
+            for (var i = 0; i < _levelCamerasParent.childCount;i++)
             {
-                levelCamerasParent.GetChild(i).gameObject.SetActive(false);
+                _levelCamerasParent.GetChild(i).gameObject.SetActive(false);
             }
+        }
+        private void TurnOfficeCameraParentsOff()
+        {
             //Deactivate Office Camera Game Objects
-            for (var i = 0; i < officeCamerasParent.childCount;i++)
+            for (var i = 0; i < _officeCamerasParent.childCount;i++)
             {
-                officeCamerasParent.GetChild(i).gameObject.SetActive(false);
+                _officeCamerasParent.GetChild(i).gameObject.SetActive(false);
             }
+        }
+        
+        private void TurnDialogueCameraParentsOff()
+        {
             //Deactivate Dialogue Camera Game Objects
             for (var i = 0; i < dialogueCamerasParent.childCount;i++)
             {
                 dialogueCamerasParent.GetChild(i).gameObject.SetActive(false);
             }
         }
-        private void PopulateCameras()
+        private void TurnCameraObjectsOff()
+        {
+            TurnLevelCameraParentsOff();
+            TurnOfficeCameraParentsOff();
+            TurnDialogueCameraParentsOff();
+        }
+        private void PopulateActiveCameras()
         {
             switch (_currentCameraState)
             {
                 case GameCameraState.Level:
-                    RepopulateActiveCamerasDictionary(levelCamerasParent);
+                    RepopulateActiveCamerasDictionary(_levelCamerasParent);
                     break;
                 case GameCameraState.Office:
-                    RepopulateActiveCamerasDictionary(officeCamerasParent);
+                    RepopulateActiveCamerasDictionary(_officeCamerasParent);
                     break;
                 case GameCameraState.IsometricFollow:
                     Debug.LogWarning("[PopulateCameras] Isometric Follow Cameras must be handled");
                     break;
                 case GameCameraState.InDialogue:
                     RepopulateActiveCamerasDictionary(dialogueCamerasParent);
+                    break;
+                case GameCameraState.MainMenu:
                     break;
             }
         }
