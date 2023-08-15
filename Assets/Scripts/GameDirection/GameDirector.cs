@@ -1,5 +1,7 @@
 using System.Collections;
 using CameraManagement;
+using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameManagement;
 using GameManagement.LevelManagement;
 using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
@@ -22,6 +24,14 @@ namespace GameDirection
     [RequireComponent(typeof(GeneralUIFader))]
     public class GameDirector : MonoBehaviour, IGameDirector
     {
+        /////////////////////////////
+        //TODO: DELETE - JUST FOR TEST
+        [SerializeField] private BaseDialogueObject introDialogue;
+        //TODO: END TODO:
+        /// <summary>
+        /// ////////////////////////////////////////////
+        /// </summary>
+        
         private static GameDirector _mInstance;
         public static IGameDirector Instance => _mInstance;
         
@@ -32,6 +42,8 @@ namespace GameDirection
         private IUIController _mUIController;
         private IGeneralUIFader _mGeneralFader;
         private IGameCameraManager _mGameCameraManager;
+        private IGeneralGameStateManager _gameStateManager;
+        private IDialogueOperator _mDialogueOperator;
         #endregion
 
         #region Init
@@ -54,6 +66,7 @@ namespace GameDirection
         {
             _mLevelManager = GetComponent<LevelManager>();
             _mGeneralFader = GetComponent<GeneralUIFader>();
+            _gameStateManager = GeneralGamePlayStateManager.Instance;
             _mGameCameraManager = GameCameraManager.Instance;
         }
         private void LoadUIScene()
@@ -63,6 +76,7 @@ namespace GameDirection
         private void Start()
         {
             _mUIController = UIController.Instance;
+            _mDialogueOperator = _mUIController.DialogueOperator;
             _mUIController.StartMainMenuUI();
             
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
@@ -77,20 +91,43 @@ namespace GameDirection
         
         public void StartNewGame()
         {
+            //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCameraFadeOut();
             _mActiveGameProfile = null;
             var newItemSources = new GeneralItemSource();
             _mActiveGameProfile = new PlayerGameProfile(newItemSources);
-            StartCoroutine(LoadOfficeLevel());
+            StartCoroutine(PrepareIntroductionReading());
         }
 
-        private IEnumerator LoadOfficeLevel()
+        private IEnumerator PrepareIntroductionReading()
         {
-            yield return new WaitForSeconds(5);
-            _mGameState = HighLevelGameStates.OfficeMidScene;
-            _mLevelManager.LoadOfficeLevel();
+            yield return new WaitForSeconds(2f);
+            _mUIController.DeactivateAllObjects();
+            _mUIController.ToggleBackground(true);
+            _mGameState = HighLevelGameStates.InCutScene;
             _mGeneralFader.GeneralCameraFadeIn();
-            _mUIController.ReturnToBaseGamePlayCanvasState();
+            _mDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
+            StartCoroutine(StartIntroductionReading());
+        }
+
+        private IEnumerator StartIntroductionReading()
+        {
+            yield return new WaitForSeconds(2f);
+            _mDialogueOperator.StartNewDialogue(introDialogue);
+        }
+        
+        private void FinishIntroductionText()
+        {
+            _mGeneralFader.GeneralCameraFadeOut();
+            StartCoroutine(FinishIntroductionReading());
+        }
+        private IEnumerator FinishIntroductionReading()
+        {
+            yield return new WaitForSeconds(2f);
+            _mLevelManager.LoadOfficeLevel();
+            _mUIController.ToggleBackground(false);
+            _mGeneralFader.GeneralCameraFadeIn();
+            _mDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
         }
         

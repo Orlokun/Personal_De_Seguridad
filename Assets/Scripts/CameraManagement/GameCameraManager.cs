@@ -66,6 +66,11 @@ namespace CameraManagement
         public void ReturnToLastState()
         {
             var lastState = _mLastCameraState;
+            if (lastState == null)
+            {
+                return;
+            }
+            
             ChangeCameraState(lastState.Item2);
             ActivateNewCamera(lastState.Item2, lastState.Item1);
         }

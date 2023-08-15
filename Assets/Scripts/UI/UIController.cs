@@ -19,6 +19,7 @@ namespace UI
 
     public interface IUIController
     {
+        void DeactivateAllObjects();
         void StartMainMenuUI();
         event UIController.ReturnToBaseCanvasState OnResetCanvas;
         void ToggleDialogueObject(bool isActive);
@@ -26,6 +27,8 @@ namespace UI
         void UpdateOfficeUIElement(int cameraState);
         void ActivateObject(CanvasBitId canvasBitId, int panel);
         void DeactivateObject(CanvasBitId canvasBitId, int panel);
+        void ToggleBackground(bool toggleValue);
+        IDialogueOperator DialogueOperator { get; }
     }
 
     [RequireComponent(typeof(DialogueOperator))]
@@ -34,20 +37,18 @@ namespace UI
         //Singleton Management to make sure only one UI controller is in scene
         private static UIController _instance;
         public static UIController Instance => _instance;
-
         public delegate void ReturnToBaseCanvasState();
-
         public event ReturnToBaseCanvasState OnResetCanvas;
         
         //Manage the activation or deactivation of the Dialogue UI Object and logic
         private IDialogueOperator _mDialogueOperator;
+        public IDialogueOperator DialogueOperator => _mDialogueOperator;
 
         private Dictionary<int, ICanvasOperator> _mActiveCanvasDict;
         
         private int _activeCanvas = 0;
         
         [SerializeField] private DialogueWithCameraTarget testCameraDialogue;
-
 
         #region PublicFunction
         public void ToggleDialogueObject(bool isActive)
@@ -74,7 +75,7 @@ namespace UI
                 canvasOperator.Value.DeactivateAllElements();
             }
             //Base elements - Bit Info is just for editor
-            var panelObjects = new List<int>() {BasePanelsBitStates.BASE_INFO, BasePanelsBitStates.BIT_INFO_PANEL};
+            var panelObjects = new List<int>() {BasePanelsBitStates.BASE_INFO};
             _mActiveCanvasDict[(int)CanvasBitId.BaseCanvas].ActivateThisElementsOnly(panelObjects);
             //Item Sidebar
             panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
@@ -108,6 +109,15 @@ namespace UI
             }
             _mActiveCanvasDict[(int)canvasBitId].DeactivateUIElement(panel);
         }
+
+        public void DeactivateAllObjects()
+        {
+            foreach (var canvasOperator in _mActiveCanvasDict)
+            {
+                canvasOperator.Value.DeactivateAllElements();
+            }
+        }
+
         public void StartMainMenuUI()
         {
             foreach (var canvasOperator in _mActiveCanvasDict)
@@ -122,6 +132,20 @@ namespace UI
                 canvasOperator.Value.ActivateThisElementsOnly(menuPanels);
             }
             
+        }
+
+        public void ToggleBackground(bool toggleValue)
+        {
+            var canvasOperator = _mActiveCanvasDict[(int) CanvasBitId.GamePlayCanvas];
+            if (!toggleValue)
+            {
+                canvasOperator.DeactivateUIElement(GameplayPanelsBitStates.TEXT_BACKGROUND);
+            }
+            else
+            {
+                canvasOperator.ActivateUIElement(GameplayPanelsBitStates.TEXT_BACKGROUND);
+            }
+
         }
         #endregion
         
@@ -148,7 +172,7 @@ namespace UI
             //GeneralFadeOutPanelAnim.gameObject.SetActive(true);
             
             //Test Dialogue. TODO: Remove
-            StartCoroutine(ManageTestDialogue());
+            //StartCoroutine(ManageTestDialogue());
         }
         private void SingletonAwake()
         {

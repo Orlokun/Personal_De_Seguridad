@@ -10,8 +10,9 @@ namespace UI
     {
         public static int ITEM_SIDEBAR = 1;
         public static int ITEM_DETAILED_SIDEBAR = 2;
-        public static int BOTTOM_DIALOGUE = 4;
-        public static int IN_GAME_CLIENTS_TALK = 8;
+        public static int TEXT_BACKGROUND = 4;
+        public static int BOTTOM_DIALOGUE = 8;
+        public static int IN_GAME_CLIENTS_TALK = 16;
     }
     
     public static class OfficePanelsBitStates

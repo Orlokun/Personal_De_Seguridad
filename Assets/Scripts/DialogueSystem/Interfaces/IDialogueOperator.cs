@@ -5,5 +5,7 @@ namespace DialogueSystem.Interfaces
         UIDialogueState CurrentDialogueState { get; }
         void StartNewDialogue(IDialogueObject newDialogue);
         void KillDialogue();
+        event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
+
     }
 }

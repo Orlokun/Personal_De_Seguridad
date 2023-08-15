@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using CameraManagement;
 using DialogueSystem.Interfaces;
@@ -39,12 +38,13 @@ namespace DialogueSystem
         #endregion
 
         #region Members
-        private delegate void FinishedDialogueReading();
-        private event FinishedDialogueReading OnDialogueCompleted;
+
+        public delegate void FinishedDialogueReading();
+        public event FinishedDialogueReading OnDialogueCompleted;
+        
         /// <summary>
         /// Private Memebers and dependencies
         /// </summary>
-
         private UIDialogueState _currentState;
         public UIDialogueState CurrentDialogueState => _currentState;
 
@@ -74,17 +74,15 @@ namespace DialogueSystem
             }
             GameCameraManager.Instance.ReturnToLastState();
             _mUIController.ToggleDialogueObject(false);
-            GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
+            //GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
             KillDialogue();
         }
-
         private IEnumerator FinishDialogue()
         {
             while (CurrentDialogueState != UIDialogueState.FinishedTypingBaseDialogue)
             {
                 yield return null;
             }
-            
         }
 
         private void DisplayDialogueChoice()
