@@ -88,7 +88,8 @@ namespace GameDirection
         #region Public Fields
         public HighLevelGameStates GetCurrentState => _mGameState;
         public IPlayerGameProfile GetActiveGameProfile => _mActiveGameProfile;
-        
+
+        #region ManageNewGame
         public void StartNewGame()
         {
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
@@ -130,7 +131,7 @@ namespace GameDirection
             _mDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
         }
-        
+        #endregion
         public void ChangeHighLvlGameState(HighLevelGameStates newState)
         {
             _mGameState = newState;

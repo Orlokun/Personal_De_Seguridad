@@ -1,6 +1,7 @@
 using System.Collections;
 using CameraManagement;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Sound;
 using DialogueSystem.Units;
 using InputManagement;
 using TMPro;
@@ -20,6 +21,7 @@ namespace DialogueSystem
         FinishedTypingBaseDialogue,
     }
 
+
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
         /// <summary>
@@ -38,9 +40,6 @@ namespace DialogueSystem
         #endregion
 
         #region Members
-
-        public delegate void FinishedDialogueReading();
-        public event FinishedDialogueReading OnDialogueCompleted;
         
         /// <summary>
         /// Private Memebers and dependencies
@@ -52,9 +51,15 @@ namespace DialogueSystem
         private IDialogueCameraMan _dialogueCameraMan;
         private Coroutine _typingMachineCoroutine;
         private IUIController _mUIController;
+        private IDialogueOperatorSoundMachine _soundMachine;
         private const string DECISION_PREFAB = "DecisionUIObject";
         private const string UI_RESOURCES_PATH = "UI/";
         #endregion
+        
+                
+        public delegate void FinishedDialogueReading();
+        public event FinishedDialogueReading OnDialogueCompleted;
+
 
         #region Public Interface
         public void StartNewDialogue(IDialogueObject newDialogue)
@@ -113,6 +118,7 @@ namespace DialogueSystem
         private void Awake()
         {
             _dialogueCameraMan = Factory.CreateCameraMan();
+            _soundMachine = GetComponent<DialogueOperatorSoundMachine>();
             OnDialogueCompleted += OnDialogueFinished;
         }
         private void Start()
@@ -158,8 +164,8 @@ namespace DialogueSystem
         {
             _currentState = UIDialogueState.TypingText;
             var isAddingHtmlTag = false;
+            _soundMachine.StartPlayingSound();
             nextLineButton.SetActive(false);
-
             foreach (var letter in dialogueLine)
             {
                 //Check if player is hurrying Dialogue and we have more than 3 characters.
@@ -187,9 +193,9 @@ namespace DialogueSystem
                     var typingSpeed = Random.Range(minWritingSpeed, maxWritingSpeed);
                     yield return new WaitForSeconds(typingSpeed);
                 }
-
             }
             nextLineButton.SetActive(true);
+            _soundMachine.PausePlayingSound();
             _currentState = UIDialogueState.FinishedTypingLine;
         }
         private void LoadNewDialogue(IDialogueObject newDialogue)
