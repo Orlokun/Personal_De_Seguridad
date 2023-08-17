@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using DialogueSystem;
+using GameManagement;
+using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
 using GameManagement.ProfileDataModules.ItemStores.Stores;
 using UnityEngine;
 
@@ -35,6 +37,16 @@ namespace Utils
         public static OtherItemsSourceModule CreateOtherItemsSourceModule()
         {
             return new OtherItemsSourceModule();
+        }
+
+        public static GeneralItemSource CreateGeneralItemSource()
+        {
+            return new GeneralItemSource();
+        }
+
+        public static PlayerGameProfile CreatePlayerGameProfile(GeneralItemSource generalItemSource)
+        {
+            return new PlayerGameProfile(generalItemSource);
         }
     }
     public static class CustomTime

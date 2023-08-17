@@ -131,7 +131,6 @@ namespace UI
                     {MainMenuPanelsBitStates.BG_PANEL, MainMenuPanelsBitStates.MAIN_OPTIONS};
                 canvasOperator.Value.ActivateThisElementsOnly(menuPanels);
             }
-            
         }
 
         public void ToggleBackground(bool toggleValue)

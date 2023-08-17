@@ -1,9 +1,7 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GameManagement.LevelManagement
+namespace GamePlayManagement.LevelManagement
 {
     public interface ILevelManager
     {

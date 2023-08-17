@@ -5,14 +5,6 @@ using UnityEngine;
 
 namespace InputManagement
 {
-    public enum InputGameState
-    {
-        InGame,
-        Pause,
-        InDialogue, 
-        MainMenu
-    }
-
     public class GeneralPlayerInputManager : MonoBehaviour
     {
         private IGeneralGameStateManager _mGameStateManager;
@@ -40,7 +32,7 @@ namespace InputManagement
         private void ManageGameplayStateInput()
         {
             if (!Input.GetKeyDown(KeyCode.Tab) || _mGameStateManager.CurrentInputGameState != InputGameState.InGame
-                || _highLvlGameState.GetCurrentState == HighLevelGameStates.OfficeMidScene)
+                || _highLvlGameState.GetCurrentHighLvlGameState == HighLevelGameStates.OfficeMidScene)
             {
                 return;
             }

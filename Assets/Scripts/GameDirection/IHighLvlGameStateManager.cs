@@ -2,7 +2,7 @@ namespace GameDirection
 {
     public interface IHighLvlGameStateManager
     {
-        public HighLevelGameStates GetCurrentState { get; }
+        public HighLevelGameStates GetCurrentHighLvlGameState { get; }
         public void ChangeHighLvlGameState(HighLevelGameStates newState);
     }
 }
