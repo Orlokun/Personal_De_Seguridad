@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using CameraManagement;
 using DialogueSystem.Interfaces;
@@ -209,8 +210,29 @@ namespace DialogueSystem
             {
                 return;
             }
-            mSpeakerImageDisplay.sprite = _currentDialogue.ActorImage;
-            mSpeakerName.text = _currentDialogue.SpeakerName;
+
+            //Check Dialogue speaker image
+            if (_currentDialogue.ActorImage == null)
+            {
+                mSpeakerImageDisplay.gameObject.SetActive(false);
+            }
+            else
+            {
+                mSpeakerImageDisplay.sprite = _currentDialogue.ActorImage;
+                mSpeakerImageDisplay.gameObject.SetActive(true);
+            }
+            
+            //Check Dialogue speaker
+            if (string.IsNullOrEmpty(_currentDialogue.SpeakerName))
+            {
+                mSpeakerName.gameObject.SetActive(false);
+            }
+            else
+            {
+                mSpeakerName.text = _currentDialogue.SpeakerName;
+
+                mSpeakerName.gameObject.SetActive(true);
+            }
 
             if (_currentDialogue.ContainsBehavior(DialogueBehaviors.DialogueWithChoice))
             {

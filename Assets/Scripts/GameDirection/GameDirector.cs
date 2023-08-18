@@ -2,6 +2,7 @@ using System.Collections;
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GameDirection.Initial_Office_Scene;
 using GameManagement;
 using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
 using GamePlayManagement.LevelManagement;

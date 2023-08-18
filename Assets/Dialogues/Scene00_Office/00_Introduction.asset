@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f593f045ba2849b8a928bdf22c893597, type: 3}
+  m_Name: 00_Introduction
+  m_EditorClassIdentifier: 
+  dialogueLines:
+  - ... Nada nuevo bajo el sol.
+  - "Simplemente no hay empleo, y luego de 35 a\xF1os... "
+  - "35 a\xF1os de trabajo..."
+  - "Te han despedido as\xED como as\xED."
+  - Siempre te has dedicado a la seguridad
+  - Ahora solo tienes el contacto de un local cercano
+  - "'La Copia feliz del ed\xE9n'. Su due\xF1o ya se est\xE1 vovlviendo senil ..."
+  - "En su paranoia est\xE1 dispuesto a contratar seguridad "
+  actorImage: {fileID: 0}
+  speakerName: Reality
+  dialogueBehaviorsList: 0100000001000000010000000100000001000000010000000100000001000000
