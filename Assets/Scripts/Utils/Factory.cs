@@ -3,6 +3,8 @@ using DialogueSystem;
 using GameManagement;
 using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
 using GameManagement.ProfileDataModules.ItemStores.Stores;
+using GamePlayManagement;
+using GamePlayManagement.ProfileDataModules;
 using UnityEngine;
 
 namespace Utils
@@ -47,6 +49,11 @@ namespace Utils
         public static PlayerGameProfile CreatePlayerGameProfile(GeneralItemSource generalItemSource)
         {
             return new PlayerGameProfile(generalItemSource);
+        }
+
+        public static JobsSourceModule CreateJobSourcesModule()
+        {
+            return new JobsSourceModule();
         }
     }
     public static class CustomTime

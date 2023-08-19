@@ -1,3 +1,4 @@
+using GamePlayManagement.ProfileDataModules.ItemStores;
 using UnityEngine;
 
 namespace GameManagement.ProfileDataModules.ItemStores
@@ -12,6 +13,7 @@ namespace GameManagement.ProfileDataModules.ItemStores
         protected const int MHighestBitItem = 16384;
         
         //Interfaces values implementations
+        public int ElementsActive => MItemsActive;
         public bool IsModuleActive => MItemsActive > 0;
         public int ActiveItemsInSource => MItemsActive;
         public bool IsItemActive(int item)

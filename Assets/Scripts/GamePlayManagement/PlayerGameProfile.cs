@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameManagement.ProfileDataModules;
-using GameManagement.ProfileDataModules.ItemStores;
+using GameManagement;
 using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
+using GamePlayManagement.ProfileDataModules;
+using GamePlayManagement.ProfileDataModules.ItemStores;
 using UI;
 using UnityEngine;
 using Utils;
 
-namespace GameManagement
+namespace GamePlayManagement
 {
     public class PlayerGameProfile : IPlayerGameProfile
     {
@@ -31,7 +32,7 @@ namespace GameManagement
         private Dictionary<int, IItemSourceModule> _mIndexedSourceModules;
 
         //Public Module Interfaces Fields
-        public IItemSourceModule GetItemSourceWithIndex(BitItemType value)
+        public IItemSourceModule GetActiveItemsInModule(BitItemType value)
         {
             return GetSourceModuleWithBitIndex((int)value);
         }

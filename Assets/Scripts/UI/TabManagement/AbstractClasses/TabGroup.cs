@@ -8,15 +8,15 @@ namespace UI.TabManagement.AbstractClasses
 {
     public abstract class TabGroup : MonoBehaviour, ITabGroup, ITabUpdate
     {
-        [SerializeField] private List<TabElement> tabElements;
+        [SerializeField] protected List<TabElement> tabElements;
 
-        protected Dictionary<int, ITabElement> MTabElements;
-        protected bool MTabActiveState;
+        protected Dictionary<int, ITabElement> MTabElements = new Dictionary<int, ITabElement>();
+        protected bool MIsTabActive;
         protected int MActiveTab;
         protected IUIController MuiController;
 
         public int ActiveTab => MActiveTab;
-        public bool IsTabGroupActive => MTabActiveState;
+        public bool IsTabGroupActive => MIsTabActive;
 
         public virtual bool ActivateTabInUI()
         {
@@ -30,6 +30,10 @@ namespace UI.TabManagement.AbstractClasses
             throw e;
         }
 
+        public void UpdateDictionaryData()
+        {
+            InitializeTabElementsDataDict();
+        }
 
         protected virtual void Awake()
         {
@@ -49,6 +53,11 @@ namespace UI.TabManagement.AbstractClasses
 
         private void InitializeTabElementsDataDict()
         {
+            if (tabElements.Count == 0)
+            {
+                return;
+            }
+            
             MTabElements = new Dictionary<int, ITabElement>();
             var bitLimit = BitOperator.TurnCountIntoMaxBitValue(tabElements.Count);
 

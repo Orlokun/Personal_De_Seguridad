@@ -1,5 +1,6 @@
 using GameDirection;
 using GameManagement.ProfileDataModules.ItemStores;
+using GamePlayManagement.ProfileDataModules.ItemStores;
 using UI.TabManagement.AbstractClasses;
 using UnityEngine;
 namespace UI.TabManagement
@@ -25,16 +26,16 @@ namespace UI.TabManagement
 
         public override bool ActivateTabInUI()
         {
-            MTabActiveState = true;
+            MIsTabActive = true;
             MuiController.ActivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
-            return MTabActiveState;
+            return MIsTabActive;
         }
 
         public override bool DeactivateGroupInUI()
         {
-            MTabActiveState = false;
+            MIsTabActive = false;
             MuiController.DeactivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
-            return MTabActiveState;
+            return MIsTabActive;
         }
 
         public override void UpdateTabGroupContent(int selectedTabIndex)
@@ -44,14 +45,13 @@ namespace UI.TabManagement
             {
                 ClearGrid();
             }
-            
             UpdateSelectedItemsModule((BitItemType) selectedTabIndex);
             var activeItems = _activeItemsModule.ActiveItemsInSource;
         }
 
         private void UpdateSelectedItemsModule(BitItemType index)
         {
-            _activeItemsModule = GameDirector.Instance.GetActiveGameProfile.GetItemSourceWithIndex(index);
+            _activeItemsModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemsInModule(index);
         }
         
         private void ClearGrid()

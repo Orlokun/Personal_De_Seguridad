@@ -1,3 +1,4 @@
+using DataUnits;
 using TMPro;
 using UI.TabManagement.Interfaces;
 using UnityEngine;
@@ -17,9 +18,13 @@ namespace UI.TabManagement.AbstractClasses
 
         [SerializeField] private string SnippetName;
         [SerializeField] private TMP_Text snippetNameText;
-        [SerializeField]
         private Image _mBackground;
 
+        public void SetSnippetNameText(string snippetName)
+        {
+            SnippetName = snippetName;
+            snippetNameText.text = SnippetName;
+        }
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");

@@ -139,12 +139,32 @@ namespace UI
             }
             return bitNumber;
         }
-        private void UpdateUIObjects()
+        private void UpdateUIObjects()  
         {
             foreach (var bitPanelKvP in _panelsInCanvas)
             {
                 var isActive = (_activeUIElements & bitPanelKvP.Key) != 0;
+                
+                UIOfficePanel component;
+                if (!bitPanelKvP.Value)
+                {
+                    continue;
+                }
+                
+                
+                var isOfficePanel = bitPanelKvP.Value.TryGetComponent<UIOfficePanel>(out component);
                 bitPanelKvP.Value.SetActive(isActive);
+                if (GetCanvasID == CanvasBitId.Office && isActive && isOfficePanel)
+                {
+                    foreach (var officeFadeInElement in component.officeFadeInElements)
+                    {
+                        if (officeFadeInElement != null)
+                        {
+                            LeanTween.alpha(officeFadeInElement, 0, 0);
+                            LeanTween.alpha(officeFadeInElement, 1, 2f).setEase(LeanTweenType.easeOutSine);
+                        }
+                    }
+                } 
             }
         }
     }

@@ -8,6 +8,4 @@ namespace UI
         TRAP_ITEM_TYPE = 8,
         OTHERS_ITEM_TYPE = 16
     }
-
-    
 }

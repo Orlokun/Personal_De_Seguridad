@@ -15,11 +15,11 @@ namespace UI
         public static int IN_GAME_CLIENTS_TALK = 16;
     }
     
-    public static class OfficePanelsBitStates
+    public enum OfficePanelsBitStates
     {
-        public static int NOTEBOOK = 1;
-        public static int PHONE = 2;
-        public static int RADIO_ASHTRAY = 4;
+        NOTEBOOK = 1,
+        PHONE = 2,
+        RADIO_ASHTRAY = 4,
     }
 
     public static class MainMenuPanelsBitStates

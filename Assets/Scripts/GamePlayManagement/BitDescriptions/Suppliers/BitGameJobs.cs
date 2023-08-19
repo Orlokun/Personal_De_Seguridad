@@ -1,4 +1,4 @@
-namespace GameManagement.BitDescriptions.Suppliers
+namespace GamePlayManagement.BitDescriptions.Suppliers
 {
     public enum GameJobs
     {
