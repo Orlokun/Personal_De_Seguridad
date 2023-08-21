@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using DialogueSystem;
-using GameManagement;
-using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
-using GameManagement.ProfileDataModules.ItemStores.Stores;
 using GamePlayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
-using UnityEngine;
+using GamePlayManagement.ProfileDataModules.ItemSuppliers;
+using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 
 namespace Utils
 {
@@ -15,66 +13,23 @@ namespace Utils
         {
             return new DialogueCameraMan();
         }
-
-        public static GuardSourcesModule CreateGuardSourcesModule()
+        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier)
         {
-            return new GuardSourcesModule();
+            return new ItemSupplierShop(itemSupplier);
         }
-
-        public static CameraSourceModule CreateCameraSourceModule()
+        
+        public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule)
         {
-            return new CameraSourceModule();
-        }
-
-        public static WeaponsSourceModule CreateWeaponsSourceModule()
-        {
-            return new WeaponsSourceModule();
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule);
         }
 
-        public static TrapSourceModule CreateTrapSourceModule()
+        public static IItemSuppliersModule CreateItemSuppliersModule()
         {
-            return new TrapSourceModule();
+            return new ItemSuppliersModule();
         }
-
-        public static OtherItemsSourceModule CreateOtherItemsSourceModule()
+        public static IJobsSourcesModule CreateJobSourcesModule()
         {
-            return new OtherItemsSourceModule();
-        }
-
-        public static GeneralItemSource CreateGeneralItemSource()
-        {
-            return new GeneralItemSource();
-        }
-
-        public static PlayerGameProfile CreatePlayerGameProfile(GeneralItemSource generalItemSource)
-        {
-            return new PlayerGameProfile(generalItemSource);
-        }
-
-        public static JobsSourceModule CreateJobSourcesModule()
-        {
-            return new JobsSourceModule();
-        }
-    }
-    public static class CustomTime
-    {
-        public static float LocalTimeScale = 1;
-        public static float deltaTime {
-            get {
-                return Time.deltaTime * LocalTimeScale;
-            }
-        }
- 
-        public static bool IsPaused {
-            get {
-                return LocalTimeScale == 0f;
-            }
-        }
- 
-        public static float TimeScale {
-            get {
-                return Time.timeScale * LocalTimeScale;
-            }
+            return new JobsSourcesModule();
         }
     }
 }

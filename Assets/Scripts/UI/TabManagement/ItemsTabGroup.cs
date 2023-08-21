@@ -1,6 +1,5 @@
 using GameDirection;
-using GameManagement.ProfileDataModules.ItemStores;
-using GamePlayManagement.ProfileDataModules.ItemStores;
+using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UI.TabManagement.AbstractClasses;
 using UnityEngine;
 namespace UI.TabManagement
@@ -11,19 +10,8 @@ namespace UI.TabManagement
         [SerializeField] private Transform gridParentObject;
         [SerializeField] private Transform storeTitle;
 
-        private IItemSourceModule _activeItemsModule;
+        private IItemSuppliersModule _activeItemsModule;
         
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            //UpdateSelectedItemsModule(startType);
-        }
-
         public override bool ActivateTabInUI()
         {
             MIsTabActive = true;
@@ -46,14 +34,13 @@ namespace UI.TabManagement
                 ClearGrid();
             }
             UpdateSelectedItemsModule((BitItemType) selectedTabIndex);
-            var activeItems = _activeItemsModule.ActiveItemsInSource;
+            var activeItems = _activeItemsModule.AllActiveSuppliers;
         }
 
         private void UpdateSelectedItemsModule(BitItemType index)
         {
-            _activeItemsModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemsInModule(index);
+            //_activeItemsModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemsInModule(index);
         }
-        
         private void ClearGrid()
         {
             foreach (Transform itemObject in gridParentObject)

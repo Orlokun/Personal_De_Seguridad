@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 138390982}
   - component: {fileID: 138390984}
   - component: {fileID: 138390985}
+  - component: {fileID: 138390986}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -216,7 +217,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4efd75f48241cde4197c20fdde2440d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  introDialogue: {fileID: 11400000, guid: 402c44df188c3594b979dbec5c536e32, type: 2}
+  introDialogues:
+  - {fileID: 11400000, guid: 402c44df188c3594b979dbec5c536e32, type: 2}
+  - {fileID: 11400000, guid: 742ac6314207684448e2be65396ac94c, type: 2}
 --- !u!4 &138390983
 Transform:
   m_ObjectHideFlags: 0
@@ -256,6 +259,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GeneralFadeOutPanelAnim: {fileID: 307853436}
+--- !u!114 &138390986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138390981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c572e17e73ebb8541a3b238929aaed37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _createdItems:
+  - {fileID: 11400000, guid: ef1cbb44288578f4ba9a50cd6e8ca09f, type: 2}
+  - {fileID: 11400000, guid: ec7aaaa2b109c7143ba0018af99ffb8f, type: 2}
+  - {fileID: 11400000, guid: 276476d9d95fdab429172da1b9ed6672, type: 2}
+  - {fileID: 11400000, guid: cfcd992b3251163419a78d6c8ec8a8b3, type: 2}
 --- !u!1001 &164073034
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ namespace UI.TabManagement
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            
         }
 
         public void OnPointerExit(PointerEventData eventData)

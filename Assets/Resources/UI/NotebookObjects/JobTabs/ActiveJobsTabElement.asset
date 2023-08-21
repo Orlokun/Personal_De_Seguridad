@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ActiveJobsTabElement
   m_EditorClassIdentifier: 
   tabType: 1
-  icon: {fileID: 21300000, guid: 4a231ba0e81e63849a8f985c228e8acd, type: 3}
+  icon: {fileID: 21300000, guid: 309b1d5a294fd6c43ae9cf77656c1852, type: 3}
   tabElementName: Active

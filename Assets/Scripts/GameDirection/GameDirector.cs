@@ -1,10 +1,11 @@
 using System.Collections;
+using System.Collections.Generic;
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.Initial_Office_Scene;
-using GameManagement;
-using GameManagement.ProfileDataModules.ItemStores.StoreInterfaces;
+using GamePlayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -28,7 +29,7 @@ namespace GameDirection
     {
         /////////////////////////////
         //TODO: DELETE - JUST FOR TEST
-        [SerializeField] private BaseDialogueObject introDialogue;
+        [SerializeField] private List<BaseDialogueObject> introDialogues;
         //TODO: END TODO:
         /// <summary>
         /// ////////////////////////////////////////////
@@ -47,9 +48,10 @@ namespace GameDirection
         private IGeneralGameStateManager _gameStateManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
-
-        // Introduction Scene / FTUE
-        private IntroductionSceneManager _introductionSceneManager;
+        private IBaseItemCatalogue _mItemCatalogue;
+        
+        
+        private IntroSceneManager _introSceneManager;
         #endregion
 
         #region Public Fields
@@ -62,6 +64,7 @@ namespace GameDirection
         public IGeneralGameStateManager GetGameStateManager => _gameStateManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
+        public IBaseItemCatalogue GetBaseItemCatalogue => _mItemCatalogue;
         #endregion
 
         #region Init
@@ -86,7 +89,6 @@ namespace GameDirection
             _mGeneralFader = GetComponent<GeneralUIFader>();
             _gameStateManager = GeneralGamePlayStateManager.Instance;
             _mGameCameraManager = GameCameraManager.Instance;             
-            _mSoundDirector = SoundDirector.Instance;
         }
         private void LoadUIScene()
         {
@@ -94,19 +96,21 @@ namespace GameDirection
         }
         private void Start()
         {
+            _mSoundDirector = SoundDirector.Instance;
             _mUIController = UIController.Instance;
             _mDialogueOperator = _mUIController.DialogueOperator;
-            _mSoundDirector = SoundDirector.Instance;
-
+            _mItemCatalogue = BaseItemCatalogue.Instance;
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
-            _introductionSceneManager = gameObject.AddComponent<IntroductionSceneManager>();
-            _introductionSceneManager.Initialize(this, introDialogue);
+            var dialoguesInterface = _mDialogueOperator.GetDialogueObjects(introDialogues);
+            _introSceneManager = gameObject.AddComponent<IntroSceneManager>();
+            _introSceneManager.Initialize(this, dialoguesInterface);
             
             _mUIController.StartMainMenuUI();
             
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
         }
+
 
         #endregion
         
@@ -117,16 +121,33 @@ namespace GameDirection
         {
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCameraFadeOut();
-            _mActiveGameProfile = null;
-            var newItemSources = Factory.CreateGeneralItemSource();
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(newItemSources);
+            CreateNewProfile();
             _mGameState = HighLevelGameStates.InCutScene;
             StartCoroutine(PrepareIntroductionReading());
+        }
+
+        private void CreateNewProfile()
+        {
+            _mActiveGameProfile = null;
+            var itemSuppliersModule = Factory.CreateItemSuppliersModule();
+            var jobSourcesModule = Factory.CreateJobSourcesModule();
+            jobSourcesModule.AddJobToModule(BitGameJobSuppliers.LOCAl_DE_BARRIO);
+            
+            //Activate Suppliers
+            itemSuppliersModule.ActivateSupplier(BitItemSupplier.MONCHITO);
+            itemSuppliersModule.ActivateSupplier(BitItemSupplier.TERCER_AIRE);
+            
+            //Activate Items in Suppliers
+            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.MONCHITO, (int)MonchitoItemsBitId.WEB_CAM);
+            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.MONCHITO, (int)MonchitoItemsBitId.ENCINA);
+            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.TERCER_AIRE, (int)TercerAireItemsBitId.DON_RONBINSON);
+            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.TERCER_AIRE, (int)TercerAireItemsBitId.ORYAN);
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule);
         }
         private IEnumerator PrepareIntroductionReading()
         {
             yield return new WaitForSeconds(2f);
-            StartCoroutine(_introductionSceneManager.PrepareIntroductionReading());
+            StartCoroutine(_introSceneManager.PrepareIntroductionReading());
         }
         #endregion
         

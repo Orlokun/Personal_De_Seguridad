@@ -17,7 +17,29 @@ namespace UI.TabManagement.NBVerticalTabs
             }
             ClearTabElements();
             
-            List<IVerticaTabElement> verticalTabElements;
+            //Manage Vertical Tabs that should be available when pressing each element in tab
+            _tabGroupSource = newSource;
+            var verticalTabElements = GetVerticalTabElements(newSource, parentGroup);
+            InstantiateVerticalTabs(verticalTabElements);
+            UpdateDictionaryData();
+        }
+
+        public override bool ActivateTabInUI()
+        {
+            MIsTabActive = true;
+            return MIsTabActive;
+        }
+
+        public override bool DeactivateGroupInUI()
+        {
+            MIsTabActive = false;
+            return MIsTabActive;
+        }
+
+        #region Private Utils
+        private List<IVerticaTabElement> GetVerticalTabElements(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup)
+        {
+            var verticalTabElements = new List<IVerticaTabElement>();
             _tabGroupSource = newSource;
             switch (_tabGroupSource)
             {
@@ -37,9 +59,12 @@ namespace UI.TabManagement.NBVerticalTabs
                     verticalTabElements = parentGroup.ConfigVerticalTabObjects;
                     break;
                 default:
-                    return;
+                    return verticalTabElements;
             }
-
+            return verticalTabElements;
+        }
+        private void InstantiateVerticalTabs(List<IVerticaTabElement> verticalTabElements)
+        {
             foreach (var tabElement in verticalTabElements)
             {
                 var tabGameObject = Instantiate(tabElementPrefab, tabElementsParent);
@@ -48,9 +73,7 @@ namespace UI.TabManagement.NBVerticalTabs
                 tabElementController.SetSnippetNameText(tabElement.TabElementName);
                 tabElements.Add(tabElementController);
             }
-            UpdateDictionaryData();
         }
-
         private void ClearTabElements()
         {
             tabElements.Clear();
@@ -60,19 +83,8 @@ namespace UI.TabManagement.NBVerticalTabs
                 Destroy(tabElement.gameObject);
             }
         }
-        
-        public override bool ActivateTabInUI()
-        {
-            MIsTabActive = true;
-            return MIsTabActive;
-        }
+        #endregion
 
-        public override bool DeactivateGroupInUI()
-        {
-            MIsTabActive = false;
-            return MIsTabActive;
-        }
-        
         public override void UpdateTabGroupContent(int selectedTabIndex)
         {
             base.UpdateTabGroupContent(selectedTabIndex);

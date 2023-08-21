@@ -1,4 +1,6 @@
 using GameManagement;
+using GamePlayManagement;
+
 namespace GameDirection
 {
     public interface IPlayerProfileManager

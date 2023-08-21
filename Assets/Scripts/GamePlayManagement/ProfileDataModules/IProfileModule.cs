@@ -1,8 +1,6 @@
-namespace GameManagement.Modules
+namespace GamePlayManagement.ProfileDataModules
 {
     public interface IProfileModule
     {
-        public int ElementsActive { get; }
-        public bool IsModuleActive { get; }
     }
 }

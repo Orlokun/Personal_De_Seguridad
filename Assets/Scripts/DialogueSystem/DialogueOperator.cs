@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Sound;
@@ -63,6 +64,16 @@ namespace DialogueSystem
 
 
         #region Public Interface
+        public List<IDialogueObject> GetDialogueObjects(List<BaseDialogueObject> dialogueObjects)
+        {
+            var dialogueList = new List<IDialogueObject>();
+            foreach (var baseDialogueObject in dialogueObjects)
+            {
+                dialogueList.Add(baseDialogueObject);
+            }
+            return dialogueList;
+        }
+
         public void StartNewDialogue(IDialogueObject newDialogue)
         {
             Debug.Log("Starting new Dialogue");

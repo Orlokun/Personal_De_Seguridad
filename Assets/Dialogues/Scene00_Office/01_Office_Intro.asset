@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: 01_Office_Intro
   m_EditorClassIdentifier: 
   dialogueLines:
-  - "Los \xFAltimos tres a\xF1os los has pasado sin trabajar. Bebiendo Tus ahorros."
-  - En tu agenda solo tienes el concato de un viejo amigo
+  - "Por ahora solo tienes el n\xFAmero de <b> Don Jos\xE9</b>. Due\xF1o del local."
+  - "Adem\xE1s tienes el n\xFAmero de un viejo amigo que tiene un servicio de guardias
+    viejos a bajo costo."
+  - "El \xFAltimo n\xFAmero que tienes es el de tu sobrino <b>Monchito</b>, que sabe
+    ingeni\xE1rselas con cosas caseras."
   actorImage: {fileID: 0}
-  speakerName: 
-  dialogueBehaviorsList: 
+  speakerName: Realidad
+  dialogueBehaviorsList: 01000000

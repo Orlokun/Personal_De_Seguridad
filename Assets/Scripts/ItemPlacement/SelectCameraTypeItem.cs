@@ -1,5 +1,5 @@
-using GameManagement.ProfileDataModules.Items;
 using Scripts.ItemPlacement;
+using UI.Items;
 using UnityEngine.EventSystems;
 using Utils;
 

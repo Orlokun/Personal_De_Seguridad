@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df6465ce6b16411d86e9924255ff8142, type: 3}
+  m_Name: Guard_ORyan
+  m_EditorClassIdentifier: 
+  _itemSupplier: 256
+  _itemType: 1
+  _itemIcon: {fileID: 21300000, guid: 36eea33696a174d4e98dd57e9bae6c3a, type: 3}
+  itemName: O'Ryan
+  price: 3
+  bitId: 2

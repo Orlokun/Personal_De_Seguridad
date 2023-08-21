@@ -14,13 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueLines:
   - ... Nada nuevo bajo el sol.
-  - "Simplemente no hay empleo, y luego de 35 a\xF1os... "
-  - "35 a\xF1os de trabajo..."
-  - "Te han despedido as\xED como as\xED."
-  - Siempre te has dedicado a la seguridad
-  - Ahora solo tienes el contacto de un local cercano
-  - "'La Copia feliz del ed\xE9n'. Su due\xF1o ya se est\xE1 vovlviendo senil ..."
-  - "En su paranoia est\xE1 dispuesto a contratar seguridad "
+  - Simplemente no hay empleo a tu edad.
+  - "35 a\xF1os trabajaste en el mismo lugar. Siempre un trabajador comprometido."
+  - Ya hace unos meses que tuviste que salir y tus ahorros ya no aguantan.
+  - "Siempre te has dedicado a la seguridad, es lo \xFAnico que sabes hacer."
+  - Un vecino sin muchas luces, senil y paranoide por exceso de television te dio
+    su contacto
+  - "El miedo se lo come y est\xE1 dispuesto a pagar su triste pensi\xF3n por tus
+    servicios..."
+  - Dale un llamado...
   actorImage: {fileID: 0}
   speakerName: Reality
-  dialogueBehaviorsList: 0100000001000000010000000100000001000000010000000100000001000000
+  dialogueBehaviorsList: 01000000

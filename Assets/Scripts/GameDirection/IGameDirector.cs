@@ -1,6 +1,7 @@
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using GameManagement;
+using GamePlayManagement;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -17,5 +18,6 @@ namespace GameDirection
         public IGeneralGameStateManager GetGameStateManager { get; }
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
+        public IBaseItemCatalogue GetBaseItemCatalogue { get; }
     }
 }
