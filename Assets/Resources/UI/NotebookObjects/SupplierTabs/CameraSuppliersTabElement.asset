@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CameraSuppliersTabElement
   m_EditorClassIdentifier: 
   tabType: 2
-  icon: {fileID: 21300000, guid: ff6ba1c2254762640899a77a15a3bd88, type: 3}
+  icon: {fileID: 21300000, guid: ca57db13780f80a45b065730ca08fde7, type: 3}
   tabElementName: Camaras

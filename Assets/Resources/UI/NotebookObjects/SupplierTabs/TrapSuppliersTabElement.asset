@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: TrapSuppliersTabElement
   m_EditorClassIdentifier: 
   tabType: 8
-  icon: {fileID: 21300000, guid: 3df236fe7f2f4ba41a245e2fc870ff44, type: 3}
+  icon: {fileID: 21300000, guid: 1b876801e630f7d499efaa9b3de68892, type: 3}
   tabElementName: Trampas
