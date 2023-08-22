@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
+using DataUnits.ItemSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
 
@@ -12,6 +14,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         public bool IsItemManaged(int bitItemId);
         public BitItemSupplier BitSupplierId { get; }
         public IItemObject GetItemObject(int bitItemId);
+        public IItemSupplierDataObject GetSupplierData { get; }
 
     }
 
@@ -19,18 +22,28 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
     {
         public BitItemSupplier BitSupplierId { get; }
 
+        private IItemSupplierDataObject _mSupplierData;
         private int _mActiveItems = 0;
         private Dictionary<int, IItemObject> _activeItemsData = new Dictionary<int, IItemObject>();
-        
+        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bitSupplierId"></param>
-        public ItemSupplierShop(BitItemSupplier bitSupplierId)
+        /// <param name="itemDataCatalogue"></param>
+        /// <param name="suppliersCatalogue"></param>
+        public ItemSupplierShop(BitItemSupplier bitSupplierId, IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
             BitSupplierId = bitSupplierId;
+            _mItemDataCatalogue = itemDataCatalogue;
+            _mSuppliersCatalogue = suppliersCatalogue;
+            _mSupplierData = _mSuppliersCatalogue.GetItemSupplierData(BitSupplierId);
         }
-        
+
+        public IItemSupplierDataObject GetSupplierData => _mSupplierData;
+
         public IItemObject GetItemObject(int bitItemId)
         {
             return (_mActiveItems & bitItemId) == 0 ? null : _activeItemsData[bitItemId];
@@ -52,7 +65,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
                 return;
             }
 
-            var getItem = BaseItemCatalogue.Instance.GetItemFromCatalogue(BitSupplierId, bitItemId);
+            var getItem = _mItemDataCatalogue.GetItemFromCatalogue(BitSupplierId, bitItemId);
             if (getItem == null)
             {
                 Debug.LogError("[AddItemToSupplier] Item Added must exist in Base Catalogue");

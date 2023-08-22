@@ -1,3 +1,4 @@
+using DataUnits.GameCatalogues;
 using DialogueSystem;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -13,9 +14,9 @@ namespace Utils
         {
             return new DialogueCameraMan();
         }
-        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier)
+        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IBaseItemDataCatalogue itemDataCatalogue,IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
-            return new ItemSupplierShop(itemSupplier);
+            return new ItemSupplierShop(itemSupplier, itemDataCatalogue, suppliersCatalogue);
         }
         
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule)
@@ -23,13 +24,13 @@ namespace Utils
             return new PlayerGameProfile(itemSuppliersModule, jobsModule);
         }
 
-        public static IItemSuppliersModule CreateItemSuppliersModule()
+        public static IItemSuppliersModule CreateItemSuppliersModule(IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
-            return new ItemSuppliersModule();
+            return new ItemSuppliersModule(itemDataCatalogue, suppliersCatalogue);
         }
-        public static IJobsSourcesModule CreateJobSourcesModule()
+        public static IJobsSourcesModule CreateJobSourcesModule(IBaseJobsCatalogue jobsCatalogue)
         {
-            return new JobsSourcesModule();
+            return new JobsSourcesModule(jobsCatalogue);
         }
     }
 }

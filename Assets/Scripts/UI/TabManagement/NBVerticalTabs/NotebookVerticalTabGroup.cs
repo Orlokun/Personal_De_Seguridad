@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using GameDirection;
+using GamePlayManagement;
 using UI.TabManagement.AbstractClasses;
 using UnityEngine;
 
@@ -7,8 +9,19 @@ namespace UI.TabManagement.NBVerticalTabs
     public class NotebookVerticalTabGroup : TabGroup, INotebookVerticalTab
     {
         private NotebookVerticalTabSource _tabGroupSource;
+        private IPlayerGameProfile _playerProfile;
         [SerializeField]private Transform tabElementsParent;
         [SerializeField] private GameObject tabElementPrefab;
+
+        [SerializeField] private Transform leftPage;
+        [SerializeField] private Transform rightPage;
+
+        [SerializeField] private GameObject JobPrefab;
+        [SerializeField] private GameObject SupplierPrefab;
+        [SerializeField] private GameObject LawsPrefab;
+        [SerializeField] private GameObject RequirementsPrefab;
+        [SerializeField] private GameObject ConfigPrefab;
+        
         public void SetNewTabState(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup)
         {
             if (_tabGroupSource == newSource)
@@ -22,14 +35,13 @@ namespace UI.TabManagement.NBVerticalTabs
             var verticalTabElements = GetVerticalTabElements(newSource, parentGroup);
             InstantiateVerticalTabs(verticalTabElements);
             UpdateDictionaryData();
+            UpdateTabGroupContent((int)newSource);
         }
-
         public override bool ActivateTabInUI()
         {
             MIsTabActive = true;
             return MIsTabActive;
         }
-
         public override bool DeactivateGroupInUI()
         {
             MIsTabActive = false;
@@ -83,11 +95,94 @@ namespace UI.TabManagement.NBVerticalTabs
                 Destroy(tabElement.gameObject);
             }
         }
+
+        private void ClearNotebookContent()
+        {
+            foreach (Transform leftPageContent in leftPage)
+            {
+                Destroy(leftPageContent.gameObject);
+            }
+            foreach (Transform leftPageContent in rightPage)
+            {
+                Destroy(leftPageContent.gameObject);
+            }
+        }
+
+        private GameObject InstantiatePrefabs(int i, GameObject prefab)
+        {
+            return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(JobPrefab, rightPage);
+        }
+        
+        private void UpdateContentInPage(NotebookVerticalTabSource notebookInfoSource)
+        {
+            switch (notebookInfoSource)
+            {
+                case NotebookVerticalTabSource.Jobs:
+                    ManageJobObjectsInstantiation();
+                    break;
+                case NotebookVerticalTabSource.Suppliers:
+                    ManageSuppliersInstantiation();
+                    break;
+                case NotebookVerticalTabSource.Laws:
+                    break;
+                case NotebookVerticalTabSource.CurrentRequirements:
+                    break;
+                case NotebookVerticalTabSource.Config:
+                    break;
+                default:
+                    return;
+            }
+        }
+        private void ManageJobObjectsInstantiation()
+        {
+            var availableJobSources = _playerProfile.GetActiveJobModule().JobObjects;
+            var index = 0;
+            foreach (var availableJobSource in availableJobSources)
+            {
+                if (index ==10)
+                {
+                    break;
+                }
+                var prefabObject = InstantiatePrefabs(index, JobPrefab);
+                var jobObjectController = prefabObject.GetComponent<NotebookJobPrefab>();
+                        
+                var jobName = availableJobSource.Value.JobName;
+                var jobPhone = availableJobSource.Value.JobNumber;
+                jobObjectController.SetJobPrefabValues(jobName, jobPhone);
+                index++;
+            }
+        }
+
+        private void ManageSuppliersInstantiation()
+        {
+            var availableItemSuppliers = _playerProfile.GetActiveSuppliersModule().ActiveProviderObjects;
+            var index = 0;
+            foreach (var availableItemSupplier in availableItemSuppliers)
+            {
+                if (index ==10)
+                {
+                    break;
+                }
+                var prefabObject = InstantiatePrefabs(index, SupplierPrefab);
+                var supplierObjectController = prefabObject.GetComponent<NotebookItemSupplierPrefab>();
+                var storeName = availableItemSupplier.Value.GetSupplierData.SupplierName;
+                var storeNumber = availableItemSupplier.Value.GetSupplierData.SupplierPhone;
+                var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
+                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber, storeIcon);
+                index++;
+            }
+        }
         #endregion
 
         public override void UpdateTabGroupContent(int selectedTabIndex)
         {
+            if (_playerProfile == null)
+            {
+                _playerProfile = GameDirector.Instance.GetActiveGameProfile;
+            }
             base.UpdateTabGroupContent(selectedTabIndex);
+            ClearNotebookContent();
+            UpdateContentInPage(_tabGroupSource);
         }
     }
 }

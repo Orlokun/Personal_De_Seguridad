@@ -1,4 +1,9 @@
+using System.Collections.Generic;
+using DataUnits;
+using DataUnits.GameCatalogues;
+using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using UnityEngine;
 
 namespace GamePlayManagement.ProfileDataModules
 {
@@ -6,8 +11,16 @@ namespace GamePlayManagement.ProfileDataModules
     {
         private int _jobsActive = 0;
         private int _archivedJobs = 0;
+        private Dictionary<BitGameJobSuppliers, IJobSupplierObject> _mJobSuppliers = new Dictionary<BitGameJobSuppliers, IJobSupplierObject>();
         public int ElementsActive => _jobsActive;
+        public Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects => _mJobSuppliers;
         public bool IsModuleActive => _jobsActive > 0;
+        private IBaseJobsCatalogue _jobsCatalogue;
+
+        public JobsSourcesModule(IBaseJobsCatalogue jobsCatalogue)
+        {
+            _jobsCatalogue = jobsCatalogue;
+        }
         
         public void AddJobToModule(BitGameJobSuppliers gainedJobSupplier)
         {
@@ -16,7 +29,20 @@ namespace GamePlayManagement.ProfileDataModules
                 return;
             }
             _jobsActive |= (int) gainedJobSupplier;
+
+            if (_mJobSuppliers.ContainsKey(gainedJobSupplier))
+            {
+                Debug.LogError("[JobsSourcesModule.AddJobToModule] Job Supplier was already added");
+                return;
+            }
+
+            if (!_jobsCatalogue.JobSupplierExists(gainedJobSupplier))
+            {
+                Debug.LogError("[JobsSourcesModule.AddJobToModule] Job Supplier must exist in catalogue before trying to activate it");
+            }
+            _mJobSuppliers.Add(gainedJobSupplier, _jobsCatalogue.GetJobSupplierObject(gainedJobSupplier));
         }
+
 
         public void ArchiveJob(BitGameJobSuppliers lostJobSupplier)
         {

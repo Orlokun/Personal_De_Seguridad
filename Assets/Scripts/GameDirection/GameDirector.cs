@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using CameraManagement;
+using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.Initial_Office_Scene;
@@ -48,7 +49,11 @@ namespace GameDirection
         private IGeneralGameStateManager _gameStateManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
-        private IBaseItemCatalogue _mItemCatalogue;
+        
+        //Scriptable Objects Catalogues
+        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IBaseJobsCatalogue _mJobsCatalogue;
+        private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
         
         
         private IntroSceneManager _introSceneManager;
@@ -64,7 +69,7 @@ namespace GameDirection
         public IGeneralGameStateManager GetGameStateManager => _gameStateManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
-        public IBaseItemCatalogue GetBaseItemCatalogue => _mItemCatalogue;
+        public IBaseItemDataCatalogue GetBaseItemDataCatalogue => _mItemDataCatalogue;
         #endregion
 
         #region Init
@@ -99,7 +104,9 @@ namespace GameDirection
             _mSoundDirector = SoundDirector.Instance;
             _mUIController = UIController.Instance;
             _mDialogueOperator = _mUIController.DialogueOperator;
-            _mItemCatalogue = BaseItemCatalogue.Instance;
+            _mItemDataCatalogue = BaseItemDataCatalogue.Instance;
+            _mJobsCatalogue = BaseJobsCatalogue.Instance;
+            _mSuppliersCatalogue = BaseItemSuppliersCatalogue.Instance;
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             var dialoguesInterface = _mDialogueOperator.GetDialogueObjects(introDialogues);
             _introSceneManager = gameObject.AddComponent<IntroSceneManager>();
@@ -129,8 +136,8 @@ namespace GameDirection
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
-            var itemSuppliersModule = Factory.CreateItemSuppliersModule();
-            var jobSourcesModule = Factory.CreateJobSourcesModule();
+            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataCatalogue, _mSuppliersCatalogue);
+            var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             jobSourcesModule.AddJobToModule(BitGameJobSuppliers.LOCAl_DE_BARRIO);
             
             //Activate Suppliers

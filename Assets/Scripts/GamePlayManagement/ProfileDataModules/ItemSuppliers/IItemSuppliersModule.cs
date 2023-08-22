@@ -1,17 +1,15 @@
+using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
-    public interface IStoreSuppliersModule : IProfileModule
-    {
-        public int ActiveItemSuppliers { get; }
-        public bool IsSupplierActive(BitItemSupplier itemSupplier);
-    }
-    
     public interface IItemSuppliersModule : IProfileModule
     {
         public int AllActiveSuppliers { get; }
+        public Dictionary<int, IItemSupplierShop> ActiveProviderObjects { get; }
+
         //Suppliers API
         public bool IsSupplierActive(BitItemSupplier provider);
         public void ActivateSupplier(BitItemSupplier provider);

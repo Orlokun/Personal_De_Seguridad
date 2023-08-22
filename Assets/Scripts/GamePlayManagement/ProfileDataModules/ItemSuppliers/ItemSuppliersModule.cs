@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
@@ -10,9 +11,18 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
     public class ItemSuppliersModule : IItemSuppliersModule
     {
         private int _mActiveProviders;
+        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IBaseItemSuppliersCatalogue _mItemSuppliersCatalogue;
         private Dictionary<int, IItemSupplierShop> _activeProviders = new Dictionary<int, IItemSupplierShop>();
+        public Dictionary<int, IItemSupplierShop> ActiveProviderObjects => _activeProviders;
 
         public int AllActiveSuppliers => _mActiveProviders;
+
+        public ItemSuppliersModule(IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue itemSuppliersDataCatalogue)
+        {
+            _mItemDataCatalogue = itemDataCatalogue;
+            _mItemSuppliersCatalogue = itemSuppliersDataCatalogue;
+        }
         
         /// <summary>
         /// Items Management 
@@ -91,7 +101,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
                 return;
             }
 
-            var itemSupplier = Factory.CreateItemStoreSupplier(provider);
+            var itemSupplier = Factory.CreateItemStoreSupplier(provider, _mItemDataCatalogue, _mItemSuppliersCatalogue);
             _activeProviders.Add(castProvider, itemSupplier);
         }
 
