@@ -37,12 +37,12 @@ namespace DataUnits.GameCatalogues
         
         public bool GetItemSupplerSupplierExists(BitItemSupplier itemSupplier)
         {
-            return _mIItemSuppliers.Any(x => x.ItemSupplier == itemSupplier);
+            return _mIItemSuppliers.Any(x => x.ItemSupplierId == itemSupplier);
         }
 
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier)
         {
-            return _mIItemSuppliers.SingleOrDefault(x => x.ItemSupplier == jobSupplier);
+            return _mIItemSuppliers.SingleOrDefault(x => x.ItemSupplierId == jobSupplier);
         }
     }
 

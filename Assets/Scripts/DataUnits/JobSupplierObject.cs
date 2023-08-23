@@ -3,11 +3,14 @@ using UnityEngine;
 
 namespace DataUnits
 {
-    public interface IJobSupplierObject
+    public interface ISupplierBaseObject
+    {
+        public string SupplierNumber { get; }
+        public string SupplierName { get; }
+    }
+    public interface IJobSupplierObject : ISupplierBaseObject
     {
         public BitGameJobSuppliers JobSupplier { get; }
-        public string JobNumber { get; }
-        public string JobName { get; }
         public string OwnerName { get; }
         public Sprite OwnerIcon { get; }
     }
@@ -21,8 +24,8 @@ namespace DataUnits
         [SerializeField] private string ownerName;
         [SerializeField] private Sprite ownerIcon;
         public BitGameJobSuppliers JobSupplier => jobSupplier;
-        public string JobNumber => jobNumber;
-        public string JobName => jobName;
+        public string SupplierNumber => jobNumber;
+        public string SupplierName => jobName;
         public string OwnerName => ownerName;
         public Sprite OwnerIcon => ownerIcon;
     }

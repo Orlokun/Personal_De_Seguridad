@@ -146,9 +146,7 @@ namespace UI.TabManagement.NBVerticalTabs
                 var prefabObject = InstantiatePrefabs(index, JobPrefab);
                 var jobObjectController = prefabObject.GetComponent<NotebookJobPrefab>();
                         
-                var jobName = availableJobSource.Value.JobName;
-                var jobPhone = availableJobSource.Value.JobNumber;
-                jobObjectController.SetJobPrefabValues(jobName, jobPhone);
+                jobObjectController.SetJobPrefabValues(availableJobSource.Value);
                 index++;
             }
         }
@@ -166,9 +164,10 @@ namespace UI.TabManagement.NBVerticalTabs
                 var prefabObject = InstantiatePrefabs(index, SupplierPrefab);
                 var supplierObjectController = prefabObject.GetComponent<NotebookItemSupplierPrefab>();
                 var storeName = availableItemSupplier.Value.GetSupplierData.SupplierName;
-                var storeNumber = availableItemSupplier.Value.GetSupplierData.SupplierPhone;
+                var storeNumber = availableItemSupplier.Value.GetSupplierData.SupplierNumber;
                 var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
-                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber, storeIcon);
+                var storeId = availableItemSupplier.Value.GetSupplierData.ItemSupplierId;
+                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber, storeIcon, storeId);
                 index++;
             }
         }

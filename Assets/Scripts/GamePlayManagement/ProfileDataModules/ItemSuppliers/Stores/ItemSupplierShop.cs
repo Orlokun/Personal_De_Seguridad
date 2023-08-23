@@ -17,7 +17,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         public IItemSupplierDataObject GetSupplierData { get; }
 
     }
-
+    
     public class ItemSupplierShop : IItemSupplierShop
     {
         public BitItemSupplier BitSupplierId { get; }

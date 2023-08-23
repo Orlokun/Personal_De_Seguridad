@@ -11,7 +11,6 @@ namespace GameDirection
     public interface IGameDirector : IHighLvlGameStateManager, IPlayerProfileManager
     {
         public void StartNewGame();
-        public IPlayerGameProfile GetActiveGameProfile { get; }
         public ILevelManager GetLevelManager { get; }
         public IUIController GetUIController { get; }
         public IGeneralUIFader GetGeneralFader { get; }

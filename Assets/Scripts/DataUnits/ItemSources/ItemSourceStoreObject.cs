@@ -11,17 +11,19 @@ namespace DataUnits.ItemSources
         [SerializeField] protected string supplierPhone;
         [SerializeField] protected Sprite supplierPortrait;
     
-        public BitItemSupplier ItemSupplier =>itemSupplier;
+        public BitItemSupplier ItemSupplierId =>itemSupplier;
         public string SupplierName =>supplierName;
-        public string SupplierPhone =>supplierPhone;
+        public string SupplierNumber => supplierPhone;
         public Sprite SupplierPortrait =>supplierPortrait;
     }
 
-    public interface IItemSupplierDataObject
+    public interface ICallableObject
     {
-        public BitItemSupplier ItemSupplier { get; }
-        public string SupplierName{ get; }
-        public string SupplierPhone{ get; }
+    }
+
+    public interface IItemSupplierDataObject : ISupplierBaseObject
+    {
+        public BitItemSupplier ItemSupplierId { get; }
         public Sprite SupplierPortrait{ get; }
     }
 }

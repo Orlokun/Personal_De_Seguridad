@@ -1,4 +1,8 @@
+using DataUnits;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using TMPro;
+using UI.PopUpManager;
+using UI.PopUpManager.NotebookScreen;
 using UnityEngine;
 
 namespace UI.TabManagement.NBVerticalTabs
@@ -7,11 +11,26 @@ namespace UI.TabManagement.NBVerticalTabs
     {
         [SerializeField] private TMP_Text mStoreName;
         [SerializeField] private TMP_Text mStorePhone;
+        private BitGameJobSuppliers _supplierId;
 
-        public void SetJobPrefabValues(string storeName, string storePhone)
+        private IPopUpOperator _popUpOperator;
+        
+        private void Awake()
         {
-            mStoreName.text = storeName;
-            mStorePhone.text = storePhone;
+            _popUpOperator = PopUpOperator.Instance;
+        }
+        public void SetJobPrefabValues(IJobSupplierObject supplierData)
+        {
+            mStoreName.text = supplierData.SupplierName;
+            mStorePhone.text = supplierData.SupplierNumber;
+            _supplierId = supplierData.JobSupplier;
+        }
+        
+        public void OpenOptionsPopUp()
+        {
+            var popUp = _popUpOperator.ActivatePopUp(BitPopUpId.NotebookObjectAction);
+            var casPopUp = (IItemSupplierNotebookButtonAction) popUp;
+            casPopUp.SetSupplier((int)_supplierId, CallableObjectType.Job);
         }
     }
 }

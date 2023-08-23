@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using CameraManagement;
@@ -26,6 +25,14 @@ namespace DialogueSystem
 
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
+        
+        #region Static Props/Members
+
+        private static DialogueOperator _mInstance;
+        public static IDialogueOperator Instance => _mInstance;
+        
+        #endregion
+        
         /// <summary>
         /// Reference of UI Editor Components
         /// </summary>
@@ -129,6 +136,11 @@ namespace DialogueSystem
         #region Init
         private void Awake()
         {
+            if (_mInstance != null)
+            {
+                Destroy(this);
+            }
+            _mInstance = this;
             _dialogueCameraMan = Factory.CreateCameraMan();
             _soundMachine = GetComponent<DialogueOperatorSoundMachine>();
             OnDialogueCompleted += OnDialogueFinished;
