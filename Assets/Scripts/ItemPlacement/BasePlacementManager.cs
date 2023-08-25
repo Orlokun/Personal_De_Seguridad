@@ -17,14 +17,14 @@ namespace ItemPlacement
         protected bool IsMouseReleased = false;
         protected bool IsInsideAllowedZone = false;
 
-        protected UnityEngine.Camera MainCamera;
+        protected Camera MainCamera;
         
         //The scaling factor of the object
         [SerializeField] private float scaleFactor = 1.2f;
 
         protected virtual void Awake()
         {
-            MainCamera = UnityEngine.Camera.main;
+            MainCamera = Camera.main;
         }
 
         protected void Update()

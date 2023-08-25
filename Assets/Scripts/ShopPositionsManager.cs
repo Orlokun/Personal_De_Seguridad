@@ -8,7 +8,7 @@ public class ShopPositionsManager : InitializeManager
 
     private void Awake()
     {
-        Initialize();
+        this.Initialize();
     }
 
     public override void Initialize()

@@ -1,5 +1,5 @@
 using Scripts.ItemPlacement;
-using UI.Items;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using Utils;
 
@@ -8,12 +8,19 @@ namespace ItemPlacement
     public class SelectCameraTypeItem : BaseSelectItemForPlacement, IInitialize
     {
         private bool _mInitiliazed;
-        private IUITabItemObject _mCameraObject;
-        public IUITabItemObject CameraObject => _mCameraObject;
-        public void SetCameraObject(IUITabItemObject cameraObjectInterface)
+        //Prefabs that need to be instantiated
+        public GameObject instantiatedPrefab;
+        
+
+        protected void Start()
         {
-            _mCameraObject = cameraObjectInterface;
+            if (instantiatedPrefab == null)
+            {
+                return;
+            }
+            Initialize();
         }
+
         public void Initialize()
         {
             if (_mInitiliazed)
@@ -28,22 +35,21 @@ namespace ItemPlacement
         private void CreateAndDeactivatePrefab()
         {
             //Instantiate prefab
-            MInstantiatedObject=Instantiate(_mCameraObject.GetPrefabObject);
+            MInstantiatedObject=Instantiate(instantiatedPrefab);
             MInstantiatedObject.SetActive(false);
         }
     
         public override void OnPointerClick(PointerEventData eventData)
         {
-            base.OnPointerClick(eventData);
             CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
+            base.OnPointerClick(eventData);
         }
     
         //Check Mouse Down Event the mouse down interface
         public override void OnPointerDown(PointerEventData eventData)
         {
-            base.OnPointerDown(eventData);
-            //Pass the object that needs to be instantiated to the manager
             CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);
+            base.OnPointerDown(eventData);
         }
         public bool IsInitialized => _mInitiliazed;
 

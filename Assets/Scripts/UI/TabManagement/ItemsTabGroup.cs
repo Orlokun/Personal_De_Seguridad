@@ -11,7 +11,16 @@ namespace UI.TabManagement
         [SerializeField] private BitItemType startType;
         [SerializeField] private Transform gridParentObject;
         [SerializeField] private Transform storeTitle;
-        [SerializeField] private GameObject itemInGridPrefab;
+        
+        
+        [SerializeField] private GameObject guardInGridPrefab;
+        [SerializeField] private GameObject camInGridPrefab;
+        [SerializeField] private GameObject weaponInGridPrefab;
+        [SerializeField] private GameObject trapInGridPrefab;
+        [SerializeField] private GameObject otherInGridPrefab;
+        
+        
+        
         private IItemSuppliersModule _suppliersModule;
         private List<IItemObject> _activeItems = new List<IItemObject>();
 
@@ -39,9 +48,31 @@ namespace UI.TabManagement
             _activeItems = GetItemsOfType((BitItemType) selectedTabIndex);
             foreach (var activeItem in _activeItems)
             {
-                var activeItemObject = Instantiate(itemInGridPrefab, gridParentObject);
+                var itemTypePrefab = GetItemPrefab((BitItemType) selectedTabIndex);
+                var activeItemObject = Instantiate(itemTypePrefab, gridParentObject);
+                
+                //Update Object aspect in UI 
                 var itemBaseObject = activeItemObject.GetComponent<BaseInventoryItem>();
                 itemBaseObject.IconImage.sprite = activeItem.ItemIcon;
+            }
+        }
+
+        private GameObject GetItemPrefab(BitItemType type)
+        {
+            switch (type)
+            {
+                case BitItemType.GUARD_ITEM_TYPE:
+                    return guardInGridPrefab;
+                case BitItemType.CAMERA_ITEM_TYPE:
+                    return camInGridPrefab;
+                case BitItemType.WEAPON_ITEM_TYPE:
+                    return weaponInGridPrefab;
+                case BitItemType.TRAP_ITEM_TYPE:
+                    return trapInGridPrefab;
+                case BitItemType.OTHERS_ITEM_TYPE:
+                    return otherInGridPrefab;
+                default:
+                    return null;
             }
         }
 

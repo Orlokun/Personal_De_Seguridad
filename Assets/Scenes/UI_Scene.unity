@@ -1225,9 +1225,41 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: camInGridPrefab
+      value: 
+      objectReference: {fileID: 8695134030278693589, guid: a4bfa61acceddc74bbb598eee2e6740c, type: 3}
+    - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
       propertyPath: itemInGridPrefab
       value: 
       objectReference: {fileID: 8695134030278693589, guid: 48e811a4d890f024daf67480e56afaaa, type: 3}
+    - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: trapInGridPrefab
+      value: 
+      objectReference: {fileID: 8695134030278693589, guid: 46a4db3ab358f014d851dd551745ad88, type: 3}
+    - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: guardInGridPrefab
+      value: 
+      objectReference: {fileID: 8695134030278693589, guid: be54c3c475508f34fa23c6693a58e8ea, type: 3}
+    - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: otherInGridPrefab
+      value: 
+      objectReference: {fileID: 8695134030278693589, guid: 0502a8fef991c2b40a6fb825bd630609, type: 3}
+    - target: {fileID: 2860299154200832572, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: weaponInGridPrefab
+      value: 
+      objectReference: {fileID: 8695134030278693589, guid: 48e811a4d890f024daf67480e56afaaa, type: 3}
+    - target: {fileID: 2860299155004287406, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: m_CellSize.x
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2860299155004287406, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: m_CellSize.y
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 2860299155004287406, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
+      propertyPath: m_ChildAlignment
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2860299155014935722, guid: 3c72f95e284053a4189ca60b9881b8a0, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

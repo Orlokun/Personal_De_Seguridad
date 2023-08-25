@@ -88,9 +88,9 @@ GameObject:
   - component: {fileID: 8695134030278693577}
   - component: {fileID: 8695134030278693590}
   - component: {fileID: 8695134030278693591}
-  - component: {fileID: 1817632163416350673}
+  - component: {fileID: 4105907018435669403}
   m_Layer: 5
-  m_Name: BaseItemInventoryIcon
+  m_Name: Weapon_BaseItemInventoryIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -186,8 +186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481c90a626b9459393adc9f8f002c85a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mInstantiatedObject: {fileID: 0}
   mUIBackgroundImage: {fileID: 8695134030278693577}
---- !u!114 &1817632163416350673
+--- !u!114 &4105907018435669403
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
