@@ -44,8 +44,8 @@ namespace UI
         private IDialogueOperator _mDialogueOperator;
         public IDialogueOperator DialogueOperator => _mDialogueOperator;
 
+        //Tracking of canvas objects active objects        
         private Dictionary<int, ICanvasOperator> _mActiveCanvasDict;
-        
         private int _activeCanvas = 0;
         
         [SerializeField] private DialogueWithCameraTarget testCameraDialogue;
@@ -109,7 +109,6 @@ namespace UI
             }
             _mActiveCanvasDict[(int)canvasBitId].DeactivateUIElement(panel);
         }
-
         public void DeactivateAllObjects()
         {
             foreach (var canvasOperator in _mActiveCanvasDict)
@@ -117,7 +116,6 @@ namespace UI
                 canvasOperator.Value.DeactivateAllElements();
             }
         }
-
         public void StartMainMenuUI()
         {
             foreach (var canvasOperator in _mActiveCanvasDict)
@@ -132,7 +130,6 @@ namespace UI
                 canvasOperator.Value.ActivateThisElementsOnly(menuPanels);
             }
         }
-
         public void ToggleBackground(bool toggleValue)
         {
             var canvasOperator = _mActiveCanvasDict[(int) CanvasBitId.GamePlayCanvas];

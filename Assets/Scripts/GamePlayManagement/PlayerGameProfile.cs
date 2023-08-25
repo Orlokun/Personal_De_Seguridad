@@ -20,10 +20,14 @@ namespace GamePlayManagement
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
 
-        //Memebers
+        //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
-
+        
+        //Public Fields
+        public DateTime GameCreationDate => _mGameCreationDate;
+        public Guid GameId => _mGameId;
+        
         //Public Module Interfaces Fields
         public IItemSuppliersModule GetActiveSuppliersModule()
         {

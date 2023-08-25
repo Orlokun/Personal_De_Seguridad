@@ -34,10 +34,27 @@ namespace DataUnits.GameCatalogues
                 _mIItemSuppliers.Add(itemSupplier);
             }
         }
-        
-        public bool GetItemSupplerSupplierExists(BitItemSupplier itemSupplier)
+        public bool SupplierExists(BitItemSupplier itemSupplier)
         {
             return _mIItemSuppliers.Any(x => x.ItemSupplierId == itemSupplier);
+        }
+        public bool SupplierPhoneExists(string dialedPhone)
+        {
+            if (string.IsNullOrEmpty(dialedPhone) || dialedPhone.Length != 7)
+            {
+                return false;
+            }
+
+            return _mIItemSuppliers.Any(x => x.SupplierNumber == dialedPhone);
+        }
+
+        public IItemSupplierDataObject GetItemSupplierDataFromPhone(string supplierPhone)
+        {
+            if (string.IsNullOrEmpty(supplierPhone) || supplierPhone.Length != 7)
+            {
+                return null;
+            }
+            return _mIItemSuppliers.SingleOrDefault(x => x.SupplierNumber == supplierPhone);
         }
 
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier)
@@ -48,7 +65,9 @@ namespace DataUnits.GameCatalogues
 
     public interface IBaseItemSuppliersCatalogue
     {
-        public bool GetItemSupplerSupplierExists(BitItemSupplier itemSupplier);
+        public bool SupplierExists(BitItemSupplier itemSupplier);
+        public bool SupplierPhoneExists(string dialedPhone);
+        public IItemSupplierDataObject GetItemSupplierDataFromPhone(string supplierPhone);
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier);
 
     }
