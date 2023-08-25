@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
+using UI;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
@@ -20,6 +21,6 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         public void AddItemToSupplier(BitItemSupplier supplier, int itemBitId);
         public void RemoveItemFromSupplier(BitItemSupplier supplier, int itemBitId);
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId);
-
+        public List<IItemObject> GetItemsOfType(BitItemType itemType);
     }
 }

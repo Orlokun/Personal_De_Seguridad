@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UI.TabManagement.AbstractClasses;
@@ -9,9 +11,10 @@ namespace UI.TabManagement
         [SerializeField] private BitItemType startType;
         [SerializeField] private Transform gridParentObject;
         [SerializeField] private Transform storeTitle;
+        [SerializeField] private GameObject itemInGridPrefab;
+        private IItemSuppliersModule _suppliersModule;
+        private List<IItemObject> _activeItems = new List<IItemObject>();
 
-        private IItemSuppliersModule _activeItemsModule;
-        
         public override bool ActivateTabInUI()
         {
             MIsTabActive = true;
@@ -33,13 +36,20 @@ namespace UI.TabManagement
             {
                 ClearGrid();
             }
-            UpdateSelectedItemsModule((BitItemType) selectedTabIndex);
-            var activeItems = _activeItemsModule.AllActiveSuppliers;
+            _activeItems = GetItemsOfType((BitItemType) selectedTabIndex);
+            foreach (var activeItem in _activeItems)
+            {
+                var activeItemObject = Instantiate(itemInGridPrefab, gridParentObject);
+                var itemBaseObject = activeItemObject.GetComponent<BaseInventoryItem>();
+                itemBaseObject.IconImage.sprite = activeItem.ItemIcon;
+            }
         }
 
-        private void UpdateSelectedItemsModule(BitItemType index)
+        private List<IItemObject> GetItemsOfType(BitItemType itemType)
         {
-            //_activeItemsModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemsInModule(index);
+            _suppliersModule = GameDirector.Instance.GetActiveGameProfile.GetActiveSuppliersModule();
+            var itemsOfType = _suppliersModule.GetItemsOfType(itemType);
+            return itemsOfType;
         }
         private void ClearGrid()
         {

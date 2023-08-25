@@ -1,5 +1,7 @@
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UI;
+using UnityEngine;
+
 namespace DataUnits.ItemScriptableObjects
 {
     public interface IItemObject
@@ -10,5 +12,7 @@ namespace DataUnits.ItemScriptableObjects
         public string ItemName { get; }
         public int QuantityAvailable { get; }
         public float Price { get; }
+        public Sprite ItemIcon{ get; }
+
     }
 }

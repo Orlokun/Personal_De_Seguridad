@@ -3,6 +3,7 @@ using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -70,6 +71,17 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
                 return null;
             }
             return _activeProviders[(int) supplier].GetItemObject(itemBitId);
+        }
+
+        public List<IItemObject> GetItemsOfType(BitItemType itemType)
+        {
+            var itemsOfType = new List<IItemObject>();
+            foreach (var activeProvider in _activeProviders)
+            {
+                var providerItems = activeProvider.Value.GetItemsOfType(itemType);
+                itemsOfType.AddRange(providerItems);
+            }
+            return itemsOfType;
         }
 
         #endregion

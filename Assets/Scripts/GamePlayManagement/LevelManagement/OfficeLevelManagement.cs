@@ -1,13 +1,12 @@
-using System;
 using CameraManagement;
 using UnityEngine;
 
-namespace GameManagement.LevelManagement
+namespace GamePlayManagement.LevelManagement
 {
     public class GameMapLevelManagement : MonoBehaviour
     {
         protected IGameCameraManager _mGameCameraManager;
-        private void Awake()
+        protected virtual void Awake()
         {
             _mGameCameraManager = GameCameraManager.Instance;
         }

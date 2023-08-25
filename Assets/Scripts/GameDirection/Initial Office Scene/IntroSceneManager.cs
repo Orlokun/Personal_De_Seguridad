@@ -7,12 +7,18 @@ using Utils;
 
 namespace GameDirection.Initial_Office_Scene
 {
+    public interface IIntroSceneManager
+    {
+        public event IntroSceneManager.FinishIntroDialogue OnFinishIntroDialogue;
+    }
     public interface ISceneManager
     {
         
     }
     public class IntroSceneManager : MonoBehaviour, ISceneManager, IInitializeWithArg2<IGameDirector, List<IDialogueObject>>
     {
+        public delegate void FinishIntroDialogue();
+        public event FinishIntroDialogue OnFinishIntroDialogue;
         private IGameDirector _mGameDirector;
         private List<IDialogueObject> _introDialogues;
         private bool _isInitialized;
@@ -77,8 +83,11 @@ namespace GameDirection.Initial_Office_Scene
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialogues[_dialogueIndex]);
-            _dialogueIndex++;
+            _dialogueIndex++;         
+            
+            OnFinishIntroDialogue?.Invoke();
         }
+
 
         #endregion
     }

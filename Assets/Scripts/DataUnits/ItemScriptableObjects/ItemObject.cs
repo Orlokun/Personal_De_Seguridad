@@ -22,6 +22,7 @@ namespace DataUnits.ItemScriptableObjects
         public string ItemName => itemName;
         public int QuantityAvailable => quantityAvailable;
         public float Price => price;
+        public Sprite ItemIcon =>_itemIcon;
 
     }
 }

@@ -20,7 +20,7 @@ namespace GamePlayManagement.LevelManagement
         public void LoadFirstLevel()
         {
             SceneManager.LoadScene(3, LoadSceneMode.Additive);
-            SceneManager.UnloadSceneAsync(0);
+ //           SceneManager.UnloadSceneAsync(0);
         }
 
         public void LoadUIScene()

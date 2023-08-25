@@ -11,6 +11,7 @@ using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 namespace GameDirection
@@ -55,7 +56,9 @@ namespace GameDirection
         private IBaseJobsCatalogue _mJobsCatalogue;
         private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
         
-        
+        /// <summary>
+        /// Initial Scene Manager
+        /// </summary>
         private IntroSceneManager _introSceneManager;
         #endregion
 
@@ -111,7 +114,7 @@ namespace GameDirection
             var dialoguesInterface = _mDialogueOperator.GetDialogueObjects(introDialogues);
             _introSceneManager = gameObject.AddComponent<IntroSceneManager>();
             _introSceneManager.Initialize(this, dialoguesInterface);
-            
+            _introSceneManager.OnFinishIntroDialogue += LoadFirstLevel;
             _mUIController.StartMainMenuUI();
             
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
@@ -155,6 +158,11 @@ namespace GameDirection
         {
             yield return new WaitForSeconds(2f);
             StartCoroutine(_introSceneManager.PrepareIntroductionReading());
+        }
+        private void LoadFirstLevel()
+        {
+            ChangeHighLvlGameState(HighLevelGameStates.InGame);
+            _mLevelManager.LoadFirstLevel();
         }
         #endregion
         

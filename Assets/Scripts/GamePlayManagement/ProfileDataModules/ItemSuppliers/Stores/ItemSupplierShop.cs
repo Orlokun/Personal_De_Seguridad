@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using DataUnits.ItemSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using UI;
 using UnityEngine;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
@@ -15,6 +17,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         public BitItemSupplier BitSupplierId { get; }
         public IItemObject GetItemObject(int bitItemId);
         public IItemSupplierDataObject GetSupplierData { get; }
+        public List<IItemObject> GetItemsOfType(BitItemType itemType);
 
     }
     
@@ -25,6 +28,8 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         private IItemSupplierDataObject _mSupplierData;
         private int _mActiveItems = 0;
         private Dictionary<int, IItemObject> _activeItemsData = new Dictionary<int, IItemObject>();
+        
+        
         private IBaseItemDataCatalogue _mItemDataCatalogue;
         private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
 
@@ -43,6 +48,10 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         }
 
         public IItemSupplierDataObject GetSupplierData => _mSupplierData;
+        public List<IItemObject> GetItemsOfType(BitItemType itemType)
+        {
+            return (from activeItem in _activeItemsData where activeItem.Value.ItemType == itemType select activeItem.Value).ToList();
+        }
 
         public IItemObject GetItemObject(int bitItemId)
         {
