@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using AdvancedPeopleSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts.Editor
 {
 
     [CustomEditor(typeof(CharacterCustomization))]
-    public class EditorCharacterPrefabEdit : Editor
+    public class EditorCharacterPrefabEdit : UnityEditor.Editor
     {
 
         bool bodyShape = false;

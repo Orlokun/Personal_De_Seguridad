@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using AdvancedPeopleSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts.Editor
 {
     [CustomEditor(typeof(CharacterPreBuilt))]
-    public class CharacterPreBuiltEditor : Editor
+    public class CharacterPreBuiltEditor : UnityEditor.Editor
     {
 
         private CharacterPreBuilt characterPreBuilt;

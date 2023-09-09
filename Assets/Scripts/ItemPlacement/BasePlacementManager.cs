@@ -5,7 +5,7 @@ namespace ItemPlacement
     public abstract class BasePlacementManager : MonoBehaviour
     {
         protected GameObject CurrentPlacedObject;
-        protected GameObject _lastInstantiatedGameObject;
+        protected GameObject LastInstantiatedGameObject;
         
         [SerializeField] protected LayerMask targetLayerMask;
         [SerializeField] protected LayerMask blockLayerMasks;
@@ -20,7 +20,7 @@ namespace ItemPlacement
         protected Camera MainCamera;
         
         //The scaling factor of the object
-        [SerializeField] private float scaleFactor = 1.2f;
+        [SerializeField] private float scaleFactor = 1.5f;
 
         protected virtual void Awake()
         {
@@ -81,18 +81,16 @@ namespace ItemPlacement
         protected void MoveObjectPreview()
         {
             Vector3 point;
-            Vector3 screenPosition;
+            Vector3 mousePosition;
 
 #if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
         Touch touch = Input.GetTouch (touchID);
         screenPosition = new Vector3 (touch.position.x, touch.position.y, 0);
 #else
-            screenPosition = Input.mousePosition;
+            mousePosition = Input.mousePosition;
 #endif
-            
-            point = GetPlacementPoint(screenPosition);
+            point = GetPlacementPoint(mousePosition);
             CurrentPlacedObject.transform.position = new Vector3(point.x, point.y, point.z);
-            CurrentPlacedObject.transform.localEulerAngles = new Vector3(0, 60, 0);
         }
 
         protected virtual Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
@@ -146,12 +144,10 @@ namespace ItemPlacement
         protected void CreateObjectInPlace()
         {
             GameObject obj = Instantiate(CurrentPlacedObject);
-            _lastInstantiatedGameObject = obj;
+            LastInstantiatedGameObject = obj;
             obj.transform.position = CurrentPlacedObject.transform.position;
             obj.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;
             obj.transform.localScale *= scaleFactor;
-            //Change the Layer of this object to Drag for subsequent drag detection
-            //obj.layer = LayerMask.NameToLayer("Drag");
         }
         
         protected bool MouseTouchesExpectedLayerAndCurrentObjectIsActive()

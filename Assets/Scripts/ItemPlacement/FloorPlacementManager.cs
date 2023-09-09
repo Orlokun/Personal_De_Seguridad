@@ -12,7 +12,7 @@ namespace ItemPlacement
         
         //The length of the z axis of the object from the camera
         [SerializeField] private float zDistance = 50f;
-
+        private float lastMouseXPos;
         protected override void Awake()
         {
             _instance = this;
@@ -22,8 +22,13 @@ namespace ItemPlacement
         new void Update()   
         {
             base.Update();
+            if (!Input.GetKeyDown(KeyCode.R) || CurrentPlacedObject == null)
+            {
+                return;
+            }
+            CurrentPlacedObject.transform.Rotate(0,45,0);
         }
-        
+
         protected override Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
         {
             Ray ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
