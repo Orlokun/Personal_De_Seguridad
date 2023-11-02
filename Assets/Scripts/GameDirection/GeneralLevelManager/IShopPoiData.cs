@@ -10,5 +10,6 @@ namespace GameDirection.GeneralLevelManager
         public Vector3 GetPosition { get; }
         public bool IsOccupied { get; }
         public void OccupyPoi(Guid occupier);
+        public void LeavePoi(Guid leavingId);
     }
 }

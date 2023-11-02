@@ -137,7 +137,20 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-
+        private void Walking()
+        {
+            if (NavMeshAgent.destination.Equals(default(Vector3)))
+            {
+                Debug.LogWarning("Destination to walk to must be already set");
+                return;
+            }
+            
+            if (NavMeshAgent.remainingDistance < .5f && !NavMeshAgent.isStopped)
+            {
+                NavMeshAgent.isStopped = true;
+                OnWalkingDestinationReached();
+            }
+        }
         protected override void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
         {
             base.RotateTowardsYOnly(rotatingObject, facingTowards);
@@ -152,11 +165,14 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     CheckShoppingStatus();
                     break;
                 case BaseAttitudeStatus.Paying:
+                    Random.InitState(DateTime.Now.Millisecond);
+                    PayAndLeave(Random.Range(5000,11000));
                     break;
                 case BaseAttitudeStatus.Entering:
                     StartShopping();
                     break;
                 case BaseAttitudeStatus.Leaving:
+                    Destroy(this.gameObject);
                     break;
                 case BaseAttitudeStatus.Fighting:
                     break;
@@ -196,27 +212,23 @@ namespace Players_NPC.NPC_Management.Customer_Management
             await Task.Delay(Random.Range(7000, 15000));
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
+            ReleaseCurrentPoI();
             GoToNextProduct();
         }
-
+        private void ReleaseCurrentPoI()
+        {
+            var poi = _mShelvesOfInterest[CurrentProductSearchIndex-1].GetCustomerPoI;
+            if (poi.OccupierId != MCustomerId)
+            {
+                return;
+            }
+            poi.LeavePoi(MCustomerId);
+        }
         private bool EvaluateProductStealingChances()
         {
             return false;
         }
-        private void Walking()
-        {
-            if (NavMeshAgent.destination.Equals(default(Vector3)))
-            {
-                Debug.LogWarning("Destination to walk to must be already set");
-                return;
-            }
-            
-            if (NavMeshAgent.remainingDistance < .5f && !NavMeshAgent.isStopped)
-            {
-                NavMeshAgent.isStopped = true;
-                OnWalkingDestinationReached();
-            }
-        }
+
         private void GoToEntrance()
         {
             if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.Entering) != 0)
@@ -233,11 +245,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
                 SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
-                NavMeshAgent.SetDestination(_mPayingPosition);
-                NavMeshAgent.isStopped = false;
                 return;
             }
-            Debug.Log("[GoToNextPoint] Going to Next Point as usual");
+            Debug.Log($"[GoToNextPoint] Going to Shelf Indexed: {CurrentProductSearchIndex}");
             var destinationCorrectlySet = NavMeshAgent.SetDestination(_mShelvesOfInterest[CurrentProductSearchIndex].GetCustomerPoI.GetPosition);
             NavMeshAgent.isStopped = !destinationCorrectlySet;
             CurrentProductSearchIndex++;
@@ -251,16 +261,18 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;   
             }
             NavMeshAgent.destination = _mPayingPosition;
-            if (NavMeshAgent.remainingDistance < .5f && !NavMeshAgent.isStopped)
-            {
-                NavMeshAgent.isStopped = true;
-                StartCoroutine(PayAndLeave(Random.Range(2,10)));
-            }
         }
-        private IEnumerator PayAndLeave(float timePaying)
+        private async void PayAndLeave(int timePaying)
         {
-            yield return new WaitForSeconds(timePaying);
-            //_mCustomerMovementStatus = BaseCustomerMovementStatus.Leaving;
+            SetCustomerMovementStatus(BaseCustomerMovementStatus.Idle);
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
+            NavMeshAgent.isStopped = true;
+
+            //Time to do something
+            await Task.Delay(timePaying);
+            SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Leaving);
+
             NavMeshAgent.SetDestination(MInitialPosition);
             NavMeshAgent.isStopped = false;
         }
@@ -278,6 +290,16 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     var shelfOfInterest = _mShelvesOfInterest[CurrentProductSearchIndex-1];
                     tempProductOfInterest = shelfOfInterest.GetRandomProductPosition();
                     break;
+                case BaseAttitudeStatus.Paying:
+                    tempProductOfInterest = null;
+                    NavMeshAgent.SetDestination(_mPayingPosition);
+                    NavMeshAgent.isStopped = false;
+                    break;
+                case BaseAttitudeStatus.Leaving:
+                    NavMeshAgent.SetDestination(_positionsManager.EntrancePosition());
+                    NavMeshAgent.isStopped = false;
+                    break;
+
             }
         }
 
@@ -304,23 +326,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
         }
         #endregion
-
-        
-        #region Leaving
-        private void Leave()
-        {
-            if (NavMeshAgent.destination == _positionsManager.EntrancePosition())
-            {
-                return;
-            }
-            NavMeshAgent.destination = _positionsManager.EntrancePosition();
-        }
-        #endregion
-
-        public void ChangeAnimationState(string newAnimState, float delay)
-        {
-
-        }
 
         protected virtual void OnWalkingDestinationReached()
         {

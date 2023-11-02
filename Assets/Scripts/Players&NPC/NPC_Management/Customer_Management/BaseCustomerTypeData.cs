@@ -72,7 +72,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
         {
             Random.InitState(DateTime.Now.Millisecond);
             MCleanness = Random.Range(1, 10);
+            Random.InitState(DateTime.Now.Millisecond);
             MSocialStatus = Random.Range(1, 10);
+            Random.InitState(DateTime.Now.Millisecond);
             MAge = Random.Range(1, 100);
             
             
