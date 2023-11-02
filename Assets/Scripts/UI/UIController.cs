@@ -4,6 +4,7 @@ using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using InputManagement;
+using Players_NPC;
 using UnityEngine;
 using Utils;
 

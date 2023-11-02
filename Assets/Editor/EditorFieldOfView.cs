@@ -1,7 +1,6 @@
 using GamePlayManagement.FieldOfView;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace Editor
 {

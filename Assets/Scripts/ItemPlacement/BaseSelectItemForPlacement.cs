@@ -2,8 +2,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Scripts.ItemPlacement
+namespace ItemPlacement
 {
+    /// <summary>
+    /// UI script to Instantiate the game object of the item that will be used by the player
+    /// </summary>
     public class BaseSelectItemForPlacement : MonoBehaviour, IPointerDownHandler, IPointerClickHandler
     {
         protected GameObject MInstantiatedObject;

@@ -8,7 +8,7 @@ using Utils;
 
 namespace UI.TabManagement.AbstractClasses
 {
-    public class TabElement : MonoBehaviour, IPointerClickHandler, ITabElement, IInitializeWithArg<ITabGroup>
+    public class TabElement : MonoBehaviour, IPointerClickHandler, ITabElement, IInitializeWithArg1<ITabGroup>
     {
         private bool _mInitialized;
         private ITabGroup _tabGroup;

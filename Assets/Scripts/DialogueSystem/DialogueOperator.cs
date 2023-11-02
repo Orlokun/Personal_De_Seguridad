@@ -65,10 +65,9 @@ namespace DialogueSystem
         private const string UI_RESOURCES_PATH = "UI/";
         #endregion
         
-                
         public delegate void FinishedDialogueReading();
         public event FinishedDialogueReading OnDialogueCompleted;
-
+        
 
         #region Public Interface
         public List<IDialogueObject> GetDialogueObjects(List<BaseDialogueObject> dialogueObjects)

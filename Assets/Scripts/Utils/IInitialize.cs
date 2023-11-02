@@ -6,7 +6,7 @@ namespace Utils
         public void Initialize();
     }
 
-    public interface IInitializeWithArg<T1> 
+    public interface IInitializeWithArg1<T1> 
     {
         public void Initialize(T1 injectionClass);
     }
