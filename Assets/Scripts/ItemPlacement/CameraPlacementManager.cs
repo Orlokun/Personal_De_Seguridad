@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
 namespace ItemPlacement
@@ -63,6 +64,13 @@ namespace ItemPlacement
             }
             Debug.Log($"Current Position of selected item: {newPoint}");
             return newPoint;
+        }
+
+        protected override void CreateObjectInPlace()
+        {
+            base.CreateObjectInPlace();
+            var cineMachineComponent = LastInstantiatedGameObject.GetComponent<CameraItemPrefab>();
+
         }
 
         private Vector3 GetClosestCameraPoint(Vector3 point)

@@ -22,7 +22,7 @@ namespace GamePlayManagement.ProfileDataModules
             _jobsCatalogue = jobsCatalogue;
         }
         
-        public void AddJobToModule(BitGameJobSuppliers gainedJobSupplier)
+        public void UnlockJobModule(BitGameJobSuppliers gainedJobSupplier)
         {
             if ((_jobsActive & (int) gainedJobSupplier) != 0)
             {

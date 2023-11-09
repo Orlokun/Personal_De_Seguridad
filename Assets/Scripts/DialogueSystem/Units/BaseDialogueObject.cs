@@ -14,7 +14,7 @@ namespace DialogueSystem.Units
     [CreateAssetMenu(menuName = "Dialogue/DialogueObject")]
     public class BaseDialogueObject : ScriptableObject, IDialogueObject
     {
-        [SerializeField] protected List<string> dialogueLines;
+        [SerializeField] protected List<string> dialogueLines = new List<string>();
         [SerializeField] protected Sprite actorImage;
         [SerializeField] protected string speakerName;
         [SerializeField] protected List<DialogueBehaviors> dialogueBehaviorsList;
@@ -54,7 +54,7 @@ namespace DialogueSystem.Units
         {
             if (dialogueBehaviorsList == null || dialogueBehaviorsList.Count == 0)
             {
-                Debug.LogWarning("Dialogue Behaviors must be set in editor");
+//                Debug.LogWarning("Dialogue Behaviors must be set in editor");
                 return;
             }
             foreach (var dialogueBehavior in dialogueBehaviorsList)

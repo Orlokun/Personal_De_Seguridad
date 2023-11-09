@@ -1,8 +1,14 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.ItemSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Networking;
+using Utils;
 
 namespace DataUnits.GameCatalogues
 {
@@ -10,11 +16,10 @@ namespace DataUnits.GameCatalogues
     {
         private static BaseItemSuppliersCatalogue _instance;
         public static IBaseItemSuppliersCatalogue Instance => _instance;
+        private ItemSuppliersFromData _mItemSuppliersFromData;
     
-        [SerializeField] private List<ItemSupplierDataObject> existingSuppliers;
-
-        private List<IItemSupplierDataObject> _mIItemSuppliers;
-        public List<IItemSupplierDataObject> Itemuppliers => _mIItemSuppliers;
+        private List<IItemSupplierDataObject> _mIItemSuppliersInData;
+        public List<IItemSupplierDataObject> GetItemSuppliersCompleteData => _mIItemSuppliersInData;
     
         private void Awake()
         {
@@ -24,51 +29,116 @@ namespace DataUnits.GameCatalogues
                 Destroy(this);
             }
             _instance = this;
-            LoadInterfaces();
+            GetItemsCatalogueData();
         }
-        private void LoadInterfaces()
+
+        private void GetItemsCatalogueData()
         {
-            _mIItemSuppliers = new List<IItemSupplierDataObject>();
-            foreach (var itemSupplier in existingSuppliers)
+            Debug.Log($"START: COLLECTING Item SOURCES DATA");
+            var url = DataSheetUrls.ItemSuppliersGameData;
+            StartCoroutine(LoadItemsCatalogueData(url));
+        }
+        private IEnumerator LoadItemsCatalogueData(string url)
+        {
+            var webRequest = UnityWebRequest.Get(url);
+            yield return webRequest.SendWebRequest();
+            if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
+                webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                _mIItemSuppliers.Add(itemSupplier);
+                Debug.LogError("GetItems Catalogue Data must be reachable");
+            }
+            else
+            {
+                var sourceJson = webRequest.downloadHandler.text;
+                LoadFromJson(sourceJson);
             }
         }
+
+        private void LoadFromJson(string sourceJson)
+        {
+            Debug.Log($"BaseJobsCatalogue.LoadFromJson");
+            Debug.Log($"StartParsing Items Catalogue: {sourceJson}");
+
+            _mItemSuppliersFromData = JsonConvert.DeserializeObject<ItemSuppliersFromData>(sourceJson);
+            Debug.Log($"Finished parsing. Is _jobsCatalogueFromData null?: {_mItemSuppliersFromData == null}");
+            _mIItemSuppliersInData = new List<IItemSupplierDataObject>();
+            int storePhone;
+            int unlockPoints;
+            for (var i = 1; i < _mItemSuppliersFromData.values.Count;i++)
+            {
+                var itemSupplierDataObj = (IItemSupplierDataObject)ScriptableObject.CreateInstance<ItemSupplierDataObject>();
+
+                var gotId = int.TryParse(_mItemSuppliersFromData.values[i][0], out var supplierId);
+                itemSupplierDataObj.ItemSupplierId = (BitItemSupplier) supplierId;
+                    
+                itemSupplierDataObj.StoreName = _mItemSuppliersFromData.values[i][1];
+                
+                var gotPhone = int.TryParse(_mItemSuppliersFromData.values[i][2], out storePhone);
+                itemSupplierDataObj.StorePhoneNumber = storePhone;
+
+                var gotItems = int.TryParse(_mItemSuppliersFromData.values[i][2], out var itemsAvailable);
+                itemSupplierDataObj.ItemTypesAvailable = itemsAvailable;
+
+                var gotUp = int.TryParse(_mItemSuppliersFromData.values[i][4], out unlockPoints);
+                if (!gotUp)
+                {
+                    Debug.LogWarning("GetJobsCatalogueData");
+                }
+                itemSupplierDataObj.UnlockPoints = unlockPoints;
+                _mIItemSuppliersInData.Add(itemSupplierDataObj);
+            }
+        }
+        
         public bool SupplierExists(BitItemSupplier itemSupplier)
         {
-            return _mIItemSuppliers.Any(x => x.ItemSupplierId == itemSupplier);
+            return _mIItemSuppliersInData.Any(x => x.ItemSupplierId == itemSupplier);
         }
-        public bool SupplierPhoneExists(string dialedPhone)
+
+        public IItemSupplierDataObject GetSupplierFromId(BitItemSupplier itemId)
         {
-            if (string.IsNullOrEmpty(dialedPhone) || dialedPhone.Length != 7)
+            return _mIItemSuppliersInData.SingleOrDefault(x => x.ItemSupplierId == itemId);
+        }
+
+        public Tuple<bool,int> ItemSupplierPhoneExists(int dialedPhone)
+        {
+            var tuple = new Tuple<bool, int>(false, 0);
+            if (dialedPhone == 0 || dialedPhone.ToString().Length != 7)
             {
-                return false;
+                Debug.LogWarning("[BaseItemSuppliersCatalogue.SupplierPhoneExists] dialed Phone number must be checked before this instace");
+                return tuple;
             }
-
-            return _mIItemSuppliers.Any(x => x.SupplierNumber == dialedPhone);
+            var isStoreNumber = _mIItemSuppliersInData.Any(x => x.StorePhoneNumber == dialedPhone);
+            if (!isStoreNumber)
+            {
+                return tuple;
+            }
+            var itemSupplierId =
+                (int)_mIItemSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == dialedPhone)!.ItemSupplierId;
+            return new Tuple<bool, int>(isStoreNumber, itemSupplierId);
         }
 
-        public IItemSupplierDataObject GetItemSupplierDataFromPhone(string supplierPhone)
+        public IItemSupplierDataObject GetItemSupplierDataFromPhone(int supplierPhone)
         {
-            if (string.IsNullOrEmpty(supplierPhone) || supplierPhone.Length != 7)
+            if (supplierPhone == 0 || supplierPhone.ToString().Length != 7)
             {
                 return null;
             }
-            return _mIItemSuppliers.SingleOrDefault(x => x.SupplierNumber == supplierPhone);
+            return _mIItemSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == supplierPhone);
         }
 
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier)
         {
-            return _mIItemSuppliers.SingleOrDefault(x => x.ItemSupplierId == jobSupplier);
+            return _mIItemSuppliersInData.SingleOrDefault(x => x.ItemSupplierId == jobSupplier);
         }
     }
 
     public interface IBaseItemSuppliersCatalogue
     {
         public bool SupplierExists(BitItemSupplier itemSupplier);
-        public bool SupplierPhoneExists(string dialedPhone);
-        public IItemSupplierDataObject GetItemSupplierDataFromPhone(string supplierPhone);
+        public IItemSupplierDataObject GetSupplierFromId(BitItemSupplier itemId);
+        public Tuple<bool, int> ItemSupplierPhoneExists(int dialedPhone);
+        public IItemSupplierDataObject GetItemSupplierDataFromPhone(int supplierPhone);
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier);
-
+        public List<IItemSupplierDataObject> GetItemSuppliersCompleteData { get; }
     }
 }

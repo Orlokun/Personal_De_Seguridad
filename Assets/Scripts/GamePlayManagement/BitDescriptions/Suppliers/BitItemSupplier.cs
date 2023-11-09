@@ -10,7 +10,7 @@ namespace GamePlayManagement.BitDescriptions.Suppliers
         DATAVAMPS = 32,
         DEPREDATOR = 64,
         ABISMAL_SPA = 128,
-        TERCER_AIRE = 256,
+        Third_Air = 256,
         ILETRA_SEGURIDAD = 512,
         PAPO_CONTRERAS = 1024,
         CACHETE = 2048,

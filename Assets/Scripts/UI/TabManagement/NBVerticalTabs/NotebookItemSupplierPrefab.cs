@@ -21,11 +21,11 @@ namespace UI.TabManagement.NBVerticalTabs
             _popUpOperator = PopUpOperator.Instance;
         }
 
-        public void SetSupplierPrefabValues(string storeName, string storePhone, Sprite storeLogo, BitItemSupplier supplierId)
+        public void SetSupplierPrefabValues(string storeName, string storePhone, BitItemSupplier supplierId)
         {
             mStoreName.text = storeName;
             mStorePhone.text = storePhone;
-            mStoreLogo.sprite = storeLogo;
+            //mStoreLogo.sprite = storeLogo;
             _supplierId = supplierId;
         }
 

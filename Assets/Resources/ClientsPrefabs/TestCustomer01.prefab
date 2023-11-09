@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 1941783453}
   - component: {fileID: 1941783454}
   - component: {fileID: 1941783455}
+  - component: {fileID: 8903278216945612218}
+  - component: {fileID: 1750498309644112079}
   m_Layer: 0
   m_Name: TestCustomer01
   m_TagString: Untagged
@@ -261,7 +263,7 @@ MonoBehaviour:
     - {fileID: 8868800023074788290}
   animator: {fileID: 391346677835203680}
   characterSelectedElements:
-    Hair: 15
+    Hair: 8
     Beard: 7
     Hat: -1
     Shirt: 5
@@ -270,7 +272,7 @@ MonoBehaviour:
     Accessory: 4
     Item1: -1
   heightValue: 0.07179761
-  headSizeValue: 0.25
+  headSizeValue: -0.031
   feetOffset: 0
   characterBlendshapeDatas:
   - blendshapeName: Fat
@@ -469,7 +471,7 @@ MonoBehaviour:
     type: 50
     group: 2
     value: 100
-  Skin: {r: 0.65882355, g: 0.43137255, b: 0.3372549, a: 1}
+  Skin: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 1}
   Eye: {r: 0.22588104, g: 0.26180884, b: 0.3396226, a: 1}
   Hair: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
   Underpants: {r: 0.5660378, g: 0.5660378, b: 0.5660378, a: 1}
@@ -495,7 +497,7 @@ Animator:
   m_GameObject: {fileID: 8569396655643029760}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 1b8f3f34252d9ee44823ab05504b31a8, type: 3}
-  m_Controller: {fileID: 9100000, guid: 73dfba487f63297498cf4b2ae53f6fb5, type: 2}
+  m_Controller: {fileID: 9100000, guid: bc8fa3f4bfa92744e9dfc9dd21c4815f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -621,7 +623,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
@@ -637,8 +639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48fd663056ca4ff79e265c59a7ab9348, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mNumberOfDestinations: 3
-  mPayingPosition: {fileID: 0}
+  headTransform: {fileID: 8868800023349138663}
 --- !u!195 &1941783455
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -661,6 +662,34 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8903278216945612218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8569396655643029760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba11d06858a4d2e9d84c979ee835336, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!54 &1750498309644112079
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8569396655643029760}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 0
 --- !u!1 &8868800021793331862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2979,7 +3008,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300018, guid: 4a8a5833b9f72de43a876138c8f460dc, type: 3}
+  m_Mesh: {fileID: 4300010, guid: d5c7146d81e23d6418266720878a9367, type: 3}
   m_Bones:
   - {fileID: 8868800022059115999}
   - {fileID: 8868800023459817844}
@@ -7959,7 +7988,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300038, guid: 4a8a5833b9f72de43a876138c8f460dc, type: 3}
+  m_Mesh: {fileID: 4300028, guid: d5c7146d81e23d6418266720878a9367, type: 3}
   m_Bones:
   - {fileID: 8868800022059115999}
   - {fileID: 8868800023459817844}
@@ -8672,7 +8701,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300008, guid: 4a8a5833b9f72de43a876138c8f460dc, type: 3}
+  m_Mesh: {fileID: 4300006, guid: d5c7146d81e23d6418266720878a9367, type: 3}
   m_Bones:
   - {fileID: 8868800022059115999}
   - {fileID: 8868800023459817844}
@@ -9752,7 +9781,7 @@ Transform:
   m_GameObject: {fileID: 8868800023349138680}
   m_LocalRotation: {x: -0.13690382, y: -0.11254916, z: -0.03353726, w: 0.98359823}
   m_LocalPosition: {x: -0.000000043888576, y: 0.08705421, z: 0.000000052154064}
-  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_LocalScale: {x: 0.969, y: 0.969, z: 0.969}
   m_Children: []
   m_Father: {fileID: 8868800023342027900}
   m_RootOrder: 0
@@ -10337,7 +10366,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300028, guid: 4a8a5833b9f72de43a876138c8f460dc, type: 3}
+  m_Mesh: {fileID: 4300016, guid: d5c7146d81e23d6418266720878a9367, type: 3}
   m_Bones:
   - {fileID: 8868800022059115999}
   - {fileID: 8868800023459817844}

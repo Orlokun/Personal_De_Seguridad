@@ -38,10 +38,6 @@ namespace Players_NPC
 
         protected virtual void Start()
         {
-            ShopPositionsManager positionManagerComponent;
-            var foundPositionManager = TryGetComponent<ShopPositionsManager>(out positionManagerComponent);
-            Debug.Log($"[BaseCharacterInScene.Start] Found Position Manager: {foundPositionManager}");
-            _positionsManager = positionManagerComponent;
             _positionsManager = FindObjectOfType<ShopPositionsManager>();
         }
         protected virtual void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)

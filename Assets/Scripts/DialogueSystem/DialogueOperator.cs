@@ -48,10 +48,10 @@ namespace DialogueSystem
         [SerializeField] private float minWritingSpeed;
         #endregion
 
-        #region Members
+        #region Private Members
         
         /// <summary>
-        /// Private Memebers and dependencies
+        /// Private Members and dependencies
         /// </summary>
         private UIDialogueState _currentState;
         public UIDialogueState CurrentDialogueState => _currentState;
@@ -70,7 +70,7 @@ namespace DialogueSystem
         
 
         #region Public Interface
-        public List<IDialogueObject> GetDialogueObjects(List<BaseDialogueObject> dialogueObjects)
+        public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects)
         {
             var dialogueList = new List<IDialogueObject>();
             foreach (var baseDialogueObject in dialogueObjects)
@@ -78,6 +78,12 @@ namespace DialogueSystem
                 dialogueList.Add(baseDialogueObject);
             }
             return dialogueList;
+        }
+
+        public void LoadJobSupplierDialogues(IEnumerator coroutine)
+        {
+            Debug.Log("[DIALOGUE OPERATOR] Starting Co routine for Supplier Dialogues Data");
+            StartCoroutine(coroutine);
         }
 
         public void StartNewDialogue(IDialogueObject newDialogue)
@@ -252,7 +258,6 @@ namespace DialogueSystem
             else
             {
                 mSpeakerName.text = _currentDialogue.SpeakerName;
-
                 mSpeakerName.gameObject.SetActive(true);
             }
 

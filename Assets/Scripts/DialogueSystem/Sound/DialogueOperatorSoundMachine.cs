@@ -1,15 +1,23 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace DialogueSystem.Sound
 {
+    public class DialogueVoices
+    {
+        
+    }
+    
     [RequireComponent(typeof(AudioSource))]
     public class DialogueOperatorSoundMachine : MonoBehaviour, IDialogueOperatorSoundMachine
     {
         //Sound
         private AudioSource _mAudioSource;
         [SerializeField] private AudioClip typeWriterSound;
+        [SerializeField] private List<AudioClip> characterVoices;
 
+        private Dictionary<int, AudioClip> SpeakersInGame;
         private void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -18,12 +26,16 @@ namespace DialogueSystem.Sound
                 Debug.LogError("Dialogue Operator Sound machine must have sound loaded");
                 return;
             }
-            SetAudioClip();
+            SetAudioClip(typeWriterSound);
         }
 
-        private void SetAudioClip()
+        /*private AudioClip GetDialogueSpeakerAudioClip()
         {
-            _mAudioSource.clip = typeWriterSound;
+
+        }*/
+        private void SetAudioClip(AudioClip newClip)
+        {
+            _mAudioSource.clip = newClip;
         }
 
         public void StartPlayingSound()
@@ -40,5 +52,10 @@ namespace DialogueSystem.Sound
         {
             _mAudioSource.Pause();
         }
+    }
+
+    public enum SpeakerId
+    {
+              
     }
 }

@@ -78,7 +78,7 @@ namespace UI.TabManagement
 
         private List<IItemObject> GetItemsOfType(BitItemType itemType)
         {
-            _suppliersModule = GameDirector.Instance.GetActiveGameProfile.GetActiveSuppliersModule();
+            _suppliersModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemSuppliersModule();
             var itemsOfType = _suppliersModule.GetItemsOfType(itemType);
             return itemsOfType;
         }

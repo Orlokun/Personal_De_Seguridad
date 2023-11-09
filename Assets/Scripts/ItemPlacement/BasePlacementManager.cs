@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace ItemPlacement
 {
@@ -141,9 +142,10 @@ namespace ItemPlacement
             CurrentPlacedObject.SetActive(false);
             CurrentPlacedObject = null;
         }
-        protected void CreateObjectInPlace()
+        protected virtual void CreateObjectInPlace()
         {
             GameObject obj = Instantiate(CurrentPlacedObject);
+            SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));      
             LastInstantiatedGameObject = obj;
             obj.transform.position = CurrentPlacedObject.transform.position;
             obj.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;

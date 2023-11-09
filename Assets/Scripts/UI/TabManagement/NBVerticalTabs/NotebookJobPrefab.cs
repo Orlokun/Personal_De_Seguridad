@@ -21,9 +21,9 @@ namespace UI.TabManagement.NBVerticalTabs
         }
         public void SetJobPrefabValues(IJobSupplierObject supplierData)
         {
-            mStoreName.text = supplierData.SupplierName;
-            mStorePhone.text = supplierData.SupplierNumber;
-            _supplierId = supplierData.JobSupplier;
+            mStoreName.text = supplierData.StoreName;
+            mStorePhone.text = supplierData.StorePhoneNumber.ToString();
+            _supplierId = supplierData.BitId;
         }
         
         public void OpenOptionsPopUp()

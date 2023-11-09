@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using DialogueSystem.Units;
 
@@ -9,7 +10,8 @@ namespace DialogueSystem.Interfaces
         void StartNewDialogue(IDialogueObject newDialogue);
         void KillDialogue();
         event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
-        public List<IDialogueObject> GetDialogueObjects(List<BaseDialogueObject> dialogueObjects);
-        
+        public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects);
+        public void LoadJobSupplierDialogues(IEnumerator coroutine);
+
     }
 }

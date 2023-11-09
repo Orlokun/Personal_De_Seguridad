@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
 using DataUnits;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
+using Task = System.Threading.Tasks.Task;
 
 public enum PhoneState
 {
@@ -18,6 +22,7 @@ public interface IPhoneCallOperator
 {
     void StartCallImmediately(ISupplierBaseObject callReceiver);
     void FinishCallImmediately();
+    void DialNumber(int number);
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -36,6 +41,8 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private PhoneState _phoneState = PhoneState.Dialing;
     private IDialogueOperator _dialogueOperator;
     private AudioSource _audioSource;
+
+    private Coroutine currentRoutine;
 
     #region Init
     private void Awake()
@@ -62,73 +69,116 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         var numberText = number.ToString();
         _displayedString += numberText;
         displayedText.text = _displayedString;
+        _audioSource.clip = numberSound;
+        _audioSource.Play();
     }
     public void ClearNumbersOrHungUp()
     {
         _displayedString = "";
         displayedText.text = _displayedString;
-        if (_phoneState == PhoneState.Calling || _phoneState == PhoneState.OnCall)
-        {
-            
-        }
         _phoneState = PhoneState.Dialing;
+        _audioSource.Stop();
+        StopCoroutine(currentRoutine);
     }
     public void PressCall()
     {
         _phoneState = PhoneState.Calling;
-        if (_displayedString.Length != 7)
+        if (!IsValidCall(_displayedString))
         {
             PlayInvalidCall();
             return;
         }
-        if (!BaseItemSuppliersCatalogue.Instance.SupplierPhoneExists(_displayedString))
+        PlayDialSound();
+        var toIntNumber = int.Parse(_displayedString);
+        //Since item and job suppliers are separated. Both Tuples must be checked. Because I'm an idiot. 
+        //TODO: Fix Separate Job / Item Supplier issue
+        var itemSupplierExistence = BaseItemSuppliersCatalogue.Instance.ItemSupplierPhoneExists(toIntNumber);
+        var jobSupplierExistence = BaseJobsCatalogue.Instance.JobSupplierPhoneNumberExists(toIntNumber);
+        if (!itemSupplierExistence.Item1 && !jobSupplierExistence.Item1)
         {
             Debug.Log("[PressCall] Not a Supplier number. Display the number is inactive or choose Random Conversation");
             return;
         }
-
-        PlayDialSound();
         
-        var itemSupplier = BaseItemSuppliersCatalogue.Instance.GetItemSupplierDataFromPhone(_displayedString);
+        if (itemSupplierExistence.Item1)
+        {
+            WaitAnswerFromSupplier(itemSupplierExistence.Item2);
+            return;
+        }
+        if(jobSupplierExistence.Item1)
+        {
+            WaitAnswerFromSupplier(jobSupplierExistence.Item2);
+            return;
+        }
+    }
+    private async void WaitAnswerFromItemSupplier(int calledSupplierId)
+    {
+        
     }
 
+    private async void WaitAnswerFromJobSupplier(int calledSupplierId)
+    {
+        var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((BitGameJobSuppliers)calledSupplierId);
+    }
+    
+    private async void WaitAnswerFromSupplier(int speakerCalledId)
+    {
+        ICallableSupplier supplierBaseObject;
+        
+        //Start Delay
+        Random.InitState(DateTime.Now.Millisecond);
+        var timeToWait = Random.Range(1000, 4000);
+        await Task.Delay(timeToWait);
+    }
+    private bool IsValidCall(string dialedNumber)
+    {
+        var isValid = false;
+        if (dialedNumber.Length != 7)
+        {
+            isValid = false;
+        }
+        return true;
+    }
+    
     private void PlayDialSound()
     {
         _audioSource.clip = dialingSound;
         _audioSource.Play();
     }
     
-    private IEnumerator WaitDialSound()
-    {
-        yield return new WaitForSeconds(1f);
-    }
     private void PlayInvalidCall()
     {
         Debug.Log("[PlayInvalidCall] Empty Number: Play null sound and return");
         _phoneState = PhoneState.Dialing;
+        _displayedString = "INVALID CALL";
+        _audioSource.clip = invalidNumberSound;
+        _audioSource.Play();
+        var waitTime = _audioSource.clip.length;
+        currentRoutine = StartCoroutine(WaitPhoneSoundAndHungUp(waitTime));
+    }
+
+    private IEnumerator WaitPhoneSoundAndHungUp(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
         ClearNumbersOrHungUp();
     }
 
-    
-    private IEnumerator WaitInvalidCallSound()
-    {
-        yield return new WaitForSeconds(1f);
-    }
-    
     public void StartCallImmediately(ISupplierBaseObject callReceiver)
     {
-        displayedText.text = callReceiver.SupplierName;
-        ToggleDialingSound(true);
+        _displayedString = callReceiver.StorePhoneNumber.ToString();
+        displayedText.text = _displayedString;
         //Play Sound for a few seconds
         //Get Dialogue in shop
         //Each shop/object should be holding its dialogue. 
         //Dialogues should be divided in types: Inner/Interpersonal/MainDialogue
         //Each type should be divided as well
     }
+    
     public void FinishCallImmediately()
     {
         Debug.Log($"[FinishCallImmediately] Not Implemented");   
     }
+    
     private void ToggleDialingSound(bool isSoundActive)
     {
         Debug.Log($"[ToggleDialingSound] Not Implemented");   

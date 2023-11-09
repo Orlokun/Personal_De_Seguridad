@@ -153,7 +153,7 @@ namespace UI.TabManagement.NBVerticalTabs
 
         private void ManageSuppliersInstantiation()
         {
-            var availableItemSuppliers = _playerProfile.GetActiveSuppliersModule().ActiveProviderObjects;
+            var availableItemSuppliers = _playerProfile.GetActiveItemSuppliersModule().ActiveProviderObjects;
             var index = 0;
             foreach (var availableItemSupplier in availableItemSuppliers)
             {
@@ -163,11 +163,11 @@ namespace UI.TabManagement.NBVerticalTabs
                 }
                 var prefabObject = InstantiatePrefabs(index, SupplierPrefab);
                 var supplierObjectController = prefabObject.GetComponent<NotebookItemSupplierPrefab>();
-                var storeName = availableItemSupplier.Value.GetSupplierData.SupplierName;
-                var storeNumber = availableItemSupplier.Value.GetSupplierData.SupplierNumber;
-                var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
+                var storeName = availableItemSupplier.Value.GetSupplierData.StoreName;
+                var storeNumber = availableItemSupplier.Value.GetSupplierData.StorePhoneNumber;
+                //var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
                 var storeId = availableItemSupplier.Value.GetSupplierData.ItemSupplierId;
-                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber, storeIcon, storeId);
+                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber.ToString(), storeId);
                 index++;
             }
         }

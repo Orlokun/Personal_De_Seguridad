@@ -13,6 +13,7 @@ namespace GameDirection.GeneralLevelManager
         public bool OccupyPoi(Guid occupier, IShopPoiData occupiedPoi);
         public Vector3 EntrancePosition();
         public Vector3 PayingPosition();
+        public Vector3 InstantiatePosition();
     }
 
     /// <summary>
@@ -27,9 +28,10 @@ namespace GameDirection.GeneralLevelManager
         private int _positionsInLevel;
         
         private IShelfInMarket[] _mShelfObjects;
-        
-        
+
+        [SerializeField] private Transform payingPosition;
         [SerializeField] private Transform entranceTransform;
+        [SerializeField] private Transform customerInstantiationTransform;
 
         private void Awake()
         {
@@ -95,10 +97,14 @@ namespace GameDirection.GeneralLevelManager
         {
             return entranceTransform.position;
         }
-
+        public Vector3 InstantiatePosition()
+        {
+            return customerInstantiationTransform.position;
+        }
+        
         public Vector3 PayingPosition()
         {
-            throw new NotImplementedException();
+            return payingPosition.position;
         }
     }
 }

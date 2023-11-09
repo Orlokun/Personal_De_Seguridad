@@ -14,8 +14,8 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         private int _mActiveProviders;
         private IBaseItemDataCatalogue _mItemDataCatalogue;
         private IBaseItemSuppliersCatalogue _mItemSuppliersCatalogue;
-        private Dictionary<int, IItemSupplierShop> _activeProviders = new Dictionary<int, IItemSupplierShop>();
-        public Dictionary<int, IItemSupplierShop> ActiveProviderObjects => _activeProviders;
+        private Dictionary<BitItemSupplier, IItemSupplierShop> _activeProviders = new Dictionary<BitItemSupplier, IItemSupplierShop>();
+        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects => _activeProviders;
 
         public int AllActiveSuppliers => _mActiveProviders;
 
@@ -42,9 +42,9 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
                 Debug.LogWarning("Item supplier is not available");
                 return false;
             }
-            return _activeProviders[(int) supplier].IsItemManaged(itemBitId);
+            return _activeProviders[supplier].IsItemManaged(itemBitId);
         }
-        public void AddItemToSupplier(BitItemSupplier supplier, int itemBitId)
+        public void UnlockItemInSupplier(BitItemSupplier supplier, int itemBitId)
         {
             var castSupplier = (int) supplier;
             if ((castSupplier & _mActiveProviders) == 0)
@@ -52,7 +52,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
                 Debug.LogWarning("[ItemSuppliersModule.AddItemToSupplier] Item supplier must be active in module");
                 return;
             }
-            _activeProviders[castSupplier].AddItemToSupplier(itemBitId);
+            _activeProviders[supplier].AddItemToSupplier(itemBitId);
         }
 
         public void RemoveItemFromSupplier(BitItemSupplier supplier, int itemBitId)
@@ -61,7 +61,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             {
                 return;
             }
-            _activeProviders[(int) supplier].RemoveItemFromSupplier(itemBitId);
+            _activeProviders[supplier].RemoveItemFromSupplier(itemBitId);
         }
 
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId)
@@ -70,7 +70,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             {
                 return null;
             }
-            return _activeProviders[(int) supplier].GetItemObject(itemBitId);
+            return _activeProviders[supplier].GetItemObject(itemBitId);
         }
 
         public List<IItemObject> GetItemsOfType(BitItemType itemType)
@@ -98,7 +98,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             var castSupplier = (int) provider;
             return (_mActiveProviders & castSupplier) != 0;
         }
-        public void ActivateSupplier(BitItemSupplier provider)
+        public void UnlockSupplier(BitItemSupplier provider)
         {
             var castProvider = (int) provider;
             
@@ -108,13 +108,13 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             }
             _mActiveProviders |= castProvider;
             
-            if (_activeProviders.ContainsKey(castProvider))
+            if (_activeProviders.ContainsKey(provider))
             {
                 return;
             }
 
             var itemSupplier = Factory.CreateItemStoreSupplier(provider, _mItemDataCatalogue, _mItemSuppliersCatalogue);
-            _activeProviders.Add(castProvider, itemSupplier);
+            _activeProviders.Add(provider, itemSupplier);
         }
 
         public void RemoveSupplier(BitItemSupplier provider)
@@ -128,11 +128,11 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             
             _mActiveProviders &= ~castProvider;
             
-            if (!_activeProviders.ContainsKey(castProvider))
+            if (!_activeProviders.ContainsKey(provider))
             {
                 return;
             }
-            _activeProviders.Remove(castProvider);
+            _activeProviders.Remove(provider);
         }
 
         #endregion

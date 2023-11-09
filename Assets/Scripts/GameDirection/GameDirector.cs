@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using CameraManagement;
 using DataUnits.GameCatalogues;
@@ -11,7 +10,6 @@ using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Utils;
 
 namespace GameDirection
@@ -54,12 +52,12 @@ namespace GameDirection
         //Scriptable Objects Catalogues
         private IBaseItemDataCatalogue _mItemDataCatalogue;
         private IBaseJobsCatalogue _mJobsCatalogue;
-        private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
+        private IBaseItemSuppliersCatalogue _mItemSuppliersData;
         
         /// <summary>
         /// Initial Scene Manager
         /// </summary>
-        private IntroSceneManager _introSceneManager;
+        private DialoguesInSceneDataManager _dialoguesInSceneDataManager;
         #endregion
 
         #region Public Fields
@@ -107,21 +105,21 @@ namespace GameDirection
             _mSoundDirector = SoundDirector.Instance;
             _mUIController = UIController.Instance;
             _mDialogueOperator = _mUIController.DialogueOperator;
-            _mItemDataCatalogue = BaseItemDataCatalogue.Instance;
+            _mItemDataCatalogue = BaseItemCatalogue.Instance;
             _mJobsCatalogue = BaseJobsCatalogue.Instance;
-            _mSuppliersCatalogue = BaseItemSuppliersCatalogue.Instance;
+            _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
+            
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
-            var dialoguesInterface = _mDialogueOperator.GetDialogueObjects(introDialogues);
-            _introSceneManager = gameObject.AddComponent<IntroSceneManager>();
-            _introSceneManager.Initialize(this, dialoguesInterface);
-            _introSceneManager.OnFinishIntroDialogue += LoadFirstLevel;
+            var dialoguesInterface = _mDialogueOperator.GetDialogueObjectInterfaces(introDialogues);
+            _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
+            _dialoguesInSceneDataManager.Initialize(this);
+            _dialoguesInSceneDataManager.OnFinishCurrentDialogue += LoadFirstLevel;
+            
             _mUIController.StartMainMenuUI();
             
             GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
         }
-
-
         #endregion
         
         #region Public Fields
@@ -133,35 +131,21 @@ namespace GameDirection
             _mGeneralFader.GeneralCameraFadeOut();
             CreateNewProfile();
             _mGameState = HighLevelGameStates.InCutScene;
-            StartCoroutine(PrepareIntroductionReading());
+            StartCoroutine(_dialoguesInSceneDataManager.PrepareIntroductionReading());
         }
 
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
-            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataCatalogue, _mSuppliersCatalogue);
+            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataCatalogue, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
-            jobSourcesModule.AddJobToModule(BitGameJobSuppliers.LOCAl_DE_BARRIO);
-            
-            //Activate Suppliers
-            itemSuppliersModule.ActivateSupplier(BitItemSupplier.MONCHITO);
-            itemSuppliersModule.ActivateSupplier(BitItemSupplier.TERCER_AIRE);
-            
-            //Activate Items in Suppliers
-            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.MONCHITO, (int)MonchitoItemsBitId.WEB_CAM);
-            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.MONCHITO, (int)MonchitoItemsBitId.ENCINA);
-            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.TERCER_AIRE, (int)TercerAireItemsBitId.DON_RONBINSON);
-            itemSuppliersModule.AddItemToSupplier(BitItemSupplier.TERCER_AIRE, (int)TercerAireItemsBitId.ORYAN);
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule);
+            _mActiveGameProfile.UpdateProfileData();
         }
-        private IEnumerator PrepareIntroductionReading()
-        {
-            yield return new WaitForSeconds(2f);
-            StartCoroutine(_introSceneManager.PrepareIntroductionReading());
-        }
+        
         private void LoadFirstLevel()
         {
-            ChangeHighLvlGameState(HighLevelGameStates.InGame);
+            ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             _mLevelManager.LoadFirstLevel();
         }
         #endregion

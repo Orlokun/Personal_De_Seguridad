@@ -86,6 +86,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             MAgility = Random.Range(1, 10);
             MSpeed = Random.Range(1, 10);
             MStrength = Random.Range(1, 10);
+            
             Debug.Log($"Cleanness: {Cleanness} ---SocialStatus: {SocialStatus} ---Age: {Age} " +
                       $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Lawfulness} " +
                       $"---Aggressive: {Aggressive} ---Agility: {Agility} ---Speed: {Speed} ---Strength: {Strength}");

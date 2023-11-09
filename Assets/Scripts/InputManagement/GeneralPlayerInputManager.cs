@@ -32,11 +32,11 @@ namespace InputManagement
         private void ManageGameplayStateInput()
         {
             if (!Input.GetKeyDown(KeyCode.Tab) || _mGameStateManager.CurrentInputGameState != InputGameState.InGame
-                || _highLvlGameState.GetCurrentHighLvlGameState == HighLevelGameStates.OfficeMidScene)
+                )
             {
                 return;
             }
-
+            
             var newState = _mGameCameraManager.ActiveState() == GameCameraState.Office
                 ? GameCameraState.Level
                 : GameCameraState.Office;
