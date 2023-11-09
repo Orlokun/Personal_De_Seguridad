@@ -62,7 +62,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersCompleteData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.UnlockPoints <= GeneralXP)
+                if (itemSupplier.StoreUnlockPoints <= GeneralXP)
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }

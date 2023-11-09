@@ -125,7 +125,7 @@ namespace DataUnits.GameCatalogues
                     Debug.LogWarning("");
                 }
                 
-                //Step 7: Create Item Object and add to List in Dictionary
+                //Step 7: Create Item Scriptable Object and add to List in Dictionary
                 IItemObject itemDataObject = ScriptableObject.CreateInstance<ItemObject>();
                 itemDataObject.SetItemObjectData(supplierBitId, bitItemType, itemId, itemName, unlockPoints, itemPrice);
                 _mCatalogueItemsFromData[supplierBitId].Add(itemDataObject);

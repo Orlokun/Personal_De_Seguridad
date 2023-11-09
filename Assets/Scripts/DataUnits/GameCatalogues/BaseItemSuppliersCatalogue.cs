@@ -84,7 +84,9 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("GetJobsCatalogueData");
                 }
-                itemSupplierDataObj.UnlockPoints = unlockPoints;
+                itemSupplierDataObj.StoreUnlockPoints = unlockPoints;
+                
+                itemSupplierDataObj.LoadDialogueData();
                 _mIItemSuppliersInData.Add(itemSupplierDataObj);
             }
         }

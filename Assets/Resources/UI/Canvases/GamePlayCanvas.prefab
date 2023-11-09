@@ -712,7 +712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2860299154051315817
 RectTransform:
   m_ObjectHideFlags: 0
@@ -765,8 +765,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a96c8e11f76d7af489ac78cc289ba63d, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 678c92572cc724845a460c87117f5353, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -792,7 +792,7 @@ Canvas:
   m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 10
   m_TargetDisplay: 0
@@ -1064,7 +1064,11 @@ MonoBehaviour:
   startType: 1
   gridParentObject: {fileID: 2860299155004287407}
   storeTitle: {fileID: 2860299155328288262}
-  itemInGridPrefab: {fileID: 0}
+  guardInGridPrefab: {fileID: 0}
+  camInGridPrefab: {fileID: 0}
+  weaponInGridPrefab: {fileID: 0}
+  trapInGridPrefab: {fileID: 0}
+  otherInGridPrefab: {fileID: 0}
 --- !u!1 &2860299154237559508
 GameObject:
   m_ObjectHideFlags: 0
@@ -2608,15 +2612,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7645427, g: 0.9339623, b: 0.7533375, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ada41680c5f94c54facdaeb4e851ff6d, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 492b9988436bd45049a9a6bc52ac8fb0, type: 3}
+  m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3019,7 +3023,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.25
+  m_fontSize: 32.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

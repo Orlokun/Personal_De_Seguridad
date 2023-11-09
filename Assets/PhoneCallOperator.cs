@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using DataUnits;
 using DataUnits.GameCatalogues;
+using DataUnits.JobSources;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using TMPro;
 using UnityEngine;
@@ -20,9 +22,10 @@ public enum PhoneState
 
 public interface IPhoneCallOperator
 {
-    void StartCallImmediately(ISupplierBaseObject callReceiver);
+    void GoToCall(ISupplierBaseObject callReceiver);
     void FinishCallImmediately();
     void DialNumber(int number);
+    void AnswerPhone();
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -72,6 +75,12 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         _audioSource.clip = numberSound;
         _audioSource.Play();
     }
+
+    public void AnswerPhone()
+    {
+        _audioSource.Stop();
+    }
+
     public void ClearNumbersOrHungUp()
     {
         _displayedString = "";
@@ -102,23 +111,29 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         
         if (itemSupplierExistence.Item1)
         {
-            WaitAnswerFromSupplier(itemSupplierExistence.Item2);
+            WaitAnswerFromItemSupplier(itemSupplierExistence.Item2);
             return;
         }
         if(jobSupplierExistence.Item1)
         {
-            WaitAnswerFromSupplier(jobSupplierExistence.Item2);
+            WaitAnswerFromJobSupplier(jobSupplierExistence.Item2);
             return;
         }
     }
     private async void WaitAnswerFromItemSupplier(int calledSupplierId)
     {
+        var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
         
     }
 
     private async void WaitAnswerFromJobSupplier(int calledSupplierId)
     {
         var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((BitGameJobSuppliers)calledSupplierId);
+        var currentProfile = GameDirector.Instance.GetActiveGameProfile;
+        jobSupplierCallingData.StartCalling(currentProfile.GeneralXP);
+        Random.InitState(DateTime.Now.Millisecond);
+        var randomWaitTime = Random.Range(500, 12500);
+        await Task.Delay(randomWaitTime);
     }
     
     private async void WaitAnswerFromSupplier(int speakerCalledId)
@@ -132,12 +147,8 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     }
     private bool IsValidCall(string dialedNumber)
     {
-        var isValid = false;
-        if (dialedNumber.Length != 7)
-        {
-            isValid = false;
-        }
-        return true;
+        bool isValid = dialedNumber.Length == 7;
+        return isValid;
     }
     
     private void PlayDialSound()
@@ -163,7 +174,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         ClearNumbersOrHungUp();
     }
 
-    public void StartCallImmediately(ISupplierBaseObject callReceiver)
+    public void GoToCall(ISupplierBaseObject callReceiver)
     {
         _displayedString = callReceiver.StorePhoneNumber.ToString();
         displayedText.text = _displayedString;

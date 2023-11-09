@@ -17,7 +17,7 @@ namespace Utils
             "https://sheets.googleapis.com/v4/spreadsheets/1bli4diwooBNk5K04Cdl1bytCw7QtPfkVTBTi5SiRjGc/values/ItemsCatalogue?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
         //https://docs.google.com/spreadsheets/d//edit?usp=sharing
-        public static string JobSupplierDialogueGameData(DialogueSpeakerId speakerIndex)
+        public static string SuppliersDialogueGameData(DialogueSpeakerId speakerIndex)
         {
             switch (speakerIndex)
             {

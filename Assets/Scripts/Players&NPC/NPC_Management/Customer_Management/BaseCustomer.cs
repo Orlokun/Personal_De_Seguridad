@@ -225,7 +225,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
         protected override void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
         {
             base.RotateTowardsYOnly(rotatingObject, facingTowards);
-            Debug.Log("Rotating!");
         }
         #endregion
         

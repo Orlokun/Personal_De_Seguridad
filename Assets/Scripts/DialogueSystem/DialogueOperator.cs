@@ -80,7 +80,7 @@ namespace DialogueSystem
             return dialogueList;
         }
 
-        public void LoadJobSupplierDialogues(IEnumerator coroutine)
+        public void LoadSupplierDialogues(IEnumerator coroutine)
         {
             Debug.Log("[DIALOGUE OPERATOR] Starting Co routine for Supplier Dialogues Data");
             StartCoroutine(coroutine);
@@ -88,6 +88,7 @@ namespace DialogueSystem
 
         public void StartNewDialogue(IDialogueObject newDialogue)
         {
+            _currentState = UIDialogueState.TypingText;
             Debug.Log("Starting new Dialogue");
             LoadNewDialogue(newDialogue);
             
@@ -180,6 +181,7 @@ namespace DialogueSystem
                 //The following line of code makes the coroutine wait for a frame so as the next WaitUntil is not skipped
                 yield return null;
             }
+            _currentState = UIDialogueState.NotDisplayed;
             OnDialogueCompleted?.Invoke();
         }
 

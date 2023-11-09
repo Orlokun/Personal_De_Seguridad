@@ -1,4 +1,5 @@
 using DataUnits;
+using DataUnits.JobSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using TMPro;
 using UI.PopUpManager;

@@ -1,6 +1,7 @@
 using CameraManagement;
 using DataUnits;
 using DataUnits.GameCatalogues;
+using DataUnits.JobSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,7 +28,7 @@ namespace UI.PopUpManager.NotebookScreen
             var supplierData = _mCallableObjectType == CallableObjectType.Item
                 ? (ISupplierBaseObject)BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier) _supplierId)
                 : (ISupplierBaseObject)BaseJobsCatalogue.Instance.GetJobSupplierObject((BitGameJobSuppliers) _supplierId);
-            PhoneCallOperator.Instance.StartCallImmediately(supplierData);
+            PhoneCallOperator.Instance.GoToCall(supplierData);
             Debug.Log($"Not Implemented. Supplier is: {_supplierId}");
         }
 

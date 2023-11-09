@@ -11,7 +11,7 @@ namespace DialogueSystem.Interfaces
         void KillDialogue();
         event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
         public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects);
-        public void LoadJobSupplierDialogues(IEnumerator coroutine);
+        public void LoadSupplierDialogues(IEnumerator coroutine);
 
     }
 }

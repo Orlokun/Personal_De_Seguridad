@@ -52,6 +52,11 @@ namespace DialogueSystem.Sound
         {
             _mAudioSource.Pause();
         }
+
+        public void SetNewAudioClip(AudioClip voiceTextSound)
+        {
+            _mAudioSource.clip = voiceTextSound;
+        }
     }
 
     public enum SpeakerId

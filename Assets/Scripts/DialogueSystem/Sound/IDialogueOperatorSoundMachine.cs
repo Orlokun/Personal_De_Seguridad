@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace DialogueSystem.Sound
 {
     public interface IDialogueOperatorSoundMachine
@@ -5,5 +7,6 @@ namespace DialogueSystem.Sound
         void StartPlayingSound();
         void StopPlayingSound();
         void PausePlayingSound();
+        void SetNewAudioClip(AudioClip voiceTextSound);
     }
 }
