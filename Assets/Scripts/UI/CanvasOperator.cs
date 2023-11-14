@@ -151,7 +151,6 @@ namespace UI
                     continue;
                 }
                 
-                
                 var isOfficePanel = bitPanelKvP.Value.TryGetComponent<UIOfficePanel>(out component);
                 bitPanelKvP.Value.SetActive(isActive);
                 if (GetCanvasID == CanvasBitId.Office && isActive && isOfficePanel)

@@ -15,6 +15,13 @@ namespace GamePlayManagement.ProfileDataModules
         private Dictionary<BitGameJobSuppliers, IJobSupplierObject> _mJobSuppliers = new Dictionary<BitGameJobSuppliers, IJobSupplierObject>();
         public int ElementsActive => _jobsActive;
         public Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects => _mJobSuppliers;
+        private BitGameJobSuppliers _mCurrentActiveEmployer;
+        public BitGameJobSuppliers CurrentEmployer => _mCurrentActiveEmployer;
+        public void SetNewEmployer(BitGameJobSuppliers newEmployer)
+        {
+            _mCurrentActiveEmployer = newEmployer;
+        }
+
         public bool IsModuleActive => _jobsActive > 0;
         private IBaseJobsCatalogue _jobsCatalogue;
 

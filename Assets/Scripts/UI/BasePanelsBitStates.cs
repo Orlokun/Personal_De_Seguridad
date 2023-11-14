@@ -13,6 +13,7 @@ namespace UI
         public static int TEXT_BACKGROUND = 4;
         public static int BOTTOM_DIALOGUE = 8;
         public static int IN_GAME_CLIENTS_TALK = 16;
+        public static int IN_GAME_CLOCK = 32;
     }
     
     public enum OfficePanelsBitStates

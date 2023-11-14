@@ -36,7 +36,7 @@ namespace GamePlayManagement
         {
             return _itemSuppliersModule;
         }
-        public IJobsSourcesModule GetActiveJobModule()
+        public IJobsSourcesModule GetActiveJobsModule()
         {
             return _jobsSourcesModule;
         }
@@ -53,7 +53,7 @@ namespace GamePlayManagement
             {
                 if (jobSupplierObject.StoreUnlockPoints <= GeneralXP)
                 {
-                    GetActiveJobModule().UnlockJobModule(jobSupplierObject.BitId);
+                    GetActiveJobsModule().UnlockJobModule(jobSupplierObject.BitId);
                 }
             }
         }

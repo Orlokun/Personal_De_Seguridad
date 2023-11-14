@@ -11,5 +11,8 @@ namespace GamePlayManagement.ProfileDataModules
         void UnlockJobModule(BitGameJobSuppliers gainedJobSupplier);
         public int ElementsActive { get; }
         Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects { get; }
+        public BitGameJobSuppliers CurrentEmployer { get; }
+        public void SetNewEmployer(BitGameJobSuppliers newEmployer);
+
     }
 }

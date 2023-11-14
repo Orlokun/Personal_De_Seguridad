@@ -38,6 +38,8 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     [SerializeField] private AudioClip dialingSound;
     [SerializeField] private AudioClip invalidNumberSound;
     [SerializeField] private AudioClip numberSound;
+    [SerializeField] private AudioClip pickUpSound;
+    [SerializeField] private AudioClip hangUpSound;
     [SerializeField] private Image phoneBgColor;
 
     private string _displayedString = "";
@@ -79,6 +81,8 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     public void AnswerPhone()
     {
         _audioSource.Stop();
+        _audioSource.clip = pickUpSound;
+        _audioSource.Play();
     }
 
     public void ClearNumbersOrHungUp()
@@ -123,7 +127,6 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private async void WaitAnswerFromItemSupplier(int calledSupplierId)
     {
         var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
-        
     }
 
     private async void WaitAnswerFromJobSupplier(int calledSupplierId)

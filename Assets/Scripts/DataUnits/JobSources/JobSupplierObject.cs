@@ -9,6 +9,7 @@ using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
+using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
@@ -20,6 +21,11 @@ namespace DataUnits.JobSources
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
+        public JobSupplierObject(BitGameJobSuppliers bitId, string storeType, string storeName, string storeOwnerName,
+            int storeUnlockPoints, string storeDescription, int storePhoneNumber, DialogueSpeakerId speakerIndexId)
+        {
+            
+        }
         public BitGameJobSuppliers BitId { get; set; }
         public string StoreType{ get; set; }
         public string StoreName{ get; set; }
@@ -28,6 +34,12 @@ namespace DataUnits.JobSources
         public string StoreDescription{ get; set; }
         public int StorePhoneNumber{ get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
+        public int StoreHighestUnlockedDialogue => _mStoreHighestUnlockedDialogue;
+        private int _mStoreHighestUnlockedDialogue;
+
+        public int StoreHighestLockedDialogue => _mStoreHighestLockedDialogue;
+        private int _mStoreHighestLockedDialogue;
+        
 
         private int _callAttempts = 0;
 
@@ -56,7 +68,7 @@ namespace DataUnits.JobSources
             if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
                 webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError($"Jobs Catalogue Data must be reachable. Error: {webRequest.result}. {webRequest.error}");
+                Debug.LogError($"Jobs Catalogue Data for {StoreName} must be reachable. Error: {webRequest.result}. {webRequest.error}");
             }
             else
             {
@@ -73,6 +85,9 @@ namespace DataUnits.JobSources
             _mOverThresholdDialogues = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueIndex = 0;
+            _mStoreHighestUnlockedDialogue = 0;
+            _mStoreHighestLockedDialogue = 0;
+            
             IDialogueObject baseDialogueObject;
             for (var i = 1; i < _mDialogueData.values.Count; i++)
             {
@@ -86,23 +101,27 @@ namespace DataUnits.JobSources
                 {
                     baseDialogueObject = (IDialogueObject) CreateInstance<BaseDialogueObject>();
                     lastDialogueIndex = dialogueIndex;
-
                     if (StoreUnlockPoints > dialogueIndex)
                     {
                         _mUnderThresholdDialogues.Add(dialogueIndex, baseDialogueObject);
+                        _mStoreHighestLockedDialogue = lastDialogueIndex > StoreHighestLockedDialogue
+                            ? lastDialogueIndex
+                            : StoreHighestLockedDialogue;
                     }
                     else
                     {
                         _mOverThresholdDialogues.Add(dialogueIndex, baseDialogueObject);
+                        //Keeps track of the highest index so it can later be used in dialogue management.
+                        _mStoreHighestUnlockedDialogue = lastDialogueIndex > StoreHighestUnlockedDialogue
+                            ? lastDialogueIndex
+                            : StoreHighestUnlockedDialogue;
                     }
                 }
-
-                var dialogueObject = StoreUnlockPoints > dialogueIndex
+                var dialogueObjectsDict = StoreUnlockPoints > dialogueIndex
                     ? _mUnderThresholdDialogues
                     : _mOverThresholdDialogues;
-                
                 var dialogueLine = _mDialogueData.values[i][1];
-                dialogueObject[dialogueIndex].DialogueLines.Add(dialogueLine);
+                dialogueObjectsDict[dialogueIndex].DialogueLines.Add(dialogueLine);
             }
         }
         #endregion
@@ -125,11 +144,12 @@ namespace DataUnits.JobSources
             var randomWaitTime = Random.Range(500, 12500);
             await Task.Delay(randomWaitTime);
 
-            var randomAnswerIndex = Random.Range(StoreUnlockPoints, _mOverThresholdDialogues.Count - 1);
+            var randomAnswerIndex = Random.Range(StoreUnlockPoints, StoreHighestUnlockedDialogue);
             var randomDialogue = _mOverThresholdDialogues[randomAnswerIndex];
             PhoneCallOperator.Instance.AnswerPhone();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
+        
         private async void RandomDeflection()
         {
             Debug.LogWarning("[RandomDeflection] STORE NOT UNLOCKED");
@@ -137,7 +157,8 @@ namespace DataUnits.JobSources
             {
                 return;
             }
-            var randomDeflectionIndex = Random.Range(1, _mUnderThresholdDialogues.Count - 1);
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomDeflectionIndex = Random.Range(1, StoreHighestLockedDialogue);
             var randomDialogue = _mUnderThresholdDialogues[randomDeflectionIndex];
             Random.InitState(DateTime.Now.Millisecond);
             var randomWaitTime = Random.Range(500, 12500);
@@ -146,6 +167,5 @@ namespace DataUnits.JobSources
             PhoneCallOperator.Instance.AnswerPhone();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
-        
     }
 }

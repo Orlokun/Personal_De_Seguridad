@@ -10,7 +10,7 @@ namespace GamePlayManagement
         public DateTime GameCreationDate { get; }
         public Guid GameId { get; }
         public IItemSuppliersModule GetActiveItemSuppliersModule();
-        public IJobsSourcesModule GetActiveJobModule();
+        public IJobsSourcesModule GetActiveJobsModule();
         public void UpdateProfileData();
         public int GeneralXP { get; set; }
     }

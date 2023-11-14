@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using CameraManagement;
@@ -189,7 +190,7 @@ namespace DialogueSystem
         {
             return Input.GetKeyDown(KeyCode.Space) 
                    && _currentState == UIDialogueState.FinishedTypingLine 
-                   && GeneralGamePlayStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
+                   && GeneralInputStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
         }
         private IEnumerator WriteDialogueLine(string dialogueLine)
         {
@@ -221,6 +222,7 @@ namespace DialogueSystem
                 {
                     //Add characters one by one with a little random component
                     mDialogueTextObject.text += letter;
+                    Random.InitState(DateTime.Now.Millisecond);
                     var typingSpeed = Random.Range(minWritingSpeed, maxWritingSpeed);
                     yield return new WaitForSeconds(typingSpeed);
                 }
@@ -270,7 +272,7 @@ namespace DialogueSystem
             
             if (_currentDialogue.ContainsBehavior(DialogueBehaviors.DialogueWithCamera))
             {
-                GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InDialogue);
+                GeneralInputStateManager.Instance.SetGamePlayState(InputGameState.InDialogue);
             }
         }
         #endregion

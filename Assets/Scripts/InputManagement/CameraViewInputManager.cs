@@ -11,7 +11,7 @@ namespace InputManagement
         private int _currentCameraIndex;
         private void Start()
         {
-            GeneralGamePlayStateManager.Instance.OnGameStateChange += OnGameStateChange;
+            GeneralInputStateManager.Instance.OnGameStateChange += OnGameStateChange;
             _mGameCameraManager = GameCameraManager.Instance;
             _mUIController = UIController.Instance;
             //_mGameCameraManager.ChangeCameraState(GameCameraState.Level);
@@ -21,7 +21,7 @@ namespace InputManagement
         private void Update()
         {
             #region Camera Input
-            if (GeneralGamePlayStateManager.Instance.CurrentInputGameState == InputGameState.InGame)
+            if (GeneralInputStateManager.Instance.CurrentInputGameState == InputGameState.InGame)
             {
                 var isCameraInput = false;
                 
@@ -166,7 +166,7 @@ namespace InputManagement
 
         private void OnDestroy()
         {
-            GeneralGamePlayStateManager.Instance.OnGameStateChange -= OnGameStateChange;
+            GeneralInputStateManager.Instance.OnGameStateChange -= OnGameStateChange;
         }
     }
 }

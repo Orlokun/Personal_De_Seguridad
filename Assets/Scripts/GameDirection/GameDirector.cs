@@ -4,8 +4,8 @@ using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.Initial_Office_Scene;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
-using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -48,7 +48,7 @@ namespace GameDirection
         private IGeneralGameStateManager _gameStateManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
-        
+        private IClockManagement _mClockManagement;
         //Scriptable Objects Catalogues
         private IBaseItemDataCatalogue _mItemDataCatalogue;
         private IBaseJobsCatalogue _mJobsCatalogue;
@@ -64,6 +64,7 @@ namespace GameDirection
         public HighLevelGameStates GetCurrentHighLvlGameState => _mGameState;
         public IPlayerGameProfile GetActiveGameProfile => _mActiveGameProfile;
         public ILevelManager GetLevelManager => _mLevelManager;
+        public IClockManagement GetClockInDayManagement => _mClockManagement;
         public IUIController GetUIController => _mUIController;
         public IGeneralUIFader GetGeneralFader => _mGeneralFader;
         public IGameCameraManager GetGameCameraManager => _mGameCameraManager;
@@ -93,7 +94,7 @@ namespace GameDirection
         {
             _mLevelManager = GetComponent<LevelManager>();
             _mGeneralFader = GetComponent<GeneralUIFader>();
-            _gameStateManager = GeneralGamePlayStateManager.Instance;
+            _gameStateManager = GeneralInputStateManager.Instance;
             _mGameCameraManager = GameCameraManager.Instance;             
         }
         private void LoadUIScene()
@@ -108,6 +109,7 @@ namespace GameDirection
             _mItemDataCatalogue = BaseItemCatalogue.Instance;
             _mJobsCatalogue = BaseJobsCatalogue.Instance;
             _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
+            _mClockManagement = ClockManagement.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             var dialoguesInterface = _mDialogueOperator.GetDialogueObjectInterfaces(introDialogues);
@@ -117,7 +119,7 @@ namespace GameDirection
             
             _mUIController.StartMainMenuUI();
             
-            GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.MainMenu);
+            _gameStateManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
         }
         #endregion
@@ -147,6 +149,15 @@ namespace GameDirection
         {
             ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             _mLevelManager.LoadFirstLevel();
+        }
+        
+        public void ReleaseFromDialogueStateToGame()
+        {
+            if (_gameStateManager.CurrentInputGameState != InputGameState.InDialogue)
+            {
+                return;
+            }
+            _gameStateManager.SetGamePlayState(InputGameState.InGame);
         }
         #endregion
         

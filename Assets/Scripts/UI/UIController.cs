@@ -73,13 +73,19 @@ namespace UI
         {
             foreach (var canvasOperator in _mActiveCanvasDict)
             {
+                if (canvasOperator.Key == (int) CanvasBitId.GamePlayCanvas)
+                {
+                    var clockObjectList = new List<int>() {(int) GameplayPanelsBitStates.IN_GAME_CLOCK};
+                    canvasOperator.Value.ActivateThisElementsOnly(clockObjectList);
+                    continue;
+                }
                 canvasOperator.Value.DeactivateAllElements();
             }
             //Base elements - Bit Info is just for editor
             var panelObjects = new List<int>() {BasePanelsBitStates.BASE_INFO};
             _mActiveCanvasDict[(int)CanvasBitId.BaseCanvas].ActivateThisElementsOnly(panelObjects);
-            //Item Sidebar
-            panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+            //Item Sidebar and clock
+            panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR, GameplayPanelsBitStates.IN_GAME_CLOCK};
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
         }
@@ -183,7 +189,7 @@ namespace UI
         }
         private void LoadInitialVariables()
         {
-            GeneralGamePlayStateManager.Instance.OnGameStateChange += UpdateInputState;
+            GeneralInputStateManager.Instance.OnGameStateChange += UpdateInputState;
             SaveCanvasOperatorsDictionaries();
             _mDialogueOperator = GetComponent<DialogueOperator>();
         }
@@ -205,7 +211,7 @@ namespace UI
         #region Disable
         private void OnDestroy()
         {
-            GeneralGamePlayStateManager.Instance.OnGameStateChange -= UpdateInputState;
+            GeneralInputStateManager.Instance.OnGameStateChange -= UpdateInputState;
         }
 
         #endregion
@@ -216,7 +222,7 @@ namespace UI
         private void UpdateInputState(InputGameState newGameState)
         {
             if (newGameState == InputGameState.Pause ||
-                GeneralGamePlayStateManager.Instance.CurrentInputGameState == InputGameState.Pause)
+                GeneralInputStateManager.Instance.CurrentInputGameState == InputGameState.Pause)
             {
                 TogglePausePanel();
             }

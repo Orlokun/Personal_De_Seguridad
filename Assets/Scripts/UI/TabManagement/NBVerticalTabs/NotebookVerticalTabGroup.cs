@@ -135,7 +135,7 @@ namespace UI.TabManagement.NBVerticalTabs
         }
         private void ManageJobObjectsInstantiation()
         {
-            var availableJobSources = _playerProfile.GetActiveJobModule().JobObjects;
+            var availableJobSources = _playerProfile.GetActiveJobsModule().JobObjects;
             var index = 0;
             foreach (var availableJobSource in availableJobSources)
             {

@@ -30,6 +30,9 @@ namespace DataUnits.ItemSources
         public int ItemTypesAvailable { get; set; }
         public int StoreUnlockPoints { get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
+        public int StoreHighestUnlockedDialogue { get; set; }
+        public int StoreHighestLockedDialogue { get; set; }
+
         
         private Dictionary<int, IDialogueObject> _mUnderThresholdDialogues = new Dictionary<int, IDialogueObject>();
         private Dictionary<int, IDialogueObject> _mOverThresholdDialogues = new Dictionary<int, IDialogueObject>();
@@ -46,6 +49,8 @@ namespace DataUnits.ItemSources
                 GetCurrentCallAnswer();
             }
         }
+
+
         private void GetCurrentCallAnswer()
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");

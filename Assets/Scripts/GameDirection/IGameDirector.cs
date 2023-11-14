@@ -1,6 +1,7 @@
 using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
+using GameDirection.TimeOfDayManagement;
 using GameManagement;
 using GamePlayManagement;
 using GamePlayManagement.LevelManagement;
@@ -12,6 +13,7 @@ namespace GameDirection
     {
         public void StartNewGame();
         public ILevelManager GetLevelManager { get; }
+        public IClockManagement GetClockInDayManagement { get; }
         public IUIController GetUIController { get; }
         public IGeneralUIFader GetGeneralFader { get; }
         public IGameCameraManager GetGameCameraManager { get; }
@@ -19,5 +21,7 @@ namespace GameDirection
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
         public IBaseItemDataCatalogue GetBaseItemDataCatalogue { get; }
+        public void ReleaseFromDialogueStateToGame();
+
     }
 }
