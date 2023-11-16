@@ -112,7 +112,6 @@ namespace GameDirection
             _mClockManagement = ClockManagement.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
-            var dialoguesInterface = _mDialogueOperator.GetDialogueObjectInterfaces(introDialogues);
             _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
             _dialoguesInSceneDataManager.Initialize(this);
             _dialoguesInSceneDataManager.OnFinishCurrentDialogue += LoadFirstLevel;

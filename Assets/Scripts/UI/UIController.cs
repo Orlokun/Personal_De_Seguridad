@@ -73,19 +73,18 @@ namespace UI
         {
             foreach (var canvasOperator in _mActiveCanvasDict)
             {
-                if (canvasOperator.Key == (int) CanvasBitId.GamePlayCanvas)
+                if (canvasOperator.Key == (int) CanvasBitId.BaseCanvas)
                 {
-                    var clockObjectList = new List<int>() {(int) GameplayPanelsBitStates.IN_GAME_CLOCK};
-                    canvasOperator.Value.ActivateThisElementsOnly(clockObjectList);
+                    var baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
+                        BasePanelsBitStates.IN_GAME_HELP_BUTTON};
+                    canvasOperator.Value.ActivateThisElementsOnly(baseObjects);
                     continue;
                 }
                 canvasOperator.Value.DeactivateAllElements();
             }
-            //Base elements - Bit Info is just for editor
-            var panelObjects = new List<int>() {BasePanelsBitStates.BASE_INFO};
-            _mActiveCanvasDict[(int)CanvasBitId.BaseCanvas].ActivateThisElementsOnly(panelObjects);
+            
             //Item Sidebar and clock
-            panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR, GameplayPanelsBitStates.IN_GAME_CLOCK};
+            var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
         }

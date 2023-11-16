@@ -154,14 +154,14 @@ namespace GameDirection.Initial_Office_Scene
             _mGameDirector.GetClockInDayManagement.SetClockAtDaytime(CurrentPartOfDay.EarlyMorning);
             _mGameDirector.GetClockInDayManagement.PlayPauseClock(true);
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= ReleaseFromDialogueStateAndStartClock;
+            StartCoroutine(PrepareFirstFeedback());
+        }
 
-        }
-        private IEnumerator PrepareForIntroductionReading()
+        private IEnumerator PrepareFirstFeedback()
         {
-            yield return new WaitForSeconds(2f);
-            StartCoroutine(PrepareIntroductionReading());
+            yield return new WaitForSeconds(2);
+            FeedbackManager.Instance.StartReadingFeedback(GeneralFeedbackId.QE_MOVEMENT);
         }
-        
         
 
         #endregion

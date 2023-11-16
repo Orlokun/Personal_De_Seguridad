@@ -5,6 +5,8 @@ namespace UI
         public static int BASE_INFO = 1;
         public static int BIT_INFO_PANEL = 2;
         public static int PAUSE_MENU = 4;
+        public static int IN_GAME_CLOCK = 8;
+        public static int IN_GAME_HELP_BUTTON = 16;
     }
     public static class GameplayPanelsBitStates
     {
@@ -13,7 +15,6 @@ namespace UI
         public static int TEXT_BACKGROUND = 4;
         public static int BOTTOM_DIALOGUE = 8;
         public static int IN_GAME_CLIENTS_TALK = 16;
-        public static int IN_GAME_CLOCK = 32;
     }
     
     public enum OfficePanelsBitStates

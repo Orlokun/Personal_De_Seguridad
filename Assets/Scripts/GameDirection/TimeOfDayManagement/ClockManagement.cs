@@ -121,7 +121,7 @@ namespace GameDirection.TimeOfDayManagement
             {
                 yield return new WaitForSeconds(.8f);
                 AdvanceGameMinute();
-                Debug.Log($"[Clock Tick] {_clockText.text}");
+                //Debug.Log($"[Clock Tick] {_clockText.text}");
             }
         }
 
@@ -194,7 +194,7 @@ namespace GameDirection.TimeOfDayManagement
             var currentMinuteText = "";
 
             currentMinuteText = currentMinute > 9 ? currentMinute.ToString() : "0" + currentMinute.ToString();
-            currentHourText = currentHour > 10 ? currentHour.ToString() : "0" + currentHour.ToString();
+            currentHourText = currentHour > 9 ? currentHour.ToString() : "0" + currentHour.ToString();
 
             _clockText.text = currentHourText + ":" + currentMinuteText;
         }

@@ -78,9 +78,9 @@ namespace DataUnits.JobSources
         }
         private void LoadDialoguesFromJson(string sourceJson)
         {
-            Debug.Log($"[JobSupplier.LoadDialoguesFromJson] Begin request");
+            //Debug.Log($"[JobSupplier.LoadDialoguesFromJson] Begin request");
             _mDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
-            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDialogueData == null}. {_mDialogueData}");
+            //Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDialogueData == null}. {_mDialogueData}");
             _mUnderThresholdDialogues = new Dictionary<int, IDialogueObject>();
             _mOverThresholdDialogues = new Dictionary<int, IDialogueObject>();
 
