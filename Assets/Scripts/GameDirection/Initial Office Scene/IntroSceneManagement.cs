@@ -17,14 +17,14 @@ namespace GameDirection.Initial_Office_Scene
     }
     public class DialoguesInSceneDataManager : MonoBehaviour, ISceneManager, IInitializeWithArg1<IGameDirector>
     {
-        private DialogueObjectsFromData introDialogues;
+        private DialogueObjectsFromData _introDialogues;
         public delegate void FinishCurrentDialogue();
         public event FinishCurrentDialogue OnFinishCurrentDialogue;
         private IGameDirector _mGameDirector;
-        private List<IDialogueObject> _introDialogueObjects;
+        private List<IDialogueObject> _introDialoguesList;
         private bool _isInitialized;
 
-        private int _dialogueIndex = 0;
+        private int _dialogueIndex;
 
         public bool IsInitialized => _isInitialized;
         public void Initialize(IGameDirector injectionClass1)
@@ -66,20 +66,20 @@ namespace GameDirection.Initial_Office_Scene
             Debug.Log($"DialoguesInSceneDataManager.LoadFromJson");
             Debug.Log($"StartParsing Dialogue Objects: {sourceJson}");
 
-            introDialogues = JsonConvert.DeserializeObject<DialogueObjectsFromData>(sourceJson);
-            Debug.Log($"Finished parsing Dialogue Data null?: {introDialogues == null}");
-            _introDialogueObjects = new List<IDialogueObject>();
+            _introDialogues = JsonConvert.DeserializeObject<DialogueObjectsFromData>(sourceJson);
+            Debug.Log($"Finished parsing Dialogue Data null?: {_introDialogues == null}");
+            _introDialoguesList = new List<IDialogueObject>();
             var lastDialogueIndex = 0;
             BaseDialogueObject currentDialogueObject;
-            if (introDialogues == null)
+            if (_introDialogues == null)
             {
                 return;
             }
             
-            for (var i = 1; i < introDialogues.values.Count;i++)
+            for (var i = 1; i < _introDialogues.values.Count;i++)
             {
                 int currentGroupIndex;
-                var gotIndex = int.TryParse(introDialogues.values[i][0], out currentGroupIndex);
+                var gotIndex = int.TryParse(_introDialogues.values[i][0], out currentGroupIndex);
                 if (!gotIndex)
                 {
                     Debug.LogWarning("Dialogue line has no index");
@@ -88,18 +88,18 @@ namespace GameDirection.Initial_Office_Scene
                 {
                     lastDialogueIndex = currentGroupIndex;
                     currentDialogueObject = ScriptableObject.CreateInstance<BaseDialogueObject>();
-                    var dialogueLine = introDialogues.values[i][1];
+                    var dialogueLine = _introDialogues.values[i][1];
                     currentDialogueObject.DialogueLines.Add(dialogueLine);
-                    _introDialogueObjects.Add(currentDialogueObject);
+                    _introDialoguesList.Add(currentDialogueObject);
                 }
                 else
                 {
-                    var dialogueObject = _introDialogueObjects[currentGroupIndex];
-                    var dialogueLine = introDialogues.values[i][1];
+                    var dialogueObject = _introDialoguesList[currentGroupIndex];
+                    var dialogueLine = _introDialogues.values[i][1];
                     dialogueObject.DialogueLines.Add(dialogueLine);
                 }
             }
-            Debug.Log($"[IntroSceneManager.LoadFromJson] Loaded {_introDialogueObjects.Count} Dialogues //");
+            Debug.Log($"[IntroSceneManager.LoadFromJson] Loaded {_introDialoguesList.Count} Dialogues //");
         }
         
         #region Introduction Region
@@ -112,19 +112,19 @@ namespace GameDirection.Initial_Office_Scene
             _mGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetUIController.ToggleBackground(true);
-            _mGameDirector.GetGeneralFader.GeneralCameraFadeIn();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralFadeIn();
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
             StartCoroutine(StartIntroductionReading());
         }
         private IEnumerator StartIntroductionReading()
         {
             yield return new WaitForSeconds(2f);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialogueObjects[_dialogueIndex]);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesList[_dialogueIndex]);
             _dialogueIndex++;
         }
         private void FinishIntroductionText()
         {
-            _mGameDirector.GetGeneralFader.GeneralCameraFadeOut();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralCameraFadeOut();
             StartCoroutine(FinishIntroductionReading());
         }
         private IEnumerator FinishIntroductionReading()
@@ -132,7 +132,7 @@ namespace GameDirection.Initial_Office_Scene
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetLevelManager.LoadOfficeLevel();
             _mGameDirector.GetUIController.ToggleBackground(false);
-            _mGameDirector.GetGeneralFader.GeneralCameraFadeIn();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralFadeIn();
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
             StartCoroutine(SecondDialogue());
         }
@@ -142,7 +142,7 @@ namespace GameDirection.Initial_Office_Scene
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromDialogueStateAndStartClock;
             yield return new WaitForSeconds(2.5f);
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialogueObjects[_dialogueIndex]);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesList[_dialogueIndex]);
             _dialogueIndex++;         
             OnFinishCurrentDialogue?.Invoke();
         }
@@ -151,7 +151,7 @@ namespace GameDirection.Initial_Office_Scene
         {
             _mGameDirector.ReleaseFromDialogueStateToGame();
             _mGameDirector.GetUIController.ReturnToBaseGamePlayCanvasState();
-            _mGameDirector.GetClockInDayManagement.SetClockAtDaytime(CurrentPartOfDay.EarlyMorning);
+            _mGameDirector.GetClockInDayManagement.SetClockAtDaytime(PartOfDay.EarlyMorning);
             _mGameDirector.GetClockInDayManagement.PlayPauseClock(true);
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= ReleaseFromDialogueStateAndStartClock;
             StartCoroutine(PrepareFirstFeedback());
@@ -159,7 +159,7 @@ namespace GameDirection.Initial_Office_Scene
 
         private IEnumerator PrepareFirstFeedback()
         {
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(6);
             FeedbackManager.Instance.StartReadingFeedback(GeneralFeedbackId.QE_MOVEMENT);
         }
         

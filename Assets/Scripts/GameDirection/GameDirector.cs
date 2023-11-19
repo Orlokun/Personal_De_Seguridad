@@ -27,14 +27,6 @@ namespace GameDirection
     [RequireComponent(typeof(GeneralUIFader))]
     public class GameDirector : MonoBehaviour, IGameDirector
     {
-        /////////////////////////////
-        //TODO: DELETE - JUST FOR TEST
-        [SerializeField] private List<BaseDialogueObject> introDialogues;
-        //TODO: END TODO:
-        /// <summary>
-        /// ////////////////////////////////////////////
-        /// </summary>
-        
         private static GameDirector _mInstance;
         public static IGameDirector Instance => _mInstance;
         
@@ -48,7 +40,8 @@ namespace GameDirection
         private IGeneralGameStateManager _gameStateManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
-        private IClockManagement _mClockManagement;
+        private IClockManagement _mClockManager;
+        private IFeedbackManager _mFeedbackManager;
         //Scriptable Objects Catalogues
         private IBaseItemDataCatalogue _mItemDataCatalogue;
         private IBaseJobsCatalogue _mJobsCatalogue;
@@ -64,14 +57,16 @@ namespace GameDirection
         public HighLevelGameStates GetCurrentHighLvlGameState => _mGameState;
         public IPlayerGameProfile GetActiveGameProfile => _mActiveGameProfile;
         public ILevelManager GetLevelManager => _mLevelManager;
-        public IClockManagement GetClockInDayManagement => _mClockManagement;
+        public IClockManagement GetClockInDayManagement => _mClockManager;
+        public IFeedbackManager GetFeedbackManager => _mFeedbackManager;
         public IUIController GetUIController => _mUIController;
-        public IGeneralUIFader GetGeneralFader => _mGeneralFader;
+        public IGeneralUIFader GetGeneralBackgroundFader => _mGeneralFader;
         public IGameCameraManager GetGameCameraManager => _mGameCameraManager;
         public IGeneralGameStateManager GetGameStateManager => _gameStateManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IBaseItemDataCatalogue GetBaseItemDataCatalogue => _mItemDataCatalogue;
+        
         #endregion
 
         #region Init
@@ -109,7 +104,8 @@ namespace GameDirection
             _mItemDataCatalogue = BaseItemCatalogue.Instance;
             _mJobsCatalogue = BaseJobsCatalogue.Instance;
             _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
-            _mClockManagement = ClockManagement.Instance;
+            _mClockManager = ClockManagement.Instance;
+            _mFeedbackManager = FeedbackManager.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
@@ -134,7 +130,6 @@ namespace GameDirection
             _mGameState = HighLevelGameStates.InCutScene;
             StartCoroutine(_dialoguesInSceneDataManager.PrepareIntroductionReading());
         }
-
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
@@ -143,13 +138,11 @@ namespace GameDirection
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule);
             _mActiveGameProfile.UpdateProfileData();
         }
-        
         private void LoadFirstLevel()
         {
             ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             _mLevelManager.LoadFirstLevel();
         }
-        
         public void ReleaseFromDialogueStateToGame()
         {
             if (_gameStateManager.CurrentInputGameState != InputGameState.InDialogue)

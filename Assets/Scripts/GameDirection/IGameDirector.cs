@@ -15,13 +15,13 @@ namespace GameDirection
         public ILevelManager GetLevelManager { get; }
         public IClockManagement GetClockInDayManagement { get; }
         public IUIController GetUIController { get; }
-        public IGeneralUIFader GetGeneralFader { get; }
+        public IGeneralUIFader GetGeneralBackgroundFader { get; }
         public IGameCameraManager GetGameCameraManager { get; }
         public IGeneralGameStateManager GetGameStateManager { get; }
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
         public IBaseItemDataCatalogue GetBaseItemDataCatalogue { get; }
+        public IFeedbackManager GetFeedbackManager { get; }
         public void ReleaseFromDialogueStateToGame();
-
     }
 }

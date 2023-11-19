@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 namespace GameDirection.TimeOfDayManagement
@@ -27,20 +28,20 @@ namespace GameDirection.TimeOfDayManagement
     public class JournalManagement
     {
         private DayBitId _currentDay;
-        private CurrentPartOfDay _currentTimeOfDay;
+        private PartOfDay _timeOfDay;
         private IPlayerProfileManager _mActivePlayerProfile;
 
-        public JournalManagement(DayBitId loadCurrentDay, CurrentPartOfDay loadCurrentPartOfDay, IPlayerProfileManager activePlayerProfile)
+        public JournalManagement(DayBitId loadCurrentDay, PartOfDay loadPartOfDay, IPlayerProfileManager activePlayerProfile)
         {
             _currentDay = loadCurrentDay;
-            _currentTimeOfDay = loadCurrentPartOfDay;
+            _timeOfDay = loadPartOfDay;
             _mActivePlayerProfile = activePlayerProfile;
         }
     }
 
     public interface IClockManagement
     {
-        public void SetClockAtDaytime(CurrentPartOfDay partOfDay);
+        public void SetClockAtDaytime(PartOfDay partOfDay);
         public void PlayPauseClock(bool isPlay);
 
     }
@@ -127,6 +128,7 @@ namespace GameDirection.TimeOfDayManagement
 
         private void AdvanceGameMinute()
         {
+            CheckIfChangesTimeOfDay();
             _mCurrentMinute++;
             if (_mCurrentMinute >= 60)
             {
@@ -142,6 +144,45 @@ namespace GameDirection.TimeOfDayManagement
             ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
         }
 
+        private void CheckIfChangesTimeOfDay()
+        {
+            if (_mCurrentHour == DayStartHour && _mCurrentMinute == DayStartMinute)
+            {
+                Debug.Log("[CheckIfChangesTimeOfDay] Early Morning");
+                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+                bannerObject.ToggleBannerForSeconds("Early Morning", 3);
+                return;
+            }
+            if (_mCurrentHour == MorningStartHour && _mCurrentMinute == MorningStartMinute)
+            {
+                Debug.Log("[CheckIfChangesTimeOfDay] Morning");
+                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+                bannerObject.ToggleBannerForSeconds("Morning", 3);
+                return;
+            }
+            if (_mCurrentHour == NoonStartHour && _mCurrentMinute == NoonStartHour)
+            {
+                Debug.Log("[CheckIfChangesTimeOfDay] Noon");
+                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+                bannerObject.ToggleBannerForSeconds("Noon", 3);
+                return;
+            }
+            if (_mCurrentHour == AfternoonStartHour && _mCurrentMinute == AfternoonStartMinute)
+            {
+                Debug.Log("[CheckIfChangesTimeOfDay] Afternoon");
+                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+                bannerObject.ToggleBannerForSeconds("Afternoon", 4);   
+                return;
+            }
+            if (_mCurrentHour == NightStartHour && _mCurrentMinute == NightStartMinute)
+            {
+                Debug.Log("[CheckIfChangesTimeOfDay] Night");                
+                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+                bannerObject.ToggleBannerForSeconds("Night", 4);
+                return;
+            }
+        }
+
         public void PlayPauseClock(bool isPlay)
         {
             isTimeAdvancing = isPlay;
@@ -151,36 +192,36 @@ namespace GameDirection.TimeOfDayManagement
             }
         }
 
-        public void SetClockAtDaytime(CurrentPartOfDay partOfDay)
+        public void SetClockAtDaytime(PartOfDay partOfDay)
         {
             switch (partOfDay)
             {
-                case CurrentPartOfDay.EarlyMorning:
+                case PartOfDay.EarlyMorning:
                     _mCurrentHour = DayStartHour;
                     _mCurrentMinute = DayStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case CurrentPartOfDay.Morning:
+                case PartOfDay.Morning:
                     _mCurrentHour = MorningStartHour;
                     _mCurrentMinute = MorningStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case CurrentPartOfDay.Noon:
+                case PartOfDay.Noon:
                     _mCurrentHour = NoonStartHour;
                     _mCurrentMinute = NoonStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case CurrentPartOfDay.Afternoon:
+                case PartOfDay.Afternoon:
                     _mCurrentHour = AfternoonStartHour;
                     _mCurrentMinute = AfternoonStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case CurrentPartOfDay.Evening:
+                case PartOfDay.Evening:
                     _mCurrentHour = EveningStartHour;
                     _mCurrentMinute = EveningStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case CurrentPartOfDay.Night:
+                case PartOfDay.Night:
                     _mCurrentHour = NightStartHour;
                     _mCurrentMinute = NightStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);

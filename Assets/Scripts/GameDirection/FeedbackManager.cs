@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
@@ -23,44 +22,43 @@ namespace GameDirection
         public static IFeedbackManager Instance => _mInstance;
         
         [SerializeField] private Image mFeedbackBaseObject;
-        private TMP_Text mFeedbackBaseText;
+        [SerializeField] private TMP_Text mFeedbackTextObject;
+        
         private FeedbackTextsData _mFeedbackTextsData;
         private Dictionary<GeneralFeedbackId, GeneralFeedbackObject> _feedbackObjects = new Dictionary<GeneralFeedbackId, GeneralFeedbackObject>();
-        private bool isInitialized = false;
-        public bool IsInitialized => isInitialized;
+        private bool _mInitialized;
+        public bool IsInitialized => _mInitialized;
 
-        private bool isDisplayingText = false;
+        private bool _mIsActive;
 
+        #region Init
         private void Awake()
         {
             if (mFeedbackBaseObject != null)
             {            
-                mFeedbackBaseText = mFeedbackBaseObject.transform.GetChild(0).GetComponent<TMP_Text>();
                 mFeedbackBaseObject.gameObject.SetActive(false);
             }
         }
 
         private void Start()
         {
-            if (!isInitialized)
+            if (_mInstance != null && _mInstance != this)
             {
-                Initialize();
+                Destroy(this);
             }
+            Initialize();
         }
-        
         public void Initialize()
         {
-            if (isInitialized)
+            if (_mInitialized)
             {
                 return;
             }
-            isInitialized = true;
-            _mInstance = this;
-
             var url = DataSheetUrls.FeedbacksGameDataUrl;
             StartCoroutine(GetFeedbacksData(url));
+            _mInitialized = true;
+            _mInstance = this;
         }
-    
         private IEnumerator GetFeedbacksData(string url)
         {
             Debug.Log("[GetFeedbacksData] Creating Web request done");
@@ -105,10 +103,15 @@ namespace GameDirection
                 }
             }
         }
+        #endregion
 
+        /// <summary>
+        /// API call to start reading
+        /// </summary>
+        /// <param name="feedbackType"></param>
         public void StartReadingFeedback(GeneralFeedbackId feedbackType)
         {
-            if (!isInitialized)
+            if (!_mInitialized)
             {
                 Initialize();
             }
@@ -119,27 +122,40 @@ namespace GameDirection
             ReadFeedbackForTime(_feedbackObjects[feedbackType].FeedbackText,
                 _feedbackObjects[feedbackType].FeedbackReadTime);
         }
-
         private void ReadFeedbackForTime(string feedbackText, int timeLength)
         {
-            if (isDisplayingText)
+            if (_mIsActive)
             {
                 return;
             }
             StartCoroutine(StartFeedbackDisplay(feedbackText, timeLength));
         }
-
         private IEnumerator StartFeedbackDisplay(string feedbackText, int time)
         {
-            isDisplayingText = true;
-            mFeedbackBaseText.text = feedbackText;
-            mFeedbackBaseObject.gameObject.SetActive(isDisplayingText);
-
-            yield return new WaitForSeconds(time);
+            _mIsActive = true;
+            mFeedbackTextObject.text = feedbackText;
+            var bgAnim = mFeedbackBaseObject.GetComponent<Animator>();
+            var textAnim = mFeedbackTextObject.GetComponent<Animator>();
             
-            isDisplayingText = false;
-            mFeedbackBaseText.text = "";
-            mFeedbackBaseObject.gameObject.SetActive(isDisplayingText);
+            if (!bgAnim || !textAnim)
+            {
+                yield break;
+            }
+            mFeedbackBaseObject.gameObject.SetActive(_mIsActive);
+            
+            bgAnim.Play(AnimationHashData.BgFadeIn);
+            textAnim.Play(AnimationHashData.TextFadeIn);
+            var fadeClips = bgAnim.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            var seconds = time + fadeClips;
+            yield return new WaitForSeconds(seconds);
+            
+            mFeedbackTextObject.text = "";
+            bgAnim.Play(AnimationHashData.BgFadeOut);
+            textAnim.Play(AnimationHashData.TextFadeOut);
+            fadeClips = bgAnim.GetCurrentAnimatorClipInfo(0)[0].clip.length;
+            yield return new WaitForSeconds(fadeClips);
+            _mIsActive = false;
+            mFeedbackBaseObject.gameObject.SetActive(_mIsActive);
         }
     }
 }

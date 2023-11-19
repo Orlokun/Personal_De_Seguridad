@@ -1,6 +1,6 @@
 namespace GameDirection.TimeOfDayManagement
 {
-    public enum CurrentPartOfDay
+    public enum PartOfDay
     {
         EarlyMorning,       // 7.30
         Morning,            // 10.00

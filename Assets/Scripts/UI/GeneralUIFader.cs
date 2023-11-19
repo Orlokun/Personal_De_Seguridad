@@ -5,19 +5,20 @@ namespace UI
 {
     public class GeneralUIFader : MonoBehaviour, IGeneralUIFader
     {
-        private static readonly int FadeIn = Animator.StringToHash("FadeIn");
+        private static readonly int FadeIn = Animator.StringToHash("ObjectFadeOut");
+        private static readonly int FadeOut = Animator.StringToHash("ObjectFadeIn");
         [SerializeField] private Animator GeneralFadeOutPanelAnim;
         private void Start()
         {
             DontDestroyOnLoad(GeneralFadeOutPanelAnim.gameObject.transform.parent);
         }
-        public void GeneralCameraFadeIn()
+        public void GeneralFadeIn()
         {
-            GeneralFadeOutPanelAnim.SetBool(FadeIn, true);
+            GeneralFadeOutPanelAnim.Play(FadeIn);
         }
         public void GeneralCameraFadeOut()
         {   
-            GeneralFadeOutPanelAnim.SetBool(FadeIn, false);
+            GeneralFadeOutPanelAnim.Play(FadeOut);
         }
     }
 }

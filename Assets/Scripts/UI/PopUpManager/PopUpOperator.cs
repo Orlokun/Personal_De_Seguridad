@@ -6,7 +6,8 @@ namespace UI.PopUpManager
 {
     public enum BitPopUpId
     {
-        NotebookObjectAction = 1
+        NOTEBOOK_ACTION_POPUP = 1,
+        LARGE_HORIZONTAL_BANNER = 2
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -75,10 +76,13 @@ namespace UI.PopUpManager
         {
             switch (newPopUp)
             {
-                case BitPopUpId.NotebookObjectAction:
+                case BitPopUpId.NOTEBOOK_ACTION_POPUP:
                     //const string pathString = PopupPath + "UI/PopUps/UI_SupplierUIActions";
-                    var popUpPrefab = (GameObject)Instantiate(Resources.Load("UI/PopUps/UI_SupplierUIActions"), transform);
-                    return popUpPrefab.GetComponent<SelectSupplierNotebookButtonAction>();
+                    var notebookOptions = (GameObject)Instantiate(Resources.Load("UI/PopUps/UI_SupplierUIActions"), transform);
+                    return notebookOptions.GetComponent<SelectSupplierNotebookButtonAction>();
+                case BitPopUpId.LARGE_HORIZONTAL_BANNER:
+                    var bannerPrefab = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
+                    return bannerPrefab.GetComponent<BannerObjectController>();
                 default:
                     return null;
             }

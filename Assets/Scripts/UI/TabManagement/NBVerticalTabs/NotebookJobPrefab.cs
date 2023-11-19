@@ -29,7 +29,7 @@ namespace UI.TabManagement.NBVerticalTabs
         
         public void OpenOptionsPopUp()
         {
-            var popUp = _popUpOperator.ActivatePopUp(BitPopUpId.NotebookObjectAction);
+            var popUp = _popUpOperator.ActivatePopUp(BitPopUpId.NOTEBOOK_ACTION_POPUP);
             var casPopUp = (IItemSupplierNotebookButtonAction) popUp;
             casPopUp.SetSupplier((int)_supplierId, CallableObjectType.Job);
         }
