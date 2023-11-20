@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UI.PopUpManager.NotebookScreen;
+using UI.PopUpManager.OfficeRelatedPopUps;
 using UnityEngine;
 
 namespace UI.PopUpManager
@@ -85,8 +86,8 @@ namespace UI.PopUpManager
                     var bannerPrefab = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
                     return bannerPrefab.GetComponent<BannerObjectController>();
                     case BitPopUpId.CIGAR_CONFIRMATION_POPUP:
-                    var cigarConfirmationPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
-                    return cigarConfirmationPopup.GetComponent<BannerObjectController>();
+                    var cigarConfirmationPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_Office_CigarActionConfirmation"), transform);
+                    return cigarConfirmationPopup.GetComponent<CigarConfirmationPopUp>();
                 default:
                     return null;
             }

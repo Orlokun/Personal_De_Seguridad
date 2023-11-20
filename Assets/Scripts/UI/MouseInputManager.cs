@@ -37,11 +37,9 @@ namespace UI
                 }
                 
                 Cursor.SetCursor(interactiveObjectMouseTexture, Vector2.zero, CursorMode.Auto);   
-                Debug.Log("[MouseInputManager] Hovering an interactive office object");
             }
             else
             {            
-                Debug.Log("[MouseInputManager] Regular state");
                 Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);
                 _mHoveredObject = null;
             }
