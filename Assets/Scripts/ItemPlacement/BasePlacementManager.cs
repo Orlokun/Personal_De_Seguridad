@@ -162,13 +162,17 @@ namespace ItemPlacement
 
             Debug.Log("[ObjectSelectedInsideZone] Item Selected Correctly");
             var newPoint = Input.mousePosition;
-            Ray ray = UnityEngine.Camera.main.ScreenPointToRay(newPoint);
-            RaycastHit hitInfo;
-            if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask) && !Physics.Raycast(ray, 1000, blockLayerMasks))
+            if (Camera.main != null)
             {
-                Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
-                return true;
+                Ray ray = Camera.main.ScreenPointToRay(newPoint);
+                RaycastHit hitInfo;
+                if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask) && !Physics.Raycast(ray, 1000, blockLayerMasks))
+                {
+                    Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
+                    return true;
+                }
             }
+
             return false;
         }
         

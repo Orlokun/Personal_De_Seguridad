@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using GameDirection;
+using GameDirection.TimeOfDayManagement;
 using TMPro;
 using UI.PopUpManager;
 using UnityEngine;
@@ -8,6 +11,42 @@ public interface IBannerObjectController
 {
     public void ToggleBannerForSeconds(string newText, float seconds);
 }
+
+public class CigarConfirmationPopUp : ConfirmationPopUp
+{
+    private void Start()
+    {
+        GameDirector.Instance.GetClockInDayManagement.PlayPauseClock(false);
+    }
+
+    public override void ConfirmAction()
+    {
+        GameDirector.Instance.GetClockInDayManagement.
+    }
+    public override void CancelAction()
+    {
+        
+    }
+}
+
+public interface IConfirmationPopUp
+{
+    void CancelAction();
+    void ConfirmAction();
+}
+
+public class ConfirmationPopUp : PopUpObject, IConfirmationPopUp
+{
+    public virtual void CancelAction()
+    {
+        
+    }
+    public virtual void ConfirmAction()
+    {
+        
+    }
+}
+
 public class BannerObjectController : PopUpObject, IBannerObjectController
 {
     private Animator _mTextAnimator;

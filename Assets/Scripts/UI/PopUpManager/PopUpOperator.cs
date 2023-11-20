@@ -7,7 +7,8 @@ namespace UI.PopUpManager
     public enum BitPopUpId
     {
         NOTEBOOK_ACTION_POPUP = 1,
-        LARGE_HORIZONTAL_BANNER = 2
+        LARGE_HORIZONTAL_BANNER = 2,
+        CIGAR_CONFIRMATION_POPUP = 3
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -83,6 +84,9 @@ namespace UI.PopUpManager
                 case BitPopUpId.LARGE_HORIZONTAL_BANNER:
                     var bannerPrefab = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
                     return bannerPrefab.GetComponent<BannerObjectController>();
+                    case BitPopUpId.CIGAR_CONFIRMATION_POPUP:
+                    var cigarConfirmationPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
+                    return cigarConfirmationPopup.GetComponent<BannerObjectController>();
                 default:
                     return null;
             }

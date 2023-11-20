@@ -43,7 +43,8 @@ namespace GameDirection.TimeOfDayManagement
     {
         public void SetClockAtDaytime(PartOfDay partOfDay);
         public void PlayPauseClock(bool isPlay);
-
+        public PartOfDay GetCurrentPartOfDay();
+        public void AdvanceToNextPartOfDay();
     }
 
     [RequireComponent(typeof(TMP_Text))]
@@ -51,7 +52,8 @@ namespace GameDirection.TimeOfDayManagement
     {
         private static IClockManagement _mInstance;
         public static IClockManagement Instance => _mInstance;
-        
+
+        #region Time of Day Members
         private const int DayStartHour = 7;
         private const int DayStartMinute = 0;
         
@@ -72,22 +74,23 @@ namespace GameDirection.TimeOfDayManagement
         
         private const int DayFinishHour = 19;
         private const int DayFinishMinute = 0;
-        
+        #endregion
+
         private bool isTimeAdvancing = false;
         private int _mCurrentHour = 0;
         private int _mCurrentMinute = 0;
+        private bool _mIsInitialized;
+        private PartOfDay _mCurrentPartOfDay;
 
         [SerializeField]
         private TMP_Text _clockText;
 
+        #region Init
         private void Awake()
         {
             Initialize();
         }
-
-        private bool _mIsInitialized;
         public bool IsInitialized => _mIsInitialized;
-        
         public void Initialize()
         {
             if (_mIsInitialized)
@@ -106,7 +109,6 @@ namespace GameDirection.TimeOfDayManagement
             gameObject.SetActive(false);
             _mIsInitialized = true;
         }
-
         private void OnEnable()
         {
             if (isTimeAdvancing || !_mIsInitialized)
@@ -115,6 +117,7 @@ namespace GameDirection.TimeOfDayManagement
             }
             StartCoroutine(UpdateClock());
         }
+        #endregion
 
         private IEnumerator UpdateClock()
         {
@@ -140,7 +143,6 @@ namespace GameDirection.TimeOfDayManagement
             {
                 Debug.Log("DAY FINISHED");
             }
-
             ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
         }
 
@@ -149,6 +151,7 @@ namespace GameDirection.TimeOfDayManagement
             if (_mCurrentHour == DayStartHour && _mCurrentMinute == DayStartMinute)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Early Morning");
+                _mCurrentPartOfDay = PartOfDay.EarlyMorning;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Early Morning", 3);
                 return;
@@ -156,6 +159,7 @@ namespace GameDirection.TimeOfDayManagement
             if (_mCurrentHour == MorningStartHour && _mCurrentMinute == MorningStartMinute)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Morning");
+                _mCurrentPartOfDay = PartOfDay.Morning;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Morning", 3);
                 return;
@@ -163,6 +167,7 @@ namespace GameDirection.TimeOfDayManagement
             if (_mCurrentHour == NoonStartHour && _mCurrentMinute == NoonStartHour)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Noon");
+                _mCurrentPartOfDay = PartOfDay.Noon;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Noon", 3);
                 return;
@@ -170,13 +175,15 @@ namespace GameDirection.TimeOfDayManagement
             if (_mCurrentHour == AfternoonStartHour && _mCurrentMinute == AfternoonStartMinute)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Afternoon");
+                _mCurrentPartOfDay = PartOfDay.Afternoon;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Afternoon", 4);   
                 return;
             }
             if (_mCurrentHour == NightStartHour && _mCurrentMinute == NightStartMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Night");                
+                Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
+                _mCurrentPartOfDay = PartOfDay.Night;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Night", 4);
                 return;
@@ -190,6 +197,26 @@ namespace GameDirection.TimeOfDayManagement
             {
                 StartCoroutine(UpdateClock());
             }
+        }
+
+        public PartOfDay GetCurrentPartOfDay()
+        {
+            return _mCurrentPartOfDay;
+        }
+
+        public void AdvanceToNextPartOfDay()
+        {
+            if (_mCurrentPartOfDay == PartOfDay.Afternoon)
+            {
+                StartFinishDay();   
+                return;
+            }
+            _mCurrentPartOfDay++;
+        }
+
+        private void StartFinishDay()
+        {
+            Debug.Log("Finishing Day");   
         }
 
         public void SetClockAtDaytime(PartOfDay partOfDay)

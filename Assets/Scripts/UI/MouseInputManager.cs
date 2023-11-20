@@ -6,6 +6,8 @@ namespace UI
         [SerializeField] private Texture2D interactiveObjectMouseTexture;
         [SerializeField] private Texture2D defaultMouseTexture;
         [SerializeField] private LayerMask officeObjectLayer;
+
+        private IOfficeInteractiveObject _mHoveredObject; 
         
         private void Awake()
         {
@@ -18,21 +20,42 @@ namespace UI
             {
                 return;
             }
+            ManageMouseCursor();
+            ManageMouseClick();
+        }
+
+        private void ManageMouseCursor()
+        {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hitInfo, 100, officeObjectLayer))
             {
                 var interactiveObject = hitInfo.collider.gameObject;
-                if (!interactiveObject.TryGetComponent<OfficeInteractiveObject>(out var interactiveComponent))
+                if (!interactiveObject.TryGetComponent<IOfficeInteractiveObject>(out _mHoveredObject))
                 {
+                    Debug.LogError("[MouseInputManager.ManageMouseCursor] Mouse interactive object component not found");
                     return;
                 }
+                
                 Cursor.SetCursor(interactiveObjectMouseTexture, Vector2.zero, CursorMode.Auto);   
                 Debug.Log("[MouseInputManager] Hovering an interactive office object");
             }
             else
             {            
                 Debug.Log("[MouseInputManager] Regular state");
-                Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);   
+                Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);
+                _mHoveredObject = null;
+            }
+        }
+
+        private void ManageMouseClick()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (_mHoveredObject == null)
+                {
+                    return;
+                }
+                _mHoveredObject.SendClickObject();
             }
         }
     }
