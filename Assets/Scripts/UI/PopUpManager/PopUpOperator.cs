@@ -9,7 +9,7 @@ namespace UI.PopUpManager
     {
         NOTEBOOK_ACTION_POPUP = 1,
         LARGE_HORIZONTAL_BANNER = 2,
-        CIGAR_CONFIRMATION_POPUP = 3
+        CIGAR_CONFIRMATION_POPUP = 4
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -35,15 +35,25 @@ namespace UI.PopUpManager
         {
             return ((int) popUpId & _mActiveBitPopUps) != 0;
         }
+
+        public IPopUpObject GetActivePopUp(BitPopUpId popUpId)
+        {
+            if (!_activePopUps.ContainsKey(popUpId))
+            {
+                Debug.LogError("[GetActivePopUp]Pop Up Must Be Active Before Getting!");
+            }
+            return _activePopUps[popUpId];
+        }
+
         public void TogglePopUpsActive(bool isActive)
         {
             
         }
         public IPopUpObject ActivatePopUp(BitPopUpId newPopUp)
         {
-            if (((int) newPopUp & _mActiveBitPopUps) != 0)
+            if (IsPopupActive(newPopUp))
             {
-                return null;
+                return GetActivePopUp(newPopUp);
             }
             _mActiveBitPopUps |= (int)newPopUp;
             var popUpInterface = InstantiatePopUp(newPopUp);
@@ -72,6 +82,36 @@ namespace UI.PopUpManager
             }
             _activePopUps.Clear();
             _mActiveBitPopUps = 0;
+        }
+        public void RemoveAllPopUpsExceptOne(BitPopUpId exceptPopUp)
+        {
+            var deletedObjects = new List<BitPopUpId>();
+            foreach (var activePopUp in _activePopUps)
+            {
+                if (activePopUp.Key != exceptPopUp)
+                {
+                    _mActiveBitPopUps &= ~(int) activePopUp.Key; 
+                    activePopUp.Value.DeletePopUp();
+                    deletedObjects.Add(activePopUp.Key);
+                }
+            }
+
+            foreach (var deletedObject in deletedObjects)
+            {
+                if (_activePopUps.ContainsKey(deletedObject))
+                {
+                    _activePopUps.Remove(deletedObject);
+                }
+            }
+            if((_mActiveBitPopUps & (int) exceptPopUp) != 0)
+            {
+                _mActiveBitPopUps = (int)exceptPopUp;
+            }
+            /*
+            else
+            {
+                _mActiveBitPopUps = 0;
+            }*/
         }
 
         private IPopUpObject InstantiatePopUp(BitPopUpId newPopUp)

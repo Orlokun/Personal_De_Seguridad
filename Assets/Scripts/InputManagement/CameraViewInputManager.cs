@@ -71,7 +71,6 @@ namespace InputManagement
                 }
             }
             #endregion
-
         }
 
         private void OnGameStateChange(InputGameState newGameState)

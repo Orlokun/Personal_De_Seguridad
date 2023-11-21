@@ -7,6 +7,6 @@ namespace GameDirection.TimeOfDayManagement
         Noon,               // 12.30
         Afternoon,          // 15.00
         Evening,            // 18.00
-        Night               // 20.00
+        EndOfDay               // 20.00
     }
 }

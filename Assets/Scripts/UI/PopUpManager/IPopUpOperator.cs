@@ -8,5 +8,7 @@ namespace UI.PopUpManager
         public void RemoveAllPopUps();
         public void TogglePopUpsActive(bool isActive);
 
+        public void RemoveAllPopUpsExceptOne(BitPopUpId exception);
+
     }
 }

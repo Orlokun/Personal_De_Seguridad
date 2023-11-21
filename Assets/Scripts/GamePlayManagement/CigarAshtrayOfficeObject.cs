@@ -6,6 +6,7 @@ namespace GamePlayManagement
     {
         public override void SendClickObject()
         {
+            base.SendClickObject();
             if (PopUpOperator.Instance.IsPopupActive(BitPopUpId.CIGAR_CONFIRMATION_POPUP))
             {
                 return;

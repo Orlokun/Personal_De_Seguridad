@@ -109,7 +109,7 @@ namespace GameDirection.TimeOfDayManagement
             gameObject.SetActive(false);
             _mIsInitialized = true;
         }
-        private void OnEnable()
+        private void OnStart()
         {
             if (isTimeAdvancing || !_mIsInitialized)
             {
@@ -164,7 +164,7 @@ namespace GameDirection.TimeOfDayManagement
                 bannerObject.ToggleBannerForSeconds("Morning", 3);
                 return;
             }
-            if (_mCurrentHour == NoonStartHour && _mCurrentMinute == NoonStartHour)
+            if (_mCurrentHour == NoonStartHour && _mCurrentMinute == NoonStartMinute)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Noon");
                 _mCurrentPartOfDay = PartOfDay.Noon;
@@ -183,15 +183,21 @@ namespace GameDirection.TimeOfDayManagement
             if (_mCurrentHour == NightStartHour && _mCurrentMinute == NightStartMinute)
             {
                 Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
-                _mCurrentPartOfDay = PartOfDay.Night;
+                _mCurrentPartOfDay = PartOfDay.EndOfDay;
                 var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
                 bannerObject.ToggleBannerForSeconds("Night", 4);
                 return;
             }
         }
 
+
         public void PlayPauseClock(bool isPlay)
         {
+            if (isPlay && isTimeAdvancing)
+            {
+                return;
+            }
+            
             isTimeAdvancing = isPlay;
             if (isTimeAdvancing)
             {
@@ -221,6 +227,11 @@ namespace GameDirection.TimeOfDayManagement
 
         public void SetClockAtDaytime(PartOfDay partOfDay)
         {
+            if (partOfDay == _mCurrentPartOfDay && partOfDay != PartOfDay.EarlyMorning)
+            {
+                return;
+            }
+            _mCurrentPartOfDay = partOfDay;
             switch (partOfDay)
             {
                 case PartOfDay.EarlyMorning:
@@ -248,11 +259,14 @@ namespace GameDirection.TimeOfDayManagement
                     _mCurrentMinute = EveningStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
-                case PartOfDay.Night:
-                    _mCurrentHour = NightStartHour;
-                    _mCurrentMinute = NightStartMinute;
+                case PartOfDay.EndOfDay:
+                    _mCurrentHour = EveningStartHour;
+                    _mCurrentMinute = EveningStartMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
+                    StartFinishDay();   
                     break;
+                default:
+                    return;
             }
         }
 

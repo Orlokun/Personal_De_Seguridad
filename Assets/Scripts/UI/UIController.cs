@@ -5,6 +5,7 @@ using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using InputManagement;
 using Players_NPC;
+using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 
@@ -98,6 +99,7 @@ namespace UI
             }
             var bitList = new List<int>() {indexBitValue};
             _mActiveCanvasDict[(int)CanvasBitId.Office].ActivateThisElementsOnly(bitList);
+            PopUpOperator.Instance.RemoveAllPopUpsExceptOne(BitPopUpId.LARGE_HORIZONTAL_BANNER);
         }
         public void ActivateObject(CanvasBitId canvasBitId, int panel)
         {

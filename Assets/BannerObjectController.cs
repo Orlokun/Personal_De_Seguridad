@@ -4,7 +4,7 @@ using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 
-public interface IBannerObjectController
+public interface IBannerObjectController : IPopUpObject
 {
     public void ToggleBannerForSeconds(string newText, float seconds);
 }
