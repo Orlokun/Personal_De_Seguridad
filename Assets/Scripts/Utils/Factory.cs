@@ -14,9 +14,9 @@ namespace Utils
         {
             return new DialogueCameraMan();
         }
-        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IBaseItemDataCatalogue itemDataCatalogue,IBaseItemSuppliersCatalogue suppliersCatalogue)
+        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IItemsDataController itemDataController,IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
-            return new ItemSupplierShop(itemSupplier, itemDataCatalogue, suppliersCatalogue);
+            return new ItemSupplierShop(itemSupplier, itemDataController, suppliersCatalogue);
         }
         
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule)
@@ -24,9 +24,9 @@ namespace Utils
             return new PlayerGameProfile(itemSuppliersModule, jobsModule);
         }
 
-        public static IItemSuppliersModule CreateItemSuppliersModule(IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue suppliersCatalogue)
+        public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
-            return new ItemSuppliersModule(itemDataCatalogue, suppliersCatalogue);
+            return new ItemSuppliersModule(itemDataController, suppliersCatalogue);
         }
         public static IJobsSourcesModule CreateJobSourcesModule(IBaseJobsCatalogue jobsCatalogue)
         {

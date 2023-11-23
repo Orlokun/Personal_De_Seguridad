@@ -36,11 +36,6 @@ namespace UI.PopUpManager.NotebookScreen
         {
             Debug.Log($"Not Implemented. Supplier is: {_supplierId}");
         }
-        
-        protected override void InitializeValues()
-        {
-            
-        }
 
         public void OnPointerClick(PointerEventData eventData)
         {

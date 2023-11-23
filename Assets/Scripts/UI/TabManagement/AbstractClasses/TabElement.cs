@@ -30,7 +30,7 @@ namespace UI.TabManagement.AbstractClasses
             Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");
             if (_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab != _mIndex)
             {
-                _tabGroup.UpdateTabGroupContent(_mIndex);
+                _tabGroup.UpdateTabItemGroupTypes(_mIndex);
                 return;
             }
             
@@ -43,7 +43,7 @@ namespace UI.TabManagement.AbstractClasses
             if (!_tabGroup.IsTabGroupActive)
             {
                 _tabGroup.ActivateTabInUI();
-                _tabGroup.UpdateTabGroupContent(_mIndex);
+                _tabGroup.UpdateTabItemGroupTypes(_mIndex);
             }
             Debug.Log($"[TabElement.OnPointerClick] Tab Group Named {gameObject.name}");
         }

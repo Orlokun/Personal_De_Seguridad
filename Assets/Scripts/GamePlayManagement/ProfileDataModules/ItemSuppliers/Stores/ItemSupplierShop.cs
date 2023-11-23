@@ -30,19 +30,19 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         private Dictionary<int, IItemObject> _activeItemsData = new Dictionary<int, IItemObject>();
         
         
-        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IItemsDataController _mItemDataController;
         private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bitSupplierId"></param>
-        /// <param name="itemDataCatalogue"></param>
+        /// <param name="itemDataController"></param>
         /// <param name="suppliersCatalogue"></param>
-        public ItemSupplierShop(BitItemSupplier bitSupplierId, IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue suppliersCatalogue)
+        public ItemSupplierShop(BitItemSupplier bitSupplierId, IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
             BitSupplierId = bitSupplierId;
-            _mItemDataCatalogue = itemDataCatalogue;
+            _mItemDataController = itemDataController;
             _mSuppliersCatalogue = suppliersCatalogue;
             _mSupplierData = _mSuppliersCatalogue.GetItemSupplierData(BitSupplierId);
         }
@@ -74,7 +74,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
                 return;
             }
 
-            var getItem = _mItemDataCatalogue.GetItemFromCatalogue(BitSupplierId, bitItemId);
+            var getItem = _mItemDataController.GetItemFromCatalogue(BitSupplierId, bitItemId);
             if (getItem == null)
             {
                 Debug.LogError("[AddItemToSupplier] Item Added must exist in Base Catalogue");

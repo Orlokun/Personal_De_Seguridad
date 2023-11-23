@@ -94,7 +94,7 @@ namespace DataUnits.JobSources
                 var isDialogueIndex = int.TryParse(_mDialogueData.values[i][0], out var dialogueIndex);
                 if (dialogueIndex == 0 || !isDialogueIndex)
                 {
-                    Debug.LogWarning("[JobSupplierObject.LoadDialoguesFromJson] Dialogue must have Index greater than zero");
+                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {StoreName} must have Index greater than zero");
                     return;
                 }
                 if (i == 1 || lastDialogueIndex != dialogueIndex)

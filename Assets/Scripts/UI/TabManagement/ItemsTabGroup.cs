@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
+using ItemPlacement;
 using UI.TabManagement.AbstractClasses;
 using UnityEngine;
 namespace UI.TabManagement
@@ -38,9 +39,9 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateTabGroupContent(int selectedTabIndex)
+        public override void UpdateTabItemGroupTypes(int selectedTabIndex)
         {
-            base.UpdateTabGroupContent(selectedTabIndex);
+            base.UpdateTabItemGroupTypes(selectedTabIndex);
             if (gridParentObject.childCount > 0)
             {
                 ClearGrid();
@@ -48,16 +49,16 @@ namespace UI.TabManagement
             _activeItems = GetItemsOfType((BitItemType) selectedTabIndex);
             foreach (var activeItem in _activeItems)
             {
-                var itemTypePrefab = GetItemPrefab((BitItemType) selectedTabIndex);
+                var itemTypePrefab = GetItemPrefabType((BitItemType) selectedTabIndex);
                 var activeItemObject = Instantiate(itemTypePrefab, gridParentObject);
                 
                 //Update Object aspect in UI 
-                var itemBaseObject = activeItemObject.GetComponent<BaseInventoryItem>();
-                itemBaseObject.IconImage.sprite = activeItem.ItemIcon;
+                var itemBaseObject = activeItemObject.GetComponent<BaseItemIconUIObject>();
+                itemBaseObject.Initialize(activeItem);
             }
         }
 
-        private GameObject GetItemPrefab(BitItemType type)
+        private GameObject GetItemPrefabType(BitItemType type)
         {
             switch (type)
             {

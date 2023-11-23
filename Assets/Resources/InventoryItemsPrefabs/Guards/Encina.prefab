@@ -7521,7 +7521,6 @@ GameObject:
   - component: {fileID: 1566783134381587983}
   - component: {fileID: 2654730060289208691}
   - component: {fileID: 7198465433987725718}
-  - component: {fileID: 5957088147157058665}
   m_Layer: 0
   m_Name: Encina
   m_TagString: Untagged
@@ -7726,7 +7725,7 @@ MonoBehaviour:
     - {fileID: 1538819984743856977}
     - {fileID: 5378042782320199804}
   prefabPath: Assets/AdvancedPeopleSystem2/Prefabs/CustomizableCharacter.prefab
-  instanceStatus: 1
+  instanceStatus: 5
   originHip: {fileID: 4624240754163697216}
   headHip: {fileID: 2642828159911225153}
   clothesAnchors:
@@ -8183,28 +8182,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &5957088147157058665
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5085081953980375545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5fc9a6e72a4906884ee455e8701667, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  radius: 10
-  angle: 73
-  foundObject: {fileID: 0}
-  customerLayerMask:
-    serializedVersion: 2
-    m_Bits: 256
-  obstructionMask:
-    serializedVersion: 2
-    m_Bits: 64
-  canSeeCustomer: 1
 --- !u!1 &5213116276099316583
 GameObject:
   m_ObjectHideFlags: 0

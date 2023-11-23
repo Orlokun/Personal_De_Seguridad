@@ -12,16 +12,16 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
     public class ItemSuppliersModule : IItemSuppliersModule
     {
         private int _mActiveProviders;
-        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IItemsDataController _mItemDataController;
         private IBaseItemSuppliersCatalogue _mItemSuppliersCatalogue;
         private Dictionary<BitItemSupplier, IItemSupplierShop> _activeProviders = new Dictionary<BitItemSupplier, IItemSupplierShop>();
         public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects => _activeProviders;
 
         public int AllActiveSuppliers => _mActiveProviders;
 
-        public ItemSuppliersModule(IBaseItemDataCatalogue itemDataCatalogue, IBaseItemSuppliersCatalogue itemSuppliersDataCatalogue)
+        public ItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue itemSuppliersDataCatalogue)
         {
-            _mItemDataCatalogue = itemDataCatalogue;
+            _mItemDataController = itemDataController;
             _mItemSuppliersCatalogue = itemSuppliersDataCatalogue;
         }
         
@@ -113,7 +113,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
                 return;
             }
 
-            var itemSupplier = Factory.CreateItemStoreSupplier(provider, _mItemDataCatalogue, _mItemSuppliersCatalogue);
+            var itemSupplier = Factory.CreateItemStoreSupplier(provider, _mItemDataController, _mItemSuppliersCatalogue);
             _activeProviders.Add(provider, itemSupplier);
         }
 

@@ -1,9 +1,25 @@
 using DataUnits;
+using UnityEngine;
 
 namespace Utils
 {
     public static class DataSheetUrls
     {
+        /// <summary>
+        /// Special Stats
+        /// </summary>
+        public static string GuardsSpecialStats =
+            "https://sheets.googleapis.com/v4/spreadsheets/1CRV2rBLnzGJzjpb3ydAEwLstM9ud6aH66Wc5LZIi5vk/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string CameraSpecialStats =
+            "https://sheets.googleapis.com/v4/spreadsheets/1xc4PAQXv78xpLSZAMq9hN-G9R9adEqUoy4sIN0vs2kM/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string WeaponsSpecialStats =
+            "https://sheets.googleapis.com/v4/spreadsheets/1Aizb_yaWEXh6D2MznZNzBON-00VtuiOWEfLfhcklPLs/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string TrapsSpecialStats =
+            "https://sheets.googleapis.com/v4/spreadsheets/1qMlDbWtwEHplxhFnd0bqaaioCGE2i4O0jzucJyjNmw0/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string OtherItemsSpecialStats =
+            "https://sheets.googleapis.com/v4/spreadsheets/1v4pUiKUzvH9pMGTjLUGcXM_aDyH22l2FAPLlRAnzq30/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+
+        
         public static string FeedbacksGameDataUrl = 
             "https://sheets.googleapis.com/v4/spreadsheets/1aahEf2opdO7gwsnFmZJ5nVtpjaAa3O-rgoFqBW9b74Q/values/GeneralFeedbacks?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
         public static string JobSuppliersGameData =
@@ -17,7 +33,6 @@ namespace Utils
         public static string ItemsCatalogueGameData =
             "https://sheets.googleapis.com/v4/spreadsheets/1bli4diwooBNk5K04Cdl1bytCw7QtPfkVTBTi5SiRjGc/values/ItemsCatalogue?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
-        //https://docs.google.com/spreadsheets/d//edit?usp=sharing
         public static string SuppliersDialogueGameData(DialogueSpeakerId speakerIndex)
         {
             switch (speakerIndex)
@@ -59,7 +74,6 @@ namespace Utils
                     return "https://sheets.googleapis.com/v4/spreadsheets/17vtsi2Hr7bbp4nHwLrHfHqUrhaIUzjrTAZyUQR7xN14/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case DialogueSpeakerId.MedievalInnovations:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1GibENZ_H1f02x7r9TOP2rQSf8Ud54gPrc4PDWkcTuPI/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                
                 //JobSuppliers
                 case DialogueSpeakerId.HappyCopyOfEden:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1HKIw3cAmtAyQgTH5LrJHIKUhVgr0gR7k3k_BuLfY37A/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
@@ -92,6 +106,9 @@ namespace Utils
                 case DialogueSpeakerId.LakeMansion:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1Qna5DHgwEbFPCFkRhMFSJoXsaFPaVSNdrFQ_A3tM-QI/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case DialogueSpeakerId.Bank:
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1IcNIdCRRfGtTMYCm5K_-rELfS-ZjgzCLiKQ-ITHJ0cg/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                case DialogueSpeakerId.VitaNova:
+                    Debug.LogWarning("Vita nova has the same dialogues as bank!");
                     return "https://sheets.googleapis.com/v4/spreadsheets/1IcNIdCRRfGtTMYCm5K_-rELfS-ZjgzCLiKQ-ITHJ0cg/values/Dialogues?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 default:
                     return "";

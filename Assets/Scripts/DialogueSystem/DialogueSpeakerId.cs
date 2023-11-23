@@ -19,6 +19,7 @@ namespace DataUnits
         OmnicorpMuseum,
         LakeMansion,
         Bank,
+        VitaNova,
         //Item Suppliers
         Moncho,
         D1TV,

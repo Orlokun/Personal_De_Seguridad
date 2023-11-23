@@ -195,11 +195,11 @@ GameObject:
   m_Component:
   - component: {fileID: 138390983}
   - component: {fileID: 138390982}
+  - component: {fileID: 138390986}
   - component: {fileID: 138390984}
   - component: {fileID: 138390985}
   - component: {fileID: 138390987}
   - component: {fileID: 138390988}
-  - component: {fileID: 138390986}
   m_Layer: 0
   m_Name: GameDirector
   m_TagString: Untagged
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 138390981}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23c8b031c3df48429a07867183bca247, type: 3}
+  m_Script: {fileID: 11500000, guid: 6529376c43974295ae82721c0c1d3cfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &138390987

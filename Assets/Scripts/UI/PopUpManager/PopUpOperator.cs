@@ -9,7 +9,12 @@ namespace UI.PopUpManager
     {
         NOTEBOOK_ACTION_POPUP = 1,
         LARGE_HORIZONTAL_BANNER = 2,
-        CIGAR_CONFIRMATION_POPUP = 4
+        CIGAR_CONFIRMATION_POPUP = 4,
+        GUARD_ITEM_INFO_PANEL = 8,
+        CAMERA_ITEM_INFO_PANEL = 16,
+        WEAPON_ITEM_INFO_PANEL = 32,
+        TRAP_ITEM_INFO_PANEL = 64,
+        OTHER_ITEM_INFO_PANEL = 128
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -125,9 +130,24 @@ namespace UI.PopUpManager
                 case BitPopUpId.LARGE_HORIZONTAL_BANNER:
                     var bannerPrefab = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
                     return bannerPrefab.GetComponent<BannerObjectController>();
-                    case BitPopUpId.CIGAR_CONFIRMATION_POPUP:
+                case BitPopUpId.CIGAR_CONFIRMATION_POPUP:
                     var cigarConfirmationPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_Office_CigarActionConfirmation"), transform);
                     return cigarConfirmationPopup.GetComponent<CigarConfirmationPopUp>();
+                case BitPopUpId.GUARD_ITEM_INFO_PANEL:
+                    var guardInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Guard"), transform);
+                    return guardInfoPanelPopup.GetComponent<GuardItemInfoPanel>();
+                case BitPopUpId.CAMERA_ITEM_INFO_PANEL:
+                    var cameraInfoPanel = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Camera"), transform);
+                    return cameraInfoPanel.GetComponent<IItemInfoPanel>();
+                case BitPopUpId.WEAPON_ITEM_INFO_PANEL:
+                    var weaponInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Weapon"), transform);
+                    return weaponInfoPanelPopup.GetComponent<IItemInfoPanel>();
+                case BitPopUpId.TRAP_ITEM_INFO_PANEL:
+                    var trapInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Trap"), transform);
+                    return trapInfoPanelPopup.GetComponent<IItemInfoPanel>();
+                case BitPopUpId.OTHER_ITEM_INFO_PANEL:
+                    var otherItemInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Other"), transform);
+                    return otherItemInfoPanelPopup.GetComponent<IItemInfoPanel>();
                 default:
                     return null;
             }

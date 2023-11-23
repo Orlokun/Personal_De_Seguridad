@@ -1,5 +1,6 @@
+using DataUnits.ItemScriptableObjects;
+using UI.PopUpManager;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ItemPlacement
@@ -7,23 +8,28 @@ namespace ItemPlacement
     /// <summary>
     /// UI script to Instantiate the game object of the item that will be used by the player
     /// </summary>
-    public class BaseSelectItemForPlacement : MonoBehaviour, IPointerDownHandler, IPointerClickHandler
+    public class BaseSelectItemForPlacement : MonoBehaviour
     {
         protected GameObject MInstantiatedObject;
-        [SerializeField]protected Image mUIBackgroundImage;
-        public virtual void OnPointerClick(PointerEventData eventData)
+        [SerializeField] private Button MInstantiatingButton;
+
+        protected void Awake()
+        {
+            if (MInstantiatingButton == null)
+            {
+                Debug.LogError("[SelectItemForPlacement] A button for Instantiating selected item must be set");
+            }
+            MInstantiatingButton.onClick.AddListener(OnItemClicked);
+        }
+        public virtual void OpenItemInfoPanel()
+        {
+            Debug.Log("[base.OpenItemInfoPanel]");
+        }
+        
+        
+        public virtual void OnItemClicked()
         {
             Debug.Log("[base.OnPointerClick]");
-            mUIBackgroundImage.gameObject.SetActive(true);
-            if (MInstantiatedObject.activeInHierarchy != true)
-            {
-                MInstantiatedObject.SetActive(true);
-            }
-        }
-    
-        public virtual void OnPointerDown(PointerEventData eventData)
-        {
-            Debug.Log("[OnPointerDown]");
             if (MInstantiatedObject.activeInHierarchy != true)
             {
                 MInstantiatedObject.SetActive(true);

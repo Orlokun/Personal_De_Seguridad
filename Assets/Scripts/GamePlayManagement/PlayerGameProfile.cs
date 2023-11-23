@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using DataUnits.GameCatalogues;
+using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UnityEngine;
@@ -59,7 +62,7 @@ namespace GamePlayManagement
         }
         private void UpdateItemSuppliersInProfile()
         {
-            var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersCompleteData;
+            var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
                 if (itemSupplier.StoreUnlockPoints <= GeneralXP)
@@ -70,7 +73,8 @@ namespace GamePlayManagement
         }
         private void UpdateItemsInProfile()
         {
-            var itemsInCatalogue = BaseItemCatalogue.Instance.ExistingItemsInCatalogue;
+            var itemsInCatalogue = ItemsDataController.Instance.ExistingItemsInCatalogue;
+            UpdateItemsSpecialStats(itemsInCatalogue);
             var activeProviders = GetActiveItemSuppliersModule().ActiveProviderObjects;
             foreach (var itemSupplier in activeProviders)
             {
@@ -81,6 +85,18 @@ namespace GamePlayManagement
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
                     }
+                }
+            }
+        }
+
+        private void UpdateItemsSpecialStats(Dictionary<BitItemSupplier, List<IItemObject>> ItemsInData)
+        {
+            foreach (var itemSupplier in ItemsInData)
+            {
+                foreach (var itemObject in itemSupplier.Value)
+                {
+                    var specialStats = ItemsDataController.Instance.GetItemStats(itemSupplier.Key, itemObject.ItemType ,itemObject.BitId);
+                    itemObject.SetItemSpecialStats(specialStats);
                 }
             }
         }

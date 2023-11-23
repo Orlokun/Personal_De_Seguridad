@@ -20,7 +20,7 @@ namespace GameDirection
         public IGeneralGameStateManager GetGameStateManager { get; }
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
-        public IBaseItemDataCatalogue GetBaseItemDataCatalogue { get; }
+        public IItemsDataController GetItemsDataController { get; }
         public IFeedbackManager GetFeedbackManager { get; }
         public void ReleaseFromDialogueStateToGame();
     }

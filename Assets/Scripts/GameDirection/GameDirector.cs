@@ -43,7 +43,7 @@ namespace GameDirection
         private IClockManagement _mClockManager;
         private IFeedbackManager _mFeedbackManager;
         //Scriptable Objects Catalogues
-        private IBaseItemDataCatalogue _mItemDataCatalogue;
+        private IItemsDataController _mItemDataController;
         private IBaseJobsCatalogue _mJobsCatalogue;
         private IBaseItemSuppliersCatalogue _mItemSuppliersData;
         
@@ -65,7 +65,7 @@ namespace GameDirection
         public IGeneralGameStateManager GetGameStateManager => _gameStateManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
-        public IBaseItemDataCatalogue GetBaseItemDataCatalogue => _mItemDataCatalogue;
+        public IItemsDataController GetItemsDataController => _mItemDataController;
         
         #endregion
 
@@ -101,11 +101,13 @@ namespace GameDirection
             _mSoundDirector = SoundDirector.Instance;
             _mUIController = UIController.Instance;
             _mDialogueOperator = _mUIController.DialogueOperator;
-            _mItemDataCatalogue = BaseItemCatalogue.Instance;
+            _mItemDataController = ItemsDataController.Instance;
             _mJobsCatalogue = BaseJobsCatalogue.Instance;
             _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
             _mClockManager = ClockManagement.Instance;
             _mFeedbackManager = FeedbackManager.Instance;
+
+            LoadDialoguesForSuppliers();
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
@@ -117,6 +119,20 @@ namespace GameDirection
             _gameStateManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
         }
+
+        private void LoadDialoguesForSuppliers()
+        {
+            foreach (var itemSupplier in _mItemSuppliersData.GetItemSuppliersInData)
+            {
+                itemSupplier.LoadDialogueData();
+            }
+
+            foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
+            {
+                jobSupplier.LoadDialogueData();
+            }
+        }
+
         #endregion
         
         #region Public Fields
@@ -133,7 +149,7 @@ namespace GameDirection
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
-            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataCatalogue, _mItemSuppliersData);
+            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule);
             _mActiveGameProfile.UpdateProfileData();

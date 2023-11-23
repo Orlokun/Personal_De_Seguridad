@@ -19,7 +19,7 @@ namespace DataUnits.GameCatalogues
         private ItemSuppliersFromData _mItemSuppliersFromData;
     
         private List<IItemSupplierDataObject> _mIItemSuppliersInData;
-        public List<IItemSupplierDataObject> GetItemSuppliersCompleteData => _mIItemSuppliersInData;
+        public List<IItemSupplierDataObject> GetItemSuppliersInData => _mIItemSuppliersInData;
     
         private void Awake()
         {
@@ -32,9 +32,12 @@ namespace DataUnits.GameCatalogues
             GetItemsCatalogueData();
         }
 
+        private void Start()
+        {
+        }
         private void GetItemsCatalogueData()
         {
-            Debug.Log($"START: COLLECTING Item SOURCES DATA");
+            Debug.Log($"START: COLLECTING Item suppliers DATA");
             var url = DataSheetUrls.ItemSuppliersGameData;
             StartCoroutine(LoadItemsCatalogueData(url));
         }
@@ -50,23 +53,23 @@ namespace DataUnits.GameCatalogues
             else
             {
                 var sourceJson = webRequest.downloadHandler.text;
-                LoadFromJson(sourceJson);
+                LoadItemSuppliersFromJson(sourceJson);
             }
         }
 
-        private void LoadFromJson(string sourceJson)
+        private void LoadItemSuppliersFromJson(string sourceJson)
         {
-            Debug.Log($"BaseJobsCatalogue.LoadFromJson");
+            Debug.Log($"BaseItemSuppliersCatalogue.LoadItemSuppliersFromJson");
             Debug.Log($"StartParsing Items Catalogue: {sourceJson}");
 
             _mItemSuppliersFromData = JsonConvert.DeserializeObject<ItemSuppliersFromData>(sourceJson);
-            Debug.Log($"Finished parsing. Is _jobsCatalogueFromData null?: {_mItemSuppliersFromData == null}");
+            Debug.Log($"Finished parsing. Is _mItemSuppliersFromData null?: {_mItemSuppliersFromData == null}");
             _mIItemSuppliersInData = new List<IItemSupplierDataObject>();
             int storePhone;
             int unlockPoints;
             for (var i = 1; i < _mItemSuppliersFromData.values.Count;i++)
             {
-                var itemSupplierDataObj = (IItemSupplierDataObject)ScriptableObject.CreateInstance<ItemSupplierDataObject>();
+                var itemSupplierDataObj = (IItemSupplierDataObject)ScriptableObject.CreateInstance<ItemSupplierGameObject>();
 
                 var gotId = int.TryParse(_mItemSuppliersFromData.values[i][0], out var supplierId);
                 itemSupplierDataObj.ItemSupplierId = (BitItemSupplier) supplierId;
@@ -76,7 +79,7 @@ namespace DataUnits.GameCatalogues
                 var gotPhone = int.TryParse(_mItemSuppliersFromData.values[i][2], out storePhone);
                 itemSupplierDataObj.StorePhoneNumber = storePhone;
 
-                var gotItems = int.TryParse(_mItemSuppliersFromData.values[i][2], out var itemsAvailable);
+                var gotItems = int.TryParse(_mItemSuppliersFromData.values[i][3], out var itemsAvailable);
                 itemSupplierDataObj.ItemTypesAvailable = itemsAvailable;
 
                 var gotUp = int.TryParse(_mItemSuppliersFromData.values[i][4], out unlockPoints);
@@ -85,8 +88,17 @@ namespace DataUnits.GameCatalogues
                     Debug.LogWarning("GetJobsCatalogueData");
                 }
                 itemSupplierDataObj.StoreUnlockPoints = unlockPoints;
-                
-                itemSupplierDataObj.LoadDialogueData();
+
+                var storeDescription = _mItemSuppliersFromData.values[i][5];
+                itemSupplierDataObj.StoreDescription = storeDescription;
+
+                var gotSpeakerId = int.TryParse(_mItemSuppliersFromData.values[i][6], out var speakerId);
+                if (!gotSpeakerId)
+                {
+                    Debug.LogWarning("GetJobsCatalogueData");
+                }
+                itemSupplierDataObj.SpeakerIndex = (DialogueSpeakerId)speakerId;
+                //itemSupplierDataObj.LoadDialogueData();
                 _mIItemSuppliersInData.Add(itemSupplierDataObj);
             }
         }
@@ -141,6 +153,6 @@ namespace DataUnits.GameCatalogues
         public Tuple<bool, int> ItemSupplierPhoneExists(int dialedPhone);
         public IItemSupplierDataObject GetItemSupplierDataFromPhone(int supplierPhone);
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier);
-        public List<IItemSupplierDataObject> GetItemSuppliersCompleteData { get; }
+        public List<IItemSupplierDataObject> GetItemSuppliersInData { get; }
     }
 }

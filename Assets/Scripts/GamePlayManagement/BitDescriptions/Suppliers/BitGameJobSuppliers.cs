@@ -13,6 +13,11 @@ namespace GamePlayManagement.BitDescriptions.Suppliers
         MERCADO_NEGRO = 256,
         FERIA_AUTOCONVOCADA = 512,
         MERCADO_VEGANO = 1024,
-        SUPERMERCADO_MAYORISTA = 2048
+        SUPERMERCADO_MAYORISTA = 2048,
+        ZOOTOPIA = 4096,
+        OMNICORP_MUSEUM = 8192,
+        LAKE_MANSION = 16384,
+        CBGB_BANK = 32768,
+        VITA_NOVA_MALL = 65536
     }
 }

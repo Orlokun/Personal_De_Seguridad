@@ -2,6 +2,6 @@ namespace UI.TabManagement.AbstractClasses
 {
     public interface ITabUpdate
     {
-        public void UpdateTabGroupContent(int selectedTabIndex);
+        public void UpdateTabItemGroupTypes(int selectedTabIndex);
     }
 }

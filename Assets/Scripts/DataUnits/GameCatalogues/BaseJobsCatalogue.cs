@@ -38,10 +38,6 @@ namespace DataUnits.GameCatalogues
         {
             DontDestroyOnLoad(this);
             Initialize();
-        }
-
-        private void Start()
-        {            
             GetJobSuppliersData();
         }
 
@@ -79,13 +75,13 @@ namespace DataUnits.GameCatalogues
             else
             {
                 var sourceJson = webRequest.downloadHandler.text;
-                LoadFromJson(sourceJson);
+                LoadJobSuppliersFromJson(sourceJson);
             }
         }
 
-        private void LoadFromJson(string sourceJson)
+        private void LoadJobSuppliersFromJson(string sourceJson)
         {
-            Debug.Log($"BaseJobsCatalogue.LoadFromJson");
+            Debug.Log($"BaseJobsCatalogue.LoadJobSuppliersFromJson");
             _jobsData = JsonConvert.DeserializeObject<JobsCatalogueFromData>(sourceJson);
             Debug.Log($"Finished parsing. Is _jobsCatalogueFromData null?: {_jobsData == null}");
             _mIjobSuppliersInData = new List<IJobSupplierObject>();
@@ -116,7 +112,6 @@ namespace DataUnits.GameCatalogues
                 var gotSpeakerId = int.TryParse(_jobsData.values[i][7], out var speakerIndex);
                 jobSupplier.SpeakerIndex = (DialogueSpeakerId)speakerIndex;
                 
-                jobSupplier.LoadDialogueData();
                 _mIjobSuppliersInData.Add(jobSupplier);
             }
         }

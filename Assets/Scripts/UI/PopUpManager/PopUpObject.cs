@@ -6,16 +6,11 @@ namespace UI.PopUpManager
     {
         protected IPopUpOperator PopUpOperator;
         protected BitPopUpId PopUpId;
+
         public void InitializePopUp(IPopUpOperator popUpOperator, BitPopUpId popUpId)
         {
             PopUpOperator = popUpOperator;
             PopUpId = popUpId;
-            InitializeValues();
-        }
-
-        protected virtual void InitializeValues()
-        {
-            
         }
 
         public void DeletePopUp()

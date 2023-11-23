@@ -9,7 +9,7 @@ namespace ItemPlacement
         private bool _mInitiliazed;
         //Prefabs that need to be instantiated
         public GameObject instantiatedPrefab;
-        
+        public bool IsInitialized => _mInitiliazed;
 
         protected void Start()
         {
@@ -38,19 +38,10 @@ namespace ItemPlacement
             MInstantiatedObject.SetActive(false);
         }
     
-        public override void OnPointerClick(PointerEventData eventData)
+        public override void OnItemClicked()
         {
+            base.OnItemClicked();
             CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
-            base.OnPointerClick(eventData);
         }
-    
-        //Check Mouse Down Event the mouse down interface
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);
-            base.OnPointerDown(eventData);
-        }
-        public bool IsInitialized => _mInitiliazed;
-
     }
 }

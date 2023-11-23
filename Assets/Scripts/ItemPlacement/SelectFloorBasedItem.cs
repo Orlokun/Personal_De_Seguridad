@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ItemPlacement
 {
@@ -16,27 +15,19 @@ namespace ItemPlacement
             }
             CreateAndDeactivatePrefab();
         }
-    
+
         private void CreateAndDeactivatePrefab()
         {
             //Instantiate prefab
-            MInstantiatedObject=Instantiate(instantiatedPrefab);
+            MInstantiatedObject = Instantiate(instantiatedPrefab);
             MInstantiatedObject.SetActive(false);
+
         }
-    
-    
-        public override void OnPointerClick(PointerEventData eventData)
+
+        public override void OnItemClicked()
         {
-            base.OnPointerClick(eventData);
+            base.OnItemClicked();
             FloorPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
-        }
-    
-        //Check Mouse Down Event the mouse down interface
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            base.OnPointerDown(eventData);
-            //Pass the object that needs to be instantiated to the manager
-            FloorPlacementManager.Instance.AttachNewObject(MInstantiatedObject);
         }
     }
 }
