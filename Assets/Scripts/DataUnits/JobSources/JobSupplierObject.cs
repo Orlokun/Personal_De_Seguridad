@@ -9,7 +9,6 @@ using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
-using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
@@ -21,6 +20,7 @@ namespace DataUnits.JobSources
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
+        #region Constructor & API
         public JobSupplierObject(BitGameJobSuppliers bitId, string storeType, string storeName, string storeOwnerName,
             int storeUnlockPoints, string storeDescription, int storePhoneNumber, DialogueSpeakerId speakerIndexId)
         {
@@ -32,8 +32,38 @@ namespace DataUnits.JobSources
         public string StoreOwnerName{ get; set; }
         public int StoreUnlockPoints{ get; set; }
         public string StoreDescription{ get; set; }
+        public int[] StoreMinMaxClients { get; set; }
         public int StorePhoneNumber{ get; set; }
+        public int StoreOwnerAge{ get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
+        public string SpriteName { get; set; }
+
+        public int Sanity => _mSanity;
+        public int Kindness => _mKindness;
+        public int Violence => _mViolence;
+        public int Intelligence => _mIntelligence;
+        public int Money => _mMoney;
+        #endregion
+
+        #region SupplierStats
+        private int _mSanity;
+        private int _mKindness;
+        private int _mViolence;
+        private int _mIntelligence;
+        private int _mMoney;
+
+        ///Store Stats
+        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money)
+        {
+            _mSanity = sanity;
+            _mKindness = kindness;
+            _mViolence = violence;
+            _mIntelligence = intelligence;
+            _mMoney = money;
+        }
+        #endregion
+
+        #region Members
         public int StoreHighestUnlockedDialogue => _mStoreHighestUnlockedDialogue;
         private int _mStoreHighestUnlockedDialogue;
 
@@ -45,6 +75,7 @@ namespace DataUnits.JobSources
 
         private Dictionary<int, IDialogueObject> _mUnderThresholdDialogues = new Dictionary<int, IDialogueObject>();
         private Dictionary<int, IDialogueObject> _mOverThresholdDialogues = new Dictionary<int, IDialogueObject>();
+        #endregion
 
         #region JsonDialogueManagement
         private SupplierDialoguesData _mDialogueData; 
@@ -126,6 +157,7 @@ namespace DataUnits.JobSources
         }
         #endregion
 
+        #region CallManagement
         public void StartCalling(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
@@ -141,7 +173,7 @@ namespace DataUnits.JobSources
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");
             Random.InitState(DateTime.Now.Millisecond);
-            var randomWaitTime = Random.Range(500, 12500);
+            var randomWaitTime = Random.Range(500, 4500);
             await Task.Delay(randomWaitTime);
 
             var randomAnswerIndex = Random.Range(StoreUnlockPoints, StoreHighestUnlockedDialogue);
@@ -167,5 +199,6 @@ namespace DataUnits.JobSources
             PhoneCallOperator.Instance.AnswerPhone();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
+        #endregion
     }
 }

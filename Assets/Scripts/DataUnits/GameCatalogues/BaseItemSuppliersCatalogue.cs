@@ -60,7 +60,7 @@ namespace DataUnits.GameCatalogues
         private void LoadItemSuppliersFromJson(string sourceJson)
         {
             Debug.Log($"BaseItemSuppliersCatalogue.LoadItemSuppliersFromJson");
-            Debug.Log($"StartParsing Items Catalogue: {sourceJson}");
+            Debug.Log($"StartParsing Item Suppliers Catalogue: {sourceJson}");
 
             _mItemSuppliersFromData = JsonConvert.DeserializeObject<ItemSuppliersFromData>(sourceJson);
             Debug.Log($"Finished parsing. Is _mItemSuppliersFromData null?: {_mItemSuppliersFromData == null}");
@@ -95,10 +95,35 @@ namespace DataUnits.GameCatalogues
                 var gotSpeakerId = int.TryParse(_mItemSuppliersFromData.values[i][6], out var speakerId);
                 if (!gotSpeakerId)
                 {
-                    Debug.LogWarning("GetJobsCatalogueData");
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] Speaker Id Must be available");
                 }
                 itemSupplierDataObj.SpeakerIndex = (DialogueSpeakerId)speakerId;
-                //itemSupplierDataObj.LoadDialogueData();
+                
+                var gotReliance = int.TryParse(_mItemSuppliersFromData.values[i][7], out var reliance);
+                if (!gotReliance)
+                {
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] Reliance must be available");
+                }
+                
+                var gotQuality = int.TryParse(_mItemSuppliersFromData.values[i][8], out var quality);
+                if (!gotQuality)
+                {
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] Quality must be available");
+                }
+                
+                var gotKindness = int.TryParse(_mItemSuppliersFromData.values[i][9], out var kindness);
+                if (!gotKindness)
+                {
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] Reliance must be available");
+                }
+                
+                var gotOmniCredits = int.TryParse(_mItemSuppliersFromData.values[i][10], out var omniCredits);
+                if (!gotOmniCredits)
+                {
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] OmniCredits must be available");
+                }
+                var spriteName = _mItemSuppliersFromData.values[i][11];
+                itemSupplierDataObj.SetStats(reliance,quality,kindness,omniCredits, spriteName);
                 _mIItemSuppliersInData.Add(itemSupplierDataObj);
             }
         }

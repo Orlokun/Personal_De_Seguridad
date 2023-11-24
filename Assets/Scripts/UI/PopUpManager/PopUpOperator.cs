@@ -15,7 +15,8 @@ namespace UI.PopUpManager
         CAMERA_ITEM_INFO_PANEL = 16,
         WEAPON_ITEM_INFO_PANEL = 32,
         TRAP_ITEM_INFO_PANEL = 64,
-        OTHER_ITEM_INFO_PANEL = 128
+        OTHER_ITEM_INFO_PANEL = 128,
+        ITEM_SUPPLIER_INFO_PANEL = 256,
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -67,7 +68,6 @@ namespace UI.PopUpManager
             _activePopUps.Add(newPopUp, popUpInterface);
             return popUpInterface;
         }
-        
         public void RemovePopUp(BitPopUpId removedPopUp)
         {
             if (((int) removedPopUp & _mActiveBitPopUps) == 0)
@@ -78,8 +78,6 @@ namespace UI.PopUpManager
             _activePopUps[removedPopUp].DeletePopUp();
             _activePopUps.Remove(removedPopUp);
         }
-
-        
         public void RemoveAllPopUps()
         {
             foreach (var activePopUp in _activePopUps)
@@ -126,8 +124,8 @@ namespace UI.PopUpManager
             {
                 case BitPopUpId.JOB_SUPPLIER_INFO_POPUP:
                     //const string pathString = PopupPath + "UI/PopUps/UI_SupplierUIActions";
-                    var notebookOptions = (GameObject)Instantiate(Resources.Load("UI/PopUps/UI_SupplierUIActions"), transform);
-                    return notebookOptions.GetComponent<SelectSupplierNotebookButtonAction>();
+                    var notebookOptions = (GameObject)Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_JobSupplier"), transform);
+                    return notebookOptions.GetComponent<JobSupplierInfoPanel>();
                 case BitPopUpId.LARGE_HORIZONTAL_BANNER:
                     var bannerPrefab = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_LargeBannerObject"), transform);
                     return bannerPrefab.GetComponent<BannerObjectController>();
@@ -149,6 +147,9 @@ namespace UI.PopUpManager
                 case BitPopUpId.OTHER_ITEM_INFO_PANEL:
                     var otherItemInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_Other"), transform);
                     return otherItemInfoPanelPopup.GetComponent<IItemInfoPanel>();
+                case BitPopUpId.ITEM_SUPPLIER_INFO_PANEL:
+                    var itemSupplierInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_ItemSupplier"), transform);
+                    return itemSupplierInfoPanelPopup.GetComponent<ItemSupplierInfoPanel>();
                 default:
                     return null;
             }

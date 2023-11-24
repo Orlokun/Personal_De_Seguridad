@@ -144,9 +144,9 @@ namespace UI.TabManagement.NBVerticalTabs
                     break;
                 }
                 var prefabObject = InstantiatePrefabs(index, JobPrefab);
-                var jobObjectController = prefabObject.GetComponent<NotebookJobPrefab>();
+                var jobObjectController = prefabObject.GetComponent<NotebookSupplierObject>();
                         
-                jobObjectController.SetJobPrefabValues(availableJobSource.Value);
+                jobObjectController.SetNotebookObjectValues(availableJobSource.Value);
                 index++;
             }
         }
@@ -162,12 +162,9 @@ namespace UI.TabManagement.NBVerticalTabs
                     break;
                 }
                 var prefabObject = InstantiatePrefabs(index, SupplierPrefab);
-                var supplierObjectController = prefabObject.GetComponent<NotebookItemSupplierPrefab>();
-                var storeName = availableItemSupplier.Value.GetSupplierData.StoreName;
-                var storeNumber = availableItemSupplier.Value.GetSupplierData.StorePhoneNumber;
+                var supplierObjectController = prefabObject.GetComponent<NotebookSupplierObject>();
                 //var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
-                var storeId = availableItemSupplier.Value.GetSupplierData.ItemSupplierId;
-                supplierObjectController.SetSupplierPrefabValues(storeName, storeNumber.ToString(), storeId);
+                supplierObjectController.SetNotebookObjectValues(availableItemSupplier.Value.GetSupplierData);
                 index++;
             }
         }

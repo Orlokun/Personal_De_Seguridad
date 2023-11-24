@@ -20,6 +20,11 @@ namespace DataUnits.ItemSources
     [CreateAssetMenu(menuName = "ItemSource/BaseItemSource")]
     public class ItemSupplierGameObject : ScriptableObject, IItemSupplierDataObject
     {
+        private int _mReliance;
+        private int _mQuality;
+        private int _mKindness;
+        private int _mOmniCredits;
+        private string _mSpriteName;
         
         [SerializeField] protected Sprite supplierPortrait;
         public Sprite SupplierPortrait =>supplierPortrait;
@@ -37,6 +42,22 @@ namespace DataUnits.ItemSources
         private Dictionary<int, IDialogueObject> _mUnderThresholdDialogues = new Dictionary<int, IDialogueObject>();
         private Dictionary<int, IDialogueObject> _mOverThresholdDialogues = new Dictionary<int, IDialogueObject>();
 
+        public void SetStats(int reliance, int quality, int kindness, int omniCredits, string spriteName)
+        {
+            _mReliance = reliance;
+            _mQuality = quality;
+            _mKindness = kindness;
+            _mOmniCredits = omniCredits;
+            _mSpriteName = spriteName;
+            StoreHighestUnlockedDialogue = 1;
+        }
+
+        public int Reliance => _mReliance;
+        public int Quality => _mQuality;
+        public int Kindness => _mKindness;
+        public int OmniCredits => _mOmniCredits;
+        public string SpriteName => _mSpriteName;
+
 
         public void StartCalling(int playerLevel)
         {
@@ -50,10 +71,17 @@ namespace DataUnits.ItemSources
             }
         }
 
-
-        private void GetCurrentCallAnswer()
+        private async void GetCurrentCallAnswer()
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomWaitTime = Random.Range(500, 12500);
+            await Task.Delay(randomWaitTime);
+
+            var randomAnswerIndex = Random.Range(StoreUnlockPoints, StoreHighestUnlockedDialogue);
+            var randomDialogue = _mOverThresholdDialogues[randomAnswerIndex];
+            PhoneCallOperator.Instance.AnswerPhone();
+            GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
         private async void RandomDeflection()
         {
@@ -86,6 +114,8 @@ namespace DataUnits.ItemSources
             var url = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex);
             DialogueOperator.Instance.LoadSupplierDialogues(LoadDialogueDataFromServer(url));
         }
+
+
         private IEnumerator LoadDialogueDataFromServer(string url)
         {
             //
@@ -125,7 +155,7 @@ namespace DataUnits.ItemSources
                     baseDialogueObject = (IDialogueObject) CreateInstance<BaseDialogueObject>();
                     lastDialogueIndex = dialogueIndex;
 
-                    if (StoreUnlockPoints >= dialogueIndex)
+                    if (StoreUnlockPoints > dialogueIndex)
                     {
                         _mUnderThresholdDialogues.Add(dialogueIndex, baseDialogueObject);
                     }
@@ -135,7 +165,7 @@ namespace DataUnits.ItemSources
                     }
                 }
 
-                var dialogueObject = StoreUnlockPoints >= dialogueIndex
+                var dialogueObject = StoreUnlockPoints > dialogueIndex
                     ? _mUnderThresholdDialogues
                     : _mOverThresholdDialogues;
                 
@@ -153,5 +183,11 @@ namespace DataUnits.ItemSources
         public int ItemTypesAvailable { get; set; }
         public string StoreDescription { get; set; }
         public void LoadDialogueData();
+        public void SetStats(int reliance, int quality, int kindness, int omniCredits, string spriteName);
+        public int Reliance { get; }
+        public int Quality { get; }
+        public int Kindness { get; }
+        public int OmniCredits { get; }
+        public string SpriteName { get; }
     }
 }

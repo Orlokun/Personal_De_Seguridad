@@ -112,6 +112,34 @@ namespace DataUnits.GameCatalogues
                 var gotSpeakerId = int.TryParse(_jobsData.values[i][7], out var speakerIndex);
                 jobSupplier.SpeakerIndex = (DialogueSpeakerId)speakerIndex;
                 
+                //Minimum and maximum clients in store
+                var gotClientsMin = int.TryParse(_jobsData.values[i][8], out var clientsMin);
+                var gotClientsMax = int.TryParse(_jobsData.values[i][9], out var clientsMax);
+                var clientRange = new int[2];
+                clientRange[0] = clientsMin;
+                clientRange[1] = clientsMax;
+                jobSupplier.StoreMinMaxClients = clientRange;
+                
+                var gotSanity = int.TryParse(_jobsData.values[i][10], out var sanity);
+                var gotKindness = int.TryParse(_jobsData.values[i][11], out var kindness);
+                var gotViolence = int.TryParse(_jobsData.values[i][12], out var violence);
+                var gotIntelligence = int.TryParse(_jobsData.values[i][13], out var intelligence);
+                var gotMoney = int.TryParse(_jobsData.values[i][14], out var money);
+                
+                if (!gotSanity || !gotKindness || !gotViolence || !gotIntelligence || !gotMoney)
+                {
+                    Debug.LogError("Job Supplier Stats must be available!");
+                }
+                else
+                {
+                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, money);
+                }
+                var spriteName = _jobsData.values[i][15];
+                jobSupplier.SpriteName = spriteName;
+                
+                var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
+                jobSupplier.StoreOwnerAge = ownerAge;
+                
                 _mIjobSuppliersInData.Add(jobSupplier);
             }
         }
