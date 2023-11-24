@@ -8,7 +8,7 @@ namespace UI.PopUpManager
 {
     public enum BitPopUpId
     {
-        NOTEBOOK_ACTION_POPUP = 1,
+        JOB_SUPPLIER_INFO_POPUP = 1,
         LARGE_HORIZONTAL_BANNER = 2,
         CIGAR_CONFIRMATION_POPUP = 4,
         GUARD_ITEM_INFO_PANEL = 8,
@@ -124,7 +124,7 @@ namespace UI.PopUpManager
         {
             switch (newPopUp)
             {
-                case BitPopUpId.NOTEBOOK_ACTION_POPUP:
+                case BitPopUpId.JOB_SUPPLIER_INFO_POPUP:
                     //const string pathString = PopupPath + "UI/PopUps/UI_SupplierUIActions";
                     var notebookOptions = (GameObject)Instantiate(Resources.Load("UI/PopUps/UI_SupplierUIActions"), transform);
                     return notebookOptions.GetComponent<SelectSupplierNotebookButtonAction>();
