@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GamePlayManagement.BitDescriptions;
 using InputManagement;
 using Players_NPC;
 using UI.PopUpManager;

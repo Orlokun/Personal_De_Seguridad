@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UI;
 

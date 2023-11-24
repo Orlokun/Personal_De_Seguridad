@@ -1,5 +1,6 @@
 using System;
 using DataUnits.GameCatalogues;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UI;
 using UnityEngine;

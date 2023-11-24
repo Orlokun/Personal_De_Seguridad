@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using UI;

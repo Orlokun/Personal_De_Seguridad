@@ -1,4 +1,4 @@
-namespace UI
+namespace GamePlayManagement.BitDescriptions
 {
     public enum BitItemType
     {

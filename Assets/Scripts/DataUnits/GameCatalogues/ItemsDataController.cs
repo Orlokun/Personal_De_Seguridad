@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.ItemScriptableObjects;
-using GamePlayManagement.BitDescriptions.Suppliers;
+    using GamePlayManagement.BitDescriptions;
+    using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
 using UI;
 using UnityEngine;
@@ -340,9 +341,9 @@ namespace DataUnits.GameCatalogues
                     return;
                 }
                 
-                //Step 3: Get Weapon Type
-                var gotWeaponType = int.TryParse(_mWeaponStatsFromDataString.values[i][3], out var weaponType);
-                if (!gotWeaponType)
+                //Step 3: Get Weapon Quality
+                var gotWeaponQuality = int.TryParse(_mWeaponStatsFromDataString.values[i][3], out var weaponQuality);
+                if (!gotWeaponQuality)
                 {
                     Debug.LogWarning("[LoadWeaponDataFromJson] Weapon Type must be available");
                 }
@@ -366,7 +367,7 @@ namespace DataUnits.GameCatalogues
                 }
                 
                 IWeaponStats itemDataObject =
-                    new WeaponStats(itemId,weaponType, damage, range, persuasiveness);
+                    new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness);
                 _mWeaponsSpecialData[supplierBitId].Add(itemDataObject);
             }
         }

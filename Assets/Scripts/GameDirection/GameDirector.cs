@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
@@ -107,7 +108,6 @@ namespace GameDirection
             _mClockManager = ClockManagement.Instance;
             _mFeedbackManager = FeedbackManager.Instance;
 
-            LoadDialoguesForSuppliers();
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
@@ -118,6 +118,13 @@ namespace GameDirection
             
             _gameStateManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
+            WaitAndLoadDialogues();
+        }
+
+        private async void WaitAndLoadDialogues()
+        {
+            await Task.Delay(300);
+            LoadDialoguesForSuppliers();
         }
 
         private void LoadDialoguesForSuppliers()

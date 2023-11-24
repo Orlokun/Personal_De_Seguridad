@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using ItemPlacement;
 using UI.TabManagement.AbstractClasses;
