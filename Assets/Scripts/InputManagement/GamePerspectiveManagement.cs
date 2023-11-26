@@ -7,7 +7,7 @@ namespace InputManagement
 {
     public class GamePerspectiveManagement : MonoBehaviour
     {
-        private IGeneralGameStateManager _mGameStateManager;
+        private IGeneralInputStateManager _mInputStateManager;
         private IHighLvlGameStateManager _highLvlGameState;
         private IGameCameraManager _mGameCameraManager;
         private IUIController _mUIController;
@@ -20,20 +20,19 @@ namespace InputManagement
         private void Start()
         {
             _mGameCameraManager = GameCameraManager.Instance;
-            _mGameStateManager = GeneralInputStateManager.Instance;
+            _mInputStateManager = GeneralInputStateManager.Instance;
             _highLvlGameState = GameDirector.Instance;
             _mUIController = UIController.Instance;
         }
         private void Update()
         {
             ManagePauseInput();
-            ManageGameplayStateInput();
+            ManagePerspectiveGameplayInput();
         }
         
-        private void ManageGameplayStateInput()
+        private void ManagePerspectiveGameplayInput()
         {
-            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameStateManager.CurrentInputGameState != InputGameState.InGame
-                )
+            if (!Input.GetKeyDown(KeyCode.Tab) || _mInputStateManager.CurrentInputGameState != InputGameState.InGame)
             {
                 return;
             }
@@ -44,7 +43,7 @@ namespace InputManagement
 
             _mGameCameraManager.ChangeCameraState(newState);
             _mGameCameraManager.ActivateNewCamera(newState, 0);
-            if (_mGameStateManager.CurrentInputGameState != InputGameState.InDialogue)
+            if (_mInputStateManager.CurrentInputGameState != InputGameState.InDialogue)
             {
                 _mUIController.ReturnToBaseGamePlayCanvasState();
             }
@@ -56,10 +55,10 @@ namespace InputManagement
                 return;
             }
             Debug.Log("Starting Pause Process");
-            var currentGameState = _mGameStateManager.CurrentInputGameState;
+            var currentGameState = _mInputStateManager.CurrentInputGameState;
             var isCurrentPause = currentGameState == InputGameState.Pause;
                 
-            var newGameState = isCurrentPause ? _mGameStateManager.LastInputGameState : InputGameState.Pause;
+            var newGameState = isCurrentPause ? _mInputStateManager.LastInputGameState : InputGameState.Pause;
             Debug.Log($"Pausing game == {newGameState == InputGameState.Pause}");
 
             GeneralInputStateManager.Instance.SetGamePlayState(newGameState);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.LevelManagement;
 using InputManagement;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -106,13 +107,13 @@ namespace GameDirection.Initial_Office_Scene
         public IEnumerator PrepareIntroductionReading()
         {
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
-            _mGameDirector.GetGameStateManager.SetGamePlayState(InputGameState.InDialogue);
+            _mGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
             
             _mGameDirector.GetSoundDirector.PlayAmbientMusic();
             _mGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetUIController.ToggleBackground(true);
-            _mGameDirector.GetGeneralBackgroundFader.GeneralFadeIn();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
             StartCoroutine(StartIntroductionReading());
         }
@@ -124,15 +125,17 @@ namespace GameDirection.Initial_Office_Scene
         }
         private void FinishIntroductionText()
         {
-            _mGameDirector.GetGeneralBackgroundFader.GeneralCameraFadeOut();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainAppear();
             StartCoroutine(FinishIntroductionReading());
         }
         private IEnumerator FinishIntroductionReading()
         {
+            yield return new WaitForSeconds(1f);
+            _mGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.OfficeLvl);
+            _mGameDirector.GetLevelManager.UnloadScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
-            _mGameDirector.GetLevelManager.LoadOfficeLevel();
             _mGameDirector.GetUIController.ToggleBackground(false);
-            _mGameDirector.GetGeneralBackgroundFader.GeneralFadeIn();
+            _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
             StartCoroutine(SecondDialogue());
         }

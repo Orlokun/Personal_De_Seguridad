@@ -9,6 +9,9 @@ namespace InputManagement
         private IGameCameraManager _mGameCameraManager;
         private IUIController _mUIController;
         private int _currentCameraIndex;
+        
+        public int CurrentCameraIndex => _currentCameraIndex;
+        
         private void Start()
         {
             GeneralInputStateManager.Instance.OnGameStateChange += OnGameStateChange;
@@ -57,6 +60,8 @@ namespace InputManagement
                 }
                 if (_currentCameraIndex > _mGameCameraManager.MaxNumberOfCameras())
                 {
+                    Debug.LogWarning("[CameraViewInputManager.Update] Current Camera attempted is out of bound. " +
+                                     "Make sure Current Camera index is updated to current camera state");
                     return;
                 }
             

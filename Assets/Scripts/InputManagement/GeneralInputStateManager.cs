@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace InputManagement
 {
-    public interface IGeneralGameStateManager
+    public interface IGeneralInputStateManager
     {
         InputGameState CurrentInputGameState { get; }
         InputGameState LastInputGameState { get; }
@@ -9,10 +9,10 @@ namespace InputManagement
         event GeneralInputStateManager.GameStateChangeHandler OnGameStateChange;
     }
 
-    public class GeneralInputStateManager : IGeneralGameStateManager
+    public class GeneralInputStateManager : IGeneralInputStateManager
     {
         private static GeneralInputStateManager _mInstance;
-        public static GeneralInputStateManager Instance
+        public static IGeneralInputStateManager Instance
         {
             get
             {

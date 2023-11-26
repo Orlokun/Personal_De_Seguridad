@@ -33,7 +33,7 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
         {
             //2.FadeOut
             PopUpOperator.RemovePopUp(PopUpId);
-            GameDirector.Instance.GetGeneralBackgroundFader.GeneralCameraFadeOut();
+            GameDirector.Instance.GetGeneralBackgroundFader.GeneralCurtainAppear();
             GameDirector.Instance.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             //3. Play lighter sound
             //4. Charge action cost
@@ -41,7 +41,7 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
 
             //5. Go to time of day from dropdown
             ClockManagement.Instance.SetClockAtDaytime(newPartOfDay);
-            GameDirector.Instance.GetGeneralBackgroundFader.GeneralFadeIn();
+            GameDirector.Instance.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             GameDirector.Instance.ChangeHighLvlGameState(HighLevelGameStates.InGame);
             ClockManagement.Instance.PlayPauseClock(true);
 
@@ -66,7 +66,7 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
                 case "Evening":
                     newPartOfDay = PartOfDay.Evening;
                     break;
-                case "End Of Day":
+                case "End of Day":
                     newPartOfDay = PartOfDay.EndOfDay;
                     break;
             }

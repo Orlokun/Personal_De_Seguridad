@@ -35,7 +35,6 @@ namespace UI.TabManagement.NBVerticalTabs
             UIController.Instance.UpdateOfficeUIElement((int)OfficeCameraStates.Phone);
             GameCameraManager.Instance.ActivateNewCamera(GameCameraState.Office, (int)OfficeCameraStates.Phone);
             PopUpManager.PopUpOperator.Instance.RemoveAllPopUps();
-
         }
         public virtual void OpenInfoPopUp()
         {

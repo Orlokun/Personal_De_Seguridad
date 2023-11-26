@@ -1,9 +1,7 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
-using DialogueSystem.Units;
 using GameDirection.Initial_Office_Scene;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
@@ -21,10 +19,11 @@ namespace GameDirection
         InGame = 2,
         Loading = 4,
         InCutScene = 8,
-        OfficeMidScene = 16
+        OfficeMidScene = 16,
+        EndOfDay = 32
     }
 
-    [RequireComponent(typeof(LevelManager))]
+    [RequireComponent(typeof(LevelLoadManager))]
     [RequireComponent(typeof(GeneralUIFader))]
     public class GameDirector : MonoBehaviour, IGameDirector
     {
@@ -38,11 +37,12 @@ namespace GameDirection
         private IUIController _mUIController;
         private IGeneralUIFader _mGeneralFader;
         private IGameCameraManager _mGameCameraManager;
-        private IGeneralGameStateManager _gameStateManager;
+        private IGeneralInputStateManager _inputStateManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
         private IClockManagement _mClockManager;
         private IFeedbackManager _mFeedbackManager;
+        private IGeneralInputStateManager _mGeneralInputManager;
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
         private IBaseJobsCatalogue _mJobsCatalogue;
@@ -63,7 +63,7 @@ namespace GameDirection
         public IUIController GetUIController => _mUIController;
         public IGeneralUIFader GetGeneralBackgroundFader => _mGeneralFader;
         public IGameCameraManager GetGameCameraManager => _mGameCameraManager;
-        public IGeneralGameStateManager GetGameStateManager => _gameStateManager;
+        public IGeneralInputStateManager GetInputStateManager => _inputStateManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IItemsDataController GetItemsDataController => _mItemDataController;
@@ -88,14 +88,13 @@ namespace GameDirection
         }
         private void SetComponentManagers()
         {
-            _mLevelManager = GetComponent<LevelManager>();
+            _mLevelManager = GetComponent<LevelLoadManager>();
             _mGeneralFader = GetComponent<GeneralUIFader>();
-            _gameStateManager = GeneralInputStateManager.Instance;
-            _mGameCameraManager = GameCameraManager.Instance;             
+            _inputStateManager = GeneralInputStateManager.Instance;
         }
         private void LoadUIScene()
         {
-            _mLevelManager.LoadUIScene();
+            _mLevelManager.LoadAdditiveLevel(LevelIndexId.UILvl);
         }
         private void Start()
         {
@@ -107,6 +106,8 @@ namespace GameDirection
             _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
             _mClockManager = ClockManagement.Instance;
             _mFeedbackManager = FeedbackManager.Instance;
+            _mGeneralInputManager = GeneralInputStateManager.Instance;
+            _mGameCameraManager = GameCameraManager.Instance;             
 
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
@@ -116,7 +117,7 @@ namespace GameDirection
             
             _mUIController.StartMainMenuUI();
             
-            _gameStateManager.SetGamePlayState(InputGameState.MainMenu);
+            _inputStateManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
             WaitAndLoadDialogues();
         }
@@ -126,14 +127,12 @@ namespace GameDirection
             await Task.Delay(300);
             LoadDialoguesForSuppliers();
         }
-
         private void LoadDialoguesForSuppliers()
         {
             foreach (var itemSupplier in _mItemSuppliersData.GetItemSuppliersInData)
             {
                 itemSupplier.LoadDialogueData();
             }
-
             foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
             {
                 jobSupplier.LoadDialogueData();
@@ -142,13 +141,13 @@ namespace GameDirection
 
         #endregion
         
-        #region Public Fields
+        #region Public Functions
         
         #region ManageNewGame
         public void StartNewGame()
         {
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
-            _mGeneralFader.GeneralCameraFadeOut();
+            _mGeneralFader.GeneralCurtainAppear();
             CreateNewProfile();
             _mGameState = HighLevelGameStates.InCutScene;
             StartCoroutine(_dialoguesInSceneDataManager.PrepareIntroductionReading());
@@ -158,21 +157,22 @@ namespace GameDirection
             _mActiveGameProfile = null;
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule);
+            var calendarModule = Factory.CreateCalendarManager();
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule);
             _mActiveGameProfile.UpdateProfileData();
         }
         private void LoadFirstLevel()
         {
             ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
-            _mLevelManager.LoadFirstLevel();
+            //_mLevelManager.LoadAdditiveLevel(LevelIndexId.EdenLvl);
         }
         public void ReleaseFromDialogueStateToGame()
         {
-            if (_gameStateManager.CurrentInputGameState != InputGameState.InDialogue)
+            if (_inputStateManager.CurrentInputGameState != InputGameState.InDialogue)
             {
                 return;
             }
-            _gameStateManager.SetGamePlayState(InputGameState.InGame);
+            _inputStateManager.SetGamePlayState(InputGameState.InGame);
         }
         #endregion
         
@@ -180,6 +180,44 @@ namespace GameDirection
         {
             _mGameState = newState;
         }
+
+        /// <summary>
+        /// Finish Workday Region
+        /// </summary>
+        #region FinishWork
+        public void FinishWorkday()
+        {
+            Debug.Log("[FinishWorkday] Start. Next: ChangeHighLvlGameState");
+            ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
+            Debug.Log("[FinishWorkday] Done:ChangeHighLvlGameState Next: SetGamePlayState");
+            _mGeneralInputManager.SetGamePlayState(InputGameState.OnlyOffice);
+            Debug.Log("[FinishWorkday] Done:SetGamePlayState Next: GeneralCurtainAppear");
+            _mGeneralFader.GeneralCurtainAppear();
+            //Debug.Log("[FinishWorkday] Done:GeneralCurtainAppear Next: UnloadScene");
+            //_mLevelManager.UnloadScene(LevelIndexId.EdenLvl);
+            Debug.Log("[FinishWorkday] Done:UnloadScene Next: UIFinishWorkday");
+            UIFinishWorkday();
+            Debug.Log("[FinishWorkday] Done:UIFinishWorkday Next: ChangeCameraState");
+            _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
+            Debug.Log("[FinishWorkday] Done:ChangeCameraState Next: ActivateNewCamera");
+            _mGameCameraManager.ActivateNewCamera(GameCameraState.Office, 0);
+            Debug.Log("[FinishWorkday] Done:ActivateNewCamera Next: GeneralCurtainDisappear");
+            FadeInEndOfScene();
+            //_mLevelManager.LoadAdditiveLevel();
+        }
+
+        private async void UIFinishWorkday()
+        {
+            await Task.Delay(1000);
+            _mUIController.ReturnToBaseGamePlayCanvasState();
+        }
+
+        private async void FadeInEndOfScene()
+        {
+            await Task.Delay(6500);
+            _mGeneralFader.GeneralCurtainDisappear();
+            }
+        #endregion
         #endregion
     }
 }

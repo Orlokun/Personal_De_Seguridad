@@ -1,24 +1,25 @@
-using System;
 using UnityEngine;
 
 namespace UI
 {
     public class GeneralUIFader : MonoBehaviour, IGeneralUIFader
     {
-        private static readonly int FadeIn = Animator.StringToHash("ObjectFadeOut");
-        private static readonly int FadeOut = Animator.StringToHash("ObjectFadeIn");
-        [SerializeField] private Animator GeneralFadeOutPanelAnim;
+        private static readonly int CurtainDisappear = Animator.StringToHash("ObjectFadeOut");
+        private static readonly int CurtainAppear = Animator.StringToHash("ObjectFadeIn");
+        [SerializeField] private Animator generalFadeOutPanelAnim;
         private void Start()
         {
-            DontDestroyOnLoad(GeneralFadeOutPanelAnim.gameObject.transform.parent);
+            DontDestroyOnLoad(generalFadeOutPanelAnim.gameObject.transform.parent);
         }
-        public void GeneralFadeIn()
+        public void GeneralCurtainAppear()
         {
-            GeneralFadeOutPanelAnim.Play(FadeIn);
+            Debug.Log("[GeneralCurtainIn] FADE IN CURTAIN");
+            generalFadeOutPanelAnim.Play(CurtainAppear);
         }
-        public void GeneralCameraFadeOut()
+        public void GeneralCurtainDisappear()
         {   
-            GeneralFadeOutPanelAnim.Play(FadeOut);
+            Debug.Log("[GeneralCurtainOUT] FADE OUT CURTAIN");
+            generalFadeOutPanelAnim.Play(CurtainDisappear);
         }
     }
 }

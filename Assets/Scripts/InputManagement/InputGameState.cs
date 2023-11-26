@@ -5,6 +5,7 @@ namespace InputManagement
         InGame,
         Pause,
         InDialogue, 
-        MainMenu
+        MainMenu,
+        OnlyOffice
     }
 }

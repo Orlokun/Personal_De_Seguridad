@@ -2,20 +2,24 @@ using System;
 using System.Collections.Generic;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UnityEngine;
+using Utils;
 
 namespace GamePlayManagement
 {
     public class PlayerGameProfile : IPlayerGameProfile
     {
         //Profile constructor
-        public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule)
+        public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
+            ICalendarManagement calendarManager)
         {
             _itemSuppliersModule = itemSuppliersModule;
             _jobsSourcesModule = jobsSourcesModule;
+            _calendarModule = calendarManager;
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
             _generalXp = 3;
@@ -24,7 +28,7 @@ namespace GamePlayManagement
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
-
+        private ICalendarManagement _calendarModule;
         //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
@@ -43,6 +47,14 @@ namespace GamePlayManagement
         {
             return _jobsSourcesModule;
         }
+
+        public ICalendarManagement GetProfileCalendar()
+        {
+            return _calendarModule;
+        }
+
+
+        #region UpdateProfileData
         public void UpdateProfileData()
         {
             UpdateJobSuppliersInProfile();
@@ -88,10 +100,9 @@ namespace GamePlayManagement
                 }
             }
         }
-
-        private void UpdateItemsSpecialStats(Dictionary<BitItemSupplier, List<IItemObject>> ItemsInData)
+        private void UpdateItemsSpecialStats(Dictionary<BitItemSupplier, List<IItemObject>> itemsInData)
         {
-            foreach (var itemSupplier in ItemsInData)
+            foreach (var itemSupplier in itemsInData)
             {
                 foreach (var itemObject in itemSupplier.Value)
                 {
@@ -100,6 +111,8 @@ namespace GamePlayManagement
                 }
             }
         }
+        #endregion
+
         public int GeneralXP
         {
             get => _generalXp;

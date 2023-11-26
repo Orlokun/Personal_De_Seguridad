@@ -17,11 +17,12 @@ namespace GameDirection
         public IUIController GetUIController { get; }
         public IGeneralUIFader GetGeneralBackgroundFader { get; }
         public IGameCameraManager GetGameCameraManager { get; }
-        public IGeneralGameStateManager GetGameStateManager { get; }
+        public IGeneralInputStateManager GetInputStateManager { get; }
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
         public IItemsDataController GetItemsDataController { get; }
         public IFeedbackManager GetFeedbackManager { get; }
         public void ReleaseFromDialogueStateToGame();
+        public void FinishWorkday();
     }
 }

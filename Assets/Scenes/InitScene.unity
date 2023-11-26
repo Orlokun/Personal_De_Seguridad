@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc6e61807044316b4165ab07bdd1329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GeneralFadeOutPanelAnim: {fileID: 307853436}
+  generalFadeOutPanelAnim: {fileID: 307853436}
 --- !u!114 &138390986
 MonoBehaviour:
   m_ObjectHideFlags: 0

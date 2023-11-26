@@ -1,5 +1,6 @@
 using DataUnits.GameCatalogues;
 using DialogueSystem;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
@@ -10,6 +11,10 @@ namespace Utils
 {
     public static class Factory
     {
+        public static CalendarManagement CreateCalendarManager()
+        {
+            return new CalendarManagement(DayBitId.DayOne, PartOfDay.EarlyMorning);
+        }
         public static DialogueCameraMan CreateCameraMan()
         {
             return new DialogueCameraMan();
@@ -19,9 +24,10 @@ namespace Utils
             return new ItemSupplierShop(itemSupplier, itemDataController, suppliersCatalogue);
         }
         
-        public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule)
+        public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
+            ICalendarManagement calendarManager)
         {
-            return new PlayerGameProfile(itemSuppliersModule, jobsModule);
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager);
         }
 
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)

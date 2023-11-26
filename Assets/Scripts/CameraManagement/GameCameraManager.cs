@@ -11,6 +11,7 @@ namespace CameraManagement
         GeneralDesktop = 0,
         Notebook = 1,
         Phone = 2,
+        Cigar = 3
     }
     
     public enum GameCameraState
@@ -25,7 +26,7 @@ namespace CameraManagement
     public class GameCameraManager : MonoBehaviour, IGameCameraManager
     {
         private static GameCameraManager _instance;
-        public static GameCameraManager Instance => _instance;
+        public static IGameCameraManager Instance => _instance;
         /// <summary>
         /// Parents for camera objects
         /// </summary>
@@ -85,9 +86,10 @@ namespace CameraManagement
             {
                 var isSelectedCamera = i == indexCamera;
                 _mActiveCameras[i].SetActive(isSelectedCamera);
+                
                 //Do not save Dialogue state in order to return from it later
                 if (isSelectedCamera && _currentCameraState != GameCameraState.InDialogue)
-                {
+                { 
                     _mLastCameraState = new Tuple<int, GameCameraState>(i, _currentCameraState);
                 }
             }

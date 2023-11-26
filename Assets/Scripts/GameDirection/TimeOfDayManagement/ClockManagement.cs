@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UI.PopUpManager;
@@ -18,27 +17,27 @@ namespace GameDirection.TimeOfDayManagement
         DayEight = 128,
         DayNine = 256,
         DayTen = 512,
-        Day,Eleven = 1024,
+        DayEleven = 1024,
         DayTwelve = 2048,
         DayThirteen = 4096,
         DayFourteen = 8192,
         DayFifteen = 16384
     }
 
-    public class JournalManagement
+    public interface IWorkDayObject
     {
-        private DayBitId _currentDay;
-        private PartOfDay _timeOfDay;
-        private IPlayerProfileManager _mActivePlayerProfile;
+        
+    }
+    public class WorkDayObject : IWorkDayObject
+    {
+        private DayBitId _mBitId;
 
-        public JournalManagement(DayBitId loadCurrentDay, PartOfDay loadPartOfDay, IPlayerProfileManager activePlayerProfile)
+        public WorkDayObject(DayBitId mBitId)
         {
-            _currentDay = loadCurrentDay;
-            _timeOfDay = loadPartOfDay;
-            _mActivePlayerProfile = activePlayerProfile;
+            _mBitId = mBitId;
         }
     }
-
+    
     public interface IClockManagement
     {
         public void SetClockAtDaytime(PartOfDay partOfDay);
@@ -52,6 +51,8 @@ namespace GameDirection.TimeOfDayManagement
     {
         private static IClockManagement _mInstance;
         public static IClockManagement Instance => _mInstance;
+
+        private IGameDirector _mDirector;
 
         #region Time of Day Members
         private const int DayStartHour = 7;
@@ -69,10 +70,7 @@ namespace GameDirection.TimeOfDayManagement
         private const int EveningStartHour = 18;
         private const int EveningStartMinute = 0;
         
-        private const int NightStartHour = 21;
-        private const int NightStartMinute = 0;
-        
-        private const int DayFinishHour = 19;
+        private const int DayFinishHour = 20;
         private const int DayFinishMinute = 0;
         #endregion
 
@@ -109,13 +107,9 @@ namespace GameDirection.TimeOfDayManagement
             gameObject.SetActive(false);
             _mIsInitialized = true;
         }
-        private void OnStart()
+        private void Start()
         {
-            if (isTimeAdvancing || !_mIsInitialized)
-            {
-                return;
-            }
-            StartCoroutine(UpdateClock());
+            _mDirector = GameDirector.Instance;
         }
         #endregion
 
@@ -180,17 +174,13 @@ namespace GameDirection.TimeOfDayManagement
                 bannerObject.ToggleBannerForSeconds("Afternoon", 4);   
                 return;
             }
-            if (_mCurrentHour == NightStartHour && _mCurrentMinute == NightStartMinute)
+            if (_mCurrentHour == DayFinishHour && _mCurrentMinute == DayFinishMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
-                _mCurrentPartOfDay = PartOfDay.EndOfDay;
-                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-                bannerObject.ToggleBannerForSeconds("Night", 4);
+                StartFinishDay();
                 return;
             }
         }
-
-
+        
         public void PlayPauseClock(bool isPlay)
         {
             if (isPlay && isTimeAdvancing)
@@ -204,12 +194,10 @@ namespace GameDirection.TimeOfDayManagement
                 StartCoroutine(UpdateClock());
             }
         }
-
         public PartOfDay GetCurrentPartOfDay()
         {
             return _mCurrentPartOfDay;
         }
-
         public void AdvanceToNextPartOfDay()
         {
             if (_mCurrentPartOfDay == PartOfDay.Afternoon)
@@ -222,7 +210,11 @@ namespace GameDirection.TimeOfDayManagement
 
         private void StartFinishDay()
         {
-            Debug.Log("Finishing Day");   
+            Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
+            _mCurrentPartOfDay = PartOfDay.EndOfDay;
+            var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+            bannerObject.ToggleBannerForSeconds("End Of Day", 4);
+            _mDirector.FinishWorkday();
         }
 
         public void SetClockAtDaytime(PartOfDay partOfDay)
@@ -260,10 +252,10 @@ namespace GameDirection.TimeOfDayManagement
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
                     break;
                 case PartOfDay.EndOfDay:
-                    _mCurrentHour = EveningStartHour;
-                    _mCurrentMinute = EveningStartMinute;
+                    _mCurrentHour = DayFinishHour;
+                    _mCurrentMinute = DayFinishMinute;
                     ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
-                    StartFinishDay();   
+                    //StartFinishDay();   
                     break;
                 default:
                     return;
