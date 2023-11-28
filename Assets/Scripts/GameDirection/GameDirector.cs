@@ -157,7 +157,7 @@ namespace GameDirection
             _mActiveGameProfile = null;
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
-            var calendarModule = Factory.CreateCalendarManager();
+            var calendarModule = Factory.CreateCalendarModule();
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule);
             _mActiveGameProfile.UpdateProfileData();
         }
@@ -187,25 +187,22 @@ namespace GameDirection
         #region FinishWork
         public void FinishWorkday()
         {
-            Debug.Log("[FinishWorkday] Start. Next: ChangeHighLvlGameState");
-            ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
-            Debug.Log("[FinishWorkday] Done:ChangeHighLvlGameState Next: SetGamePlayState");
-            _mGeneralInputManager.SetGamePlayState(InputGameState.OnlyOffice);
-            Debug.Log("[FinishWorkday] Done:SetGamePlayState Next: GeneralCurtainAppear");
-            _mGeneralFader.GeneralCurtainAppear();
-            //Debug.Log("[FinishWorkday] Done:GeneralCurtainAppear Next: UnloadScene");
-            //_mLevelManager.UnloadScene(LevelIndexId.EdenLvl);
-            Debug.Log("[FinishWorkday] Done:UnloadScene Next: UIFinishWorkday");
-            UIFinishWorkday();
-            Debug.Log("[FinishWorkday] Done:UIFinishWorkday Next: ChangeCameraState");
-            _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
-            Debug.Log("[FinishWorkday] Done:ChangeCameraState Next: ActivateNewCamera");
-            _mGameCameraManager.ActivateNewCamera(GameCameraState.Office, 0);
-            Debug.Log("[FinishWorkday] Done:ActivateNewCamera Next: GeneralCurtainDisappear");
-            FadeInEndOfScene();
-            //_mLevelManager.LoadAdditiveLevel();
+            GetActiveGameProfile.GetProfileCalendar().FinishCurrentDay();
+            ManageUIProcessEndOfDay();
         }
 
+        private void ManageUIProcessEndOfDay()
+        {
+            Debug.Log("[ManageUIProcessEndOfDay] Start");
+            ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
+            _mGeneralInputManager.SetGamePlayState(InputGameState.OnlyOffice);
+            _mGeneralFader.GeneralCurtainAppear();
+            UIFinishWorkday();
+            _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
+            _mGameCameraManager.ActivateNewCamera(GameCameraState.Office, 0);
+            FadeInEndOfScene();
+            Debug.Log("[ManageUIProcessEndOfDay] Finish");
+        }
         private async void UIFinishWorkday()
         {
             await Task.Delay(1000);
@@ -216,7 +213,7 @@ namespace GameDirection
         {
             await Task.Delay(6500);
             _mGeneralFader.GeneralCurtainDisappear();
-            }
+        }
         #endregion
         #endregion
     }

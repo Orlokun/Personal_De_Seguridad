@@ -11,9 +11,13 @@ namespace Utils
 {
     public static class Factory
     {
-        public static CalendarManagement CreateCalendarManager()
+        public static WorkDayObject CreateWorkday(DayBitId dayBitId)
         {
-            return new CalendarManagement(DayBitId.DayOne, PartOfDay.EarlyMorning);
+            return new WorkDayObject(dayBitId);
+        }
+        public static CalendarModule CreateCalendarModule()
+        {
+            return new CalendarModule(DayBitId.DayOne, PartOfDay.EarlyMorning);
         }
         public static DialogueCameraMan CreateCameraMan()
         {

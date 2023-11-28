@@ -75,7 +75,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
                 return;
             }
 
-            var getItem = _mItemDataController.GetItemFromCatalogue(BitSupplierId, bitItemId);
+            var getItem = _mItemDataController.GetItemFromBaseCatalogue(BitSupplierId, bitItemId);
             if (getItem == null)
             {
                 Debug.LogError("[AddItemToSupplier] Item Added must exist in Base Catalogue");

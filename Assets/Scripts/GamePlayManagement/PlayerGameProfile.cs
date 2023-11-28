@@ -85,7 +85,7 @@ namespace GamePlayManagement
         }
         private void UpdateItemsInProfile()
         {
-            var itemsInCatalogue = ItemsDataController.Instance.ExistingItemsInCatalogue;
+            var itemsInCatalogue = ItemsDataController.Instance.ExistingBaseItemsInCatalogue;
             UpdateItemsSpecialStats(itemsInCatalogue);
             var activeProviders = GetActiveItemSuppliersModule().ActiveProviderObjects;
             foreach (var itemSupplier in activeProviders)

@@ -17,7 +17,8 @@ namespace UI
         BaseCanvas = 1,
         GamePlayCanvas = 2,
         Office = 4,
-        MainMenu = 8
+        MainMenu = 8,
+        EndOfDay = 16
     }
 
     public interface IUIController
@@ -151,6 +152,10 @@ namespace UI
                 canvasOperator.ActivateUIElement(GameplayPanelsBitStates.TEXT_BACKGROUND);
             }
 
+        }
+        public void ToggleEndOfDay(bool toogleValue)
+        {
+            
         }
         #endregion
         

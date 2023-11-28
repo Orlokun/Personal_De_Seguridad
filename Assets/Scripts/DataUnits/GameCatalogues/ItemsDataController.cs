@@ -1,13 +1,12 @@
-    using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.ItemScriptableObjects;
-    using GamePlayManagement.BitDescriptions;
-    using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
-using UI;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
@@ -18,24 +17,34 @@ namespace DataUnits.GameCatalogues
     {
         private static ItemsDataController _instance;
         public static IItemsDataController Instance => _instance;
+        public bool AreSpecialStatsReady => MAreSpecialStatsReady;
 
+        #region Special Stats Load Flags
+        private bool MAreSpecialStatsReady => _mGotGuardsData && _mGotCamerasData && _mGotWeaponsData &&
+                                              _mGotTrapsData && _mGotOtherItemsData;
+        private bool _mGotGuardsData;
+        private bool _mGotCamerasData;
+        private bool _mGotWeaponsData;
+        private bool _mGotTrapsData;
+        private bool _mGotOtherItemsData;
+        #endregion
+
+        #region Special Stats Members
         private ItemCatalogueFromData _mItemCatalogueDataString;
         private GuardStatsFromData _mGuardStatsFromDataString;
         private CameraStatsFromData _mCameraStatsFromDataString;
         private WeaponStatsFromData _mWeaponStatsFromDataString;
         private TrapStatsFromData _mTrapStatsFromDataString;
         private OtherItemsStatsFromData _mOtherItemsStatsFromDataString;
-        private bool _mAreSpecialStatsReady;
-        
         private Dictionary<BitItemSupplier, List<IGuardStats>> _mGuardsSpecialData = new Dictionary<BitItemSupplier, List<IGuardStats>>();
         private Dictionary<BitItemSupplier, List<ICameraStats>> _mCamerasSpecialData = new Dictionary<BitItemSupplier, List<ICameraStats>>();
         private Dictionary<BitItemSupplier, List<IWeaponStats>> _mWeaponsSpecialData = new Dictionary<BitItemSupplier, List<IWeaponStats>>();
         private Dictionary<BitItemSupplier, List<ITrapStats>> _mTrapsSpecialData = new Dictionary<BitItemSupplier, List<ITrapStats>>();
         private Dictionary<BitItemSupplier, List<IOtherItemsStats>> _mOthersSpecialData = new Dictionary<BitItemSupplier, List<IOtherItemsStats>>();
-        
-        private Dictionary<BitItemSupplier, List<IItemObject>> _mBaseCatalogueItemsFromData= new Dictionary<BitItemSupplier, List<IItemObject>>();
-        public Dictionary<BitItemSupplier, List<IItemObject>> ExistingItemsInCatalogue => _mBaseCatalogueItemsFromData;
-        public void Awake()
+        #endregion
+        public Dictionary<BitItemSupplier, List<IItemObject>> ExistingBaseItemsInCatalogue => _mBaseCatalogueBaseItemsFromData;
+        private Dictionary<BitItemSupplier, List<IItemObject>> _mBaseCatalogueBaseItemsFromData= new Dictionary<BitItemSupplier, List<IItemObject>>();
+        private void Awake()
         {
             DontDestroyOnLoad(this);
             if (_instance != null)
@@ -241,6 +250,7 @@ namespace DataUnits.GameCatalogues
                     new GuardStats(itemId,intelligence, kindness, proactivity, aggressive, strength, agility);
                 _mGuardsSpecialData[supplierBitId].Add(itemDataObject);
             }
+            _mGotGuardsData = true;
         }
         private void LoadCameraDataFromJson(string sourceJson)
         {
@@ -306,6 +316,7 @@ namespace DataUnits.GameCatalogues
                     new CameraStats(itemId,range, peopleInSight, clarity, persuasiveness);
                 _mCamerasSpecialData[supplierBitId].Add(itemDataObject);
             }
+            _mGotCamerasData = true;
         }
         private void LoadWeaponDataFromJson(string sourceJson)
         {
@@ -370,6 +381,8 @@ namespace DataUnits.GameCatalogues
                     new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness);
                 _mWeaponsSpecialData[supplierBitId].Add(itemDataObject);
             }
+            _mGotWeaponsData = true;
+
         }
         private void LoadTrapDataFromJson(string sourceJson)
         {
@@ -434,6 +447,7 @@ namespace DataUnits.GameCatalogues
                     new TrapStats(itemId,effectiveness, damage, range, persuasiveness);
                 _mTrapsSpecialData[supplierBitId].Add(itemDataObject);
             }
+            _mGotTrapsData = true;
         }
         private void LoadOtherItemsFromJson(string sourceJson)
         {
@@ -498,6 +512,7 @@ namespace DataUnits.GameCatalogues
                     new OtherItemsStats(itemId,effectiveness, damage, range, persuasiveness);
                 _mOthersSpecialData[supplierBitId].Add(otherItemsDataObject);
             }
+            _mGotOtherItemsData = true;
         }
         #endregion
 
@@ -507,11 +522,11 @@ namespace DataUnits.GameCatalogues
             Debug.Log($"StartParsing Items Catalogue: {sourceJson}");
 
             _mItemCatalogueDataString = JsonConvert.DeserializeObject<ItemCatalogueFromData>(sourceJson);
-            _mBaseCatalogueItemsFromData = new Dictionary<BitItemSupplier, List<IItemObject>>();
+            _mBaseCatalogueBaseItemsFromData = new Dictionary<BitItemSupplier, List<IItemObject>>();
             
             var lastItemSupplierId = 1;
             List<IItemObject> currentSupplierList = new List<IItemObject>();
-            if (_mBaseCatalogueItemsFromData == null)
+            if (_mBaseCatalogueBaseItemsFromData == null)
             {
                 Debug.LogError($"_mItemCatalogueDataString must not be null after parsing");
                 return;
@@ -522,14 +537,14 @@ namespace DataUnits.GameCatalogues
                 var gotId = int.TryParse(_mItemCatalogueDataString.values[i][0], out var supplierId);
                 if (!gotId)
                 {
-                    Debug.LogError("Item must have a supplier set from data");
+                    Debug.LogError("[LoadBaseItemDataFromJson] Item must have a supplier set from data");
                     return;
                 }
                 var supplierBitId = (BitItemSupplier) supplierId;
                 //Step 1.1: If its new supplier, add current list to Dict and clean.
                 if (lastItemSupplierId != supplierId || i == 1)
                 {
-                    _mBaseCatalogueItemsFromData.Add(supplierBitId, currentSupplierList);
+                    _mBaseCatalogueBaseItemsFromData.Add(supplierBitId, currentSupplierList);
                     currentSupplierList = new List<IItemObject>();
                     lastItemSupplierId = supplierId;
                 }
@@ -538,7 +553,7 @@ namespace DataUnits.GameCatalogues
                 var gotItemType = int.TryParse(_mItemCatalogueDataString.values[i][1], out var itemType);
                 if (!gotItemType)
                 {
-                    Debug.LogError("Item must have a supplier set from data");
+                    Debug.LogError("[LoadBaseItemDataFromJson] Item must have an item type set from data");
                     return;
                 }
                 var bitItemType = (BitItemType) itemType;
@@ -547,7 +562,7 @@ namespace DataUnits.GameCatalogues
                 var gotItemId = int.TryParse(_mItemCatalogueDataString.values[i][2], out var itemId);
                 if (!gotItemId)
                 {
-                    Debug.LogError("Item must have a BitID set from data");
+                    Debug.LogError("[LoadBaseItemDataFromJson] Item must have a BitID set from data");
                     return;
                 }
                 
@@ -558,14 +573,14 @@ namespace DataUnits.GameCatalogues
                 var gotUp = int.TryParse(_mItemCatalogueDataString.values[i][4], out var unlockPoints);
                 if (!gotUp)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadBaseItemDataFromJson] Item Unlock Points must be available in data");
                 }
 
                 //Step 6: Get Item price
                 var gotPrice = int.TryParse(_mItemCatalogueDataString.values[i][5], out var itemPrice);
                 if (!gotPrice)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadBaseItemDataFromJson] Item Price must be available in data");
                 }
                 //Step 7: Get Item Description
                 var itemDescription = _mItemCatalogueDataString.values[i][6];
@@ -573,9 +588,9 @@ namespace DataUnits.GameCatalogues
                 var spriteName = _mItemCatalogueDataString.values[i][7];
                 //Step 9: Get Item Actions 
                 var gotActions = int.TryParse(_mItemCatalogueDataString.values[i][8], out var itemActions);
-                if (!gotPrice)
+                if (!gotActions)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadBaseItemDataFromJson] Item Actions must be available in data");
                 }
                 
                 //var itemStats data
@@ -585,7 +600,7 @@ namespace DataUnits.GameCatalogues
                 IItemObject itemDataObject = ScriptableObject.CreateInstance<ItemObject>();
                 itemDataObject.SetItemObjectData(supplierBitId, bitItemType, itemId, itemName, unlockPoints, 
                     itemPrice,itemDescription, spriteName, itemActions);
-                _mBaseCatalogueItemsFromData[supplierBitId].Add(itemDataObject);
+                _mBaseCatalogueBaseItemsFromData[supplierBitId].Add(itemDataObject);
                 Debug.Log($"Added Item: {itemDataObject.ItemName}");
                 Debug.Log($"Current Item Supplier: {itemDataObject.ItemSupplier}");
             }
@@ -619,9 +634,17 @@ namespace DataUnits.GameCatalogues
         }
         #endregion
 
-        public IItemObject GetItemFromCatalogue(BitItemSupplier itemSupplier, int itemBitId)
+        public IItemObject GetItemFromBaseCatalogue(BitItemSupplier itemSupplier, int itemBitId)
         {
-            return _mBaseCatalogueItemsFromData[itemSupplier].SingleOrDefault(x => x.BitId == itemBitId);
+            try
+            {
+                return _mBaseCatalogueBaseItemsFromData[itemSupplier].SingleOrDefault(x => x.BitId == itemBitId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         public IGuardStats GetStatsForGuard(BitItemSupplier itemSupplier, int itemBitId)
         {
@@ -638,23 +661,55 @@ namespace DataUnits.GameCatalogues
         }
         public ICameraStats GetStatsForCamera(BitItemSupplier itemSupplier, int itemBitId)
         {
-            Debug.Log("[GetStatsForCamera]");
-            return _mCamerasSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            try
+            {
+                Debug.Log($"[GetStatsForCamera] SupplierID: {itemSupplier}. ItemId: {itemBitId}");
+                return _mCamerasSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         public IWeaponStats GetStatsForWeapon(BitItemSupplier itemSupplier, int itemBitId)
         {
-            Debug.Log("[GetStatsForWeapon]");
-            return _mWeaponsSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            try
+            {
+                Debug.Log("[GetStatsForWeapon]");
+                return _mWeaponsSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         public ITrapStats GetStatsForTrap(BitItemSupplier itemSupplier, int itemBitId)
         {
-            Debug.Log("[GetStatsForTrap]");
-            return _mTrapsSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            try
+            {
+                Debug.Log("[GetStatsForTrap]");
+                return _mTrapsSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         public IOtherItemsStats GetStatsForOtherItemsType(BitItemSupplier itemSupplier, int itemBitId)
         {
-            Debug.Log("[GetStatsForOtherItemsType]");
-            return _mOthersSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            try
+            {
+                Debug.Log("[GetStatsForOtherItemsType]");
+                return _mOthersSpecialData[itemSupplier].SingleOrDefault(x => x.Id == itemBitId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

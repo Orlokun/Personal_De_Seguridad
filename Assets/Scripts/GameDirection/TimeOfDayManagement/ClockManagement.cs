@@ -24,20 +24,6 @@ namespace GameDirection.TimeOfDayManagement
         DayFifteen = 16384
     }
 
-    public interface IWorkDayObject
-    {
-        
-    }
-    public class WorkDayObject : IWorkDayObject
-    {
-        private DayBitId _mBitId;
-
-        public WorkDayObject(DayBitId mBitId)
-        {
-            _mBitId = mBitId;
-        }
-    }
-    
     public interface IClockManagement
     {
         public void SetClockAtDaytime(PartOfDay partOfDay);

@@ -53,9 +53,9 @@ namespace UI
             {
                 _activeUIElements |= toggledElement;
             }
-
             UpdateUIObjects();
         }
+        
         public void ActivateUIElements(IEnumerable<int> addedElements)
         {
             foreach (var addedElement in addedElements)
@@ -68,6 +68,7 @@ namespace UI
             }
             UpdateUIObjects();
         }
+        
         public void DeactivateUIElements(IEnumerable<int> removedElements)
         {
             foreach (var removedElement in removedElements)
