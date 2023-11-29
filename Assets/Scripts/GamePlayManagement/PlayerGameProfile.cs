@@ -15,7 +15,7 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarManagement calendarManager)
+            ICalendarModule calendarManager)
         {
             _itemSuppliersModule = itemSuppliersModule;
             _jobsSourcesModule = jobsSourcesModule;
@@ -28,7 +28,7 @@ namespace GamePlayManagement
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
-        private ICalendarManagement _calendarModule;
+        private ICalendarModule _calendarModule;
         //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
@@ -48,7 +48,7 @@ namespace GamePlayManagement
             return _jobsSourcesModule;
         }
 
-        public ICalendarManagement GetProfileCalendar()
+        public ICalendarModule GetProfileCalendar()
         {
             return _calendarModule;
         }

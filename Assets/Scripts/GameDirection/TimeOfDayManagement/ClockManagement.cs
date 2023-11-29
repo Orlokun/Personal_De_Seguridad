@@ -30,6 +30,8 @@ namespace GameDirection.TimeOfDayManagement
         public void PlayPauseClock(bool isPlay);
         public PartOfDay GetCurrentPartOfDay();
         public void AdvanceToNextPartOfDay();
+        public event ClockManagement.PassTimeOfDay OnPassTimeOfDay;
+
     }
 
     [RequireComponent(typeof(TMP_Text))]
@@ -39,8 +41,16 @@ namespace GameDirection.TimeOfDayManagement
         public static IClockManagement Instance => _mInstance;
 
         private IGameDirector _mDirector;
-
+        public delegate void PassTimeOfDay(PartOfDay dayTime);
+        public event PassTimeOfDay OnPassTimeOfDay;
+        
         #region Time of Day Members
+        private const string EarlyMorningName = "Early Morning";
+        private const string MorningName = "Morning";
+        private const string NoonName = "Noon";
+        private const string AfternoonName = "Afternoon";
+        private const string EveningName = "Evening";
+        private const string EndOfDayName = "End Of Day";
         private const int DayStartHour = 7;
         private const int DayStartMinute = 0;
         
@@ -60,14 +70,14 @@ namespace GameDirection.TimeOfDayManagement
         private const int DayFinishMinute = 0;
         #endregion
 
-        private bool isTimeAdvancing = false;
+        private bool _isTimeAdvancing = false;
         private int _mCurrentHour = 0;
         private int _mCurrentMinute = 0;
         private bool _mIsInitialized;
         private PartOfDay _mCurrentPartOfDay;
 
         [SerializeField]
-        private TMP_Text _clockText;
+        private TMP_Text clockText;
 
         #region Init
         private void Awake()
@@ -101,7 +111,7 @@ namespace GameDirection.TimeOfDayManagement
 
         private IEnumerator UpdateClock()
         {
-            while (isTimeAdvancing)
+            while (_isTimeAdvancing)
             {
                 yield return new WaitForSeconds(.8f);
                 AdvanceGameMinute();
@@ -130,34 +140,27 @@ namespace GameDirection.TimeOfDayManagement
         {
             if (_mCurrentHour == DayStartHour && _mCurrentMinute == DayStartMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Early Morning");
-                _mCurrentPartOfDay = PartOfDay.EarlyMorning;
-                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-                bannerObject.ToggleBannerForSeconds("Early Morning", 3);
+                StartNewTimeOfDay(PartOfDay.EarlyMorning, EarlyMorningName, 4);
                 return;
             }
             if (_mCurrentHour == MorningStartHour && _mCurrentMinute == MorningStartMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Morning");
-                _mCurrentPartOfDay = PartOfDay.Morning;
-                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-                bannerObject.ToggleBannerForSeconds("Morning", 3);
+                StartNewTimeOfDay(PartOfDay.Morning, MorningName, 4);
                 return;
             }
             if (_mCurrentHour == NoonStartHour && _mCurrentMinute == NoonStartMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Noon");
-                _mCurrentPartOfDay = PartOfDay.Noon;
-                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-                bannerObject.ToggleBannerForSeconds("Noon", 3);
+                StartNewTimeOfDay(PartOfDay.Noon, NoonName, 4);
                 return;
             }
             if (_mCurrentHour == AfternoonStartHour && _mCurrentMinute == AfternoonStartMinute)
             {
-                Debug.Log("[CheckIfChangesTimeOfDay] Afternoon");
-                _mCurrentPartOfDay = PartOfDay.Afternoon;
-                var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-                bannerObject.ToggleBannerForSeconds("Afternoon", 4);   
+                StartNewTimeOfDay(PartOfDay.Afternoon, AfternoonName, 4);
+                return;
+            }
+            if (_mCurrentHour == EveningStartHour && _mCurrentMinute == EveningStartMinute)
+            {
+                StartNewTimeOfDay(PartOfDay.Evening, EveningName, 4);
                 return;
             }
             if (_mCurrentHour == DayFinishHour && _mCurrentMinute == DayFinishMinute)
@@ -166,16 +169,21 @@ namespace GameDirection.TimeOfDayManagement
                 return;
             }
         }
-        
+        private void StartFinishDay()
+        {
+            Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
+            StartNewTimeOfDay(PartOfDay.EndOfDay, EndOfDayName, 4);
+            _mDirector.FinishWorkday();
+        }
         public void PlayPauseClock(bool isPlay)
         {
-            if (isPlay && isTimeAdvancing)
+            if (isPlay && _isTimeAdvancing)
             {
                 return;
             }
             
-            isTimeAdvancing = isPlay;
-            if (isTimeAdvancing)
+            _isTimeAdvancing = isPlay;
+            if (_isTimeAdvancing)
             {
                 StartCoroutine(UpdateClock());
             }
@@ -194,14 +202,17 @@ namespace GameDirection.TimeOfDayManagement
             _mCurrentPartOfDay++;
         }
 
-        private void StartFinishDay()
+        private void StartNewTimeOfDay(PartOfDay partOfDay, string timeOfDayName, float bannerTimeDuration)
         {
-            Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
-            _mCurrentPartOfDay = PartOfDay.EndOfDay;
+            Debug.Log($"[CheckIfChangesTimeOfDay] {timeOfDayName}");
+            _mCurrentPartOfDay = partOfDay;
             var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-            bannerObject.ToggleBannerForSeconds("End Of Day", 4);
-            _mDirector.FinishWorkday();
+            bannerObject.ToggleBannerForSeconds(timeOfDayName, bannerTimeDuration);
+            OnPassTimeOfDay?.Invoke(_mCurrentPartOfDay);
+            //TODO: Auto save should be implemented
         }
+        
+
 
         public void SetClockAtDaytime(PartOfDay partOfDay)
         {
@@ -256,7 +267,7 @@ namespace GameDirection.TimeOfDayManagement
             currentMinuteText = currentMinute > 9 ? currentMinute.ToString() : "0" + currentMinute.ToString();
             currentHourText = currentHour > 9 ? currentHour.ToString() : "0" + currentHour.ToString();
 
-            _clockText.text = currentHourText + ":" + currentMinuteText;
+            clockText.text = currentHourText + ":" + currentMinuteText;
         }
     }
 }

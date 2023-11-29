@@ -1,9 +1,13 @@
+using GameDirection;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
 
-public class EndOfDayPanelController : MonoBehaviour
+public class EndOfDayPanelController : MonoBehaviour, IInitialize, IEndOfDayPanelController
 {
     [SerializeField] private Button ReturnButton;
     [SerializeField] private Button _mContinueButton;
@@ -13,7 +17,10 @@ public class EndOfDayPanelController : MonoBehaviour
     private Color regularValueColor = new Color();
     private Color badValueColor = new Color();
     private Color veryBadValueColor = new Color();
-    
+
+    private bool firstOpenPanelOne;
+    private bool firstOpenPanelTwo;
+
     #region FirstPanelSerializedFields
     [SerializeField] private TMP_Text maxActiveClients;
     [SerializeField] private TMP_Text thiefClients;
@@ -34,7 +41,7 @@ public class EndOfDayPanelController : MonoBehaviour
     [SerializeField] private TMP_Text foodSanity;
     [SerializeField] private TMP_Dropdown foodOptionDropdown;
     
-    [SerializeField] private TMP_Text transportTaxOmniCredits;
+    [SerializeField] private TMP_Text transportOmniCredits;
     [SerializeField] private TMP_Text transportEnergy;
     [SerializeField] private TMP_Text transportSanity;
     [SerializeField] private TMP_Dropdown transportOptDropdown;
@@ -43,17 +50,60 @@ public class EndOfDayPanelController : MonoBehaviour
     [SerializeField] private TMP_Text omniTaxEnergy;
     [SerializeField] private TMP_Text omniTaxSanity;
     
-    [SerializeField] private TMP_Text finalOmniCredits;
+    [SerializeField] private TMP_Text endOfDayCreditsStart;
+    [SerializeField] private TMP_Text endOfDayCreditsEnd;
+    
+    
     #endregion
     
     private bool _isInitialized;
     public bool IsInitialized => _isInitialized;
+    private static IEndOfDayPanelController _mInstance;
+    public static IEndOfDayPanelController Instance => _mInstance;
+    
+    public void Initialize()
+    {
+        if (_mInstance != null && (EndOfDayPanelController) _mInstance != this)
+        {
+            Destroy(this);
+        }
+        _mInstance = this;
+        ClearDisplayedValues();
+        _mContinueButton.onClick.AddListener(GoToSecondPanel);
+        ReturnButton.onClick.AddListener(ReturnToFirstPanel);
+        OnRentValueChanged();
+        OnFoodValueChanged();
+        OnTransportValueChange();
+        _isInitialized = true;
+    }
 
     private IWorkDayObject _mDisplayedDay;
 
     private void Awake()
     {
-        ClearDisplayedValues();
+        Initialize();
+    }
+    private void ReturnToFirstPanel()
+    {
+        GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.SECOND_PANEL);
+        GameDirector.Instance.GetUIController.ActivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.FIRST_PANEL);
+        _mContinueButton.onClick.RemoveAllListeners();
+        _mContinueButton.onClick.AddListener(GoToSecondPanel);
+    }
+    private void GoToSecondPanel()
+    {
+        Debug.Log("GOING TO SECOND PANEL!");
+        GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.FIRST_PANEL);
+        GameDirector.Instance.GetUIController.ActivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.SECOND_PANEL);
+        _mContinueButton.onClick.RemoveAllListeners();
+        _mContinueButton.onClick.AddListener(ConfirmAndFinishEndOfDay);
+    }
+    private void ConfirmAndFinishEndOfDay()
+    {
+        //Calculate decisions
+        //Save decisions to day
+        //Advance to Next Day in data
+        //Load new level and New Day
     }
 
     #region RentValueChange
@@ -91,24 +141,34 @@ public class EndOfDayPanelController : MonoBehaviour
     public void OnFoodValueChanged()
     {
         var selectedIndex = foodOptionDropdown.value;
-        var selectedDayTime = rentOptionDropdown.options[selectedIndex].text;
+        var selectedDayTime = foodOptionDropdown.options[selectedIndex].text;
         switch (selectedDayTime)
         {
-            case "FastFood":
+            case "Fast Food":
                 SetFastFoodValues();
                 break;
-            case "Don't Pay":
-                DontPayRent();
+            case "Restaurant":
+                SetRestaurantFoodValues();
+                break;            
+            case "Cook":
+                SetCookFoodValues();
                 break;
             default:
                 return;
         }
     }
+    //TODO: This should be data downloaded from server. Create a ticket. 
     private void SetFastFoodValues()
     {
         foodOmniCredits.text = "-1";
         foodEnergy.text = "+1";
         foodSanity.text = "-3";
+    }
+    private void SetRestaurantFoodValues()
+    {
+        foodOmniCredits.text = "-5";
+        foodEnergy.text = "+2";
+        foodSanity.text = "+4";
     }
     private void SetCookFoodValues()
     {
@@ -116,13 +176,38 @@ public class EndOfDayPanelController : MonoBehaviour
         foodEnergy.text = "0";
         foodSanity.text = "+5";
     }
-    private void SetPriceyFoodValues()
-    {
-        foodOmniCredits.text = "-5";
-        foodEnergy.text = "+2";
-        foodSanity.text = "+4";
-    }
+    #endregion
     
+    #region TransportValueChange
+    public void OnTransportValueChange()
+    {
+        var selectedIndex = transportOptDropdown.value;
+        var selectedDayTime = transportOptDropdown.options[selectedIndex].text;
+        switch (selectedDayTime)
+        {
+            case "Bike":
+                SetTransportBikeValues();
+                break;
+            case "Bus":
+                SetTransportBusValues();
+                break;            
+            default:
+                return;
+        }
+    }
+    //TODO: This should be data downloaded from server. Create a ticket. 
+    private void SetTransportBikeValues()
+    {
+        transportOmniCredits.text = "0";
+        transportEnergy.text = "+1";
+        transportSanity.text = "+3";
+    }
+    private void SetTransportBusValues()
+    {
+        transportOmniCredits.text = "-2";
+        transportEnergy.text = "-2";
+        transportSanity.text = "-2";
+    }
 
     #endregion
     
@@ -149,7 +234,7 @@ public class EndOfDayPanelController : MonoBehaviour
         foodSanity.text = "";
         foodOptionDropdown.value = 0;
 
-        transportTaxOmniCredits.text = "";
+        transportOmniCredits.text = "";
         transportEnergy.text = "";
         transportSanity.text = "";
         transportOptDropdown.value = 0;
@@ -158,7 +243,7 @@ public class EndOfDayPanelController : MonoBehaviour
         omniTaxEnergy.text = "";
         omniTaxSanity.text = "";
         
-        finalOmniCredits.text = "";
+        endOfDayCreditsStart.text = "";
     }
 
     public void SetDayForDisplay(IWorkDayObject dayToDisplay)
@@ -170,13 +255,13 @@ public class EndOfDayPanelController : MonoBehaviour
     private void UpdateUIObjectsWithDayData()
     {
         //First Panel
-        maxActiveClients.text = "";
-        thiefClients.text = "";
-        clientsCompleted.text = "";
-        clientsDetained.text = "";
-        productsPurchase.text = "";
-        productsStolen.text = "";
-        omniCredits.text = "";
+        maxActiveClients.text = _mDisplayedDay.MaxActiveClients.ToString();
+        thiefClients.text = _mDisplayedDay.ThiefClients.ToString();
+        clientsCompleted.text = _mDisplayedDay.ClientsCompleted.ToString();
+        clientsDetained.text = _mDisplayedDay.ClientsDetained.ToString();
+        productsPurchase.text = _mDisplayedDay.ProductsPurchased.ToString();
+        productsStolen.text = _mDisplayedDay.ProductsStolen.ToString();
+        omniCredits.text = _mDisplayedDay.OmniCreditsEarned.ToString();
         
         //Second panel values
         rentOmniCredits.text = "";
@@ -189,7 +274,7 @@ public class EndOfDayPanelController : MonoBehaviour
         foodSanity.text = "";
         foodOptionDropdown.value = 0;
 
-        transportTaxOmniCredits.text = "";
+        transportOmniCredits.text = "";
         transportEnergy.text = "";
         transportSanity.text = "";
         transportOptDropdown.value = 0;
@@ -198,6 +283,6 @@ public class EndOfDayPanelController : MonoBehaviour
         omniTaxEnergy.text = "";
         omniTaxSanity.text = "";
         
-        finalOmniCredits.text = "";
+        endOfDayCreditsStart.text = "";
     }
 }

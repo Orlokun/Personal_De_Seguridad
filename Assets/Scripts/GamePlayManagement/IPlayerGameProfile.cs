@@ -12,7 +12,7 @@ namespace GamePlayManagement
         public Guid GameId { get; }
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
-        public ICalendarManagement GetProfileCalendar();
+        public ICalendarModule GetProfileCalendar();
         public void UpdateProfileData();
         public int GeneralXP { get; set; }
     }

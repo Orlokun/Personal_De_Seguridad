@@ -54,7 +54,10 @@ namespace UI
         
         [SerializeField] private DialogueWithCameraTarget testCameraDialogue;
 
-        #region PublicFunction
+        private List<int> _baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
+            BasePanelsBitStates.IN_GAME_HELP_BUTTON};
+        
+            #region PublicFunction
         public void ToggleDialogueObject(bool isActive)
         {
             if (!_mActiveCanvasDict.ContainsKey((int) CanvasBitId.GamePlayCanvas))
@@ -78,15 +81,13 @@ namespace UI
             {
                 if (canvasOperator.Key == (int) CanvasBitId.BaseCanvas)
                 {
-                    var baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
-                        BasePanelsBitStates.IN_GAME_HELP_BUTTON};
-                    canvasOperator.Value.ActivateThisElementsOnly(baseObjects);
+                    canvasOperator.Value.ActivateThisElementsOnly(_baseObjects);
                     continue;
                 }
                 canvasOperator.Value.DeactivateAllElements();
             }
             
-            //Item Sidebar and clock
+            //Item Sidebar
             var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
@@ -202,7 +203,7 @@ namespace UI
         }
         private void SaveCanvasOperatorsDictionaries()
         {
-            var activeCanvas = FindObjectsOfType<CanvasOperator>();
+            var activeCanvas = FindObjectsOfType<CanvasOperator>(includeInactive:true);
             _mActiveCanvasDict = new Dictionary<int, ICanvasOperator>();
             foreach (var canvas in activeCanvas)
             {

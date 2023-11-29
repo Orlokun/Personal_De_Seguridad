@@ -5,6 +5,7 @@ using DialogueSystem.Interfaces;
 using GameDirection.Initial_Office_Scene;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -187,7 +188,6 @@ namespace GameDirection
         #region FinishWork
         public void FinishWorkday()
         {
-            GetActiveGameProfile.GetProfileCalendar().FinishCurrentDay();
             ManageUIProcessEndOfDay();
         }
 
@@ -206,12 +206,15 @@ namespace GameDirection
         private async void UIFinishWorkday()
         {
             await Task.Delay(1000);
-            _mUIController.ReturnToBaseGamePlayCanvasState();
+            _mUIController.DeactivateAllObjects();
+            _mUIController.ActivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.FIRST_PANEL);
+            var endOfDayController = EndOfDayPanelController.Instance;
+            endOfDayController.SetDayForDisplay(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject());
         }
 
         private async void FadeInEndOfScene()
         {
-            await Task.Delay(6500);
+            await Task.Delay(8000);
             _mGeneralFader.GeneralCurtainDisappear();
         }
         #endregion

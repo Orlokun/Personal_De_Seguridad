@@ -14,10 +14,12 @@ namespace GameDirection.TimeOfDayManagement
         protected int MProductsStolen;
         protected int MTimesStolen;
         protected int MValueStolen;
+        protected int MOmniCreditsEarnedEarned;
     }
     public class WorkDayObject : WorkDayObjectData, IWorkDayObject
     {
         private int _activeClients;
+        private PartOfDay _currentPartOfDay;
         public DayBitId BitId => MBitId;
         public int MaxActiveClients => MMaxActiveClients;
         public int ThiefClients => MThiefClients;
@@ -27,9 +29,11 @@ namespace GameDirection.TimeOfDayManagement
         public int ProductsStolen => MProductsStolen;
         public int TimesStolen => MTimesStolen;
         public int ValueStolen => MValueStolen;
+        public int OmniCreditsEarned => MOmniCreditsEarnedEarned;
         public WorkDayObject(DayBitId mBitId)
         {
             MBitId = mBitId;
+            _currentPartOfDay = PartOfDay.EarlyMorning;
         }
         
         public void AddActiveClient()
@@ -64,6 +68,10 @@ namespace GameDirection.TimeOfDayManagement
             throw new System.NotImplementedException();
         }
 
-
+        public void UpdatePartOfDay(PartOfDay newPartOfDay)
+        {
+            _currentPartOfDay = newPartOfDay;
+        }
+    
     }
 }

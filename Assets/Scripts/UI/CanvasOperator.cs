@@ -140,8 +140,10 @@ namespace UI
             }
             return bitNumber;
         }
-        private void UpdateUIObjects()  
+        private void UpdateUIObjects()
         {
+            var isCanvasActive = _activeUIElements != 0 ? true : false;
+            gameObject.SetActive(isCanvasActive);
             foreach (var bitPanelKvP in _panelsInCanvas)
             {
                 var isActive = (_activeUIElements & bitPanelKvP.Key) != 0;

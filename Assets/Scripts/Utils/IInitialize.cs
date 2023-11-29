@@ -2,7 +2,7 @@ namespace Utils
 {
     public interface IInitialize
     {
-        public bool IsInitialized { get;}
+        bool IsInitialized { get;}
         public void Initialize();
     }
 

@@ -29,7 +29,7 @@ namespace Utils
         }
         
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarManagement calendarManager)
+            ICalendarModule calendarManager)
         {
             return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager);
         }

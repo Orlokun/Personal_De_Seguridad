@@ -4,19 +4,24 @@ using Utils;
 
 namespace GameDirection.TimeOfDayManagement
 {
-    public class CalendarModule : ICalendarManagement
+    public class CalendarModule : ICalendarModule
     {
         private Dictionary<DayBitId, WorkDayObject> _dayPassed = new Dictionary<DayBitId, WorkDayObject>();
         private Dictionary<DayBitId, IWorkDayObject> _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();
-        private DayBitId _currentDay;
-        private PartOfDay _timeOfDay;
+        private IWorkDayObject _currentDayObject;
+        private DayBitId _currentDayId;
+        private PartOfDay _currentTimeOfDay;
 
-        public CalendarModule(DayBitId loadCurrentDay, PartOfDay loadPartOfDay)
+        public CalendarModule(DayBitId loadCurrentDayId, PartOfDay loadPartOfTimeOfDay)
         {
-            _currentDay = loadCurrentDay;
-            _timeOfDay = loadPartOfDay;
+            _currentDayId = loadCurrentDayId;
+            _currentTimeOfDay = loadPartOfTimeOfDay;
             PopulateNewWorkdays();
+            _currentDayObject = _AllWorkDays[_currentDayId];
+            GameDirector.Instance.GetClockInDayManagement.OnPassTimeOfDay += AddNewTimeOfDay;
         }
+        
+        //TODO: Constructor with profile data saved from previous games
         private void PopulateNewWorkdays()
         {
             _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();
@@ -29,19 +34,29 @@ namespace GameDirection.TimeOfDayManagement
             Debug.Log($"[PopulateNewWorkdays] Done. Workdays count: {_AllWorkDays.Count}");
         }
         
-        public void FinishCurrentDay()
-        {
-            
-        }
-
         public IWorkDayObject GetCurrentWorkDayObject()
         {
-            if (!_dayPassed.ContainsKey(_currentDay))
+            if (_currentDayId != _currentDayObject.BitId)
             {
-                Debug.LogError("Current day should be in Days passed Data dict");
+                Debug.LogError("Current day Ids must be consistent.");
                 return null;
             }
-            return _dayPassed[_currentDay];
+            return _currentDayObject;
+        }
+
+        public void StartNightManagement()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void AddNewTimeOfDay(PartOfDay newDayTime)
+        {
+            if (_currentDayObject == null)
+            {
+                Debug.LogError("[CalendarModule.AddNewTimeOfDay] Current Day object must be set");
+                return;
+            }
+            _AllWorkDays[_currentDayId].UpdatePartOfDay(newDayTime);
         }
     }
 }

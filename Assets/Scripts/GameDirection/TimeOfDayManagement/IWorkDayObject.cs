@@ -5,12 +5,17 @@ namespace GameDirection.TimeOfDayManagement
 {
     public interface IWorkDayObject
     {
+        //
+        
+        
+        //Day GamePlay Management
         public void AddActiveClient();
         public void AddFinishedClient(List<IProductInShelf> productsPurchased);
         public void AddSteal(List<IProductInShelf> productStolen);
         public void AddDetentions();
+        public void UpdatePartOfDay(PartOfDay newPartOfDay);
         
-        //GetData
+        //Day Base Data
         public DayBitId BitId{get;}
         public int MaxActiveClients{get;}
         public int ThiefClients{get;}
@@ -20,5 +25,6 @@ namespace GameDirection.TimeOfDayManagement
         public int ProductsStolen{get;}
         public int TimesStolen{get;}
         public int ValueStolen{get;}
+        public int OmniCreditsEarned { get; }
     }
 }
