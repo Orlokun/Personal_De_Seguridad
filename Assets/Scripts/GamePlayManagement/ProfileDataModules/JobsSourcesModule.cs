@@ -10,6 +10,7 @@ namespace GamePlayManagement.ProfileDataModules
 {
     public class JobsSourcesModule : IJobsSourcesModule
     {
+        private IPlayerGameProfile _activePlayer;
         private int _jobsActive = 0;
         private int _archivedJobs = 0;
         private Dictionary<BitGameJobSuppliers, IJobSupplierObject> _mJobSuppliers = new Dictionary<BitGameJobSuppliers, IJobSupplierObject>();
@@ -30,7 +31,7 @@ namespace GamePlayManagement.ProfileDataModules
             _jobsCatalogue = jobsCatalogue;
         }
         
-        public void UnlockJobModule(BitGameJobSuppliers gainedJobSupplier)
+        public void UnlockJobSupplier(BitGameJobSuppliers gainedJobSupplier)
         {
             if ((_jobsActive & (int) gainedJobSupplier) != 0)
             {
@@ -67,6 +68,11 @@ namespace GamePlayManagement.ProfileDataModules
                 return;
             }
             _archivedJobs |= (int) lostJobSupplier;
+        }
+
+        public void SetProfile(IPlayerGameProfile currentPlayerProfile)
+        {
+            _activePlayer = currentPlayerProfile;
         }
     }
 }

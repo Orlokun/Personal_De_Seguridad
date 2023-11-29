@@ -15,24 +15,36 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule calendarManager)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule)
         {
-            _itemSuppliersModule = itemSuppliersModule;
-            _jobsSourcesModule = jobsSourcesModule;
-            _calendarModule = calendarManager;
+            _totalOmniCredits = 3;
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
-            _generalXp = 3;
+            
+            _itemSuppliersModule = itemSuppliersModule;
+            _itemSuppliersModule.SetProfile(this);
+            
+            _jobsSourcesModule = jobsSourcesModule;
+            _jobsSourcesModule.SetProfile(this);
+            
+            _calendarModule = calendarManager;
+            _calendarModule.SetProfile(this);
+
+            _lifeStyleModule = lifeStyleModule;
+            _lifeStyleModule.SetProfile(this);
+
         }
         
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
         private ICalendarModule _calendarModule;
+        private ILifestyleModule _lifeStyleModule;
+        
         //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
-        private int _generalXp;
+        private int _totalOmniCredits;
         
         //Public Fields
         public DateTime GameCreationDate => _mGameCreationDate;
@@ -52,6 +64,10 @@ namespace GamePlayManagement
         {
             return _calendarModule;
         }
+        public ILifestyleModule GetLifestyleModule()
+        {
+            return _lifeStyleModule;
+        }
 
 
         #region UpdateProfileData
@@ -66,9 +82,9 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (jobSupplierObject.StoreUnlockPoints <= GeneralXP)
+                if (jobSupplierObject.StoreUnlockPoints <= GeneralOmniCredits)
                 {
-                    GetActiveJobsModule().UnlockJobModule(jobSupplierObject.BitId);
+                    GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.BitId);
                 }
             }
         }
@@ -77,7 +93,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.StoreUnlockPoints <= GeneralXP)
+                if (itemSupplier.StoreUnlockPoints <= GeneralOmniCredits)
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }
@@ -92,7 +108,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= GeneralXP)
+                    if (suppliersItem.UnlockPoints <= GeneralOmniCredits)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
@@ -113,10 +129,10 @@ namespace GamePlayManagement
         }
         #endregion
 
-        public int GeneralXP
+        public int GeneralOmniCredits
         {
-            get => _generalXp;
-            set => _generalXp = value;
+            get => _totalOmniCredits;
+            set => _totalOmniCredits = value;
         }
     }
 }

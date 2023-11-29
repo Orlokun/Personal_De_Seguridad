@@ -6,6 +6,12 @@ namespace Utils
     public static class DataSheetUrls
     {
         /// <summary>
+        /// Daily Data
+        /// </summary>
+        public static string RentValuesData = "https://sheets.googleapis.com/v4/spreadsheets/1yLh7jS95a9ARy1tikX9sdVmKltdwfTv0I09GJNaAAxU/values/RentData?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string FoodValuesData = "https://sheets.googleapis.com/v4/spreadsheets/1wqEySwe--YKJR_neXAiKVJ6A-covdHRBsvgYyd2Dklk/values/FoodData?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string TransportValuesData = "https://sheets.googleapis.com/v4/spreadsheets/13WxlP3SCO85agDBMF_U22nfuQW4zPaW_RhIKIuA1JgQ/values/TransportData?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        /// <summary>
         /// Special Stats
         /// </summary>
         public static string GuardsSpecialStats =
@@ -19,18 +25,22 @@ namespace Utils
         public static string OtherItemsSpecialStats =
             "https://sheets.googleapis.com/v4/spreadsheets/1v4pUiKUzvH9pMGTjLUGcXM_aDyH22l2FAPLlRAnzq30/values/Stats?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
-        
+        /// <summary>
+        /// Feedback & Dialogues
+        /// </summary>
         public static string FeedbacksGameDataUrl = 
             "https://sheets.googleapis.com/v4/spreadsheets/1aahEf2opdO7gwsnFmZJ5nVtpjaAa3O-rgoFqBW9b74Q/values/GeneralFeedbacks?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-        public static string JobSuppliersGameData =
-            "https://sheets.googleapis.com/v4/spreadsheets/1-oli_LmChsRrjEXqW5E8Ajt0V5IuqnY8cx3HilCTBfM/values/JobSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-
-        public static string ItemSuppliersGameData =
-            "https://sheets.googleapis.com/v4/spreadsheets/144vHYkW7Bn86_fJ7DZUEZhUITgDAcocH-FKkivNrpQs/values/ItemSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-
         public static string IntroDialoguesGameData =
             "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_00?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-        public static string ItemsCatalogueGameData =
+        
+        /// <summary>
+        /// Suppliers & Items
+        /// </summary>
+        public static string JobSuppliersGameData =
+            "https://sheets.googleapis.com/v4/spreadsheets/1-oli_LmChsRrjEXqW5E8Ajt0V5IuqnY8cx3HilCTBfM/values/JobSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string ItemSuppliersGameData =
+            "https://sheets.googleapis.com/v4/spreadsheets/144vHYkW7Bn86_fJ7DZUEZhUITgDAcocH-FKkivNrpQs/values/ItemSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                public static string ItemsCatalogueGameData =
             "https://sheets.googleapis.com/v4/spreadsheets/1bli4diwooBNk5K04Cdl1bytCw7QtPfkVTBTi5SiRjGc/values/ItemsCatalogue?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
         public static string SuppliersDialogueGameData(DialogueSpeakerId speakerIndex)

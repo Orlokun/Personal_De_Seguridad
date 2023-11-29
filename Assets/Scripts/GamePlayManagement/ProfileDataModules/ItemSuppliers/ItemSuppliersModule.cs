@@ -4,7 +4,6 @@ using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
-using UI;
 using UnityEngine;
 using Utils;
 
@@ -12,6 +11,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
     public class ItemSuppliersModule : IItemSuppliersModule
     {
+        private IPlayerGameProfile _activePlayer;
         private int _mActiveProviders;
         private IItemsDataController _mItemDataController;
         private IBaseItemSuppliersCatalogue _mItemSuppliersCatalogue;
@@ -138,5 +138,9 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 
         #endregion
 
+        public void SetProfile(IPlayerGameProfile currentPlayerProfile)
+        {
+            _activePlayer = currentPlayerProfile;
+        }
     }
 }

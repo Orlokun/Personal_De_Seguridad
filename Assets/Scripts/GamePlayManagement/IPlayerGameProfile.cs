@@ -13,7 +13,8 @@ namespace GamePlayManagement
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();
+        public ILifestyleModule GetLifestyleModule();
         public void UpdateProfileData();
-        public int GeneralXP { get; set; }
+        public int GeneralOmniCredits { get; set; }
     }
 }

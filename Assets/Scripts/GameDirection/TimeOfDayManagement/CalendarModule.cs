@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GamePlayManagement;
 using UnityEngine;
 using Utils;
 
@@ -6,6 +7,7 @@ namespace GameDirection.TimeOfDayManagement
 {
     public class CalendarModule : ICalendarModule
     {
+        private IPlayerGameProfile _activePlayer;
         private Dictionary<DayBitId, WorkDayObject> _dayPassed = new Dictionary<DayBitId, WorkDayObject>();
         private Dictionary<DayBitId, IWorkDayObject> _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();
         private IWorkDayObject _currentDayObject;
@@ -57,6 +59,11 @@ namespace GameDirection.TimeOfDayManagement
                 return;
             }
             _AllWorkDays[_currentDayId].UpdatePartOfDay(newDayTime);
+        }
+
+        public void SetProfile(IPlayerGameProfile currentPlayerProfile)
+        {
+            _activePlayer = currentPlayerProfile;
         }
     }
 }

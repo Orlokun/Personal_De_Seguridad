@@ -128,7 +128,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
-        itemSupplierObject.StartCalling(currentProfile.GeneralXP);
+        itemSupplierObject.StartCalling(currentProfile.GeneralOmniCredits);
         Random.InitState(DateTime.Now.Millisecond);
         var randomWaitTime = Random.Range(500, 4500);
         await Task.Delay(randomWaitTime);
@@ -138,7 +138,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((BitGameJobSuppliers)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
-        jobSupplierCallingData.StartCalling(currentProfile.GeneralXP);
+        jobSupplierCallingData.StartCalling(currentProfile.GeneralOmniCredits);
         Random.InitState(DateTime.Now.Millisecond);
         var randomWaitTime = Random.Range(500, 4500);
         await Task.Delay(randomWaitTime);

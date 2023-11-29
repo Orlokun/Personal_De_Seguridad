@@ -44,10 +44,15 @@ namespace GameDirection
         private IClockManagement _mClockManager;
         private IFeedbackManager _mFeedbackManager;
         private IGeneralInputStateManager _mGeneralInputManager;
+        
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
         private IBaseJobsCatalogue _mJobsCatalogue;
         private IBaseItemSuppliersCatalogue _mItemSuppliersData;
+        
+        private IRentValuesCatalogue _mRentCatalogueData;
+        private IFoodValuesCatalogue _mFoodCatalogueData;
+        private ITransportValuesCatalogue _mTransportCatalogueData;
         
         /// <summary>
         /// Initial Scene Manager
@@ -68,7 +73,8 @@ namespace GameDirection
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IItemsDataController GetItemsDataController => _mItemDataController;
-        
+        public IRentValuesCatalogue GetRentCatalogueData => _mRentCatalogueData;
+
         #endregion
 
         #region Init
@@ -108,8 +114,11 @@ namespace GameDirection
             _mClockManager = ClockManagement.Instance;
             _mFeedbackManager = FeedbackManager.Instance;
             _mGeneralInputManager = GeneralInputStateManager.Instance;
-            _mGameCameraManager = GameCameraManager.Instance;             
-
+            _mGameCameraManager = GameCameraManager.Instance;     
+            
+            _mRentCatalogueData = RentValuesCatalogue.Instance;
+            _mFoodCatalogueData = FoodValuesCatalogue.Instance;
+            _mTransportCatalogueData = TransportValuesCatalogue.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
@@ -159,7 +168,9 @@ namespace GameDirection
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             var calendarModule = Factory.CreateCalendarModule();
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule);
+            var lifestyleModule =
+                Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule);
             _mActiveGameProfile.UpdateProfileData();
         }
         private void LoadFirstLevel()
@@ -209,7 +220,7 @@ namespace GameDirection
             _mUIController.DeactivateAllObjects();
             _mUIController.ActivateObject(CanvasBitId.EndOfDay, EndOfDayPanelsBitStates.FIRST_PANEL);
             var endOfDayController = EndOfDayPanelController.Instance;
-            endOfDayController.SetDayForDisplay(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject());
+            endOfDayController.Initialize(_mRentCatalogueData, _mActiveGameProfile, _mFoodCatalogueData, _mTransportCatalogueData);
         }
 
         private async void FadeInEndOfScene()

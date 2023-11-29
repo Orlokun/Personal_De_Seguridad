@@ -56,7 +56,6 @@ namespace DataUnits.GameCatalogues
                 LoadItemSuppliersFromJson(sourceJson);
             }
         }
-
         private void LoadItemSuppliersFromJson(string sourceJson)
         {
             Debug.Log($"BaseItemSuppliersCatalogue.LoadItemSuppliersFromJson");
@@ -180,4 +179,6 @@ namespace DataUnits.GameCatalogues
         public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier);
         public List<IItemSupplierDataObject> GetItemSuppliersInData { get; }
     }
+    
+
 }
