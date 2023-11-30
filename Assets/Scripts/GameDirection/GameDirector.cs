@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits.GameCatalogues;
@@ -148,6 +149,13 @@ namespace GameDirection
                 jobSupplier.LoadDialogueData();
             }
         }
+        private void LoadProductsForJobSuppliers()
+        {
+            foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
+            {
+                jobSupplier.LoadProductsData();
+            }
+        }
 
         #endregion
         
@@ -200,6 +208,11 @@ namespace GameDirection
         public void FinishWorkday()
         {
             ManageUIProcessEndOfDay();
+        }
+
+        public void ActCoroutine(IEnumerator coroutine)
+        {
+            StartCoroutine(coroutine);
         }
 
         private void ManageUIProcessEndOfDay()

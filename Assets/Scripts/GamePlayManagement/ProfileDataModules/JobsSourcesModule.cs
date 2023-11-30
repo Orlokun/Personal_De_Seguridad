@@ -49,7 +49,10 @@ namespace GamePlayManagement.ProfileDataModules
             {
                 Debug.LogError("[JobsSourcesModule.AddJobToModule] Job Supplier must exist in catalogue before trying to activate it");
             }
-            _mJobSuppliers.Add(gainedJobSupplier, _jobsCatalogue.GetJobSupplierObject(gainedJobSupplier));
+
+            var newSupplier = _jobsCatalogue.GetJobSupplierObject(gainedJobSupplier);
+            newSupplier.LoadProductsData();
+            _mJobSuppliers.Add(gainedJobSupplier, newSupplier);
         }
 
 

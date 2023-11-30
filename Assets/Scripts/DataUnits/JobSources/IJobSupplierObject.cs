@@ -24,5 +24,6 @@ namespace DataUnits.JobSources
         public int Money { get; }
         
         public void LoadDialogueData();
+        public void LoadProductsData();
     }
 }

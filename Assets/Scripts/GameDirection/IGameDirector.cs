@@ -1,3 +1,4 @@
+using System.Collections;
 using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
@@ -25,5 +26,6 @@ namespace GameDirection
         public IFeedbackManager GetFeedbackManager { get; }
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
+        public void ActCoroutine(IEnumerator coroutine);
     }
 }

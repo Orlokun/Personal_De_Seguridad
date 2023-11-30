@@ -10,8 +10,8 @@ namespace GameDirection.TimeOfDayManagement
         
         //Day GamePlay Management
         public void AddActiveClient();
-        public void AddFinishedClient(List<IProductInShelf> productsPurchased);
-        public void AddSteal(List<IProductInShelf> productStolen);
+        public void AddFinishedClient(List<IStoreProductObjectData> productsPurchased);
+        public void AddSteal(List<IStoreProductObjectData> productStolen);
         public void AddDetentions();
         public void UpdatePartOfDay(PartOfDay newPartOfDay);
         

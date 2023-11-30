@@ -12,7 +12,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private int _mNumberOfProductsLookingFor;
 
         private IShelfInMarket[] _mShelvesOfInterest;
-        private IProductInShelf tempProductOfInterest;
+        private IStoreProduct _tempStoreProductOfInterest;
         
         private ICustomerTypeData _mCustomerTypeData;
         private Vector3 _mPayingPosition;
@@ -98,7 +98,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;
             }
             var shelfOfInterest = _mShelvesOfInterest[CurrentProductSearchIndex];
-            tempProductOfInterest = shelfOfInterest.GetRandomProductPosition();
+            _tempStoreProductOfInterest = shelfOfInterest.GetRandomProductPosition();
         }
         private void ReleaseCurrentPoI()
         {
@@ -198,7 +198,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     Walking();
                     break;
                 case BaseCustomerMovementStatus.EvaluatingProduct:
-                    RotateTowardsYOnly(transform,tempProductOfInterest.ProductTransform);
+                    RotateTowardsYOnly(transform,_tempStoreProductOfInterest.ProductTransform);
                     break;
                 case BaseCustomerMovementStatus.Stealing:
                     break;
@@ -263,10 +263,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
             {
                 case BaseAttitudeStatus.EvaluatingProduct:
                     var shelfOfInterest = _mShelvesOfInterest[CurrentProductSearchIndex-1];
-                    tempProductOfInterest = shelfOfInterest.GetRandomProductPosition();
+                    _tempStoreProductOfInterest = shelfOfInterest.GetRandomProductPosition();
                     break;
                 case BaseAttitudeStatus.Paying:
-                    tempProductOfInterest = null;
+                    _tempStoreProductOfInterest = null;
                     NavMeshAgent.SetDestination(_mPayingPosition);
                     NavMeshAgent.isStopped = false;
                     break;

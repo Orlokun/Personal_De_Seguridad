@@ -9,11 +9,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
         /// <summary>
         /// Fields
         /// </summary>
+        ///
         public int Cleanness { get; }
         public int SocialStatus { get; }
         public int Age{ get; }
         //public string UrbanStyle{ get; }  //TODO: Evaluate Later
-    
+        
+        public int Intelligence{ get; }
         public int Corruptibility { get; }
         public int Daring { get; }
         public int Lawfulness { get; }
@@ -38,6 +40,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         //protected string MUrbanStyle;       //TODO: Evaluate later
         
         //Psychological params
+        protected int MIntelligence;
         protected int MCorruptibility;
         protected int MDaring;
         protected int MLawfulness;
@@ -53,7 +56,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
         public int SocialStatus => MSocialStatus;
         public int Age => MAge;
         //public string UrbanStyle => MUrbanStyle;
-    
+
+        public int Intelligence => MIntelligence;
         public int Corruptibility => MCorruptibility;
         public int Daring => MDaring;
         public int Lawfulness => MLawfulness;

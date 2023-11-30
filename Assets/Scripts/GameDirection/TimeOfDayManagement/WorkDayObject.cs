@@ -45,7 +45,7 @@ namespace GameDirection.TimeOfDayManagement
             }
             //Manage stress eventually
         }
-        public void AddFinishedClient(List<IProductInShelf> productsPurchased)
+        public void AddFinishedClient(List<IStoreProductObjectData> productsPurchased)
         {
             foreach (var productInShelf in productsPurchased)
             {
@@ -54,7 +54,7 @@ namespace GameDirection.TimeOfDayManagement
             _activeClients--;
             MClientsCompleted++;
         }
-        public void AddSteal(List<IProductInShelf> productStolen)
+        public void AddSteal(List<IStoreProductObjectData> productStolen)
         {
             foreach (var productInShelf in productStolen)
             {

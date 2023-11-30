@@ -6,6 +6,6 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
     public interface IShelfInMarket
     {
         ShopPoiObject GetCustomerPoI { get; }
-        IProductInShelf GetRandomProductPosition();
+        IStoreProduct GetRandomProductPosition();
     }
 }

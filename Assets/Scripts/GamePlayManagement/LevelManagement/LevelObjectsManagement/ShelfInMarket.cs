@@ -8,13 +8,13 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
     public class ShelfInMarket : MonoBehaviour, IShelfInMarket
     {
-        [SerializeField] private List<ProductInShelf> productPrefabs;
+        [SerializeField] private List<StoreProductGameObject> productPrefabs;
         [SerializeField] private Transform customerPoI;
         [SerializeField] private List<Transform> positionTranforms;
 
         private IShopPoiData customerPoIData;   //Shop Poi Data to know where the client should go
         private Dictionary<int, ProductPositionInShelf> _productPositionsInShelf = new Dictionary<int, ProductPositionInShelf>();
-        private Dictionary<int, ProductInShelf> _productsInShelf = new Dictionary<int, ProductInShelf>();
+        private Dictionary<int, IStoreProduct> _productsInShelf = new Dictionary<int, IStoreProduct>();
         private Transform _getRandomProductPosition;
 
         private void Awake()
@@ -58,14 +58,14 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
                 var prefabIndex = i % 2 == 0 ? 0 : 1; 
                 var randomPrefab = productPrefabs[prefabIndex];
                 Vector3 posInShelf = _productPositionsInShelf[i].PositionInShelf;
-                var productCreated = Instantiate(randomPrefab.gameObject, posInShelf, new Quaternion());
-                _productsInShelf.Add(i, productCreated.GetComponent<ProductInShelf>());
+                //var productCreated = Instantiate(randomPrefab.gameObject, posInShelf, new Quaternion());
+                //_productsInShelf.Add(i, productCreated.GetComponent<ProductInShelf>());
             }
         }
 
         public ShopPoiObject GetCustomerPoI => customerPoI.GetComponent<ShopPoiObject>();
         
-        public IProductInShelf GetRandomProductPosition()
+        public IStoreProduct GetRandomProductPosition()
         {
             Random.InitState(DateTime.Now.Millisecond);
             var randomIndex = Random.Range(0, _productsInShelf.Count-1);
