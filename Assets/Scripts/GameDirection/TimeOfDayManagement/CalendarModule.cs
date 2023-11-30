@@ -8,22 +8,25 @@ namespace GameDirection.TimeOfDayManagement
     public class CalendarModule : ICalendarModule
     {
         private IPlayerGameProfile _activePlayer;
+        private IClockManagement _clockManagement;
         private Dictionary<DayBitId, WorkDayObject> _dayPassed = new Dictionary<DayBitId, WorkDayObject>();
         private Dictionary<DayBitId, IWorkDayObject> _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();
         private IWorkDayObject _currentDayObject;
         private DayBitId _currentDayId;
         private PartOfDay _currentTimeOfDay;
 
-        public CalendarModule(DayBitId loadCurrentDayId, PartOfDay loadPartOfTimeOfDay)
+        public CalendarModule(DayBitId loadCurrentDayId, PartOfDay loadPartOfTimeOfDay, IClockManagement clockManagement)
         {
             _currentDayId = loadCurrentDayId;
             _currentTimeOfDay = loadPartOfTimeOfDay;
+            _clockManagement = clockManagement;
             PopulateNewWorkdays();
             _currentDayObject = _AllWorkDays[_currentDayId];
-            GameDirector.Instance.GetClockInDayManagement.OnPassTimeOfDay += AddNewTimeOfDay;
+            _clockManagement.OnPassTimeOfDay += AddNewTimeOfDay;
         }
         
         //TODO: Constructor with profile data saved from previous games
+        
         private void PopulateNewWorkdays()
         {
             _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();

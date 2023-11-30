@@ -69,9 +69,9 @@ namespace Utils
         {
             return new LifestyleModule(rentCatalogue, foodCatalogue, transportsCatalogue);
         }
-        public static CalendarModule CreateCalendarModule()
+        public static CalendarModule CreateCalendarModule(IClockManagement clockManagement)
         {
-            return new CalendarModule(DayBitId.DayOne, PartOfDay.EarlyMorning);
+            return new CalendarModule(DayBitId.DayOne, PartOfDay.EarlyMorning, clockManagement);
         }
     }
 }

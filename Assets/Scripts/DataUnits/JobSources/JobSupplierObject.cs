@@ -88,7 +88,7 @@ namespace DataUnits.JobSources
             Debug.Log($"START: COLLECTING SPEAKER DATA FOR {StoreName}");
             var url = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex);
             
-            DialogueOperator.Instance.LoadSupplierDialogues(LoadDialogueDataFromServer(url));
+            GameDirector.Instance.ActCoroutine(LoadDialogueDataFromServer(url));
         }
         private IEnumerator LoadDialogueDataFromServer(string url)
         {
@@ -165,7 +165,7 @@ namespace DataUnits.JobSources
             var url = DataSheetUrls.GetStoreProducts(BitId);
             
             //TODO: Take this out of Dialogue operator
-            DialogueOperator.Instance.LoadSupplierDialogues(LoadProductsFromServer(url));
+            GameDirector.Instance.ActCoroutine(LoadProductsFromServer(url));
         }
         private IEnumerator LoadProductsFromServer(string url)
         {
@@ -265,6 +265,7 @@ namespace DataUnits.JobSources
         }
         
         #endregion
+        
         #region CallManagement
         private int _lastCallExp = 0;
         public void StartCalling(int playerLevel)

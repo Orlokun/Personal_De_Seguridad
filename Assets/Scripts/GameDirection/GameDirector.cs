@@ -175,7 +175,7 @@ namespace GameDirection
             _mActiveGameProfile = null;
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
-            var calendarModule = Factory.CreateCalendarModule();
+            var calendarModule = Factory.CreateCalendarModule(_mClockManager);
             var lifestyleModule =
                 Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule);

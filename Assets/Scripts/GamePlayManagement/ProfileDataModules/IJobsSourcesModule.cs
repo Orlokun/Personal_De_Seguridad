@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using DataUnits;
-using DataUnits.ItemScriptableObjects;
 using DataUnits.JobSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
