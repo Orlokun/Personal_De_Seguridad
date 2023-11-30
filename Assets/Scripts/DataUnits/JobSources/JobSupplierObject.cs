@@ -158,6 +158,7 @@ namespace DataUnits.JobSources
         #endregion
 
         #region CallManagement
+        private int _lastCallExp = 0;
         public void StartCalling(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
@@ -169,6 +170,12 @@ namespace DataUnits.JobSources
                 GetCurrentUnlockedCall();
             }
         }
+
+        private void CheckLastCallsStatus()
+        {
+            
+        }
+        
         private async void GetCurrentUnlockedCall()
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");

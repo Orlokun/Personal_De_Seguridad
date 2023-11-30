@@ -29,14 +29,13 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
     #endregion
 
     #region PrivateConstants
-
     #region FoodNames
-    private const string FAST_FOOD_NAME="Fast Food";
-    private const string SIMPLE_COOK_NAME="Simple Home Cook";
-    private const string COFFE_SNACKS_NAME="Cofee & Snacks";
-    private const string COMPLETE_COOK_NAME="Complete Home Cook";
-    private const string STREET_FOOD_NAME="Street Food";
-    private const string GOURMET_FOOD_NAME="Gourmet Takeout";
+    private const string FastFoodName="Fast Food";
+    private const string SimpleCookName="Simple Home Cook";
+    private const string CoffeeSnacksName="Cofee & Snacks";
+    private const string CompleteCookName="Complete Home Cook";
+    private const string StreetFoodName="Street Food";
+    private const string GourmetFoodName="Gourmet Takeout";
     #endregion
 
     #region TransportNames
@@ -48,8 +47,6 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
     private const string OmniCopterName ="Omnicopter";
     private const string OmniWalkName ="OmniWalk";
     #endregion
-
-
     #endregion
     
     #region FirstPanelSerializedFields
@@ -211,22 +208,22 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
         var selectedDayTime = foodOptionDropdown.options[selectedIndex].text;
         switch (selectedDayTime)
         {
-            case FAST_FOOD_NAME:
+            case FastFoodName:
                 SetFastFoodValues();
                 break;
-            case SIMPLE_COOK_NAME:
+            case SimpleCookName:
                 SetSimpleCookValues();
                 break;            
-            case COFFE_SNACKS_NAME:
+            case CoffeeSnacksName:
                 SetCoffeeSnacksValues();
                 break;
-            case COMPLETE_COOK_NAME:
+            case CompleteCookName:
                 SetCompleteCookValues();
                 break;
-            case STREET_FOOD_NAME:
+            case StreetFoodName:
                 SetStreetFoodValues();
                 break;
-            case GOURMET_FOOD_NAME:
+            case GourmetFoodName:
                 SetGourmetFoodValues();
                 break;
             default:
@@ -235,6 +232,15 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
         }
     }
     //TODO: This should be data downloaded from server. Create a ticket. 
+    private void SteFoodValues(IFoodDataObject foodDataObject)
+    {
+        var transportCredits = foodDataObject.GetFoodPrice;
+        var energy = foodDataObject.GetFoodEnergyBonus;
+        var sanity = foodDataObject.GetFoodSanityBonus;
+        foodOmniCredits.text = transportCredits.ToString();
+        foodEnergy.text = energy.ToString();
+        foodSanity.text = sanity.ToString();
+    }
     private void SetFastFoodValues()
     {
         

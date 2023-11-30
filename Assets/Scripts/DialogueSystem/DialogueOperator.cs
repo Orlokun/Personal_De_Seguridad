@@ -22,8 +22,6 @@ namespace DialogueSystem
         FinishedTypingLine,
         FinishedTypingBaseDialogue,
     }
-
-
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
         
@@ -68,7 +66,6 @@ namespace DialogueSystem
         
         public delegate void FinishedDialogueReading();
         public event FinishedDialogueReading OnDialogueCompleted;
-        
 
         #region Public Interface
         public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects)

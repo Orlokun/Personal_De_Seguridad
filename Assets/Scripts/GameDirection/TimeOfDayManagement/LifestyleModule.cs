@@ -8,6 +8,7 @@ namespace GameDirection.TimeOfDayManagement
 {
     public class LifestyleModule : ILifestyleModule
     {
+        #region Members
         private IPlayerGameProfile _activePlayer;
         private IRentValuesCatalogue _rentValuesCatalogue;
         private IFoodValuesCatalogue _foodValuesCatalogue;
@@ -18,10 +19,10 @@ namespace GameDirection.TimeOfDayManagement
         
         private List<IFoodDataObject> _mUnlockedFoodList = new List<IFoodDataObject>();
         private List<ITransportDataObject> _mUnlockedTransportsList = new List<ITransportDataObject>();
+        #endregion
         
         public List<IFoodDataObject> GetUnlockedFoodList => _mUnlockedFoodList;
         public List<ITransportDataObject> GetUnlockedTransportList => _mUnlockedTransportsList;
-
         public LifestyleModule(IRentValuesCatalogue rentValuesCatalogue, IFoodValuesCatalogue foodValuesCatalogue,
             ITransportValuesCatalogue transportValuesCatalogue)
         {
@@ -30,9 +31,8 @@ namespace GameDirection.TimeOfDayManagement
             _transportValuesCatalogue = transportValuesCatalogue;
         }
 
-        #region RentInterface
+        #region RentDataInterface
         public RentTypesId GetCurrentPlayerRentType => _currentRentType;
-
         public bool IsRentUnlocked(int playerXp, RentTypesId rentType)
         {
             return _rentValuesCatalogue.GetRentObject(rentType).GetUnlockLevel >= playerXp;
@@ -51,7 +51,7 @@ namespace GameDirection.TimeOfDayManagement
         }
         #endregion
 
-        #region FoodData
+        #region FoodDataInterface
         public bool IsFoodUnlocked(int playerXp, FoodTypesId foodType)
         {
             return _foodValuesCatalogue.GetAllFoodDataObjects.Any(x =>
@@ -65,7 +65,7 @@ namespace GameDirection.TimeOfDayManagement
         }
         #endregion
 
-        #region TransportData
+        #region TransportDataInterface
         public bool IsTransportUnlocked(int playerXp, TransportTypesId transportType)
         {
             return _transportValuesCatalogue.GetAllTransportDataObjects.Any(x =>
@@ -81,7 +81,6 @@ namespace GameDirection.TimeOfDayManagement
         }
         #endregion
         
-
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)
         {
             _activePlayer = currentPlayerProfile;
