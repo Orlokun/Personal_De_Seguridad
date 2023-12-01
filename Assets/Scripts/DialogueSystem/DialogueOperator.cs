@@ -56,7 +56,6 @@ namespace DialogueSystem
         public UIDialogueState CurrentDialogueState => _currentState;
 
         private IDialogueObject _currentDialogue;
-        private IDialogueCameraMan _dialogueCameraMan;
         private Coroutine _typingMachineCoroutine;
         private IUIController _mUIController;
         private IDialogueOperatorSoundMachine _soundMachine;
@@ -96,10 +95,6 @@ namespace DialogueSystem
 
         private void OnDialogueFinished()
         {
-            if(_currentDialogue.ContainsBehavior(DialogueBehaviors.DialogueWithChoice))
-            {
-                DisplayDialogueChoice();
-            }
             GameCameraManager.Instance.ReturnToLastState();
             _mUIController.ToggleDialogueObject(false);
             //GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
@@ -113,23 +108,6 @@ namespace DialogueSystem
             }
         }
 
-        private void DisplayDialogueChoice()
-        {
-            var iDecision = (IDialogueDecision) _currentDialogue;
-            foreach (var decisionText in iDecision.DecisionPossibilities)
-            {
-                var decisionObject = (GameObject)Instantiate(Resources.Load(UI_RESOURCES_PATH + DECISION_PREFAB), decisionObjectsParent);
-                TMP_Text decisionTextObject;
-                for (int i = 0; i<decisionObject.transform.childCount;i++)
-                {
-                    if (decisionObject.transform.GetChild(i).TryGetComponent(out decisionTextObject))
-                    {
-                        decisionTextObject.text = decisionText;
-                    }
-                }
-            }
-        }
-        
         public void KillDialogue()
         {
             _currentState = UIDialogueState.NotDisplayed;
@@ -145,7 +123,6 @@ namespace DialogueSystem
                 Destroy(this);
             }
             _mInstance = this;
-            _dialogueCameraMan = Factory.CreateCameraMan();
             _soundMachine = GetComponent<DialogueOperatorSoundMachine>();
             OnDialogueCompleted += OnDialogueFinished;
         }
@@ -161,9 +138,6 @@ namespace DialogueSystem
             //Go through each of the dialogue lines
             for(int i = 0; i < _currentDialogue.DialogueLines.Count; i++)
             {
-                //Manages Camera movement for line
-                _dialogueCameraMan.ManageDialogueCameraBehavior(_currentDialogue, i);
-                
                 //Make Sure no other line is being written at the moment
                 if (_typingMachineCoroutine != null)
                 {
@@ -260,16 +234,6 @@ namespace DialogueSystem
             {
                 mSpeakerName.text = _currentDialogue.SpeakerName;
                 mSpeakerName.gameObject.SetActive(true);
-            }
-
-            if (_currentDialogue.ContainsBehavior(DialogueBehaviors.DialogueWithChoice))
-            {
-                
-            }
-            
-            if (_currentDialogue.ContainsBehavior(DialogueBehaviors.DialogueWithCamera))
-            {
-                GeneralInputStateManager.Instance.SetGamePlayState(InputGameState.InDialogue);
             }
         }
         #endregion

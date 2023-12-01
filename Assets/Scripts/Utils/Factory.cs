@@ -1,6 +1,5 @@
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
-using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -35,11 +34,7 @@ namespace Utils
         {
             return new WorkDayObject(dayBitId);
         }
-      
-        public static DialogueCameraMan CreateCameraMan()
-        {
-            return new DialogueCameraMan();
-        }
+
         public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IItemsDataController itemDataController,IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
             return new ItemSupplierShop(itemSupplier, itemDataController, suppliersCatalogue);

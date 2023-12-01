@@ -11,14 +11,27 @@ namespace DialogueSystem.Units
         DialogueWithCamera = 4,
     }
 
+    public interface IDialogueLineObject
+    {
+    
+    }
+    public class DialogueLineObjectData : ScriptableObject, IDialogueLineObject
+    {
+        public string dialogueLine;
+        
+        public bool hasCameraTarget;
+        public string targetId;
+
+        public bool hasDecision;
+        public bool decisionId;
+    }
+
     [CreateAssetMenu(menuName = "Dialogue/DialogueObject")]
     public class BaseDialogueObject : ScriptableObject, IDialogueObject
     {
         [SerializeField] protected List<string> dialogueLines = new List<string>();
         [SerializeField] protected Sprite actorImage;
         [SerializeField] protected string speakerName;
-        [SerializeField] protected List<DialogueBehaviors> dialogueBehaviorsList;
-        protected int MDialogueBehaviors;
 
         public List<string> DialogueLines
         {
@@ -36,35 +49,6 @@ namespace DialogueSystem.Units
         {
             get => speakerName;
             set => speakerName = value;
-        }
-
-        public int DialogueBehaviors => MDialogueBehaviors;
-
-        public bool ContainsBehavior(DialogueBehaviors checkedBehavior)
-        {
-            return (MDialogueBehaviors & (int)checkedBehavior) != 0;
-        }
-
-        private void OnEnable()
-        {
-            LoadDialogueBehaviors();
-        }
-
-        private void LoadDialogueBehaviors()
-        {
-            if (dialogueBehaviorsList == null || dialogueBehaviorsList.Count == 0)
-            {
-//                Debug.LogWarning("Dialogue Behaviors must be set in editor");
-                return;
-            }
-            foreach (var dialogueBehavior in dialogueBehaviorsList)
-            {
-                if ((MDialogueBehaviors & (int) dialogueBehavior) != 0)
-                {
-                    continue;
-                }
-                MDialogueBehaviors |= (int) dialogueBehavior;
-            }
         }
     }
 }

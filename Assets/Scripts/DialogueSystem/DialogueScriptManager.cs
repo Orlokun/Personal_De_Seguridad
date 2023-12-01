@@ -6,17 +6,17 @@ namespace DialogueSystem
 {
     public class DialogueScriptManager : MonoBehaviour
     {
-        private IDialogueDecision _currentDialogueDecision;
+        private IDecisionObject _currentDecisionObject;
 
-        public void SetDialogue(IDialogueDecision newDialogue)
+        public void SetDialogue(IDecisionObject @new)
         {
-            _currentDialogueDecision = newDialogue;
+            _currentDecisionObject = @new;
         }
         private void Start()
         {
-            if (_currentDialogueDecision != null)
+            if (_currentDecisionObject != null)
             {
-                _currentDialogueDecision.MyIntEvent.AddListener(SubscribeDialogue);
+                _currentDecisionObject.MyIntEvent.AddListener(SubscribeDialogue);
             }
         }
         private void SubscribeDialogue(int i)

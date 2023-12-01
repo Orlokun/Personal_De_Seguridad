@@ -11,6 +11,5 @@ namespace GamePlayManagement.ProfileDataModules
         Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects { get; }
         public BitGameJobSuppliers CurrentEmployer { get; }
         public void SetNewEmployer(BitGameJobSuppliers newEmployer);
-
     }
 }

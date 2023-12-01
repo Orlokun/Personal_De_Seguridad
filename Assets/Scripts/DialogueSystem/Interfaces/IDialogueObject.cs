@@ -10,8 +10,6 @@ namespace DialogueSystem.Interfaces
         public List<string> DialogueLines { get; set; }
         public Sprite ActorImage{ get; set; }
         public string SpeakerName{ get; set; }
-        public int DialogueBehaviors { get; }
-        public bool ContainsBehavior(DialogueBehaviors checkedBehavior);
     }
 
     public interface IGeneralFeedbackObject

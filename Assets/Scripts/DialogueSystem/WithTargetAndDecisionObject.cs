@@ -8,7 +8,7 @@ using Utils;
 namespace DialogueSystem
 {
     [CreateAssetMenu(menuName = "Dialogue/DialogueWithMovementAndDecision")]
-    public class DialogueWithTargetAndDialogueDecision : BaseDialogueObject, IDialogueWithCameraTargets, IDialogueDecision
+    public class WithTargetAndDecisionObject : BaseDialogueObject, IDialogueWithCameraTargets, IDecisionObject
     {
         [SerializeField] protected List<string> decisionPossibilities;
         [SerializeField] protected int decisionIndex;
