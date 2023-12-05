@@ -11,6 +11,12 @@ namespace Utils
 {
     public static class Factory
     {
+        //Dialogue Object section
+        
+        /// <summary>
+        /// End Of Day Section
+        /// </summary>
+
         public static ITransportDataObject CreateTransportDataObject(TransportTypesId mTransportTypeId, string mRentName, int mRentPrice, int mUnlockLevel, int mSpecialCondition,
             int mRentEnergyBonus, int mRentSanityBonus)
         {
@@ -39,19 +45,15 @@ namespace Utils
         {
             return new ItemSupplierShop(itemSupplier, itemDataController, suppliersCatalogue);
         }
-        
+
+        /// <summary>
+        /// Player Profile Modules
+        /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
             ICalendarModule calendarManager, ILifestyleModule lifeStyleModule)
         {
             return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule);
         }
-
-        /// <summary>
-        /// Player Profile Modules
-        /// </summary>
-        /// <param name="itemDataController"></param>
-        /// <param name="suppliersCatalogue"></param>
-        /// <returns></returns>
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
             return new ItemSuppliersModule(itemDataController, suppliersCatalogue);

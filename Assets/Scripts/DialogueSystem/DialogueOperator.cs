@@ -10,7 +10,6 @@ using TMPro;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;
-using Utils;
 using Random = UnityEngine.Random;
 
 namespace DialogueSystem
@@ -26,7 +25,6 @@ namespace DialogueSystem
     {
         
         #region Static Props/Members
-
         private static DialogueOperator _mInstance;
         public static IDialogueOperator Instance => _mInstance;
         
@@ -67,7 +65,7 @@ namespace DialogueSystem
         public event FinishedDialogueReading OnDialogueCompleted;
 
         #region Public Interface
-        public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects)
+        public List<IDialogueObject> GetDialogueObjectInterfaces(List<DialogueObject> dialogueObjects)
         {
             var dialogueList = new List<IDialogueObject>();
             foreach (var baseDialogueObject in dialogueObjects)
@@ -136,7 +134,7 @@ namespace DialogueSystem
         private IEnumerator WriteDialogue()
         {
             //Go through each of the dialogue lines
-            for(int i = 0; i < _currentDialogue.DialogueLines.Count; i++)
+            for(int i = 0; i < _currentDialogue.DialogueNodes.Count; i++)
             {
                 //Make Sure no other line is being written at the moment
                 if (_typingMachineCoroutine != null)
@@ -146,7 +144,7 @@ namespace DialogueSystem
 
                 //Start Typewriter effect of the current line    
                 mDialogueTextObject.text = "";
-                _typingMachineCoroutine = StartCoroutine(WriteDialogueLine(_currentDialogue.DialogueLines[i]));
+                _typingMachineCoroutine = StartCoroutine(WriteDialogueLine(_currentDialogue.DialogueNodes[i]));
                 
                 //Wait for the conditions to be met in order to continue the loop
                 yield return new WaitUntil(NextLineWritingConditions);
@@ -163,18 +161,18 @@ namespace DialogueSystem
                    && _currentState == UIDialogueState.FinishedTypingLine 
                    && GeneralInputStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
         }
-        private IEnumerator WriteDialogueLine(string dialogueLine)
+        private IEnumerator WriteDialogueLine(IDialogueNode dialogueNode)
         {
             _currentState = UIDialogueState.TypingText;
             var isAddingHtmlTag = false;
             _soundMachine.StartPlayingSound();
             nextLineButton.SetActive(false);
-            foreach (var letter in dialogueLine)
+            foreach (var letter in dialogueNode.DialogueLine)
             {
                 //Check if player is hurrying Dialogue and we have more than 3 characters.
                 if (Input.GetKey(KeyCode.Space) && mDialogueTextObject.text.Length > 3)
                 {
-                    mDialogueTextObject.text = dialogueLine;
+                    mDialogueTextObject.text = dialogueNode.DialogueLine;
                     break;
                 }
                 

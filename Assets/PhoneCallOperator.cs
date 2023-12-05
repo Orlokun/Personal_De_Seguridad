@@ -146,8 +146,6 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     
     private async void WaitAnswerFromSupplier(int speakerCalledId)
     {
-        ICallableSupplier supplierBaseObject;
-        
         //Start Delay
         Random.InitState(DateTime.Now.Millisecond);
         var timeToWait = Random.Range(1000, 4000);

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
+using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
@@ -16,13 +18,13 @@ namespace GameDirection.Initial_Office_Scene
     {
         
     }
-    public class DialoguesInSceneDataManager : MonoBehaviour, ISceneManager, IInitializeWithArg1<IGameDirector>
+    public class IntroSceneDialogueManager : MonoBehaviour, ISceneManager, IInitializeWithArg1<IGameDirector>
     {
         private DialogueObjectsFromData _introDialogues;
         public delegate void FinishCurrentDialogue();
         public event FinishCurrentDialogue OnFinishCurrentDialogue;
         private IGameDirector _mGameDirector;
-        private List<IDialogueObject> _introDialoguesList;
+        private Dictionary<int, IDialogueObject> _introDialoguesDict = new Dictionary<int, IDialogueObject>();
         private bool _isInitialized;
 
         private int _dialogueIndex;
@@ -69,9 +71,9 @@ namespace GameDirection.Initial_Office_Scene
 
             _introDialogues = JsonConvert.DeserializeObject<DialogueObjectsFromData>(sourceJson);
             Debug.Log($"Finished parsing Dialogue Data null?: {_introDialogues == null}");
-            _introDialoguesList = new List<IDialogueObject>();
+            _introDialoguesDict = new Dictionary<int, IDialogueObject>();
             var lastDialogueIndex = 0;
-            BaseDialogueObject currentDialogueObject;
+            IDialogueObject currentDialogueObject;
             if (_introDialogues == null)
             {
                 return;
@@ -79,28 +81,47 @@ namespace GameDirection.Initial_Office_Scene
             
             for (var i = 1; i < _introDialogues.values.Count;i++)
             {
-                int currentGroupIndex;
-                var gotIndex = int.TryParse(_introDialogues.values[i][0], out currentGroupIndex);
-                if (!gotIndex)
+                var isDialogueNodeIndex = int.TryParse(_introDialogues.values[i][0], out var currentDialogueObjectIndex);
+                if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
                 {
-                    Debug.LogWarning("Dialogue line has no index");
+                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
+                    return;
                 }
-                if (currentGroupIndex != lastDialogueIndex || i == 1)
+                if (lastDialogueIndex != currentDialogueObjectIndex || i == 1)
                 {
-                    lastDialogueIndex = currentGroupIndex;
-                    currentDialogueObject = ScriptableObject.CreateInstance<BaseDialogueObject>();
-                    var dialogueLine = _introDialogues.values[i][1];
-                    currentDialogueObject.DialogueLines.Add(dialogueLine);
-                    _introDialoguesList.Add(currentDialogueObject);
+                    lastDialogueIndex = currentDialogueObjectIndex;
+                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    _introDialoguesDict.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
-                else
+                
+                var hasDialogueNodeId = int.TryParse(_introDialogues.values[i][1], out var dialogueLineId);
+                if (dialogueLineId == 0 || !hasDialogueNodeId)
                 {
-                    var dialogueObject = _introDialoguesList[currentGroupIndex];
-                    var dialogueLine = _introDialogues.values[i][1];
-                    dialogueObject.DialogueLines.Add(dialogueLine);
+                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
+                    return;
                 }
+                var isSpeakerId = int.TryParse(_introDialogues.values[i][2], out var speakerId);
+                if (speakerId == 0 || !isSpeakerId)
+                {
+                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
+                    return;
+                }
+
+                var dialogueLineText = _introDialogues.values[i][3];
+                var cameraTargetName = _introDialogues.values[i][4];
+                var hasCameraTarget = cameraTargetName != "0";
+                var eventNameId = _introDialogues.values[i][5];
+                var hasEventId = eventNameId != "0";
+                
+                var linksToString = _introDialogues.values[i][6].Split(',');
+                var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
+                var linksToFinish = linksToInts[0] == 0;
+                var hasChoices = linksToInts.Length > 1;
+
+                var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
+                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                _introDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
-            Debug.Log($"[IntroSceneManager.LoadFromJson] Loaded {_introDialoguesList.Count} Dialogues //");
         }
         
         #region Introduction Region
@@ -120,7 +141,7 @@ namespace GameDirection.Initial_Office_Scene
         private IEnumerator StartIntroductionReading()
         {
             yield return new WaitForSeconds(2f);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesList[_dialogueIndex]);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesDict[_dialogueIndex]);
             _dialogueIndex++;
         }
         private void FinishIntroductionText()
@@ -145,7 +166,7 @@ namespace GameDirection.Initial_Office_Scene
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromDialogueStateAndStartClock;
             yield return new WaitForSeconds(2.5f);
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesList[_dialogueIndex]);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_introDialoguesDict[_dialogueIndex]);
             _dialogueIndex++;         
             OnFinishCurrentDialogue?.Invoke();
         }

@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
-using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions;
 using InputManagement;
-using Players_NPC;
 using UI.PopUpManager;
 using UnityEngine;
 using Utils;
@@ -43,21 +40,15 @@ namespace UI
         public static UIController Instance => _instance;
         public delegate void ReturnToBaseCanvasState();
         public event ReturnToBaseCanvasState OnResetCanvas;
-        
         //Manage the activation or deactivation of the Dialogue UI Object and logic
         private IDialogueOperator _mDialogueOperator;
         public IDialogueOperator DialogueOperator => _mDialogueOperator;
-
         //Tracking of canvas objects active objects        
         private Dictionary<int, ICanvasOperator> _mActiveCanvasDict;
-        private int _activeCanvas = 0;
-        
-        [SerializeField] private DialogueWithCameraTarget testCameraDialogue;
-
-        private List<int> _baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
+        private readonly List<int> _baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
             BasePanelsBitStates.IN_GAME_HELP_BUTTON};
-        
-            #region PublicFunction
+
+        #region PublicFunction
         public void ToggleDialogueObject(bool isActive)
         {
             if (!_mActiveCanvasDict.ContainsKey((int) CanvasBitId.GamePlayCanvas))
@@ -154,7 +145,7 @@ namespace UI
             }
 
         }
-        public void ToggleEndOfDay(bool toogleValue)
+        public void ToggleEndOfDay(bool toggleValue)
         {
             
         }
@@ -167,24 +158,13 @@ namespace UI
             LoadInitialVariables();
             DontDestroyOnLoad(this);
         }
-        private IEnumerator ManageTestDialogue()
+        /*private IEnumerator ManageTestDialogue()
         {
             yield return new WaitForSeconds(4);
             //ActivateUIElements(new List<int>(){BaseCanvasBitStates.BASE_INFO});
-            var guardObject = FindObjectOfType<TestGuardNavigation>().gameObject.transform;
-            testCameraDialogue.MyTargetsInDialogues[0].Value = guardObject;
-            _mDialogueOperator.StartNewDialogue(testCameraDialogue);
-        }
-        private void Start()
-        {
-            //Makes sure no Dialogue is active
-            //ReturnToBaseGamePlayCanvasState();
-            
-            //GeneralFadeOutPanelAnim.gameObject.SetActive(true);
-            
-            //Test Dialogue. TODO: Remove
-            //StartCoroutine(ManageTestDialogue());
-        }
+            //var guardObject = FindObjectOfType<TestGuardNavigation>().gameObject.transform;
+
+        }*/
         private void SingletonAwake()
         {
             if (_instance != null)
@@ -225,8 +205,6 @@ namespace UI
         #endregion
         
         #region Private Utilities
-
-
         private void UpdateInputState(InputGameState newGameState)
         {
             if (newGameState == InputGameState.Pause ||

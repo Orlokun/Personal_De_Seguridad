@@ -58,7 +58,7 @@ namespace GameDirection
         /// <summary>
         /// Initial Scene Manager
         /// </summary>
-        private DialoguesInSceneDataManager _dialoguesInSceneDataManager;
+        private IntroSceneDialogueManager _introSceneDialogueManager;
         #endregion
 
         #region Public Fields
@@ -122,9 +122,9 @@ namespace GameDirection
             _mTransportCatalogueData = TransportValuesCatalogue.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
-            _dialoguesInSceneDataManager = gameObject.AddComponent<DialoguesInSceneDataManager>();
-            _dialoguesInSceneDataManager.Initialize(this);
-            _dialoguesInSceneDataManager.OnFinishCurrentDialogue += LoadFirstLevel;
+            _introSceneDialogueManager = gameObject.AddComponent<IntroSceneDialogueManager>();
+            _introSceneDialogueManager.Initialize(this);
+            _introSceneDialogueManager.OnFinishCurrentDialogue += LoadFirstLevel;
             
             _mUIController.StartMainMenuUI();
             
@@ -142,18 +142,18 @@ namespace GameDirection
         {
             foreach (var itemSupplier in _mItemSuppliersData.GetItemSuppliersInData)
             {
-                itemSupplier.LoadDialogueData();
+                itemSupplier.LoadDeflectionsDialogueData();
             }
             foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
             {
-                jobSupplier.LoadDialogueData();
+                jobSupplier.LoadDeflectionDialoguesData();
             }
         }
         private void LoadProductsForJobSuppliers()
         {
             foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
             {
-                jobSupplier.LoadProductsData();
+                jobSupplier.GetUnlockData();
             }
         }
 
@@ -168,7 +168,7 @@ namespace GameDirection
             _mGeneralFader.GeneralCurtainAppear();
             CreateNewProfile();
             _mGameState = HighLevelGameStates.InCutScene;
-            StartCoroutine(_dialoguesInSceneDataManager.PrepareIntroductionReading());
+            StartCoroutine(_introSceneDialogueManager.PrepareIntroductionReading());
         }
         private void CreateNewProfile()
         {

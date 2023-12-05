@@ -23,7 +23,7 @@ namespace DataUnits.JobSources
         public int Intelligence { get; }
         public int Money { get; }
         
-        public void LoadDialogueData();
-        public void LoadProductsData();
+        public void LoadDeflectionDialoguesData();
+        public void GetUnlockData();
     }
 }

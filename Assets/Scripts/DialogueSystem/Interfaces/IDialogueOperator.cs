@@ -10,7 +10,7 @@ namespace DialogueSystem.Interfaces
         void StartNewDialogue(IDialogueObject newDialogue);
         void KillDialogue();
         event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
-        public List<IDialogueObject> GetDialogueObjectInterfaces(List<BaseDialogueObject> dialogueObjects);
+        public List<IDialogueObject> GetDialogueObjectInterfaces(List<DialogueObject> dialogueObjects);
         public void LoadSupplierDialogues(IEnumerator coroutine);
 
     }
