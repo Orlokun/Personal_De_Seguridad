@@ -82,7 +82,7 @@ namespace GameDirection.Initial_Office_Scene
             for (var i = 1; i < _introDialogues.values.Count;i++)
             {
                 var isDialogueNodeIndex = int.TryParse(_introDialogues.values[i][0], out var currentDialogueObjectIndex);
-                if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
+                if (!isDialogueNodeIndex)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
                     return;
@@ -95,16 +95,16 @@ namespace GameDirection.Initial_Office_Scene
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_introDialogues.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                if (!hasDialogueNodeId)
                 {
-                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
+                    Debug.LogWarning($"[IntroSceneManagement.LoadFromJson] Dialogues for Intro must have dialoge node id");
                     return;
                 }
                 var isSpeakerId = int.TryParse(_introDialogues.values[i][2], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
-                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
-                    return;
+                    Debug.LogWarning($"[IntroSceneManagement.LoadFromJson] Dialogues for Intro must have speaker Index greater than zero");
+                    //return;
                 }
 
                 var dialogueLineText = _introDialogues.values[i][3];

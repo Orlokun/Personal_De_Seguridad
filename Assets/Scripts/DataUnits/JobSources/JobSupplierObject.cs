@@ -185,13 +185,15 @@ namespace DataUnits.JobSources
         }
         private void LoadDeflectionDialoguesFromJson(string sourceJson)
         {
-            //Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin request");
+            Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin Random deflection dialogues request for {StoreName}");
             _mRandomDeflectionData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
-            //Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mRandomDeflectionData == null}. {_mRandomDeflectionData}");
             _mRandomDeflectionDialogues = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
-            
+            if (_mRandomDeflectionData.values == null)
+            {
+                Debug.LogError($"[JobSupplier.LoadImportantDialoguesFromJson] Values were not properly loaded into {StoreName} dialogues");
+            }
             IDialogueObject currentDialogueObject;
             for (var i = 1; i < _mRandomDeflectionData.values.Count; i++)
             {
@@ -209,7 +211,7 @@ namespace DataUnits.JobSources
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mRandomDeflectionData.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                if (!hasDialogueNodeId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {StoreName} must have Index greater than zero");
                     return;

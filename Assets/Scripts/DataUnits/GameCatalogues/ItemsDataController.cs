@@ -106,7 +106,7 @@ namespace DataUnits.GameCatalogues
             else
             {
                 var sourceJson = webRequest.downloadHandler.text;
-                LoadCameraDataFromJson(sourceJson);
+                LoadCameraItemsDataFromJson(sourceJson);
             }
         }
         private IEnumerator GetWeaponSpecialData(string url)
@@ -252,7 +252,7 @@ namespace DataUnits.GameCatalogues
             }
             _mGotGuardsData = true;
         }
-        private void LoadCameraDataFromJson(string sourceJson)
+        private void LoadCameraItemsDataFromJson(string sourceJson)
         {
             Debug.Log($"[ItemsDataController.LoadCameraDataFromJson]");
             _mCameraStatsFromDataString = JsonConvert.DeserializeObject<CameraStatsFromData>(sourceJson);

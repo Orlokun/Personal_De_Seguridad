@@ -153,7 +153,7 @@ namespace DataUnits.ItemSources
 
             var lastDialogueIndex = 0;
             IDialogueObject currentDialogueObject;
-            for (var i = 1; i < _mDialogueData!.values.Count;i++)
+            for (var i = 1; i < _mDialogueData.values.Count;i++)
             {
                 var isDialogueNodeIndex = int.TryParse(_mDialogueData.values[i][0], out var currentDialogueObjectIndex);
                 if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
@@ -169,15 +169,15 @@ namespace DataUnits.ItemSources
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mDialogueData.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                if (!hasDialogueNodeId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
                     return;
                 }
                 var isSpeakerId = int.TryParse(_mDialogueData.values[i][2], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have Index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
                     return;
                 }
 
