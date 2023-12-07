@@ -1,6 +1,6 @@
 namespace GamePlayManagement.BitDescriptions.Suppliers
 {
-    public enum BitGameJobSuppliers
+    public enum JobSupplierBitId
     {
         COPY_OF_EDEN = 1,
         XOXO_MINIMARKET = 2,

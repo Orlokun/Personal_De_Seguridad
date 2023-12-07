@@ -11,19 +11,20 @@ namespace GamePlayManagement.ProfileDataModules
     public class JobsSourcesModule : IJobsSourcesModule
     {
         private IPlayerGameProfile _activePlayer;
-        private int _jobsActive = 0;
+        private int unlockedJobSuppliers = 0;
         private int _archivedJobs = 0;
-        private Dictionary<BitGameJobSuppliers, IJobSupplierObject> _mJobSuppliers = new Dictionary<BitGameJobSuppliers, IJobSupplierObject>();
-        public int ElementsActive => _jobsActive;
-        public Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects => _mJobSuppliers;
-        private BitGameJobSuppliers _mCurrentActiveEmployer;
-        public BitGameJobSuppliers CurrentEmployer => _mCurrentActiveEmployer;
-        public void SetNewEmployer(BitGameJobSuppliers newEmployer)
+        private Dictionary<JobSupplierBitId, IJobSupplierObject> _mJobSuppliers = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
+        public int ElementsActive => unlockedJobSuppliers;
+        public Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects => _mJobSuppliers;
+        private JobSupplierBitId _mCurrentActiveEmployer;
+        public JobSupplierBitId CurrentEmployer => _mCurrentActiveEmployer;
+        
+        public void SetNewEmployer(JobSupplierBitId newEmployer)
         {
             _mCurrentActiveEmployer = newEmployer;
         }
 
-        public bool IsModuleActive => _jobsActive > 0;
+        public bool IsModuleActive => unlockedJobSuppliers > 0;
         private IBaseJobsCatalogue _jobsCatalogue;
 
         public JobsSourcesModule(IBaseJobsCatalogue jobsCatalogue)
@@ -31,13 +32,13 @@ namespace GamePlayManagement.ProfileDataModules
             _jobsCatalogue = jobsCatalogue;
         }
         
-        public void UnlockJobSupplier(BitGameJobSuppliers gainedJobSupplier)
+        public void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier)
         {
-            if ((_jobsActive & (int) gainedJobSupplier) != 0)
+            if ((unlockedJobSuppliers & (int) gainedJobSupplier) != 0)
             {
                 return;
             }
-            _jobsActive |= (int) gainedJobSupplier;
+            unlockedJobSuppliers |= (int) gainedJobSupplier;
 
             if (_mJobSuppliers.ContainsKey(gainedJobSupplier))
             {
@@ -56,14 +57,14 @@ namespace GamePlayManagement.ProfileDataModules
         }
 
 
-        public void ArchiveJob(BitGameJobSuppliers lostJobSupplier)
+        public void ArchiveJob(JobSupplierBitId lostJobSupplier)
         {
             //Remove Job from active ones
-            if ((_jobsActive & (int) lostJobSupplier) == 0)
+            if ((unlockedJobSuppliers & (int) lostJobSupplier) == 0)
             {
                 return;
             }
-            _jobsActive &= (int)~lostJobSupplier;
+            unlockedJobSuppliers &= (int)~lostJobSupplier;
             
             //Add to archived jobs
             if ((_archivedJobs & (int) lostJobSupplier) != 0)

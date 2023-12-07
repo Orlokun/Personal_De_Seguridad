@@ -5,6 +5,7 @@ using DialogueSystem.Interfaces;
 using GameDirection.TimeOfDayManagement;
 using GameManagement;
 using GamePlayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -27,5 +28,6 @@ namespace GameDirection
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);
+        public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier);
     }
 }

@@ -7,6 +7,7 @@ using GameDirection.Initial_Office_Scene;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UI;
@@ -189,7 +190,6 @@ namespace GameDirection
             _inputStateManager.SetGamePlayState(InputGameState.InGame);
         }
         #endregion
-        
         public void ChangeHighLvlGameState(HighLevelGameStates newState)
         {
             _mGameState = newState;
@@ -209,6 +209,11 @@ namespace GameDirection
             StartCoroutine(coroutine);
         }
 
+        public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier)
+        {
+            GetActiveGameProfile.GetActiveJobsModule().SetNewEmployer(newJobSupplier);
+            GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);        
+        }
         private void ManageUIProcessEndOfDay()
         {
             Debug.Log("[ManageUIProcessEndOfDay] Start");
@@ -221,6 +226,7 @@ namespace GameDirection
             FadeInEndOfScene();
             Debug.Log("[ManageUIProcessEndOfDay] Finish");
         }
+        
         private async void UIFinishWorkday()
         {
             await Task.Delay(1000);

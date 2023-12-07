@@ -136,7 +136,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
 
     private async void WaitAnswerFromJobSupplier(int calledSupplierId)
     {
-        var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((BitGameJobSuppliers)calledSupplierId);
+        var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((JobSupplierBitId)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
         jobSupplierCallingData.StartCalling(currentProfile.GeneralOmniCredits);
         Random.InitState(DateTime.Now.Millisecond);

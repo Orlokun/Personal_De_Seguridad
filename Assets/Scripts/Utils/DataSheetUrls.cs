@@ -160,45 +160,45 @@ namespace Utils
         }
         
         //Products for Job Suppliers
-        public static string GetStoreProducts(BitGameJobSuppliers jobSupplierId)
+        public static string GetStoreProducts(JobSupplierBitId jobSupplierId)
         {
             Debug.LogWarning("[DataSheetsUrl.StoreProducts] All store products use the same url right now! Must make sure each has its own");
             switch (jobSupplierId)
             {
                 //JobSuppliers
-                case BitGameJobSuppliers.COPY_OF_EDEN:
+                case JobSupplierBitId.COPY_OF_EDEN:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.XOXO_MINIMARKET:
+                case JobSupplierBitId.XOXO_MINIMARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.POTOBRAS_GAS_STATION:
+                case JobSupplierBitId.POTOBRAS_GAS_STATION:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.ARISTO_SUPERMARKET:
+                case JobSupplierBitId.ARISTO_SUPERMARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.FOOTNOTE_LIBRARY:
+                case JobSupplierBitId.FOOTNOTE_LIBRARY:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.LITTLE_OASIS_STRIP_CENTER:
+                case JobSupplierBitId.LITTLE_OASIS_STRIP_CENTER:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.LIBIDOH_CHINESE_MALL:
+                case JobSupplierBitId.LIBIDOH_CHINESE_MALL:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.FIGS_CENTRAL_MARKET:
+                case JobSupplierBitId.FIGS_CENTRAL_MARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.MICHIMALONCO_BLACK_MARKET:
+                case JobSupplierBitId.MICHIMALONCO_BLACK_MARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.MEDIEVAL_FAIR_AND_JUST:
+                case JobSupplierBitId.MEDIEVAL_FAIR_AND_JUST:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.VEGAN_MARKET:
+                case JobSupplierBitId.VEGAN_MARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.JUST_TAKE_IT_MAYORMARKET:
+                case JobSupplierBitId.JUST_TAKE_IT_MAYORMARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.ZOOTOPIA_EXOTIC_ANIMALS:
+                case JobSupplierBitId.ZOOTOPIA_EXOTIC_ANIMALS:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.OMNICORP_MUSEUM:
+                case JobSupplierBitId.OMNICORP_MUSEUM:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.LAKE_MANSION:
+                case JobSupplierBitId.LAKE_MANSION:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.CBGB_BANK:
+                case JobSupplierBitId.CBGB_BANK:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case BitGameJobSuppliers.VITA_NOVA_MALL:
+                case JobSupplierBitId.VITA_NOVA_MALL:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 default:
                     return "";

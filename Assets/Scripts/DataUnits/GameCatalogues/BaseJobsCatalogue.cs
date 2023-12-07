@@ -14,8 +14,8 @@ namespace DataUnits.GameCatalogues
 {
     public interface IBaseJobsCatalogue
     {
-        bool JobSupplierExists(BitGameJobSuppliers jobSupplier);
-        IJobSupplierObject GetJobSupplierObject(BitGameJobSuppliers jobSupplier);
+        bool JobSupplierExists(JobSupplierBitId jobSupplier);
+        IJobSupplierObject GetJobSupplierObject(JobSupplierBitId jobSupplier);
         List<IJobSupplierObject> JobSuppliersInData { get; }
         public Tuple<bool, int> JobSupplierPhoneNumberExists(int phoneDialed);
 
@@ -91,7 +91,7 @@ namespace DataUnits.GameCatalogues
                     
                 int jobId;
                 var gotId = int.TryParse(_jobsData.values[i][0], out jobId);
-                jobSupplier.BitId = (BitGameJobSuppliers) jobId;
+                jobSupplier.JobSupplierBitId = (JobSupplierBitId) jobId;
                     
                 jobSupplier.StoreType = _jobsData.values[i][1];
                 jobSupplier.StoreName = _jobsData.values[i][2];
@@ -149,14 +149,14 @@ namespace DataUnits.GameCatalogues
         /// </summary>
         /// <param name="jobSupplier"></param>
         /// <returns></returns>
-        public bool JobSupplierExists(BitGameJobSuppliers jobSupplier)
+        public bool JobSupplierExists(JobSupplierBitId jobSupplier)
         {
-            return _mIjobSuppliersInData.Any(x => x.BitId == jobSupplier);
+            return _mIjobSuppliersInData.Any(x => x.JobSupplierBitId == jobSupplier);
         }
 
-        public IJobSupplierObject GetJobSupplierObject(BitGameJobSuppliers jobSupplier)
+        public IJobSupplierObject GetJobSupplierObject(JobSupplierBitId jobSupplier)
         {
-            return _mIjobSuppliersInData.SingleOrDefault(x => x.BitId == jobSupplier);
+            return _mIjobSuppliersInData.SingleOrDefault(x => x.JobSupplierBitId == jobSupplier);
         }
         public Tuple<bool, int> JobSupplierPhoneNumberExists(int phoneDialed)
         {
@@ -165,7 +165,7 @@ namespace DataUnits.GameCatalogues
             {
                 return new Tuple<bool, int>(false, 0);
             }
-            var supplierId = (int)_mIjobSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == phoneDialed).BitId;
+            var supplierId = (int)_mIjobSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == phoneDialed).JobSupplierBitId;
             return new Tuple<bool, int>(true, supplierId);
         }
     }

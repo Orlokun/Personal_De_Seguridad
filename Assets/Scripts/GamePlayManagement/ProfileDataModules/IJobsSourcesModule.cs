@@ -6,10 +6,10 @@ namespace GamePlayManagement.ProfileDataModules
 {
     public interface IJobsSourcesModule : IProfileModule
     {
-        void UnlockJobSupplier(BitGameJobSuppliers gainedJobSupplier);
+        void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier);
         public int ElementsActive { get; }
-        Dictionary<BitGameJobSuppliers, IJobSupplierObject> JobObjects { get; }
-        public BitGameJobSuppliers CurrentEmployer { get; }
-        public void SetNewEmployer(BitGameJobSuppliers newEmployer);
+        Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects { get; }
+        public JobSupplierBitId CurrentEmployer { get; }
+        public void SetNewEmployer(JobSupplierBitId newEmployer);
     }
 }

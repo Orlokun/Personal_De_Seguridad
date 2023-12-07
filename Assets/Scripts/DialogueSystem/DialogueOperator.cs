@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Sound;
@@ -47,7 +46,9 @@ namespace DialogueSystem
         [SerializeField] private float maxWritingSpeed;
         [SerializeField] private float minWritingSpeed;
         [SerializeField] private DialogueChoicesGameOperator _dialogueChoiceOperator;
+        private DialogueEventsOperator _dialogueEventsOperator;
         private IDialogueChoicesGameOperator dialogueChoicesOperator => _dialogueChoiceOperator;
+        private IDialogueEventsOperator DialogueEventsOperator => _dialogueEventsOperator;
 
         #endregion
 
@@ -144,6 +145,7 @@ namespace DialogueSystem
         private void Start()
         {
             _mUIController = UIController.Instance;
+            _dialogueEventsOperator = new DialogueEventsOperator();
         }
         #endregion
 
@@ -251,7 +253,7 @@ namespace DialogueSystem
             {
                 return;
             }
-            //TODO: Launch Event
+            _dialogueEventsOperator.HandleDialogueEvent(dialogueNode.EventCodes);
         }
         private void CheckDialogueLineChoiceBehavior(IDialogueNode dialogueNode)
         {

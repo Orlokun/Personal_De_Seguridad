@@ -949,6 +949,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontSize
+      value: 47.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 3e47e9472433bbd44838eecf268a6156, type: 2}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.8962264
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.8962264
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0.8962264
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 3089973298418849135, guid: 3e47e9472433bbd44838eecf268a6156, type: 2}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563086830915475, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4293256677
+      objectReference: {fileID: 0}
     - target: {fileID: 110563088202568720, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -973,6 +1009,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 110563088202568722, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 967c7b47090d34cf090c40749e45f0b4, type: 3}
     m_RemovedComponents:
     - {fileID: 5446890728059628266, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}

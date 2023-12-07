@@ -10,13 +10,13 @@ namespace UI.TabManagement.NBVerticalTabs
     internal class NotebookJobSupplierObject : NotebookSupplierObject
     {
         private IJobSupplierObject _jobSupplier;
-        private BitGameJobSuppliers _supplierId;
+        private JobSupplierBitId _supplierId;
 
         public override void SetNotebookObjectValues(ISupplierBaseObject supplierData)
         {
             base.SetNotebookObjectValues(supplierData);
             _jobSupplier = (IJobSupplierObject)supplierData;
-            _supplierId = _jobSupplier.BitId;
+            _supplierId = _jobSupplier.JobSupplierBitId;
         }
 
         public override void OpenInfoPopUp()

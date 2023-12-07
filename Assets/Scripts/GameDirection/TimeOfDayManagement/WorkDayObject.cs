@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 
 namespace GameDirection.TimeOfDayManagement
@@ -6,6 +7,7 @@ namespace GameDirection.TimeOfDayManagement
     public abstract class WorkDayObjectData
     {
         protected DayBitId MBitId;
+        protected JobSupplierBitId MJobSupplierId;
         protected int MMaxActiveClients;
         protected int MThiefClients;
         protected int MClientsCompleted;
@@ -20,7 +22,10 @@ namespace GameDirection.TimeOfDayManagement
     {
         private int _activeClients;
         private PartOfDay _currentPartOfDay;
+
+
         public DayBitId BitId => MBitId;
+        public JobSupplierBitId JobSupplierId => MJobSupplierId;
         public int MaxActiveClients => MMaxActiveClients;
         public int ThiefClients => MThiefClients;
         public int ClientsCompleted => MClientsCompleted;
@@ -35,7 +40,10 @@ namespace GameDirection.TimeOfDayManagement
             MBitId = mBitId;
             _currentPartOfDay = PartOfDay.EarlyMorning;
         }
-        
+        public void SetJobSupplier(JobSupplierBitId newJobSupplier)
+        {
+            MJobSupplierId = newJobSupplier;
+        }
         public void AddActiveClient()
         {
             _activeClients++;

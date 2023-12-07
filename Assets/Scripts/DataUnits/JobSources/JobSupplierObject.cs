@@ -29,12 +29,12 @@ namespace DataUnits.JobSources
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
         #region Constructor & API
-        public JobSupplierObject(BitGameJobSuppliers bitId, string storeType, string storeName, string storeOwnerName,
+        public JobSupplierObject(JobSupplierBitId jobSupplierBitId, string storeType, string storeName, string storeOwnerName,
             int storeUnlockPoints, string storeDescription, int storePhoneNumber, DialogueSpeakerId speakerIndexId)
         {
             
         }
-        public BitGameJobSuppliers BitId { get; set; }
+        public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }
         public string StoreName{ get; set; }
         public string StoreOwnerName{ get; set; }
@@ -320,7 +320,7 @@ namespace DataUnits.JobSources
         private void GetProductsData()
         {
             Debug.Log($"START: Collecting Product data for {StoreName}");
-            var url = DataSheetUrls.GetStoreProducts(BitId);
+            var url = DataSheetUrls.GetStoreProducts(JobSupplierBitId);
             //TODO: Take this out of Dialogue operator
             GameDirector.Instance.ActCoroutine(LoadProductsFromServer(url));
         }

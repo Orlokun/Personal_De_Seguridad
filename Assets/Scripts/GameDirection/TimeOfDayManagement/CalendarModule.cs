@@ -49,6 +49,20 @@ namespace GameDirection.TimeOfDayManagement
             return _currentDayObject;
         }
 
+        public IWorkDayObject GetNextWorkDayObject()
+        {
+            //TODO: CHECK IF WE ARE OUT OF BOUND
+            var intDay = (int) _currentDayId;
+            var nextDayInt = intDay *= 2;
+            var nextDayId = (DayBitId) nextDayInt;
+            if (!_AllWorkDays.ContainsKey(nextDayId))
+            {
+                Debug.LogError("[GetNextWorkDayObject]");
+                return null;
+            }
+            return _AllWorkDays[nextDayId];
+        }
+
         public void StartNightManagement()
         {
             throw new System.NotImplementedException();

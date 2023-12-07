@@ -84,7 +84,7 @@ namespace GamePlayManagement
             {
                 if (jobSupplierObject.StoreUnlockPoints <= GeneralOmniCredits)
                 {
-                    GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.BitId);
+                    GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierBitId);
                 }
             }
         }

@@ -5,7 +5,7 @@ namespace DataUnits.JobSources
     public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier
     {
         //Base Data
-        public BitGameJobSuppliers BitId { get; set; }
+        public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }
         public string StoreOwnerName{ get; set; }
         public int StoreOwnerAge{ get; set; }

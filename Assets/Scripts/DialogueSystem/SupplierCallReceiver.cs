@@ -7,7 +7,7 @@ namespace DialogueSystem
 {
     public class JobSupplierCallReceiver : SupplierCallReceiver
     {
-        [SerializeField] private BitGameJobSuppliers supplierId;
+        [SerializeField] private JobSupplierBitId supplierId;
 
         public override void ReceiveCall()
         {

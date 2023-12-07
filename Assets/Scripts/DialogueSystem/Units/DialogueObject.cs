@@ -21,7 +21,7 @@ namespace DialogueSystem.Units
         public string TargetCameraId { get ; }
         public bool HasChoice { get ; }
         public bool HasEvent { get ; }
-        public string EventNameId { get ; }
+        public string EventCodes { get ; }
         public int[] LinkNodes { get ; }
     }
     public class DialogueNodeData : IDialogueNode
@@ -59,7 +59,7 @@ namespace DialogueSystem.Units
         public string TargetCameraId => _targetCameraId;
         public bool HasChoice => _hasChoice;
         public bool HasEvent => _hasEvent;
-        public string EventNameId => _eventNameId;
+        public string EventCodes => _eventNameId;
         public int[] LinkNodes => _linkNodes;
     }
 
