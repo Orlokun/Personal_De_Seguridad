@@ -116,12 +116,15 @@ namespace DataUnits.JobSources
                 switch (dialogueType)
                 {
                     case DialogueType.ImportantDialogue:
+                        Debug.Log($"[DownloadDialogueData.ImportantDialogue] Loading {StoreName} Important dialogues");
                         LoadImportantDialoguesFromJson(sourceJson);
                         break;
                     case DialogueType.Deflections:
+                        Debug.Log($"[DownloadDialogueData.Deflections]  Loading {StoreName} Deflections dialogues");
                         LoadDeflectionDialoguesFromJson(sourceJson);
                         break;
                     case DialogueType.InsistenceDialogue:
+                        Debug.Log($"[DownloadDialogueData.Deflections]  Loading {StoreName} InsistenceDialogue");
                         LoadInsistenceDialogues(sourceJson);
                         break;
                 }
@@ -155,13 +158,13 @@ namespace DataUnits.JobSources
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mImportantDialoguesData.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                if (!hasDialogueNodeId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {StoreName} must have Index greater than zero");
                     return;
                 }
                 var isSpeakerId = int.TryParse(_mImportantDialoguesData.values[i][2], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
+                if (!isSpeakerId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {StoreName} must have Index greater than zero");
                     return;
@@ -303,18 +306,17 @@ namespace DataUnits.JobSources
             GetImportantAndInsistenceDialogues();
             GetProductsData();
         }
-
-        private void GetImportantAndInsistenceDialogues()
+        
+        private async void GetImportantAndInsistenceDialogues()
         {
-            Debug.Log($"START: Collecting Product data for {StoreName}");
-            var url = DataSheetUrls.GetStoreProducts(BitId);
-            //TODO: Take this out of Dialogue operator
-            GameDirector.Instance.ActCoroutine(LoadProductsFromServer(url));
             var importantDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.ImportantDialogue);
             var insistenceDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.InsistenceDialogue);
+            await Task.Delay(300);
             GameDirector.Instance.ActCoroutine(DownloadDialogueData(DialogueType.ImportantDialogue, importantDialoguesUrl));
+            await Task.Delay(500);
             GameDirector.Instance.ActCoroutine(DownloadDialogueData(DialogueType.InsistenceDialogue, insistenceDialoguesUrl));
         }
+        
         private void GetProductsData()
         {
             Debug.Log($"START: Collecting Product data for {StoreName}");

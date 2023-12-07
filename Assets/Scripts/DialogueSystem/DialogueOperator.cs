@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CameraManagement;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Sound;
@@ -9,6 +11,7 @@ using InputManagement;
 using TMPro;
 using UI;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -38,11 +41,14 @@ namespace DialogueSystem
         [SerializeField] private TMP_Text mDialogueTextObject;
         [SerializeField] private TMP_Text mSpeakerName;
         [SerializeField] private GameObject nextLineButton;
-        [SerializeField] private Transform decisionObjectsParent;
+        [SerializeField] private GameObject decisionObjectsParent;
         
         //Parameters to simply randomize the writing speed a Bit. 
         [SerializeField] private float maxWritingSpeed;
         [SerializeField] private float minWritingSpeed;
+        [SerializeField] private DialogueChoicesGameOperator _dialogueChoiceOperator;
+        private IDialogueChoicesGameOperator dialogueChoicesOperator => _dialogueChoiceOperator;
+
         #endregion
 
         #region Private Members
@@ -53,6 +59,7 @@ namespace DialogueSystem
         private UIDialogueState _currentState;
         public UIDialogueState CurrentDialogueState => _currentState;
 
+        private bool _waitingForChoice;
         private IDialogueObject _currentDialogue;
         private Coroutine _typingMachineCoroutine;
         private IUIController _mUIController;
@@ -74,13 +81,11 @@ namespace DialogueSystem
             }
             return dialogueList;
         }
-
         public void LoadSupplierDialogues(IEnumerator coroutine)
         {
             Debug.Log("[DIALOGUE OPERATOR] Starting Co routine for Supplier Dialogues Data");
             StartCoroutine(coroutine);
         }
-
         public void StartNewDialogue(IDialogueObject newDialogue)
         {
             _currentState = UIDialogueState.TypingText;
@@ -88,13 +93,25 @@ namespace DialogueSystem
             LoadNewDialogue(newDialogue);
             
             _mUIController.ToggleDialogueObject(true);
-            StartCoroutine(WriteDialogue());
+            WriteNextDialogueNode(_currentDialogue, 0);
         }
 
+        public UnityAction WriteNextDialogueNode(IDialogueObject dObject, int newDialogueIndex)
+        {
+            if (dObject != _currentDialogue)
+            {
+                return null;
+            }
+            var dialogueNode = dObject.DialogueNodes[newDialogueIndex];
+            StartCoroutine(WriteDialogueNode(dialogueNode));
+            return null;
+        }
+        
         private void OnDialogueFinished()
         {
             GameCameraManager.Instance.ReturnToLastState();
             _mUIController.ToggleDialogueObject(false);
+            mDialogueTextObject.text = "";
             //GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
             KillDialogue();
         }
@@ -131,42 +148,59 @@ namespace DialogueSystem
         #endregion
 
         #region PrivateUtils
-        private IEnumerator WriteDialogue()
+        private IEnumerator WriteDialogueNode(IDialogueNode dialogueNode)
         {
-            //Go through each of the dialogue lines
-            for(int i = 0; i < _currentDialogue.DialogueNodes.Count; i++)
-            {
-                //Make Sure no other line is being written at the moment
-                if (_typingMachineCoroutine != null)
-                {
-                    StopCoroutine(_typingMachineCoroutine);
-                }
 
-                //Start Typewriter effect of the current line    
-                mDialogueTextObject.text = "";
-                _typingMachineCoroutine = StartCoroutine(WriteDialogueLine(_currentDialogue.DialogueNodes[i]));
-                
-                //Wait for the conditions to be met in order to continue the loop
-                yield return new WaitUntil(NextLineWritingConditions);
-                //The following line of code makes the coroutine wait for a frame so as the next WaitUntil is not skipped
-                yield return null;
+            //Make Sure no other line is being written at the moment
+            if (_typingMachineCoroutine != null)
+            {
+                StopCoroutine(_typingMachineCoroutine);
             }
-            _currentState = UIDialogueState.NotDisplayed;
-            OnDialogueCompleted?.Invoke();
+
+            //Start Typewriter effect of the current line    
+            mDialogueTextObject.text = "";
+            _typingMachineCoroutine = StartCoroutine(WriteDialogueLine(dialogueNode));
+            
+            //Wait for the conditions to be met in order to continue the loop
+            yield return new WaitUntil(NextLineWritingConditions);
+
+            //The following line of code makes the coroutine wait for a frame so as the next WaitUntil is not skipped
+            yield return null;
+            if (dialogueNode.LinkNodes[0] == 0)
+            {
+                Debug.Log("[DialogueOperator.WriteDialogueNode] Finished going through dialogur");
+                _currentState = UIDialogueState.NotDisplayed;
+                OnDialogueCompleted?.Invoke();
+            }
+            else if(dialogueNode.LinkNodes.Length == 1)
+            {
+                WriteNextDialogueNode(_currentDialogue, dialogueNode.LinkNodes.First());
+            }
         }
 
         private bool NextLineWritingConditions()
         {
-            return Input.GetKeyDown(KeyCode.Space) 
-                   && _currentState == UIDialogueState.FinishedTypingLine 
+            return Input.GetKeyDown(KeyCode.Space)
+                   && _currentState == UIDialogueState.FinishedTypingLine
                    && GeneralInputStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
         }
+
+        private bool NextChoiceWaitingConditions()
+        {
+            return _currentDecisionMade;
+        }
+
         private IEnumerator WriteDialogueLine(IDialogueNode dialogueNode)
         {
             _currentState = UIDialogueState.TypingText;
-            var isAddingHtmlTag = false;
-            _soundMachine.StartPlayingSound();
+            var isAddingHtmlTag = false;            //Used to manage tags inside text so they don't appear in the UI.
+            
+            _soundMachine.StartPlayingSound();      //TODO: Get sound foreach character
+            
             nextLineButton.SetActive(false);
+            
+            CheckDialogueLineCameraBehavior(dialogueNode);
+            
             foreach (var letter in dialogueNode.DialogueLine)
             {
                 //Check if player is hurrying Dialogue and we have more than 3 characters.
@@ -196,10 +230,59 @@ namespace DialogueSystem
                     yield return new WaitForSeconds(typingSpeed);
                 }
             }
+            CheckDialogueLineEventBehavior(dialogueNode);
+            CheckDialogueLineChoiceBehavior(dialogueNode);
             nextLineButton.SetActive(true);
             _soundMachine.PausePlayingSound();
             _currentState = UIDialogueState.FinishedTypingLine;
         }
+
+        private void CheckDialogueLineCameraBehavior(IDialogueNode dialogueNode)
+        {
+            if (!dialogueNode.HasCameraTarget)
+            {
+                return;
+            }
+            //TODO: Move camera towards target;
+        }
+        private void CheckDialogueLineEventBehavior(IDialogueNode dialogueNode)
+        {
+            if (!dialogueNode.HasEvent)
+            {
+                return;
+            }
+            //TODO: Launch Event
+        }
+        private void CheckDialogueLineChoiceBehavior(IDialogueNode dialogueNode)
+        {
+            if (!dialogueNode.HasChoice || dialogueNode.LinkNodes.Length <= 1)
+            {
+                Debug.Log($"Dialogue node {dialogueNode.DialogueLineIndex} has no Choice");
+                _waitingForChoice = false;
+                _currentDecisionMade = _waitingForChoice;
+                decisionObjectsParent.SetActive(_waitingForChoice);
+                return;
+            }
+            SetDecisionButtons(dialogueNode);
+        }
+
+        private void SetDecisionButtons(IDialogueNode dialogueNode)
+        {
+            Debug.Log($"Dialogue node {dialogueNode.DialogueLineIndex} Initializing Choices");
+            _waitingForChoice = true;
+            _currentDecisionMade = !_waitingForChoice;
+            decisionObjectsParent.SetActive(_waitingForChoice);
+            dialogueChoicesOperator.DisplayDialogueChoices(dialogueNode, _currentDialogue, this);
+        }
+        
+        private bool _currentDecisionMade;
+        public void MakeDecision(string decisionId)
+        {
+            _currentDecisionMade = true;
+            //TODO: Process decision
+
+        }
+
         private void LoadNewDialogue(IDialogueObject newDialogue)
         {
             if (newDialogue == null)
@@ -209,29 +292,8 @@ namespace DialogueSystem
             _currentDialogue = newDialogue;
             if (_currentDialogue == null)
             {
+                Debug.LogError("Current Dialogue must not be null after loading");
                 return;
-            }
-
-            //Check Dialogue speaker image
-            if (_currentDialogue.ActorImage == null)
-            {
-                mSpeakerImageDisplay.gameObject.SetActive(false);
-            }
-            else
-            {
-                mSpeakerImageDisplay.sprite = _currentDialogue.ActorImage;
-                mSpeakerImageDisplay.gameObject.SetActive(true);
-            }
-            
-            //Check Dialogue speaker
-            if (string.IsNullOrEmpty(_currentDialogue.SpeakerName))
-            {
-                mSpeakerName.gameObject.SetActive(false);
-            }
-            else
-            {
-                mSpeakerName.text = _currentDialogue.SpeakerName;
-                mSpeakerName.gameObject.SetActive(true);
             }
         }
         #endregion

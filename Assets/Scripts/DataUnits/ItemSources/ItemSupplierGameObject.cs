@@ -195,8 +195,9 @@ namespace DataUnits.ItemSources
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mDeflectionDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
-                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Dialogue Load");
+                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
             }
+            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
         }
         #endregion
     }

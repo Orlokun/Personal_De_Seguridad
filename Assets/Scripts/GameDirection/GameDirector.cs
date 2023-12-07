@@ -149,13 +149,7 @@ namespace GameDirection
                 jobSupplier.LoadDeflectionDialoguesData();
             }
         }
-        private void LoadProductsForJobSuppliers()
-        {
-            foreach (var jobSupplier in _mJobsCatalogue.JobSuppliersInData)
-            {
-                jobSupplier.GetUnlockData();
-            }
-        }
+
 
         #endregion
         
