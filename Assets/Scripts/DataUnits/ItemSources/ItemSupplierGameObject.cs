@@ -178,7 +178,6 @@ namespace DataUnits.ItemSources
                 if (speakerId == 0 || !isSpeakerId)
                 {
                     Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
-                    return;
                 }
 
                 var dialogueLineText = _mDialogueData.values[i][3];

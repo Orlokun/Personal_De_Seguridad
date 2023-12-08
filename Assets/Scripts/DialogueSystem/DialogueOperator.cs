@@ -21,17 +21,13 @@ namespace DialogueSystem
         NotDisplayed,
         TypingText,
         FinishedTypingLine,
-        FinishedTypingBaseDialogue,
     }
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
-        
         #region Static Props/Members
         private static DialogueOperator _mInstance;
         public static IDialogueOperator Instance => _mInstance;
-        
         #endregion
-        
         /// <summary>
         /// Reference of UI Editor Components
         /// </summary>
@@ -65,8 +61,7 @@ namespace DialogueSystem
         private Coroutine _typingMachineCoroutine;
         private IUIController _mUIController;
         private IDialogueOperatorSoundMachine _soundMachine;
-        private const string DECISION_PREFAB = "DecisionUIObject";
-        private const string UI_RESOURCES_PATH = "UI/";
+
         #endregion
         
         public delegate void FinishedDialogueReading();
@@ -111,23 +106,18 @@ namespace DialogueSystem
         private void OnDialogueFinished()
         {
             GameCameraManager.Instance.ReturnToLastState();
-            _mUIController.ToggleDialogueObject(false);
-            mDialogueTextObject.text = "";
-            //GeneralGamePlayStateManager.Instance.SetGamePlayState(InputGameState.InGame);
             KillDialogue();
-        }
-        private IEnumerator FinishDialogue()
-        {
-            while (CurrentDialogueState != UIDialogueState.FinishedTypingBaseDialogue)
-            {
-                yield return null;
-            }
         }
 
         public void KillDialogue()
         {
             _currentState = UIDialogueState.NotDisplayed;
             _currentDialogue = null;
+            mDialogueTextObject.text = "";
+            mSpeakerName.text = "";
+            mSpeakerImageDisplay.color = new Color(1, 1, 1, 0);
+            _mUIController.ToggleDialogueObject(false);
+
         }
         #endregion
 
@@ -185,11 +175,6 @@ namespace DialogueSystem
             return Input.GetKeyDown(KeyCode.Space)
                    && _currentState == UIDialogueState.FinishedTypingLine
                    && GeneralInputStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
-        }
-
-        private bool NextChoiceWaitingConditions()
-        {
-            return _currentDecisionMade;
         }
 
         private IEnumerator WriteDialogueLine(IDialogueNode dialogueNode)
@@ -260,9 +245,7 @@ namespace DialogueSystem
             if (!dialogueNode.HasChoice || dialogueNode.LinkNodes.Length <= 1)
             {
                 Debug.Log($"Dialogue node {dialogueNode.DialogueLineIndex} has no Choice");
-                _waitingForChoice = false;
-                _currentDecisionMade = _waitingForChoice;
-                decisionObjectsParent.SetActive(_waitingForChoice);
+                decisionObjectsParent.SetActive(false);
                 return;
             }
             SetDecisionButtons(dialogueNode);
@@ -271,18 +254,8 @@ namespace DialogueSystem
         private void SetDecisionButtons(IDialogueNode dialogueNode)
         {
             Debug.Log($"Dialogue node {dialogueNode.DialogueLineIndex} Initializing Choices");
-            _waitingForChoice = true;
-            _currentDecisionMade = !_waitingForChoice;
-            decisionObjectsParent.SetActive(_waitingForChoice);
+            decisionObjectsParent.SetActive(true);
             dialogueChoicesOperator.DisplayDialogueChoices(dialogueNode, _currentDialogue, this);
-        }
-        
-        private bool _currentDecisionMade;
-        public void MakeDecision(string decisionId)
-        {
-            _currentDecisionMade = true;
-            //TODO: Process decision
-
         }
 
         private void LoadNewDialogue(IDialogueObject newDialogue)
