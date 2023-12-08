@@ -52,7 +52,7 @@ namespace GamePlayManagement.ProfileDataModules
             }
 
             var newSupplier = _jobsCatalogue.GetJobSupplierObject(gainedJobSupplier);
-            newSupplier.GetUnlockData();
+            newSupplier.StartUnlockData();
             _mJobSuppliers.Add(gainedJobSupplier, newSupplier);
         }
 

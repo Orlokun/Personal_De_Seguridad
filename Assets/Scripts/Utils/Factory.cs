@@ -41,7 +41,7 @@ namespace Utils
             return new WorkDayObject(dayBitId);
         }
 
-        public static ItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IItemsDataController itemDataController,IBaseItemSuppliersCatalogue suppliersCatalogue)
+        public static IItemSupplierShop CreateItemStoreSupplier(BitItemSupplier itemSupplier, IItemsDataController itemDataController,IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
             return new ItemSupplierShop(itemSupplier, itemDataController, suppliersCatalogue);
         }

@@ -9,6 +9,7 @@ using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -26,6 +27,7 @@ namespace DataUnits.ItemSources
         private int _mKindness;
         private int _mOmniCredits;
         private string _mSpriteName;
+        private IItemSupplierShop _supplierShop;
         
         [SerializeField] protected Sprite supplierPortrait;
         public Sprite SupplierPortrait =>supplierPortrait;
@@ -36,12 +38,12 @@ namespace DataUnits.ItemSources
         public int ItemTypesAvailable { get; set; }
         public int StoreUnlockPoints { get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public int StoreHighestUnlockedDialogue { get; set; }
-        public int StoreHighestLockedDialogue { get; set; }
-
+        public int StoreHighestUnlockedDialogue { get; }
+        public int StoreHighestLockedDialogue { get; }
         
         private Dictionary<int, IDialogueObject> _mImportantDialoguesDict = new Dictionary<int, IDialogueObject>();
         private Dictionary<int, IDialogueObject> _mDeflectionDialoguesDict = new Dictionary<int, IDialogueObject>();
+        private Dictionary<int, IDialogueObject> _mInsistenceDialoguesDict = new Dictionary<int, IDialogueObject>();
 
         public void SetStats(int reliance, int quality, int kindness, int omniCredits, string spriteName)
         {
@@ -50,7 +52,6 @@ namespace DataUnits.ItemSources
             _mKindness = kindness;
             _mOmniCredits = omniCredits;
             _mSpriteName = spriteName;
-            StoreHighestUnlockedDialogue = 1;
         }
 
         public int Reliance => _mReliance;
@@ -58,8 +59,25 @@ namespace DataUnits.ItemSources
         public int Kindness => _mKindness;
         public int OmniCredits => _mOmniCredits;
         public string SpriteName => _mSpriteName;
+        public void StartUnlockedData()
+        {
+            GetImportantAndInsistenceDialogues();
+        }
 
+        public void InitializeStore(IItemSupplierShop shop)
+        {
+            _supplierShop = shop;
+        }
 
+        private async void GetImportantAndInsistenceDialogues()
+        {
+            var importantDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.ImportantDialogue);
+            var insistenceDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.InsistenceDialogue);
+            await Task.Delay(300);
+            GameDirector.Instance.ActCoroutine(LoadDialogueDataFromServer(DialogueType.ImportantDialogue, importantDialoguesUrl));
+            await Task.Delay(500);
+            GameDirector.Instance.ActCoroutine(LoadDialogueDataFromServer(DialogueType.InsistenceDialogue, insistenceDialoguesUrl));
+        }
         public void StartCalling(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
@@ -68,19 +86,18 @@ namespace DataUnits.ItemSources
             }
             else
             {
-                GetCurrentCallAnswer();
+                GetCurrentUnlockedCall();
             }
         }
 
-        private async void GetCurrentCallAnswer()
+        private async void GetCurrentUnlockedCall()
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");
             Random.InitState(DateTime.Now.Millisecond);
-            var randomWaitTime = Random.Range(500, 12500);
+            var randomWaitTime = Random.Range(1000, 12500);
             await Task.Delay(randomWaitTime);
 
-            var randomAnswerIndex = Random.Range(StoreUnlockPoints, StoreHighestUnlockedDialogue);
-            var randomDialogue = _mImportantDialoguesDict[randomAnswerIndex];
+            var randomDialogue = _mImportantDialoguesDict[1];
             PhoneCallOperator.Instance.AnswerPhone();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
@@ -103,7 +120,9 @@ namespace DataUnits.ItemSources
         }
 
         #region JsonDialogueManagement
-        private SupplierDialoguesData _mDialogueData; 
+        private SupplierDialoguesData _mDeflectionDialogueData; 
+        private SupplierDialoguesData _mImportantDialogueData; 
+        private SupplierDialoguesData _mInsistenceDialogueData; 
         public void LoadDeflectionsDialogueData()
         {
             if (SpeakerIndex == 0)
@@ -131,13 +150,13 @@ namespace DataUnits.ItemSources
                 switch (dialogueType)
                 {
                     case DialogueType.ImportantDialogue:
-                        //LoadDeflectionDialoguesFromJson(sourceJson);
+                        LoadImportantDialoguesFromJson(sourceJson);
                         break;
                     case DialogueType.Deflections:
                         LoadDeflectionDialoguesFromJson(sourceJson);
                         break;
                     case DialogueType.InsistenceDialogue:
-                        //LoadDeflectionDialoguesFromJson(sourceJson);
+                        LoadInsistenceDialoguesFromJson(sourceJson);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null);
@@ -147,15 +166,15 @@ namespace DataUnits.ItemSources
         private void LoadDeflectionDialoguesFromJson(string sourceJson)
         {
             Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
-            _mDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
-            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDialogueData == null}. {_mDialogueData}");
+            _mDeflectionDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
+            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDeflectionDialogueData == null}. {_mDeflectionDialogueData}");
             _mDeflectionDialoguesDict = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueIndex = 0;
             IDialogueObject currentDialogueObject;
-            for (var i = 1; i < _mDialogueData.values.Count;i++)
+            for (var i = 1; i < _mDeflectionDialogueData.values.Count;i++)
             {
-                var isDialogueNodeIndex = int.TryParse(_mDialogueData.values[i][0], out var currentDialogueObjectIndex);
+                var isDialogueNodeIndex = int.TryParse(_mDeflectionDialogueData.values[i][0], out var currentDialogueObjectIndex);
                 if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
                 {
                     Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
@@ -168,25 +187,25 @@ namespace DataUnits.ItemSources
                     _mDeflectionDialoguesDict.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
-                var hasDialogueNodeId = int.TryParse(_mDialogueData.values[i][1], out var dialogueLineId);
+                var hasDialogueNodeId = int.TryParse(_mDeflectionDialogueData.values[i][1], out var dialogueLineId);
                 if (!hasDialogueNodeId)
                 {
                     Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
                     return;
                 }
-                var isSpeakerId = int.TryParse(_mDialogueData.values[i][2], out var speakerId);
+                var isSpeakerId = int.TryParse(_mDeflectionDialogueData.values[i][2], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
                     Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
                 }
 
-                var dialogueLineText = _mDialogueData.values[i][3];
-                var cameraTargetName = _mDialogueData.values[i][4];
+                var dialogueLineText = _mDeflectionDialogueData.values[i][3];
+                var cameraTargetName = _mDeflectionDialogueData.values[i][4];
                 var hasCameraTarget = cameraTargetName != "0";
-                var eventNameId = _mDialogueData.values[i][5];
+                var eventNameId = _mDeflectionDialogueData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
-                var linksToString = _mDialogueData.values[i][6].Split(',');
+                var linksToString = _mDeflectionDialogueData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
@@ -198,6 +217,115 @@ namespace DataUnits.ItemSources
             }
             Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
         }
+        private void LoadImportantDialoguesFromJson(string sourceJson)
+        {
+            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
+            _mImportantDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
+            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mImportantDialogueData == null}. {_mImportantDialogueData}");
+            _mImportantDialoguesDict = new Dictionary<int, IDialogueObject>();
+
+            var lastDialogueIndex = 0;
+            IDialogueObject currentDialogueObject;
+            for (var i = 1; i < _mImportantDialogueData.values.Count;i++)
+            {
+                var isDialogueNodeIndex = int.TryParse(_mImportantDialogueData.values[i][0], out var currentDialogueObjectIndex);
+                if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
+                    return;
+                }
+                if (lastDialogueIndex != currentDialogueObjectIndex || i == 1)
+                {
+                    lastDialogueIndex = currentDialogueObjectIndex;
+                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    _mImportantDialoguesDict.Add(currentDialogueObjectIndex, currentDialogueObject);
+                }
+                
+                var hasDialogueNodeId = int.TryParse(_mImportantDialogueData.values[i][1], out var dialogueLineId);
+                if (!hasDialogueNodeId)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
+                    return;
+                }
+                var isSpeakerId = int.TryParse(_mImportantDialogueData.values[i][2], out var speakerId);
+                if (speakerId == 0 || !isSpeakerId)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
+                }
+
+                var dialogueLineText = _mImportantDialogueData.values[i][3];
+                var cameraTargetName = _mImportantDialogueData.values[i][4];
+                var hasCameraTarget = cameraTargetName != "0";
+                var eventNameId = _mImportantDialogueData.values[i][5];
+                var hasEventId = eventNameId != "0";
+                
+                var linksToString = _mImportantDialogueData.values[i][6].Split(',');
+                var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
+                var linksToFinish = linksToInts[0] == 0;
+                var hasChoices = linksToInts.Length > 1;
+
+                var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
+                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                _mImportantDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
+                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
+            }
+            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
+        }
+        private void LoadInsistenceDialoguesFromJson(string sourceJson)
+        {
+            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
+            _mInsistenceDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
+            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mInsistenceDialogueData == null}. {_mInsistenceDialogueData}");
+            _mInsistenceDialoguesDict = new Dictionary<int, IDialogueObject>();
+
+            var lastDialogueIndex = 0;
+            IDialogueObject currentDialogueObject;
+            for (var i = 1; i < _mInsistenceDialogueData.values.Count;i++)
+            {
+                var isDialogueNodeIndex = int.TryParse(_mInsistenceDialogueData.values[i][0], out var currentDialogueObjectIndex);
+                if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
+                    return;
+                }
+                if (lastDialogueIndex != currentDialogueObjectIndex || i == 1)
+                {
+                    lastDialogueIndex = currentDialogueObjectIndex;
+                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    _mInsistenceDialoguesDict.Add(currentDialogueObjectIndex, currentDialogueObject);
+                }
+                
+                var hasDialogueNodeId = int.TryParse(_mInsistenceDialogueData.values[i][1], out var dialogueLineId);
+                if (!hasDialogueNodeId)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
+                    return;
+                }
+                var isSpeakerId = int.TryParse(_mInsistenceDialogueData.values[i][2], out var speakerId);
+                if (speakerId == 0 || !isSpeakerId)
+                {
+                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
+                }
+
+                var dialogueLineText = _mInsistenceDialogueData.values[i][3];
+                var cameraTargetName = _mInsistenceDialogueData.values[i][4];
+                var hasCameraTarget = cameraTargetName != "0";
+                var eventNameId = _mInsistenceDialogueData.values[i][5];
+                var hasEventId = eventNameId != "0";
+                
+                var linksToString = _mInsistenceDialogueData.values[i][6].Split(',');
+                var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
+                var linksToFinish = linksToInts[0] == 0;
+                var hasChoices = linksToInts.Length > 1;
+
+                var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
+                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                _mInsistenceDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
+                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
+            }
+            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
+        }
+
         #endregion
     }
 
@@ -214,5 +342,7 @@ namespace DataUnits.ItemSources
         public int Kindness { get; }
         public int OmniCredits { get; }
         public string SpriteName { get; }
+        public void StartUnlockedData();
+        public void InitializeStore(IItemSupplierShop shop);
     }
 }

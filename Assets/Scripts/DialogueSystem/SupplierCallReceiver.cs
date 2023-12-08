@@ -22,13 +22,6 @@ namespace DialogueSystem
         
     }
 
-    public enum DialogueType
-    {
-        Inner,
-        Interpersonal,
-        Main
-    }
-
     public abstract class SupplierCallReceiver
     {
         private int supplierId;

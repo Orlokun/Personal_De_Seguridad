@@ -301,7 +301,7 @@ namespace DataUnits.JobSources
         #region JsonProductManagement
         private StoreProductsDataString _mProductsDataString;
         private Dictionary<int, IStoreProductObjectData> _mProductsInStore;
-        public void GetUnlockData()
+        public void StartUnlockData()
         {
             GetImportantAndInsistenceDialogues();
             GetProductsData();

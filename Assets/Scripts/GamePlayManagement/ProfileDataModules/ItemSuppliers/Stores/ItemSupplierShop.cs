@@ -47,13 +47,11 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
             _mSuppliersCatalogue = suppliersCatalogue;
             _mSupplierData = _mSuppliersCatalogue.GetItemSupplierData(BitSupplierId);
         }
-
         public IItemSupplierDataObject GetSupplierData => _mSupplierData;
         public List<IItemObject> GetItemsOfType(BitItemType itemType)
         {
             return (from activeItem in _activeItemsData where activeItem.Value.ItemType == itemType select activeItem.Value).ToList();
         }
-
         public IItemObject GetItemObject(int bitItemId)
         {
             return (_mActiveItems & bitItemId) == 0 ? null : _activeItemsData[bitItemId];
@@ -99,5 +97,6 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
             }
             _activeItemsData.Remove(item);
         }
+
     }
 }
