@@ -11,5 +11,11 @@ namespace GamePlayManagement.ProfileDataModules
         Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects { get; }
         public JobSupplierBitId CurrentEmployer { get; }
         public void SetNewEmployer(JobSupplierBitId newEmployer);
+
+        public int TotalDaysEmployed { get; }
+        public int DaysEmployedStreak { get; }
+        public int TotalDaysUnemployed { get; }
+        public int DaysUnemployedStreak { get; }
+        public int StreakWithEmployer { get; }
     }
 }

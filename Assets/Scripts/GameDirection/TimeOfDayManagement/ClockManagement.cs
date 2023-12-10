@@ -7,21 +7,21 @@ namespace GameDirection.TimeOfDayManagement
 {
     public enum DayBitId
     {
-        DayOne = 1,
-        DayTwo = 2,
-        DayThree = 4,
-        DayFour = 8,
-        DayFive = 16,
-        DaySix = 32,
-        DaySeven = 64,
-        DayEight = 128,
-        DayNine = 256,
-        DayTen = 512,
-        DayEleven = 1024,
-        DayTwelve = 2048,
-        DayThirteen = 4096,
-        DayFourteen = 8192,
-        DayFifteen = 16384
+        Day_01 = 1,
+        Day_02 = 2,
+        Day_03 = 4,
+        Day_04 = 8,
+        Day_05 = 16,
+        Day_06 = 32,
+        Day_07 = 64,
+        Day_08 = 128,
+        Day_09 = 256,
+        Day_10 = 512,
+        Day_11 = 1024,
+        Day_12 = 2048,
+        Day_13 = 4096,
+        Day_14 = 8192,
+        Day_15 = 16384
     }
 
     public interface IClockManagement
@@ -31,6 +31,7 @@ namespace GameDirection.TimeOfDayManagement
         public PartOfDay GetCurrentPartOfDay();
         public void AdvanceToNextPartOfDay();
         public event ClockManagement.PassTimeOfDay OnPassTimeOfDay;
+        public event ClockManagement.PassMinute OnPassMinute;
 
     }
 
@@ -42,7 +43,9 @@ namespace GameDirection.TimeOfDayManagement
 
         private IGameDirector _mDirector;
         public delegate void PassTimeOfDay(PartOfDay dayTime);
-        public event PassTimeOfDay OnPassTimeOfDay;
+        public event PassTimeOfDay OnPassTimeOfDay;        
+        public delegate void PassMinute(int hour, int minute);
+        public event PassMinute OnPassMinute;
         
         #region Time of Day Members
         private const string EarlyMorningName = "Early Morning";
@@ -134,6 +137,7 @@ namespace GameDirection.TimeOfDayManagement
                 Debug.Log("DAY FINISHED");
             }
             ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
+            OnPassMinute?.Invoke(_mCurrentMinute, _mCurrentHour);
         }
 
         private void CheckIfChangesTimeOfDay()

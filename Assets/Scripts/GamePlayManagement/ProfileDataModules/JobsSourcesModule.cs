@@ -14,6 +14,13 @@ namespace GamePlayManagement.ProfileDataModules
         private int unlockedJobSuppliers = 0;
         private int _archivedJobs = 0;
         private Dictionary<JobSupplierBitId, IJobSupplierObject> _mJobSuppliers = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
+        
+        private int _mTotalDaysEmployed;
+        private int _mDaysEmployedStreak;
+        private int _mTotalDaysUnemployed;
+        private int _mDaysUnemployedStreak;
+        private int _mStreakWithEmployer;
+        
         public int ElementsActive => unlockedJobSuppliers;
         public Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects => _mJobSuppliers;
         private JobSupplierBitId _mCurrentActiveEmployer;
@@ -21,12 +28,39 @@ namespace GamePlayManagement.ProfileDataModules
         
         public void SetNewEmployer(JobSupplierBitId newEmployer)
         {
+            _mStreakWithEmployer = 0;
+            _mDaysUnemployedStreak = 0;
             _mCurrentActiveEmployer = newEmployer;
         }
+
+        public void QuiteFiredFromJob()
+        {
+            _mCurrentActiveEmployer = 0;
+        }
+        public void CheckFinishDay()
+        {
+            if (_mCurrentActiveEmployer == 0)
+            {
+                _mTotalDaysUnemployed++;
+                _mDaysUnemployedStreak++;
+            }
+            else
+            {
+                _mStreakWithEmployer++;
+                _mDaysEmployedStreak++;
+                _mTotalDaysEmployed++;
+            }
+        }
+        public int TotalDaysEmployed => _mTotalDaysEmployed;
+        public int DaysEmployedStreak => _mDaysEmployedStreak;
+        public int TotalDaysUnemployed => _mTotalDaysUnemployed;
+        public int DaysUnemployedStreak => _mDaysUnemployedStreak;
+        public int StreakWithEmployer => _mStreakWithEmployer;
 
         public bool IsModuleActive => unlockedJobSuppliers > 0;
         private IBaseJobsCatalogue _jobsCatalogue;
 
+        #region Constructor & API
         public JobsSourcesModule(IBaseJobsCatalogue jobsCatalogue)
         {
             _jobsCatalogue = jobsCatalogue;
@@ -55,8 +89,6 @@ namespace GamePlayManagement.ProfileDataModules
             newSupplier.StartUnlockData();
             _mJobSuppliers.Add(gainedJobSupplier, newSupplier);
         }
-
-
         public void ArchiveJob(JobSupplierBitId lostJobSupplier)
         {
             //Remove Job from active ones
@@ -78,5 +110,6 @@ namespace GamePlayManagement.ProfileDataModules
         {
             _activePlayer = currentPlayerProfile;
         }
+        #endregion
     }
 }

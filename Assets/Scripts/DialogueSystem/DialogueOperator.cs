@@ -77,11 +77,7 @@ namespace DialogueSystem
             }
             return dialogueList;
         }
-        public void LoadSupplierDialogues(IEnumerator coroutine)
-        {
-            Debug.Log("[DIALOGUE OPERATOR] Starting Co routine for Supplier Dialogues Data");
-            StartCoroutine(coroutine);
-        }
+
         public void StartNewDialogue(IDialogueObject newDialogue)
         {
             _currentState = UIDialogueState.TypingText;

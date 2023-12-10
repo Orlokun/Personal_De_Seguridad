@@ -5,7 +5,5 @@ namespace GameDirection.TimeOfDayManagement
     {
         public IWorkDayObject GetCurrentWorkDayObject();
         public IWorkDayObject GetNextWorkDayObject();
-
-        public void StartNightManagement();
     }
 }

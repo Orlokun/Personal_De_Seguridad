@@ -4,6 +4,9 @@ namespace DataUnits.JobSources
 {
     public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier
     {
+
+        public void CheckCallingTime(int hour, int minute);
+        public int DaysAsEmployer { get; }
         //Base Data
         public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }

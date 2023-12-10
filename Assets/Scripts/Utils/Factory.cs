@@ -1,5 +1,7 @@
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
+using DialogueSystem;
+using GameDirection.DayLevelSceneManagers;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -11,6 +13,50 @@ namespace Utils
 {
     public static class Factory
     {
+        public static SupplierCallDialogueDataObject CreateSupplierCallDialogueDataObject(int callDialogueIndex, int jobDay, int callHour, int callMinute, PartOfDay partOfDay)
+        {
+            return new SupplierCallDialogueDataObject(callDialogueIndex, jobDay, callHour,
+                callMinute, partOfDay);
+        }
+        
+        public static ILevelDayManager CreateLevelDayManager(DayBitId dayId)
+        {
+            switch (dayId)
+            {
+                case DayBitId.Day_01:
+                    return new DayOneLevelSceneManagement();
+                case DayBitId.Day_02:
+                    return new DayTwoLevelSceneManagement();
+                case DayBitId.Day_03:
+                    return new DayThreeLevelSceneManagement();
+                case DayBitId.Day_04:
+                    return new DayFourLevelSceneManagement();
+                case DayBitId.Day_05:
+                    return new DayFiveLevelSceneManagement();
+                case DayBitId.Day_06:
+                    return new DaySixLevelSceneManagement();
+                case DayBitId.Day_07:
+                    return new DaySevenLevelSceneManagement();
+                case DayBitId.Day_08:
+                    return new DayEightLevelSceneManagement();
+                case DayBitId.Day_09:
+                    return new DayNineLevelSceneManagement();
+                case DayBitId.Day_10:
+                    return new DayTenLevelSceneManagement();
+                case DayBitId.Day_11:
+                    return new DayElevenLevelSceneManagement();
+                case DayBitId.Day_12:
+                    return new DayTwelveLevelSceneManagement();
+                case DayBitId.Day_13:
+                    return new DayThirteenLevelSceneManagement();
+                case DayBitId.Day_14:
+                    return new DayFourteenLevelSceneManagement();
+                case DayBitId.Day_15:
+                    return new DayFifteenLevelSceneManagement();
+                default:
+                    return null;
+            }
+        }
         //Dialogue Object section
         
         /// <summary>
@@ -68,7 +114,7 @@ namespace Utils
         }
         public static CalendarModule CreateCalendarModule(IClockManagement clockManagement)
         {
-            return new CalendarModule(DayBitId.DayOne, PartOfDay.EarlyMorning, clockManagement);
+            return new CalendarModule(DayBitId.Day_01, PartOfDay.EarlyMorning, clockManagement);
         }
     }
 }

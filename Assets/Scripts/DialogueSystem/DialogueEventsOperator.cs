@@ -18,7 +18,7 @@ namespace DialogueSystem
         public DialogueEventsOperator()
         {
             OnHirePlayer += GameDirector.Instance.ManageNewJobHiredEvent;
-            OnHirePlayer += TurnFeedbackOn;
+            OnHirePlayer += JobFoundFeedbackEvent;
         }
         public void HandleDialogueEvent(string eventCompleteCode)
         {
@@ -26,7 +26,7 @@ namespace DialogueSystem
             ProcessEventType(eventCodes);
         }
 
-        private void TurnFeedbackOn(JobSupplierBitId newJobSupplier)
+        private void JobFoundFeedbackEvent(JobSupplierBitId newJobSupplier)
         {
             var jobSupplierName = BaseJobsCatalogue.Instance.GetJobSupplierObject(newJobSupplier).StoreName;
             var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);

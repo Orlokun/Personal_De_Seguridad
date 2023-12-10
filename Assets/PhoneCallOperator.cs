@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using DataUnits;
 using DataUnits.GameCatalogues;
 using DataUnits.JobSources;
 using DialogueSystem;
@@ -15,9 +14,10 @@ using Task = System.Threading.Tasks.Task;
 
 public enum PhoneState
 {
+    HungUp,
     Calling,
-    Dialing,
-    OnCall
+    OnCall,
+    ReceivingCall,
 }
 
 public interface IPhoneCallOperator
@@ -25,7 +25,8 @@ public interface IPhoneCallOperator
     void GoToCall(ISupplierBaseObject callReceiver);
     void FinishCallImmediately();
     void DialNumber(int number);
-    void AnswerPhone();
+    void PlayAnswerSound();
+    void StartCallFromSupplier(IDialogueObject receivedCallDialogue);
 }
 
 [RequireComponent(typeof(AudioSource))]
@@ -33,36 +34,44 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
 {
     private static PhoneCallOperator _mInstance;
     public static IPhoneCallOperator Instance => _mInstance;
-    
+    private Coroutine beingCalledRoutine;
+
     [SerializeField] private TMP_Text displayedText;
     [SerializeField] private AudioClip dialingSound;
     [SerializeField] private AudioClip invalidNumberSound;
     [SerializeField] private AudioClip numberSound;
     [SerializeField] private AudioClip pickUpSound;
     [SerializeField] private AudioClip hangUpSound;
+    [SerializeField] private AudioClip receivePhoneCallSound;
     [SerializeField] private Image phoneBgColor;
 
     private string _displayedString = "";
-    private PhoneState _phoneState = PhoneState.Dialing;
+    private PhoneState _phoneState = PhoneState.HungUp;
+    private IDialogueObject waitingCall;
+    
     private IDialogueOperator _dialogueOperator;
     private AudioSource _audioSource;
 
     private Coroutine currentRoutine;
 
     #region Init
+
     private void Awake()
     {
         if (_mInstance != null)
         {
             Destroy(this);
         }
+
         _mInstance = this;
         _audioSource = GetComponent<AudioSource>();
     }
+
     private void Start()
     {
         _dialogueOperator = DialogueOperator.Instance;
     }
+
     #endregion
 
     public void DialNumber(int number)
@@ -71,6 +80,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         {
             return;
         }
+
         var numberText = number.ToString();
         _displayedString += numberText;
         displayedText.text = _displayedString;
@@ -78,22 +88,55 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         _audioSource.Play();
     }
 
-    public void AnswerPhone()
+    public void PlayAnswerSound()
     {
         _audioSource.Stop();
         _audioSource.clip = pickUpSound;
         _audioSource.Play();
     }
 
+    public void StartCallFromSupplier(IDialogueObject receivedCallDialogue)
+    {
+        _phoneState = PhoneState.ReceivingCall;
+        waitingCall = receivedCallDialogue;
+        PlayReceiveCallSound();
+        beingCalledRoutine = StartCoroutine(FinishCallIfNoAnswer());
+    }
+
+    private IEnumerator FinishCallIfNoAnswer()
+    {   
+        Random.InitState(DateTime.Now.Millisecond);
+        var randomTime = Random.Range(4000, 7000);
+        yield return new WaitForSeconds(randomTime);
+        FinishCallImmediately();
+    }
+
+    private void AnswerCallFromSupplier()
+    {
+        StopCoroutine(beingCalledRoutine);
+        _phoneState = PhoneState.Calling;
+        _dialogueOperator.StartNewDialogue(waitingCall);
+        waitingCall = null;
+    }
     public void ClearNumbersOrHungUp()
     {
         _displayedString = "";
         displayedText.text = _displayedString;
-        _phoneState = PhoneState.Dialing;
+        _phoneState = PhoneState.HungUp;
         _audioSource.Stop();
         StopCoroutine(currentRoutine);
     }
     public void PressCall()
+    {
+        if (_phoneState == PhoneState.ReceivingCall)
+        {
+            AnswerCallFromSupplier();
+            return;
+        }
+        StartPhoneCall();
+    }
+
+    private void StartPhoneCall()
     {
         _phoneState = PhoneState.Calling;
         if (!IsValidCall(_displayedString))
@@ -110,6 +153,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         if (!itemSupplierExistence.Item1 && !jobSupplierExistence.Item1)
         {
             Debug.Log("[PressCall] Not a Supplier number. Display the number is inactive or choose Random Conversation");
+            FinishCallImmediately();
             return;
         }
         
@@ -124,33 +168,23 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
             return;
         }
     }
-    private async void WaitAnswerFromItemSupplier(int calledSupplierId)
+    
+    private void WaitAnswerFromItemSupplier(int calledSupplierId)
     {
         var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
         itemSupplierObject.StartCalling(currentProfile.GeneralOmniCredits);
-        Random.InitState(DateTime.Now.Millisecond);
-        var randomWaitTime = Random.Range(500, 4500);
-        await Task.Delay(randomWaitTime);
-    }
+        GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted += FinishCallImmediately;
 
-    private async void WaitAnswerFromJobSupplier(int calledSupplierId)
+    }
+    private void WaitAnswerFromJobSupplier(int calledSupplierId)
     {
         var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((JobSupplierBitId)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
         jobSupplierCallingData.StartCalling(currentProfile.GeneralOmniCredits);
-        Random.InitState(DateTime.Now.Millisecond);
-        var randomWaitTime = Random.Range(500, 4500);
-        await Task.Delay(randomWaitTime);
+        GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted += FinishCallImmediately;
     }
-    
-    private async void WaitAnswerFromSupplier(int speakerCalledId)
-    {
-        //Start Delay
-        Random.InitState(DateTime.Now.Millisecond);
-        var timeToWait = Random.Range(1000, 4000);
-        await Task.Delay(timeToWait);
-    }
+
     private bool IsValidCall(string dialedNumber)
     {
         bool isValid = dialedNumber.Length == 7;
@@ -162,11 +196,17 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         _audioSource.clip = dialingSound;
         _audioSource.Play();
     }
+
+    private void PlayReceiveCallSound()
+    {
+        _audioSource.clip = receivePhoneCallSound;
+        _audioSource.Play();
+    }
     
     private void PlayInvalidCall()
     {
         Debug.Log("[PlayInvalidCall] Empty Number: Play null sound and return");
-        _phoneState = PhoneState.Dialing;
+        _phoneState = PhoneState.HungUp;
         _displayedString = "INVALID CALL";
         _audioSource.clip = invalidNumberSound;
         _audioSource.Play();
@@ -194,6 +234,10 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     public void FinishCallImmediately()
     {
         Debug.Log($"[FinishCallImmediately] Not Implemented");   
+        _phoneState = PhoneState.HungUp;
+        displayedText.text = "";
+        _audioSource.Stop();
+        GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted -= FinishCallImmediately;
     }
     
     private void ToggleDialingSound(bool isSoundActive)

@@ -98,7 +98,7 @@ namespace DataUnits.ItemSources
             await Task.Delay(randomWaitTime);
 
             var randomDialogue = _mImportantDialoguesDict[1];
-            PhoneCallOperator.Instance.AnswerPhone();
+            PhoneCallOperator.Instance.PlayAnswerSound();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
         private async void RandomDeflection()
@@ -115,7 +115,7 @@ namespace DataUnits.ItemSources
 
             var randomDeflectionIndex = Random.Range(1, _mDeflectionDialoguesDict.Count - 1);
             var randomDialogue = _mDeflectionDialoguesDict[randomDeflectionIndex];
-            PhoneCallOperator.Instance.AnswerPhone();
+            PhoneCallOperator.Instance.PlayAnswerSound();
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
 

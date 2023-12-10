@@ -1,5 +1,6 @@
 using DataUnits;
 using DataUnits.JobSources;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
 
@@ -58,6 +59,12 @@ namespace Utils
                     break;
                 case DialogueType.InsistenceDialogue:
                     dialogueSheetName = "Insistence";
+                    break;
+                case DialogueType.CallingDialogues:
+                    dialogueSheetName = "CallDialogues";
+                    break;
+                case DialogueType.CallingDialoguesData:
+                    dialogueSheetName = "CallDialoguesData";
                     break;
             }
             switch (speakerIndex)
@@ -158,7 +165,6 @@ namespace Utils
                     return "";
             }
         }
-        
         //Products for Job Suppliers
         public static string GetStoreProducts(JobSupplierBitId jobSupplierId)
         {
@@ -203,6 +209,18 @@ namespace Utils
                 default:
                     return "";
             }
+        }
+
+        public static string GetDaySceneDialogueDataUrl(DayBitId dayId)
+        {
+            switch (dayId)
+            {
+                case DayBitId.Day_01:
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_00?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                case DayBitId.Day_02:
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_00?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+            }
+            return "";
         }
     }
 }

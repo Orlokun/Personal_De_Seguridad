@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GamePlayManagement.LevelManagement
 {
-    public class LevelOneManagement : GameMapLevelManagement
+    public class EdenLevelManagement : GameMapLevelManagement
     {
         [SerializeField] private Transform levelCamerasParent;
 

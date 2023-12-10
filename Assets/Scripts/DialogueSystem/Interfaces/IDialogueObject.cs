@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DialogueSystem.Units;
 using UnityEngine;
+
 namespace DialogueSystem.Interfaces
 {
     public interface IDialogueObject

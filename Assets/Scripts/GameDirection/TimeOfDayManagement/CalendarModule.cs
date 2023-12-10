@@ -30,7 +30,7 @@ namespace GameDirection.TimeOfDayManagement
         private void PopulateNewWorkdays()
         {
             _AllWorkDays = new Dictionary<DayBitId, IWorkDayObject>();
-            for (var i = 1; i <= (int) DayBitId.DayFifteen; i *= 2)
+            for (var i = 1; i <= (int) DayBitId.Day_15; i *= 2)
             {
                 var id = (DayBitId) i;
                 var workday = Factory.CreateWorkday(id);

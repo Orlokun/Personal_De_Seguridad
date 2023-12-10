@@ -6286,6 +6286,7 @@ MonoBehaviour:
   numberSound: {fileID: 8300000, guid: 8712a513628bde348a040ba53951eddd, type: 3}
   pickUpSound: {fileID: 8300000, guid: 1fe1074aaeb1a1c4399d41754ed7be86, type: 3}
   hangUpSound: {fileID: 8300000, guid: 6f631a844aaee7d46921e9b9b40a3dd2, type: 3}
+  receivePhoneCallSound: {fileID: 8300000, guid: ffbfbb109635e974bab6cf31677934c9, type: 3}
   phoneBgColor: {fileID: 0}
 --- !u!82 &1173973635701305892
 AudioSource:

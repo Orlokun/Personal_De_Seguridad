@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem.Interfaces;
-using GameDirection.Initial_Office_Scene;
+using GameDirection.DayLevelSceneManagers;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
@@ -59,7 +59,7 @@ namespace GameDirection
         /// <summary>
         /// Initial Scene Manager
         /// </summary>
-        private IntroSceneDialogueManager _introSceneDialogueManager;
+        private ILevelDayManager _dayLevelManager;
         #endregion
 
         #region Public Fields
@@ -123,15 +123,18 @@ namespace GameDirection
             _mTransportCatalogueData = TransportValuesCatalogue.Instance;
             
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
-            _introSceneDialogueManager = gameObject.AddComponent<IntroSceneDialogueManager>();
-            _introSceneDialogueManager.Initialize(this);
-            _introSceneDialogueManager.OnFinishCurrentDialogue += LoadFirstLevel;
             
             _mUIController.StartMainMenuUI();
             
             _inputStateManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
             WaitAndLoadDialogues();
+        }
+
+        private void LoadDayManagement(DayBitId dayId)
+        {
+            _dayLevelManager =  Factory.CreateLevelDayManager(dayId);
+            _dayLevelManager.Initialize(this, dayId);
         }
 
         private async void WaitAndLoadDialogues()
@@ -162,8 +165,9 @@ namespace GameDirection
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCurtainAppear();
             CreateNewProfile();
+            LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             _mGameState = HighLevelGameStates.InCutScene;
-            StartCoroutine(_introSceneDialogueManager.PrepareIntroductionReading());
+            StartCoroutine(_dayLevelManager.StartDayManagement());
         }
         private void CreateNewProfile()
         {
@@ -176,11 +180,7 @@ namespace GameDirection
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule);
             _mActiveGameProfile.UpdateProfileData();
         }
-        private void LoadFirstLevel()
-        {
-            ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
-            //_mLevelManager.LoadAdditiveLevel(LevelIndexId.EdenLvl);
-        }
+
         public void ReleaseFromDialogueStateToGame()
         {
             if (_inputStateManager.CurrentInputGameState != InputGameState.InDialogue)
