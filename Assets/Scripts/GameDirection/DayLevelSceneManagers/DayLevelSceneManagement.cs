@@ -12,14 +12,7 @@ using Utils;
 
 namespace GameDirection.DayLevelSceneManagers
 {
-    public enum OmniIntroDialogues
-    {
-        NoJobIntro1,
-        NoJobIntro2,
-        NoJobIntro3,
-        JobIntro1,
-        JobIntro2
-    }
+
     
     public abstract class DayLevelSceneManagement : ILevelDayManager
     {
@@ -45,10 +38,10 @@ namespace GameDirection.DayLevelSceneManagers
             }
             MGameDirector = injectionClass1;
             DayId = injectionClass2;
-            LoadDataForDay();
+            LoadDayData();
             mInitialized = true;
         }
-        private void LoadDataForDay()
+        private void LoadDayData()
         {
             var dayDataUrl = DataSheetUrls.GetDaySceneDialogueDataUrl(DayId);    
             MGameDirector.ActCoroutine(GetDaySceneDialogueData(dayDataUrl));

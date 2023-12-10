@@ -13,6 +13,10 @@ namespace Utils
 {
     public static class Factory
     {
+        public static IModularDialogueDataController CreateModularDialoguesDataController()
+        {
+            return new ModularDialogueDataController();
+        }
         public static SupplierCallDialogueDataObject CreateSupplierCallDialogueDataObject(int callDialogueIndex, int jobDay, int callHour, int callMinute, PartOfDay partOfDay)
         {
             return new SupplierCallDialogueDataObject(callDialogueIndex, jobDay, callHour,

@@ -50,6 +50,20 @@ namespace DialogueSystem.Units
             _eventNameId = eventNameId;
             _linkNodes = linkNodes;
         }
+        public DialogueNodeData(OmniIntroDialogues dialogObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLine, bool hasCameraTarget, 
+            string targetCameraId, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
+        {
+            _dialogObjectIndex = (int)dialogObjectIndex;
+            _dialogueLineIndex = dialogueLineIndex;
+            _speakerId = speakerId;
+            _dialogueLine = dialogueLine;
+            _hasCameraTarget = hasCameraTarget;
+            _targetCameraId = targetCameraId;
+            _hasChoice = hasChoice;
+            _hasEvent = hasEvent;
+            _eventNameId = eventNameId;
+            _linkNodes = linkNodes;
+        }
         
         public int DialogObjectIndex => _dialogObjectIndex;
         public int DialogueLineIndex => _dialogueLineIndex;

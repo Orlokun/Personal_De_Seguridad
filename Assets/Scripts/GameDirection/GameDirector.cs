@@ -2,6 +2,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits.GameCatalogues;
+using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.TimeOfDayManagement;
@@ -55,6 +56,8 @@ namespace GameDirection
         private IRentValuesCatalogue _mRentCatalogueData;
         private IFoodValuesCatalogue _mFoodCatalogueData;
         private ITransportValuesCatalogue _mTransportCatalogueData;
+
+        private IModularDialogueDataController _mModularDialogues;
         
         /// <summary>
         /// Initial Scene Manager
@@ -76,6 +79,7 @@ namespace GameDirection
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IItemsDataController GetItemsDataController => _mItemDataController;
         public IRentValuesCatalogue GetRentCatalogueData => _mRentCatalogueData;
+        public IModularDialogueDataController GetModularDialogues => _mModularDialogues;
 
         #endregion
 
@@ -104,6 +108,7 @@ namespace GameDirection
         private void LoadUIScene()
         {
             _mLevelManager.LoadAdditiveLevel(LevelIndexId.UILvl);
+            
         }
         private void Start()
         {
@@ -121,7 +126,9 @@ namespace GameDirection
             _mRentCatalogueData = RentValuesCatalogue.Instance;
             _mFoodCatalogueData = FoodValuesCatalogue.Instance;
             _mTransportCatalogueData = TransportValuesCatalogue.Instance;
-            
+
+            _mModularDialogues = Factory.CreateModularDialoguesDataController();
+            _mModularDialogues.Initialize();
             //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
             
             _mUIController.StartMainMenuUI();
