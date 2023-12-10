@@ -5,6 +5,8 @@ using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.LevelManagement;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -135,6 +137,28 @@ namespace GameDirection.DayLevelSceneManagers
             OnFinishCurrentDialogue?.Invoke();
         }
 
+        protected virtual void ManageLoadJobSupplierLevel(JobSupplierBitId supplierId)
+        {
+            MGameDirector.GetLevelManager.ClearNotOfficeScenes();
+            if (supplierId == 0)
+            {
+                return;
+            }
+            var sceneToLoad = TurnJobSupplierIntoScene(supplierId);
+            MGameDirector.GetLevelManager.LoadAdditiveLevel(sceneToLoad);
+        }
+
+        private LevelIndexId TurnJobSupplierIntoScene(JobSupplierBitId supplierId)
+        {
+            switch (supplierId)
+            {
+                case JobSupplierBitId.COPY_OF_EDEN:
+                    return LevelIndexId.EdenLvl;
+                default:
+                    return 0;
+            }
+        }
+        
         protected virtual void FinishIntroductionText()
         {
             throw new NotImplementedException();

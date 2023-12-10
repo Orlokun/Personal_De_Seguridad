@@ -108,7 +108,6 @@ namespace GameDirection
         private void LoadUIScene()
         {
             _mLevelManager.LoadAdditiveLevel(LevelIndexId.UILvl);
-            
         }
         private void Start()
         {
@@ -186,6 +185,7 @@ namespace GameDirection
                 Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule);
             _mActiveGameProfile.UpdateProfileData();
+            OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
         }
 
         public void ReleaseFromDialogueStateToGame()
@@ -209,8 +209,11 @@ namespace GameDirection
         public void FinishWorkday()
         {
             ManageUIProcessEndOfDay();
+            OnFinishDay?.Invoke();
         }
 
+        public delegate void FinishDay();
+        public event FinishDay OnFinishDay;
         public void ActCoroutine(IEnumerator coroutine)
         {
             StartCoroutine(coroutine);
@@ -221,6 +224,18 @@ namespace GameDirection
             GetActiveGameProfile.GetActiveJobsModule().SetNewEmployer(newJobSupplier);
             GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);        
         }
+
+        public void BeginNewDayProcess()
+        {
+            var currentDay = (int)GetActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId;
+            var nextDay = currentDay * 2;
+            var nextDayId = (DayBitId) nextDay;
+            
+            _dayLevelManager = Factory.CreateLevelDayManager(nextDayId);
+            _dayLevelManager.Initialize(this, nextDayId);
+            StartCoroutine(_dayLevelManager.StartDayManagement());
+        }
+
         private void ManageUIProcessEndOfDay()
         {
             Debug.Log("[ManageUIProcessEndOfDay] Start");

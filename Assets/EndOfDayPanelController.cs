@@ -161,6 +161,9 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
     }
     private void ConfirmAndFinishEndOfDay()
     {
+        
+        GameDirector.Instance.GetGeneralBackgroundFader.GeneralCurtainAppear();
+        GameDirector.Instance.BeginNewDayProcess();
         //Calculate decisions
         //Save decisions to day
         //Advance to Next Day in data

@@ -7,6 +7,7 @@ namespace GamePlayManagement.LevelManagement
     {
         public void LoadAdditiveLevel(LevelIndexId lvl);
         public void UnloadScene(LevelIndexId lvl);
+        public void ClearNotOfficeScenes();
     }
 
     public enum LevelIndexId
@@ -20,8 +21,8 @@ namespace GamePlayManagement.LevelManagement
     
     public class LevelLoadManager : MonoBehaviour, ILevelManager
     {
-        private LevelIndexId currentGameLevel;
-        
+        private LevelIndexId _currentGameLevel;
+        public LevelIndexId CurrentGameLevel => _currentGameLevel;
         public void LoadAdditiveLevel(LevelIndexId lvl)
         {
             SceneManager.LoadScene((int)lvl, LoadSceneMode.Additive);
@@ -35,7 +36,18 @@ namespace GamePlayManagement.LevelManagement
             }
             SceneManager.UnloadSceneAsync((int)lvl);
         }
-        
+
+        public void ClearNotOfficeScenes()
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneByBuildIndex(i);
+                if (scene.isLoaded && scene.name != "OfficeScene" && scene.name != "UI_Scene")
+                {
+                    SceneManager.UnloadSceneAsync(i);
+                }
+            }
+        }
         public void LoadUIScene()
         {
 /*            var currentScene = SceneManager.GetActiveScene();

@@ -134,5 +134,10 @@ namespace GamePlayManagement
             get => _totalOmniCredits;
             set => _totalOmniCredits = value;
         }
+
+        public void UpdateDataEndOfDay()
+        {
+            _jobsSourcesModule.CheckFinishDay();
+        }
     }
 }

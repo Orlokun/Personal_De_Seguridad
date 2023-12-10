@@ -31,5 +31,7 @@ namespace GameDirection
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);
         public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier);
+        public void BeginNewDayProcess();
+
     }
 }

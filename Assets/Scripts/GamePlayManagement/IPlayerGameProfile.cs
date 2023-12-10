@@ -16,5 +16,6 @@ namespace GamePlayManagement
         public ILifestyleModule GetLifestyleModule();
         public void UpdateProfileData();
         public int GeneralOmniCredits { get; set; }
+        public void UpdateDataEndOfDay();
     }
 }
