@@ -79,7 +79,7 @@ namespace GameDirection
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IItemsDataController GetItemsDataController => _mItemDataController;
         public IRentValuesCatalogue GetRentCatalogueData => _mRentCatalogueData;
-        public IModularDialogueDataController GetModularDialogues => _mModularDialogues;
+        public IModularDialogueDataController GetModularDialogueManager => _mModularDialogues;
 
         #endregion
 

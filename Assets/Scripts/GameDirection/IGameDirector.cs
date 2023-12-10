@@ -1,6 +1,7 @@
 using System.Collections;
 using CameraManagement;
 using DataUnits.GameCatalogues;
+using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.TimeOfDayManagement;
 using GameManagement;
@@ -25,6 +26,7 @@ namespace GameDirection
         public IRentValuesCatalogue GetRentCatalogueData { get; }
         public IItemsDataController GetItemsDataController { get; }
         public IFeedbackManager GetFeedbackManager { get; }
+        public IModularDialogueDataController GetModularDialogueManager { get; }
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);

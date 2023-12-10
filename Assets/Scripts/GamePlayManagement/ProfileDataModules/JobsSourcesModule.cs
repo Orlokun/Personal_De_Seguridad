@@ -33,7 +33,7 @@ namespace GamePlayManagement.ProfileDataModules
             _mCurrentActiveEmployer = newEmployer;
         }
 
-        public void QuiteFiredFromJob()
+        public void QuitFiredFromJob()
         {
             _mCurrentActiveEmployer = 0;
         }

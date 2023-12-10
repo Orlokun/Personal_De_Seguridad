@@ -5,6 +5,7 @@ using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
+using GamePlayManagement;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -19,12 +20,13 @@ namespace DialogueSystem
         NoJobIntro3,
         JobIntro1,
         JobIntro2,
-        FirstJob1
+        FirstJob1,
+        PayNoRent1
     }
 
     public interface IModularDialogueDataController : IInitialize
     {
-        
+        public IDialogueObject CreateInitialDayIntro(IPlayerGameProfile currentPlayer);
     }
     
     public class ModularDialogueDataController : IModularDialogueDataController
@@ -44,6 +46,87 @@ namespace DialogueSystem
             StartModularIntroDialoguesLoadData();
             _mIsInitialized = true;
         }
+
+        public IDialogueObject CreateInitialDayIntro(IPlayerGameProfile currentPlayer)
+        {
+            var modularDialogues = new List<OmniIntroDialogues>();
+            ProcessJobModularDialogues(modularDialogues,currentPlayer);
+            var modularInitDialogue = ConvertModuleDialoguesIntoOne(modularDialogues);
+            return modularInitDialogue;
+        }
+
+        private IDialogueObject ConvertModuleDialoguesIntoOne(List<OmniIntroDialogues> dialogues)
+        {
+            IDialogueObject modularInitDialogue = ScriptableObject.CreateInstance<DialogueObject>();
+            foreach (var dialogue in dialogues)
+            {
+                if (!_modularIntroDialogues.ContainsKey(dialogue))
+                {
+                    continue;
+                }
+                var dialogueList = _modularIntroDialogues[dialogue].DialogueNodes;
+                foreach (var dialogueNode in dialogueList)
+                {
+                    modularInitDialogue.DialogueNodes.Add(dialogueNode);
+                }
+            }
+            return modularInitDialogue;
+        }
+        private void ProcessJobModularDialogues(List<OmniIntroDialogues> modularDialogues, IPlayerGameProfile currentPlayer)
+        {
+            var playerJobModule = currentPlayer.GetActiveJobsModule();
+            var isPlayerEmployed = playerJobModule.CurrentEmployer != 0;
+            
+         
+            int employmentStreak;
+            int totalDaysEmployed;
+
+            int unemployedStreak;
+            int unemployedTotalDays;
+            
+            if (isPlayerEmployed)
+            {
+                employmentStreak = playerJobModule.DaysEmployedStreak;
+                totalDaysEmployed = playerJobModule.DaysEmployedStreak;
+                TurnEmploymentDataToDialogueEnum(modularDialogues,isPlayerEmployed, employmentStreak, totalDaysEmployed);
+            }
+            else
+            {
+                unemployedStreak = playerJobModule.DaysUnemployedStreak;
+                unemployedTotalDays = playerJobModule.TotalDaysUnemployed;
+                TurnEmploymentDataToDialogueEnum(modularDialogues,isPlayerEmployed, unemployedStreak, unemployedTotalDays);
+            }
+        }
+
+        private void TurnEmploymentDataToDialogueEnum(List<OmniIntroDialogues> modularDialogues, bool isPlayerEmployed, int employmentStreak, int employmentTotal)
+        {
+            var baseDialogueName = "";
+            var streakString = employmentStreak.ToString();
+            var jobDialogueName = "";
+            
+            if (isPlayerEmployed)
+            {
+                baseDialogueName = "JobIntro";
+                jobDialogueName = baseDialogueName + streakString;
+            }
+            else
+            {
+                baseDialogueName = "NoJobIntro";
+                jobDialogueName = baseDialogueName + streakString;
+            }
+            var isJobEnum = Enum.TryParse<OmniIntroDialogues>(jobDialogueName, out var jobIntroDialogueEnum);
+            if (!isJobEnum)
+            {
+                Debug.LogWarning("[TurnEmploymentDataToDialogueEnum] Current Data must be available as OmniModular dialogue enum");
+                return;
+            }
+            modularDialogues.Add(jobIntroDialogueEnum);
+            if (employmentTotal == 1)
+            {
+                modularDialogues.Add(OmniIntroDialogues.FirstJob1);
+            }
+        }
+
         private void StartModularIntroDialoguesLoadData()
         {
             var modularDialoguesUrl = DataSheetUrls.ModularDialoguesDataUrl;

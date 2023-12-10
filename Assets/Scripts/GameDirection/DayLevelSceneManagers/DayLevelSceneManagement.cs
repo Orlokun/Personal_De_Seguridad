@@ -21,7 +21,11 @@ namespace GameDirection.DayLevelSceneManagers
         protected DayBitId DayId;
         protected bool mInitialized;
         protected IGameDirector MGameDirector;
-        protected Dictionary<int, IDialogueObject> DayDialogueObjects = new Dictionary<int, IDialogueObject>();
+        protected Dictionary<int, IDialogueObject> DayBaseDialogues = new Dictionary<int, IDialogueObject>();
+        protected IDialogueObject ModularDialogue;
+        protected int DialogueIndex;
+    
+        
         protected DialogueObjectsFromData DialoguesBaseDataString;
 
         public bool MInitialized => mInitialized;
@@ -68,7 +72,7 @@ namespace GameDirection.DayLevelSceneManagers
 
             DialoguesBaseDataString = JsonConvert.DeserializeObject<DialogueObjectsFromData>(sourceJson);
             Debug.Log($"Finished parsing Dialogue Data null?: {DialoguesBaseDataString == null}");
-            DayDialogueObjects = new Dictionary<int, IDialogueObject>();
+            DayBaseDialogues = new Dictionary<int, IDialogueObject>();
             var lastDialogueIndex = 0;
             if (DialoguesBaseDataString == null)
             {
@@ -88,7 +92,7 @@ namespace GameDirection.DayLevelSceneManagers
                 {
                     lastDialogueIndex = currentDialogueObjectIndex;
                     currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
-                    DayDialogueObjects.Add(currentDialogueObjectIndex, currentDialogueObject);
+                    DayBaseDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
                 var hasDialogueNodeId = int.TryParse(DialoguesBaseDataString.values[i][1], out var dialogueLineId);
@@ -117,7 +121,7 @@ namespace GameDirection.DayLevelSceneManagers
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
-                DayDialogueObjects[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
+                DayBaseDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }
 
@@ -140,10 +144,17 @@ namespace GameDirection.DayLevelSceneManagers
         {
             return null;
         }
-        protected virtual IEnumerator FinishIntroductionReading()
+        protected virtual IEnumerator StartModularDialogueReading()
         {
             return null;
         }
-
+        protected virtual void ReleaseFromDialogueStateAndStartClock()
+        {
+            MGameDirector.ReleaseFromDialogueStateToGame();
+            MGameDirector.GetUIController.ReturnToBaseGamePlayCanvasState();
+            MGameDirector.GetClockInDayManagement.SetClockAtDaytime(PartOfDay.EarlyMorning);
+            MGameDirector.GetClockInDayManagement.PlayPauseClock(true);
+            MGameDirector.GetDialogueOperator.OnDialogueCompleted -= ReleaseFromDialogueStateAndStartClock;
+        }
     }
 }

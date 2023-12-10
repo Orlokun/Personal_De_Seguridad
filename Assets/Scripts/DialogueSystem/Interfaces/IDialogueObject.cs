@@ -15,6 +15,7 @@ namespace DialogueSystem.Interfaces
     {
         QE_MOVEMENT = 1,
         TAB_MOVEMENT = 2,
-        MOUSE_OBJECTS = 3
+        MOUSE_OBJECTS = 3,
+        STOREVIEW = 4,
     }
 }
