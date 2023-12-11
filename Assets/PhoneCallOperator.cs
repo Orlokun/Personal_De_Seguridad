@@ -30,7 +30,6 @@ public interface IPhoneCallOperator
     void StartCallFromSupplier(IDialogueObject receivedCallDialogue);
 }
 
-[RequireComponent(typeof(AudioSource))]
 public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
 {
     private static PhoneCallOperator _mInstance;
@@ -44,13 +43,14 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     [SerializeField] private AudioClip hangUpSound;
     [SerializeField] private AudioClip receivePhoneCallSound;
     [SerializeField] private Image phoneBgColor;
+    [SerializeField] private AudioSource _audioSource;
+
 
     private string _displayedString = "";
     private PhoneState _phoneState = PhoneState.HungUp;
     private IDialogueObject waitingCall;
     
     private IDialogueOperator _dialogueOperator;
-    private AudioSource _audioSource;
 
     CancellationTokenSource cancellationToken ;
 
@@ -65,7 +65,6 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         }
 
         _mInstance = this;
-        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -107,8 +106,9 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private async void FinishCallIfNoAnswer()
     {   
         Random.InitState(DateTime.Now.Millisecond);
-        var randomTime = Random.Range(4000, 7000);
+        var randomTime = Random.Range(9000, 12000);
         cancellationToken = new CancellationTokenSource();
+        //TODO: Show feedback button that takes you straight to phone UI elements
         await Task.Delay(randomTime, cancellationToken.Token);
         FinishCallImmediately();
     }
@@ -116,6 +116,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private void AnswerCallFromSupplier()
     {
         cancellationToken.Cancel();
+        PlayAnswerSound();
         _phoneState = PhoneState.Calling;
         _dialogueOperator.StartNewDialogue(waitingCall);
         waitingCall = null;

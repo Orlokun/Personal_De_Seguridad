@@ -293,16 +293,14 @@ namespace DataUnits.JobSources
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mSupplierCallDialoguesData.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                if (!hasDialogueNodeId)
                 {
-                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
-                    return;
+                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index available");
                 }
                 var isSpeakerId = int.TryParse(_mSupplierCallDialoguesData.values[i][2], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
+                if (!isSpeakerId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
-                    return;
                 }
 
                 var dialogueLineText = _mSupplierCallDialoguesData.values[i][3];
