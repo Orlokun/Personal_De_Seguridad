@@ -1,4 +1,5 @@
 using System.Collections;
+using DialogueSystem.Interfaces;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UnityEngine;
@@ -51,6 +52,19 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             MGameDirector.GetDialogueOperator.StartNewDialogue(ModularDialogue);
             OnFinishCurrentDialogueEvent();
+        }
+
+        protected override void ReleaseFromDialogueStateAndStartClock()
+        {
+            Debug.Log("[DayTwoLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Start");
+            base.ReleaseFromDialogueStateAndStartClock();
+            MGameDirector.ActCoroutine(PrepareFirstFeedback());
+            Debug.Log("[DayTwoLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Done");
+        }
+        private IEnumerator PrepareFirstFeedback()
+        {
+            yield return new WaitForSeconds(6);
+            FeedbackManager.Instance.StartReadingFeedback(GeneralFeedbackId.STOREVIEW);
         }
     }
 }

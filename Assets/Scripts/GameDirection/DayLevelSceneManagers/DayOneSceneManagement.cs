@@ -109,7 +109,7 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(2.5f);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             MGameDirector.GetDialogueOperator.StartNewDialogue(DayBaseDialogues[DialogueIndex]);
-            OnFinishCurrentDialogueEvent();
+            //OnFinishCurrentDialogueEvent();
         }
         protected override void ReleaseFromDialogueStateAndStartClock()
         {
@@ -120,7 +120,7 @@ namespace GameDirection.DayLevelSceneManagers
         private IEnumerator PrepareFirstFeedback()
         {
             yield return new WaitForSeconds(6);
-            FeedbackManager.Instance.StartReadingFeedback(GeneralFeedbackId.STOREVIEW);
+            FeedbackManager.Instance.StartReadingFeedback(GeneralFeedbackId.QE_MOVEMENT);
         }
         #endregion
 

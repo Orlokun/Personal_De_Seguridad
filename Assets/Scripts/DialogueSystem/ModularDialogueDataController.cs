@@ -70,6 +70,16 @@ namespace DialogueSystem
                     modularInitDialogue.DialogueNodes.Add(dialogueNode);
                 }
             }
+            //Makes sure all the dialogues are correctly linked. LIMITATION: Do not add choices in intro modular dialogues
+            for (var i = 0; i < modularInitDialogue.DialogueNodes.Count; i++)
+            {
+                if (i != modularInitDialogue.DialogueNodes.Count - 1)
+                {
+                    modularInitDialogue.DialogueNodes[i].LinkNodes = new[] {i + 1};
+                    continue;
+                }
+                modularInitDialogue.DialogueNodes[i].LinkNodes = new[] {0};
+            }
             return modularInitDialogue;
         }
         private void ProcessJobModularDialogues(List<OmniIntroDialogues> modularDialogues, IPlayerGameProfile currentPlayer)
@@ -87,7 +97,7 @@ namespace DialogueSystem
             if (isPlayerEmployed)
             {
                 employmentStreak = playerJobModule.DaysEmployedStreak;
-                totalDaysEmployed = playerJobModule.DaysEmployedStreak;
+                totalDaysEmployed = playerJobModule.TotalDaysEmployed;
                 TurnEmploymentDataToDialogueEnum(modularDialogues,isPlayerEmployed, employmentStreak, totalDaysEmployed);
             }
             else
@@ -121,7 +131,7 @@ namespace DialogueSystem
                 return;
             }
             modularDialogues.Add(jobIntroDialogueEnum);
-            if (employmentTotal == 1)
+            if (isPlayerEmployed && employmentTotal == 1)
             {
                 modularDialogues.Add(OmniIntroDialogues.FirstJob1);
             }

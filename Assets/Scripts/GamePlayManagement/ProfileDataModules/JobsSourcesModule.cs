@@ -49,6 +49,7 @@ namespace GamePlayManagement.ProfileDataModules
                 _mStreakWithEmployer++;
                 _mDaysEmployedStreak++;
                 _mTotalDaysEmployed++;
+                _mJobSuppliers[_mCurrentActiveEmployer].DaysAsEmployer++;
             }
         }
         public int TotalDaysEmployed => _mTotalDaysEmployed;

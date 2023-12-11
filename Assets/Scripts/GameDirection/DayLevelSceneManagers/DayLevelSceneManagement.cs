@@ -174,6 +174,7 @@ namespace GameDirection.DayLevelSceneManagers
         }
         protected virtual void ReleaseFromDialogueStateAndStartClock()
         {
+            Debug.Log("[DayLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Start Day Game");
             MGameDirector.ReleaseFromDialogueStateToGame();
             MGameDirector.GetUIController.ReturnToBaseGamePlayCanvasState();
             MGameDirector.GetClockInDayManagement.SetClockAtDaytime(PartOfDay.EarlyMorning);

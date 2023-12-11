@@ -137,7 +137,7 @@ namespace GameDirection.TimeOfDayManagement
                 Debug.Log("DAY FINISHED");
             }
             ProcessMinutesAndHourTexts(_mCurrentHour, _mCurrentMinute);
-            OnPassMinute?.Invoke(_mCurrentMinute, _mCurrentHour);
+            OnPassMinute?.Invoke(_mCurrentHour,_mCurrentMinute);
         }
 
         private void CheckIfChangesTimeOfDay()
@@ -176,6 +176,7 @@ namespace GameDirection.TimeOfDayManagement
         private void StartFinishDay()
         {
             Debug.Log("[CheckIfChangesTimeOfDay] Finish Day");                
+            PlayPauseClock(false);
             StartNewTimeOfDay(PartOfDay.EndOfDay, EndOfDayName, 4);
             _mDirector.FinishWorkday();
         }

@@ -22,7 +22,7 @@ namespace DialogueSystem.Units
         public bool HasChoice { get ; }
         public bool HasEvent { get ; }
         public string EventCodes { get ; }
-        public int[] LinkNodes { get ; }
+        public int[] LinkNodes { get ; set; }
     }
     public class DialogueNodeData : IDialogueNode
     {
@@ -74,7 +74,11 @@ namespace DialogueSystem.Units
         public bool HasChoice => _hasChoice;
         public bool HasEvent => _hasEvent;
         public string EventCodes => _eventNameId;
-        public int[] LinkNodes => _linkNodes;
+        public int[] LinkNodes
+        {
+            get => _linkNodes;
+            set => _linkNodes = value;
+        }
     }
 
     [CreateAssetMenu(menuName = "Dialogue/DialogueObject")]

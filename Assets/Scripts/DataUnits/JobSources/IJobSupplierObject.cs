@@ -6,7 +6,7 @@ namespace DataUnits.JobSources
     {
 
         public void CheckCallingTime(int hour, int minute);
-        public int DaysAsEmployer { get; }
+        public int DaysAsEmployer { get; set; }
         //Base Data
         public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }

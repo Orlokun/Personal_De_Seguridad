@@ -49,8 +49,12 @@ namespace DataUnits.JobSources
         public int Money => _mMoney;
 
 
-        public int DaysAsEmployer => _mDaysAsEmployer;
-        
+        public int DaysAsEmployer
+        {
+            get => _mDaysAsEmployer;
+            set => _mDaysAsEmployer = value;
+        }
+
         public void LoadDeflectionDialoguesData()
         {
             _dialogueModule.LoadInitialDeflectionDialogues();
