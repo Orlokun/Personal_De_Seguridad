@@ -44,7 +44,6 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
             GameDirector.Instance.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             GameDirector.Instance.ChangeHighLvlGameState(HighLevelGameStates.InGame);
             ClockManagement.Instance.PlayPauseClock(true);
-
         }
 
         private PartOfDay GetDropDownValue()

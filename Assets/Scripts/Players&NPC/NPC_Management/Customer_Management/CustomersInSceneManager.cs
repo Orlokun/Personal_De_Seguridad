@@ -5,22 +5,34 @@ using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 namespace Players_NPC.NPC_Management.Customer_Management
 {
-    public class CustomersInSceneManager : MonoBehaviour
+    public interface ICustomersInSceneManager
+    {
+        void ToggleSpawning(bool isSpawning);
+    }
+
+    public class CustomersInSceneManager : MonoBehaviour, ICustomersInSceneManager
     {
         [SerializeField] private GameObject[] mClientPrefabs;
         [SerializeField] private Transform mStartPosition;
         private int _mInstantiationFrequency = 2;
+        private bool _mIsSpawning = false;
         
-        
-        private void Start()
+        public void ToggleSpawning(bool isSpawning)
         {
-            StartCoroutine(StartInstantiatingClients());
-        } 
-
+            if (isSpawning && _mIsSpawning)
+            {
+                return;
+            }
+            _mIsSpawning = isSpawning;
+            if (_mIsSpawning)
+            {
+                StartCoroutine(StartInstantiatingClients());
+            }
+        }
+        
         private IEnumerator StartInstantiatingClients()
         {
-            var infiniteTrue = true;
-            while (infiniteTrue)
+            while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
                 _mInstantiationFrequency = Random.Range(10, 20);

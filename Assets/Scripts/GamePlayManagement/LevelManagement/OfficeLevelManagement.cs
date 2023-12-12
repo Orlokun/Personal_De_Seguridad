@@ -1,14 +1,35 @@
 using CameraManagement;
+using GameDirection.TimeOfDayManagement;
 using UnityEngine;
 
 namespace GamePlayManagement.LevelManagement
 {
-    public class GameMapLevelManagement : MonoBehaviour
+    public abstract class GameMapLevelManagement : MonoBehaviour
     {
         protected IGameCameraManager _mGameCameraManager;
+        protected IClockManagement _mClockManager;
         protected virtual void Awake()
         {
             _mGameCameraManager = GameCameraManager.Instance;
+            _mClockManager = ClockManagement.Instance;
+            _mClockManager.OnPassTimeOfDay += CheckOpenCloseHours;
+        }
+
+        protected void CheckOpenCloseHours(PartOfDay dayTime)
+        {
+            var isOpeningTime = dayTime == PartOfDay.Morning;
+            var isClosingTime = dayTime == PartOfDay.EndOfDay;
+            if (!isOpeningTime && !isClosingTime)
+            {
+                return;
+            }
+            var toggle = isOpeningTime ? true : false;
+            ManageClientSpawning(toggle);
+        }
+        
+        protected virtual void ManageClientSpawning(bool isActive)
+        {
+
         }
     }
     
