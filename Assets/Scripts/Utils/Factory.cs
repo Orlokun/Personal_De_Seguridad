@@ -8,11 +8,16 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
+using Players_NPC.NPC_Management.Customer_Management;
 
 namespace Utils
 {
     public static class Factory
     {
+        public static BaseCustomerTypeData CreateBaseCustomerTypeData()
+        {
+            return new BaseCustomerTypeData();
+        }
         public static IModularDialogueDataController CreateModularDialoguesDataController()
         {
             return new ModularDialogueDataController();

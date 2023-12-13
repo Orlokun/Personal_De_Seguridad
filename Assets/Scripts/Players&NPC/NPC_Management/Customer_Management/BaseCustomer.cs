@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using UnityEngine;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace Players_NPC.NPC_Management.Customer_Management
@@ -17,7 +18,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private ICustomerTypeData _mCustomerTypeData;
         private Vector3 _mPayingPosition;
 
-        
         private BaseCustomerMovementStatus _mCustomerMovementStatus = 0;
         private BaseAttitudeStatus _mCustomerAttitudeStatus = 0;
 
@@ -30,7 +30,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             Random.InitState(DateTime.Now.Millisecond);
             _mNumberOfProductsLookingFor = Random.Range(1, 8);
             base.Awake();
-            _mCustomerTypeData = new BaseCustomerTypeData();
+            _mCustomerTypeData = Factory.CreateBaseCustomerTypeData();
             WalkingDestinationReached += ReachWalkingDestination;
             _mShelvesOfInterest = new IShelfInMarket[_mNumberOfProductsLookingFor];
         }
@@ -146,7 +146,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     StartShopping();
                     break;
                 case BaseAttitudeStatus.Leaving:
-                    Destroy(this.gameObject);
+                    Destroy(gameObject);
                     break;
                 case BaseAttitudeStatus.Fighting:
                     break;

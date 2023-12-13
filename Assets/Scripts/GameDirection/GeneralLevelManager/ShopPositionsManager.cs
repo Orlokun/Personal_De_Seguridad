@@ -69,8 +69,8 @@ namespace GameDirection.GeneralLevelManager
                 return null;
             }
         
-            var emptyShelfs = new IShelfInMarket[numberOfPositions];
-            for (var i = 0; i < emptyShelfs.Length; i++)
+            var emptyShelves = new IShelfInMarket[numberOfPositions];
+            for (var i = 0; i < emptyShelves.Length; i++)
             {
                 IShelfInMarket emptyPositionFound;
                 do
@@ -78,9 +78,9 @@ namespace GameDirection.GeneralLevelManager
                     var positionIndex = Random.Range(0, _positionsInLevel);
                     emptyPositionFound = _mShelfObjects[positionIndex];
                 } while (emptyPositionFound.GetCustomerPoI.IsOccupied);
-                emptyShelfs[i] = emptyPositionFound;
+                emptyShelves[i] = emptyPositionFound;
             }
-            return emptyShelfs;
+            return emptyShelves;
         }
 
         public bool OccupyPoi(Guid occupier, IShopPoiData occupiedPoi)
