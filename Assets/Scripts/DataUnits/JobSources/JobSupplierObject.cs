@@ -23,12 +23,12 @@ namespace DataUnits.JobSources
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
         private IJobSupplierDialogueModule _dialogueModule;
-        private IJobSupplierProductsModule _productsModule;
+        private IJobSupplierProductsModule _productsModuleModule;
         #region Constructor & API
         public JobSupplierObject()
         {
             _dialogueModule = new JobSupplierDialogueModule(this);
-            _productsModule = new JobSupplierProductsModule(this);
+            _productsModuleModule = new JobSupplierProductsModule(this);
         }
         public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }
@@ -55,6 +55,8 @@ namespace DataUnits.JobSources
             set => _mDaysAsEmployer = value;
         }
 
+        public IJobSupplierProductsModule JobProductsModule => _productsModuleModule;
+
         public void LoadDeflectionDialoguesData()
         {
             _dialogueModule.LoadInitialDeflectionDialogues();
@@ -63,7 +65,7 @@ namespace DataUnits.JobSources
         public void StartUnlockData()
         {
             _dialogueModule.StartUnlockDialogueData();
-            _productsModule.LoadProductData();
+            _productsModuleModule.LoadProductData();
         }
 
         #endregion

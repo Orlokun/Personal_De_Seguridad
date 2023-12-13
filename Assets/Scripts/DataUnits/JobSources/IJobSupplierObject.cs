@@ -26,6 +26,9 @@ namespace DataUnits.JobSources
         public int Intelligence { get; }
         public int Money { get; }
         
+        //Modules
+        public IJobSupplierProductsModule JobProductsModule { get; }
+        
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
     }

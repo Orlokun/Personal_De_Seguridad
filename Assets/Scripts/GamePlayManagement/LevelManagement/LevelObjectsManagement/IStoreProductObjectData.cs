@@ -5,6 +5,8 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
     public interface IStoreProduct
     {
+        public void SetStoreProductGameObjectData(IStoreProductObjectData productData, Vector3 productPosition);
+        public IStoreProductObjectData GetData { get; }
         public Vector3 ProductPosition { get; }
         public Transform ProductTransform { get; }
     }
@@ -18,5 +20,10 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         public int HideChances { get; }
         public int Tempting { get; }
         public int Punishment { get; }
+        
+        public string PrefabName { get; }
+        public string ProductBrand { get; }
+        public string ProductSpriteName { get; }
+        public string ProductDescription { get; }
     }
 }

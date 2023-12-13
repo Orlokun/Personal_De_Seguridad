@@ -1,24 +1,5 @@
-using System;
-using UnityEngine;
-
 namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
-    public class StoreProductGameObject : MonoBehaviour, IStoreProduct
-    {
-        protected Vector3 MProductPosition;
-        protected Transform MProductTransform; 
-        public Vector3 ProductPosition => transform.position;
-        public Transform ProductTransform => transform;
-
-        public StoreProductObjectData GetData => _data;
-        private StoreProductObjectData _data;
-        
-        public StoreProductGameObject(StoreProductObjectData productData)
-        {
-            _data = productData;
-        }
-    }
-    
     public class StoreProductObjectData :  IStoreProductObjectData
     {
         protected int MProductId;
@@ -30,9 +11,16 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         protected int MHideChances;
         protected int MTempting;
         protected int MPunishment;
+        
+        //PrefabManagement
+        protected string MPrefabName;
+        protected string MProductBrand;
+        protected string MProductSpriteName;
+        protected string MProductDescription;
+
 
         public StoreProductObjectData(int id, string name, int type, int quantity, int price, int hideChances, int tempting, int punishment,
-                                        string prefabName, string productBrand, string productSpriteName,string productDescription)
+            string prefabName, string productBrand, string productSpriteName,string productDescription)
         {
             MProductId = id;
             MProductName = name;
@@ -43,6 +31,12 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
             MHideChances = hideChances;
             MTempting = tempting;
             MPunishment = punishment;
+            
+            MPrefabName = prefabName;
+            MProductBrand = productBrand;
+            MProductSpriteName = productSpriteName;
+            MProductDescription = productDescription;
+            
         }
         
         public int ProductId => MProductId;
@@ -54,5 +48,10 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         public int HideChances => MHideChances;
         public int Tempting => MTempting;
         public int Punishment => MPunishment;
+        
+        public string PrefabName => MPrefabName;
+        public string ProductBrand => MProductBrand;
+        public string ProductSpriteName => MProductSpriteName;
+        public string ProductDescription => MProductDescription;
     }
 }

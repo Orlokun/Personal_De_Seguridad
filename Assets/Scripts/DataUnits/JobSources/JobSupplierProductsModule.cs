@@ -20,6 +20,7 @@ namespace DataUnits.JobSources
         
         private StoreProductsDataString _mProductsDataString;
         private Dictionary<int, IStoreProductObjectData> _mProductsInStore;
+        public Dictionary<int, IStoreProductObjectData> ProductsInStore => _mProductsInStore;
         public void LoadProductData()
         {
             Debug.Log($"START: Collecting Product data for {_supplierObject.StoreName}");

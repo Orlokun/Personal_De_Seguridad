@@ -16,6 +16,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         [SerializeField] private Transform mStartPosition;
         private int _mInstantiationFrequency = 2;
         private bool _mIsSpawning = false;
+        private Coroutine customersCoroutine;
         
         public void ToggleSpawning(bool isSpawning)
         {
@@ -24,9 +25,14 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;
             }
             _mIsSpawning = isSpawning;
-            if (_mIsSpawning)
+            switch (_mIsSpawning)
             {
-                StartCoroutine(StartInstantiatingClients());
+                case false:
+                    StopCoroutine(customersCoroutine);
+                    break;
+                case true:
+                    customersCoroutine = StartCoroutine(StartInstantiatingClients());
+                    break;
             }
         }
         
