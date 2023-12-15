@@ -87,7 +87,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         
         public ShopPoiObject GetCustomerPoI => customerPoI.GetComponent<ShopPoiObject>();
         
-        public IStoreProduct GetRandomProductPosition()
+        public IStoreProduct ChooseRandomProduct()
         {
             Random.InitState(DateTime.Now.Millisecond);
             var randomIndex = Random.Range(0, _productsInShelf.Count-1);

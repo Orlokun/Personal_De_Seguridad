@@ -16,9 +16,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
         //public string UrbanStyle{ get; }  //TODO: Evaluate Later
         
         public int Intelligence{ get; }
+        public int StealAbility{ get; }
         public int Corruptibility { get; }
         public int Daring { get; }
-        public int Lawfulness { get; }
+        public int Fearful { get; }
         public int Aggressive { get; }
     
         public float Agility { get; }
@@ -41,6 +42,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         
         //Psychological params
         protected int MIntelligence;
+        protected int MStealAbility;
         protected int MCorruptibility;
         protected int MDaring;
         protected int MLawfulness;
@@ -58,9 +60,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
         //public string UrbanStyle => MUrbanStyle;
 
         public int Intelligence => MIntelligence;
+        public int StealAbility => MStealAbility;
         public int Corruptibility => MCorruptibility;
         public int Daring => MDaring;
-        public int Lawfulness => MLawfulness;
+        public int Fearful => MLawfulness;
         public int Aggressive => MAggressive;
     
         public float Agility => MAgility;
@@ -80,8 +83,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
             MSocialStatus = Random.Range(1, 10);
             Random.InitState(DateTime.Now.Millisecond);
             MAge = Random.Range(1, 100);
-            
-            
+
+            MIntelligence = Random.Range(1, 10);
+            MStealAbility = Random.Range(1, 10);
             MCorruptibility = Random.Range(1, 10);
             MDaring = Random.Range(1, 10);
             MLawfulness = Random.Range(1, 10);
@@ -92,7 +96,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             MStrength = Random.Range(1, 10);
             
             Debug.Log($"Cleanness: {Cleanness} ---SocialStatus: {SocialStatus} ---Age: {Age} " +
-                      $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Lawfulness} " +
+                      $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Fearful} " +
                       $"---Aggressive: {Aggressive} ---Agility: {Agility} ---Speed: {Speed} ---Strength: {Strength}");
         }
     }
