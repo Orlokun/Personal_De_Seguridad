@@ -51,9 +51,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         private GameObject GetRandomClientPrefab()
         {
+            /*
             Random.InitState(DateTime.Now.Millisecond);
             var randomIndex = Random.Range(0, mClientPrefabs.Length - 1);
-            return Instantiate(mClientPrefabs[randomIndex], mStartPosition.position, new Quaternion(0,80,0,0));
+            */
+            return Instantiate(mClientPrefabs[0], mStartPosition.position, new Quaternion(0,80,0,0));
         }
     }
 }

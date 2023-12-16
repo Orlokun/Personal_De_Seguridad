@@ -7,6 +7,7 @@ namespace DialogueSystem.Interfaces
 {
     public interface IDialogueOperator
     {
+        public IDialogueEventsOperator GetDialogueEventsOperator { get; }
         UIDialogueState CurrentDialogueState { get; }
         public UnityAction WriteNextDialogueNode(IDialogueObject dObject, int newDialogueIndex);
         void StartNewDialogue(IDialogueObject newDialogue);

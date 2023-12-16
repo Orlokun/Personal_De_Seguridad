@@ -26,6 +26,11 @@ namespace DialogueSystem
             ProcessEventType(eventCodes);
         }
 
+        public void LaunchHireEvent(JobSupplierBitId jobSupplierId)
+        {
+            LaunchPlayerHiredEvent(jobSupplierId);
+        }
+
         private void JobFoundFeedbackEvent(JobSupplierBitId newJobSupplier)
         {
             var jobSupplierName = BaseJobsCatalogue.Instance.GetJobSupplierObject(newJobSupplier).StoreName;
@@ -60,6 +65,10 @@ namespace DialogueSystem
             }
             var jobSupplierBitId = (JobSupplierBitId) supplierId;
             OnHirePlayer?.Invoke(jobSupplierBitId);
+        }
+        private void LaunchPlayerHiredEvent(JobSupplierBitId jobSupplier)
+        {
+            OnHirePlayer?.Invoke(jobSupplier);
         }
     }
 }

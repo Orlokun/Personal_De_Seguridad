@@ -214,7 +214,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &581317494
 GameObject:
@@ -309,7 +309,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &757442558
 GameObject:
@@ -405,7 +405,7 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1267448432
 PrefabInstance:
@@ -699,17 +699,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5990009724308494668, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
-      propertyPath: m_Data.m_SourceObjects.m_Item0.transform
+    - target: {fileID: 391346677835203680, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
+      propertyPath: m_WarningMessage
       value: 
-      objectReference: {fileID: 581317498}
+      objectReference: {fileID: 0}
+    - target: {fileID: 5990009724308494668, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
+      propertyPath: m_Weight
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8569396655643029760, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
       propertyPath: m_Name
       value: TestCustomer01
       objectReference: {fileID: 0}
     - target: {fileID: 8569396655643029766, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8569396655643029766, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
       propertyPath: m_LocalPosition.x

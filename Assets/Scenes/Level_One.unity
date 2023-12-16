@@ -8721,8 +8721,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mClientPrefabs:
   - {fileID: 8569396655643029760, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
-  - {fileID: 8569396655643029760, guid: 9100988ef1deea24894eb01f7573d886, type: 3}
-  - {fileID: 8569396655643029760, guid: 76517d43a6a4616458d0736ca5694f52, type: 3}
   mStartPosition: {fileID: 839578824}
 --- !u!1001 &2048032047
 PrefabInstance:

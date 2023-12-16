@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using UnityEditor;
@@ -14,8 +15,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private const string ProductPrefabPath = "LevelManagementPrefabs/ProductPrefabs/";
         protected const string GetObject = "GetProduct";
         protected const string EvaluateProductObject = "InspectProduct";
+        protected const string SearchAround = "SearchAround";
+        protected bool productInHand;
         
-        [SerializeField] protected MultiAimConstraint MHeadAimConstraint;
+        [SerializeField] protected MultiAimConstraint mHeadAimConstraint;
         
         [SerializeField] protected TwoBoneIKConstraint MGrabObjectConstraint;
         [SerializeField] protected TwoBoneIKConstraint MInspectObjectConstraint;
@@ -198,29 +201,102 @@ namespace Players_NPC.NPC_Management.Customer_Management
             //Wait To play Grab Animation
             await Task.Delay(Random.Range(1500, 2000));
             MGrabObjectConstraint.data.target = _tempTargetOfInterest.transform;
-
-            BaseAnimator.ChangeAnimationState(GetObject);
+            StartCoroutine(SetGrabObjectConstraint(0,1,1));
+            //Wait to instantiate when object is grabbed and look at it
             await Task.Delay(1000);
-            var path = ProductPrefabPath + _tempStoreProductOfInterest.GetData.PrefabName;
-            _tempProductCopy = (GameObject)Instantiate(Resources.Load(path), Vector3.zero, new Quaternion(),rightHand);
-            _tempProductCopy.transform.position *= .2f;
-            BaseAnimator.ChangeAnimationState(EvaluateProductObject);
+            InstantiateProductInHand();
+
+            //Inspect Object
+            StartCoroutine(SetGrabObjectConstraint(1, 0, 1));
+            StartCoroutine(SetLookObjectWeight(0,1,1));
+            StartCoroutine(UpdateInspectObjectRigWeight(0, 1, 1));
+
+            await Task.Delay(1000);
+            //BaseAnimator.ChangeAnimationState(EvaluateProductObject);
             if (!wouldStealProduct)
             {
-                Debug.Log("[StartProductExamination] WOULD NOT STEAL PRODUCT");
-                await Task.Delay(Random.Range(4500, 10000));
-                Destroy(_tempProductCopy);
-                _tempProductCopy = null;
-                
-                SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
-                SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
-                ReleaseCurrentPoI();
-                GoToNextProduct();
+                AddProductAndKeepShopping();
             }
             else
             {
-                Debug.Log("[StartProductExamination] WOULD STEAL PRODUCT");
+                StartStealingProductAttempt();
             }
+        }
+        private IEnumerator SetLookObjectWeight(float start, float end,float time)
+        {
+            float elapsedTime = 0;
+            while (elapsedTime < time)
+            {
+                mHeadAimConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+        private IEnumerator UpdateInspectObjectRigWeight(float start, float end,float time)
+        {
+            float elapsedTime = 0;
+            while (elapsedTime < time)
+            {
+                MInspectObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+        private IEnumerator SetGrabObjectConstraint(float start, float end,float time)
+        {
+            float elapsedTime = 0;
+            while (elapsedTime < time)
+            {
+                MGrabObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+        
+        private async void AddProductAndKeepShopping()
+        {
+            Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
+            await Task.Delay(Random.Range(4500, 10000));
+            Destroy(_tempProductCopy);
+            _tempProductCopy = null;
+            BaseAnimator.ChangeAnimationState("ForgetObject");
+            SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
+            ReleaseCurrentPoI();
+            GoToNextProduct();
+        }
+        private async void StartStealingProductAttempt()
+        {
+            Debug.Log($"[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Think a sec");
+            await Task.Delay(Random.Range(1000, 1500));
+            StartCoroutine(SetLookObjectWeight(1,0,1.5f));
+            BaseAnimator.ChangeAnimationState(SearchAround);
+            Debug.Log("[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Looking Around");
+            await Task.Delay(8000);
+            
+            StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
+
+            Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.GetData.ProductName}!");
+            Destroy(_tempProductCopy);
+            _tempProductCopy = null;
+            
+            MInspectObjectConstraint.data.target = null;
+                
+            SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
+            ReleaseCurrentPoI();
+            GoToNextProduct();
+        }
+
+
+        private void InstantiateProductInHand()
+        {
+            var path = ProductPrefabPath + _tempStoreProductOfInterest.GetData.PrefabName;
+            _tempProductCopy = (GameObject)Instantiate(Resources.Load(path),rightHand, false);
+            productInHand = true;
+            _tempProductCopy.transform.localScale *= .2f;
+            _tempProductCopy.transform.localPosition = new Vector3(0,0,0);
+            _tempTargetOfInterest = _tempProductCopy.transform;
         }
         private void StartShopping()
         {
@@ -245,7 +321,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     EvaluateWalking();
                     break;
                 case BaseCustomerMovementStatus.EvaluatingProduct:
-                    LookAtObject(_tempTargetOfInterest);
+                    if (productInHand)
+                    {
+                        break;
+                    }
                     RotateTowardsYOnly(transform,_tempTargetOfInterest);
                     break;
                 case BaseCustomerMovementStatus.Stealing:
@@ -258,20 +337,34 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void LookAtObject(Transform newTarget)
         {
-            if (MHeadAimConstraint.data.constrainedObject == newTarget)
+            var targetArray = new WeightedTransformArray(1);
+            var target = new WeightedTransform(newTarget, 1f);
+            targetArray[0] = target;
+            var headObject = mHeadAimConstraint.data.constrainedObject;
+            mHeadAimConstraint.data = new MultiAimConstraintData
             {
-                return;
-            }
-            MHeadAimConstraint.data.constrainedObject = newTarget;
+                constrainedObject = headObject.transform,
+                constrainedXAxis = true,
+                constrainedYAxis = true,
+                constrainedZAxis = true,
+                sourceObjects = targetArray,
+                limits = new Vector2(-90f, 42f)   
+            };
+            BaseAnimator.ChangeAnimationState("StartLook");
+        }
+        private void StopLooking()
+        {
+            mHeadAimConstraint.data.sourceObjects.Clear();
+            mHeadAimConstraint.weight = 1;
         }
 
         private void ClearLookAt()
         {
-            if (MHeadAimConstraint.data.constrainedObject == null)
+            if (mHeadAimConstraint.data.constrainedObject == null)
             {
                 return;
             }
-            MHeadAimConstraint.data.constrainedObject = null;
+            mHeadAimConstraint.data.constrainedObject = null;
         }
         private void EvaluateWalking()
         {
@@ -280,10 +373,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 Debug.LogWarning("Destination to walk to must be already set");
                 return;
             }
-            if (NavMeshAgent.remainingDistance < 2 && (_mCustomerAttitudeStatus & BaseAttitudeStatus.Shopping) != 0)
-            {
-                SetProductAsTarget();
-            }
+
             if (NavMeshAgent.remainingDistance < .5f && !NavMeshAgent.isStopped)
             {
                 NavMeshAgent.isStopped = true;
@@ -291,10 +381,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
         }
 
-        private void SetProductAsTarget()
-        {
-            
-        }
         protected override void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
         {
             base.RotateTowardsYOnly(rotatingObject, facingTowards);

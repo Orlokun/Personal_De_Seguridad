@@ -44,7 +44,7 @@ namespace DialogueSystem
         [SerializeField] private DialogueChoicesGameOperator _dialogueChoiceOperator;
         private DialogueEventsOperator _dialogueEventsOperator;
         private IDialogueChoicesGameOperator dialogueChoicesOperator => _dialogueChoiceOperator;
-        private IDialogueEventsOperator DialogueEventsOperator => _dialogueEventsOperator;
+        public IDialogueEventsOperator GetDialogueEventsOperator => _dialogueEventsOperator;
 
         #endregion
 

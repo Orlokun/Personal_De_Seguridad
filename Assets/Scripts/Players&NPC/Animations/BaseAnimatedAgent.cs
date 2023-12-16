@@ -16,13 +16,12 @@ namespace Players_NPC.Animations
             "Walk",
             "Sit",
             "Chatting",
-            "InspectProduct",
-            "GetProduct",
             "Running",
             "Jumping",
             "Falling",
             "Sitting",
-            "PanicRunning"
+            "PanicRunning",
+            "SearchAround"
         };
         
         #region Initialization
@@ -47,10 +46,6 @@ namespace Players_NPC.Animations
 
         public void ChangeAnimationState(string newAnimState)
         {
-            if (newAnimState == _mCurrentAnimState)
-            {
-                return;
-            }
             if (!IsAnimationAvailable(newAnimState))
             {
                 Debug.LogWarning($"Animation {newAnimState} is not valid");
