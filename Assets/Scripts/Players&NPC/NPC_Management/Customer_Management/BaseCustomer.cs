@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Utils;
@@ -37,6 +37,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         private BaseCustomerMovementStatus _mCustomerMovementStatus = 0;
         private BaseAttitudeStatus _mCustomerAttitudeStatus = 0;
+
+        private Dictionary<Guid, IStoreProductObjectData> _mStolenProducts = new Dictionary<Guid, IStoreProductObjectData>();
+        private Dictionary<Guid, IStoreProductObjectData> _mPurchasedProducts = new Dictionary<Guid, IStoreProductObjectData>();
 
         private delegate void ReachDestination();
         private event ReachDestination WalkingDestinationReached;
@@ -205,12 +208,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             //Wait to instantiate when object is grabbed and look at it
             await Task.Delay(1000);
             InstantiateProductInHand();
-
-            //Inspect Object
-            StartCoroutine(SetGrabObjectConstraint(1, 0, 1));
-            StartCoroutine(SetLookObjectWeight(0,1,1));
-            StartCoroutine(UpdateInspectObjectRigWeight(0, 1, 1));
-
+            StartInspectObjectAnim();
             await Task.Delay(1000);
             //BaseAnimator.ChangeAnimationState(EvaluateProductObject);
             if (!wouldStealProduct)
@@ -222,6 +220,14 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 StartStealingProductAttempt();
             }
         }
+
+        private void StartInspectObjectAnim()
+        {
+            StartCoroutine(SetGrabObjectConstraint(1, 0, 1));
+            StartCoroutine(SetLookObjectWeight(0,1,1));
+            StartCoroutine(UpdateInspectObjectRigWeight(0, 1, 1));
+        }
+        
         private IEnumerator SetLookObjectWeight(float start, float end,float time)
         {
             float elapsedTime = 0;
@@ -257,9 +263,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
         {
             Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
             await Task.Delay(Random.Range(4500, 10000));
-            Destroy(_tempProductCopy);
-            _tempProductCopy = null;
-            BaseAnimator.ChangeAnimationState("ForgetObject");
+            StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
+            _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
+            ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
@@ -267,21 +273,17 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private async void StartStealingProductAttempt()
         {
-            Debug.Log($"[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Think a sec");
+            Debug.Log($"[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Start Process");
             await Task.Delay(Random.Range(1000, 1500));
+            
             StartCoroutine(SetLookObjectWeight(1,0,1.5f));
             BaseAnimator.ChangeAnimationState(SearchAround);
-            Debug.Log("[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Looking Around");
             await Task.Delay(8000);
             
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-
+            _mStolenProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
             Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.GetData.ProductName}!");
-            Destroy(_tempProductCopy);
-            _tempProductCopy = null;
-            
-            MInspectObjectConstraint.data.target = null;
-                
+            ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
@@ -307,6 +309,14 @@ namespace Players_NPC.NPC_Management.Customer_Management
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             GoToNextProduct();
+        }
+
+        private void ClearProductInterest()
+        {
+            Destroy(_tempProductCopy);
+            _tempTargetOfInterest = null;
+            productInHand = false;
+            _tempProductCopy = null;
         }
         #endregion
 
