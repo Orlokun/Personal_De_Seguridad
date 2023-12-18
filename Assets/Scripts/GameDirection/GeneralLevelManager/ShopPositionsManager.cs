@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using UnityEngine;
 using Utils;
@@ -9,11 +11,14 @@ namespace GameDirection.GeneralLevelManager
     public interface IShopPositionsManager
     {
         public void Initialize();
-        public IShelfInMarket[] GetUnoccupiedShelf(int numberOfPositions);
-        public bool OccupyPoi(Guid occupier, IShopPoiData occupiedPoi);
+        public List<Guid> GetShelvesOfInterestIds(int numberOfPois);
+        public List<IShelfInMarket> GetShelvesOfInterestData(List<Guid> poisId);
+        public void OccupyPoi(Guid occupier, Guid occupiedPoi);
         public Vector3 EntrancePosition();
         public Vector3 PayingPosition();
         public Vector3 InstantiatePosition();
+        public Dictionary<Guid,IShelfInMarket> ShelfObjects { get; }
+        public IShelfInMarket GetShelfObject(Guid shelfId);
     }
 
     /// <summary>
@@ -26,12 +31,27 @@ namespace GameDirection.GeneralLevelManager
     public class ShopPositionsManager : InitializeManager, IShopPositionsManager
     {
         private int _positionsInLevel;
-        
-        private IShelfInMarket[] _mShelfObjects;
+
+        private Dictionary<Guid, IShelfInMarket> mShelfObjects = new Dictionary<Guid, IShelfInMarket>();
 
         [SerializeField] private Transform payingPosition;
         [SerializeField] private Transform entranceTransform;
         [SerializeField] private Transform customerInstantiationTransform;
+        public Dictionary<Guid, IShelfInMarket> ShelfObjects => mShelfObjects;
+
+        public List<IShelfInMarket> GetShelvesOfInterestData(List<Guid> poisId)
+        {
+            var shelves = new List<IShelfInMarket>();
+            foreach (var poiId in poisId)
+            {
+                if (!mShelfObjects.ContainsKey(poiId))
+                {
+                    continue;
+                }
+                shelves.Add(mShelfObjects[poiId]);
+            }
+            return shelves;
+        }
 
         private void Awake()
         {
@@ -50,12 +70,31 @@ namespace GameDirection.GeneralLevelManager
         protected void BaseInitialization()
         {
             // ReSharper disable once CoVariantArrayConversion
-            _mShelfObjects = (IShelfInMarket[])FindObjectsOfType<ShelfInMarket>();
-            _positionsInLevel = _mShelfObjects.Length;
+            PopulateShelves();
+            _positionsInLevel = mShelfObjects.Count;
             MIsInitialized = true;
         }
+
+        private void PopulateShelves()
+        {
+            var shelfObjects = FindObjectsOfType<ShelfInMarket>();
+            foreach (var shelfObject in shelfObjects)
+            {
+                var id = shelfObject.ShelfId;
+                mShelfObjects.Add(id, shelfObject);
+            }
+        }
+
+        public IShelfInMarket GetShelfObject(Guid shelfId)
+        {
+            if (!mShelfObjects.ContainsKey(shelfId))
+            {
+                return null;
+            }
+            return mShelfObjects[shelfId];
+        }
     
-        public IShelfInMarket[] GetUnoccupiedShelf(int numberOfPositions)
+        public List<Guid> GetShelvesOfInterestIds(int numberOfPois)
         {
             if (!MIsInitialized)
             {
@@ -63,34 +102,34 @@ namespace GameDirection.GeneralLevelManager
                 return null;
             }
 
-            if (numberOfPositions <= 0)
+            if (numberOfPois <= 0)
             {
                 Debug.LogWarning("[GetUnoccupiedPositions] Number of positions to get must be greater than 0");
                 return null;
             }
-        
-            var emptyShelves = new IShelfInMarket[numberOfPositions];
-            for (var i = 0; i < emptyShelves.Length; i++)
+
+            Random.InitState(DateTime.Now.Millisecond);
+            var pickedShelves = new List<Guid>();
+            for (var i = 0; i < numberOfPois; i++)
             {
-                IShelfInMarket emptyPositionFound;
-                do
+                Guid randomPosition;
+                while (pickedShelves.Contains(randomPosition) || randomPosition == Guid.Empty)
                 {
                     var positionIndex = Random.Range(0, _positionsInLevel);
-                    emptyPositionFound = _mShelfObjects[positionIndex];
-                } while (emptyPositionFound.GetCustomerPoI.IsOccupied);
-                emptyShelves[i] = emptyPositionFound;
+                    randomPosition = mShelfObjects.Keys.ElementAtOrDefault(positionIndex);
+                }
+                pickedShelves.Add(randomPosition);
             }
-            return emptyShelves;
+            return pickedShelves;
         }
 
-        public bool OccupyPoi(Guid occupier, IShopPoiData occupiedPoi)
+        public void OccupyPoi(Guid occupier, Guid occupiedPoi)
         {
-            if (occupiedPoi.IsOccupied)
+            if (!mShelfObjects.ContainsKey(occupiedPoi))
             {
-                return false;
-            }
-            occupiedPoi.OccupyPoi(occupier);
-            return true;
+                return;
+            }   
+            mShelfObjects[occupiedPoi].GetCustomerPoI.OccupyPoi(occupier);
         }
 
         public Vector3 EntrancePosition()

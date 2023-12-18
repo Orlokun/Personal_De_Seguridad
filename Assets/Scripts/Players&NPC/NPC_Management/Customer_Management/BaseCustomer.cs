@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using UnityEngine;
@@ -12,37 +13,52 @@ namespace Players_NPC.NPC_Management.Customer_Management
 {
     public class BaseCustomer : BaseCharacterInScene, IBaseCustomer
     {
+        #region ConstantData
         private const string ProductPrefabPath = "LevelManagementPrefabs/ProductPrefabs/";
-        protected const string GetObject = "GetProduct";
-        protected const string EvaluateProductObject = "InspectProduct";
-        protected const string SearchAround = "SearchAround";
-        protected bool productInHand;
-        
+        private const string SearchAround = "SearchAround";
+        #endregion
+
+        #region ProceduralAnimConstraints
         [SerializeField] protected MultiAimConstraint mHeadAimConstraint;
-        
         [SerializeField] protected TwoBoneIKConstraint MGrabObjectConstraint;
         [SerializeField] protected TwoBoneIKConstraint MInspectObjectConstraint;
-        
         [SerializeField] protected Transform rightHand;
-        private Vector3 mPayingPosition;
-        private int _mNumberOfProductsLookingFor;
-
-        private IShelfInMarket[] _mShelvesOfInterest;
+        
+        private bool _productInHand;
+        
         private IStoreProduct _tempStoreProductOfInterest;
         private Transform _tempTargetOfInterest;
         private GameObject _tempProductCopy;
         
+        #endregion
+        
         private ICustomerTypeData _mCustomerTypeData;
+        public ICustomerTypeData CustomerTypeData => _mCustomerTypeData;
+        
+        #region LevelData
         private Vector3 _mPayingPosition;
+        private int _mNumberOfProductsLookingFor;
+        private List<Guid> _mShelvesOfInterest;
 
+        private bool mAnyShelfAvailable;
+        #endregion
+
+        #region CurrentCustomerStatus
         private BaseCustomerMovementStatus _mCustomerMovementStatus = 0;
         private BaseAttitudeStatus _mCustomerAttitudeStatus = 0;
 
+        private Dictionary<Guid, bool> _mShelvesOfInterestPurchaseStatus = new Dictionary<Guid, bool>();
         private Dictionary<Guid, IStoreProductObjectData> _mStolenProducts = new Dictionary<Guid, IStoreProductObjectData>();
         private Dictionary<Guid, IStoreProductObjectData> _mPurchasedProducts = new Dictionary<Guid, IStoreProductObjectData>();
 
+        private Guid currentShelfId;
+        #endregion
+
+        #region Events
         private delegate void ReachDestination();
         private event ReachDestination WalkingDestinationReached;
+
+        #endregion
 
         #region Init
         protected override void Awake()
@@ -52,21 +68,26 @@ namespace Players_NPC.NPC_Management.Customer_Management
             base.Awake();
             _mCustomerTypeData = Factory.CreateBaseCustomerTypeData();
             WalkingDestinationReached += ReachWalkingDestination;
-            _mShelvesOfInterest = new IShelfInMarket[_mNumberOfProductsLookingFor];
         }
         
         protected override void Start()
         {
             base.Start();
             _mPayingPosition = _positionsManager.PayingPosition();
-            GoToEntrance();
+            PopulateShelvesOfInterestData();
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Entering);
             StartWalking();
-            _mShelvesOfInterest = _positionsManager.GetUnoccupiedShelf(_mNumberOfProductsLookingFor);
+
             Debug.Log($"[Awake] Initial Position: {MInitialPosition}. ");
         }
-        private void OccupyPoi(int shelfOfInterest)
+
+        private void PopulateShelvesOfInterestData()
         {
-            _mShelvesOfInterest[shelfOfInterest].GetCustomerPoI.OccupyPoi(MCustomerId);
+            _mShelvesOfInterest = _positionsManager.GetShelvesOfInterestIds(_mNumberOfProductsLookingFor);
+            foreach (var guid in _mShelvesOfInterest)
+            {
+                _mShelvesOfInterestPurchaseStatus.Add(guid, false);
+            }
         }
         private void StartWalking()
         {
@@ -80,27 +101,17 @@ namespace Players_NPC.NPC_Management.Customer_Management
             ManageMovementStatus();
         }
 
-        #region UpdateProductEvaluation
-
-
-
-
-
-        #endregion
-        
         #region UpdateMangeAttitude
         private void ManageAttitudeStatus()
         {
             switch (_mCustomerAttitudeStatus)
             {
                 case BaseAttitudeStatus.Entering:
-                    GoToEntrance();
                     break;
                 case BaseAttitudeStatus.Paying:
                     GoToPay();
                     break;
                 case BaseAttitudeStatus.Shopping:
-                    StartShopping();
                     break;
                 case BaseAttitudeStatus.EvaluatingProduct:
                     break;
@@ -110,15 +121,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-        private void GoToEntrance()
-        {
-            if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.Entering) != 0)
-            {
-                return;
-            }
-            NavMeshAgent.destination = _positionsManager.EntrancePosition();
-            SetCustomerAttitudeStatus(BaseAttitudeStatus.Entering);
-        }
+
         private void PrepareProductEvaluation()
         {
             if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.EvaluatingProduct) != 0)
@@ -128,27 +131,63 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void ReleaseCurrentPoI()
         {
-            var poi = _mShelvesOfInterest[CurrentProductSearchIndex-1].GetCustomerPoI;
+            var poi = _positionsManager.GetShelfObject(currentShelfId).GetCustomerPoI;
             if (poi.OccupierId != MCustomerId)
             {
                 return;
             }
             poi.LeavePoi(MCustomerId);
         }
+        
         private void GoToNextProduct()
         {
             //return in idle
-            if(CurrentProductSearchIndex == _mNumberOfProductsLookingFor)
+            if(_mShelvesOfInterestPurchaseStatus.All(x => x.Value))
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
                 SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
                 return;
             }
-            Debug.Log($"[GoToNextPoint] Going to Shelf Indexed: {CurrentProductSearchIndex}");
-            var destinationCorrectlySet = NavMeshAgent.SetDestination(_mShelvesOfInterest[CurrentProductSearchIndex].GetCustomerPoI.GetPosition);
-            OccupyPoi(CurrentProductSearchIndex);
-            NavMeshAgent.isStopped = !destinationCorrectlySet;
-            CurrentProductSearchIndex++;
+            var anyPoiAvailable = CheckIfPoisAvailable();
+            if (!anyPoiAvailable)
+            {
+                //TODO: Walk randomly and find something to do
+                Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCustomerId}");
+                return;
+            }
+            currentShelfId = GetNotVisitedShelf(); 
+            var shelfObject = _positionsManager.GetShelfObject(currentShelfId).GetCustomerPoI;
+            _positionsManager.OccupyPoi(MCustomerId, currentShelfId);
+            Debug.Log($"[GoToNextPoint] Going to Shelf: {currentShelfId}. Name: {shelfObject.gameObject.name}");
+            NavMeshAgent.SetDestination(shelfObject.GetPosition);
+            NavMeshAgent.isStopped = false;
+        }
+
+        private Guid GetNotVisitedShelf()
+        {
+            foreach (var shelf in _mShelvesOfInterestPurchaseStatus)
+            {
+                if (shelf.Value == false)
+                {
+                    return shelf.Key;
+                }
+            }
+            Debug.LogError("[GetShelfObjectId] Guid not found");
+            return new Guid();
+        }
+
+        private bool ArePoisUnvisited()
+        {
+            return _mShelvesOfInterestPurchaseStatus.Any(x => x.Value == false);
+        }
+
+        private bool CheckIfPoisAvailable()
+        {
+            var unPurchasedPois = _mShelvesOfInterestPurchaseStatus.Where(x => x.Value == false);
+            var unPurchasedPoisList = unPurchasedPois.Select(x => x.Key);
+            var anyPoiAvailable = _positionsManager.GetShelvesOfInterestData(unPurchasedPoisList.ToList())
+                .Any(x => x.GetCustomerPoI.IsOccupied != true);
+            return anyPoiAvailable;
         }
 
         #endregion
@@ -159,14 +198,14 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (_mCustomerAttitudeStatus)
             {
                 case BaseAttitudeStatus.Shopping:
-                    CheckShoppingStatus();
+                    ReachProductDestination();
                     break;
                 case BaseAttitudeStatus.Paying:
                     Random.InitState(DateTime.Now.Millisecond);
                     PayAndLeave(Random.Range(5000,11000));
                     break;
                 case BaseAttitudeStatus.Entering:
-                    StartShopping();
+                    EvaluateStartShopping();
                     break;
                 case BaseAttitudeStatus.Leaving:
                     Destroy(gameObject);
@@ -175,13 +214,34 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-        private void CheckShoppingStatus()
+        private void ReachProductDestination()
         {
-            if (CurrentProductSearchIndex <= _mNumberOfProductsLookingFor)
-            {
-                EvaluateProduct();
-            }
+            EvaluateProduct();
         }
+
+        private void EvaluateStartShopping()
+        {
+            if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.Shopping) != 0)
+            {
+                return;
+            }
+            var shelves = _positionsManager.GetShelvesOfInterestData(_mShelvesOfInterest);
+            mAnyShelfAvailable =  shelves.Any(x=> x.GetCustomerPoI.IsOccupied != true);
+            if (!mAnyShelfAvailable)
+            {
+                Debug.Log("No shelves available. Will Walk around and try to interact.");
+                //TODO: SetNewStateBehavior
+                return;                
+            }
+            StartShopping();
+        }
+        private void StartShopping()
+        {
+            SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
+            SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
+            GoToNextProduct();
+        }
+        #region ProductStealEvaluation
         private void EvaluateProduct()
         {
             SetCustomerMovementStatus(BaseCustomerMovementStatus.EvaluatingProduct);
@@ -220,14 +280,21 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 StartStealingProductAttempt();
             }
         }
-
+        private void InstantiateProductInHand()
+        {
+            var path = ProductPrefabPath + _tempStoreProductOfInterest.GetData.PrefabName;
+            _tempProductCopy = (GameObject)Instantiate(Resources.Load(path),rightHand, false);
+            _productInHand = true;
+            _tempProductCopy.transform.localScale *= .2f;
+            _tempProductCopy.transform.localPosition = new Vector3(0,0,0);
+            _tempTargetOfInterest = _tempProductCopy.transform;
+        }
         private void StartInspectObjectAnim()
         {
             StartCoroutine(SetGrabObjectConstraint(1, 0, 1));
             StartCoroutine(SetLookObjectWeight(0,1,1));
             StartCoroutine(UpdateInspectObjectRigWeight(0, 1, 1));
         }
-        
         private IEnumerator SetLookObjectWeight(float start, float end,float time)
         {
             float elapsedTime = 0;
@@ -259,6 +326,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
         }
         
+        
         private async void AddProductAndKeepShopping()
         {
             Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
@@ -266,11 +334,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
             _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
             ClearProductInterest();
+            _mShelvesOfInterestPurchaseStatus[currentShelfId] = true;
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
+        
         private async void StartStealingProductAttempt()
         {
             Debug.Log($"[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Start Process");
@@ -286,36 +356,18 @@ namespace Players_NPC.NPC_Management.Customer_Management
             ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
+            _mShelvesOfInterestPurchaseStatus[currentShelfId] = true;
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
+        #endregion
 
-
-        private void InstantiateProductInHand()
-        {
-            var path = ProductPrefabPath + _tempStoreProductOfInterest.GetData.PrefabName;
-            _tempProductCopy = (GameObject)Instantiate(Resources.Load(path),rightHand, false);
-            productInHand = true;
-            _tempProductCopy.transform.localScale *= .2f;
-            _tempProductCopy.transform.localPosition = new Vector3(0,0,0);
-            _tempTargetOfInterest = _tempProductCopy.transform;
-        }
-        private void StartShopping()
-        {
-            if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.Shopping) != 0)
-            {
-                return;
-            }
-            SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
-            SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
-            GoToNextProduct();
-        }
 
         private void ClearProductInterest()
         {
             Destroy(_tempProductCopy);
             _tempTargetOfInterest = null;
-            productInHand = false;
+            _productInHand = false;
             _tempProductCopy = null;
         }
         #endregion
@@ -331,17 +383,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     EvaluateWalking();
                     break;
                 case BaseCustomerMovementStatus.EvaluatingProduct:
-                    if (productInHand)
+                    if (_productInHand)
                     {
                         break;
                     }
                     RotateTowardsYOnly(transform,_tempTargetOfInterest);
                     break;
-                case BaseCustomerMovementStatus.Stealing:
-                    break;
                 case BaseCustomerMovementStatus.Running:
-                    break;
-                case BaseCustomerMovementStatus.Detained:
                     break;
             }
         }
@@ -431,20 +479,26 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (newAttitude)
             {
                 case BaseAttitudeStatus.EvaluatingProduct:
-                    var shelfOfInterest = _mShelvesOfInterest[CurrentProductSearchIndex-1];
+                    var shelfOfInterest = _positionsManager.GetShelfObject(currentShelfId);
                     _tempStoreProductOfInterest = shelfOfInterest.ChooseRandomProduct();
                     _tempTargetOfInterest = _tempStoreProductOfInterest.ProductTransform;
                     break;
+                
                 case BaseAttitudeStatus.Paying:
                     _tempStoreProductOfInterest = null;
                     NavMeshAgent.SetDestination(_mPayingPosition);
                     NavMeshAgent.isStopped = false;
                     break;
+                
                 case BaseAttitudeStatus.Leaving:
                     NavMeshAgent.SetDestination(_positionsManager.EntrancePosition());
                     NavMeshAgent.isStopped = false;
                     break;
-
+                
+                case BaseAttitudeStatus.Entering:
+                    NavMeshAgent.SetDestination(_positionsManager.EntrancePosition());
+                    NavMeshAgent.isStopped = false;
+                    break;
             }
         }
         private void SetCustomerMovementStatus(BaseCustomerMovementStatus newMovementStatus)

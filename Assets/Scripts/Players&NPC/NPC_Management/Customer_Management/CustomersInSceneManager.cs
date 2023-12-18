@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 namespace Players_NPC.NPC_Management.Customer_Management
@@ -17,6 +19,16 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private int _mInstantiationFrequency = 2;
         private bool _mIsSpawning = false;
         private Coroutine customersCoroutine;
+        public List<NavMeshAgent> NavAgents = new List<NavMeshAgent>();
+
+        [SerializeField] private ObstacleAvoidanceType AvoidanceType;
+        [SerializeField] private float AgentSpeed;
+        [SerializeField] private float AgentRadius;
+        
+        [Header("NavMesh Configurations")]
+        public float AvoidancePredictionTime = 2;
+        public int PathfindingIterationsPerFrame = 100;
+
         
         public void ToggleSpawning(bool isSpawning)
         {
@@ -49,6 +61,12 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
         }
 
+        private void Update()
+        {
+            NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
+            NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
+        }
+
         private GameObject GetRandomClientPrefab()
         {
             /*
@@ -56,6 +74,15 @@ namespace Players_NPC.NPC_Management.Customer_Management
             var randomIndex = Random.Range(0, mClientPrefabs.Length - 1);
             */
             return Instantiate(mClientPrefabs[0], mStartPosition.position, new Quaternion(0,80,0,0));
+        }
+        
+        private void SetupAgent(NavMeshAgent Agent)
+        {
+            Agent.obstacleAvoidanceType = AvoidanceType;
+            Agent.radius = AgentRadius;
+            Agent.speed = AgentSpeed;
+            Agent.avoidancePriority = 50;
+            NavAgents.Add(Agent);
         }
     }
 }

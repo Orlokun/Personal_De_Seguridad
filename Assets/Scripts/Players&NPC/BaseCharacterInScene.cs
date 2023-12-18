@@ -18,7 +18,6 @@ namespace Players_NPC
         
         protected Guid MCustomerId;
         protected IBaseAnimatedAgent BaseAnimator;
-        protected int CurrentProductSearchIndex = 0;
         protected NavMeshAgent NavMeshAgent;
         protected Vector3 MInitialPosition;
         protected IShopPositionsManager _positionsManager;

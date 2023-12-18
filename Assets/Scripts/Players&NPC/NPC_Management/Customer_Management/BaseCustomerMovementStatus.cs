@@ -10,10 +10,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
         EvaluatingProduct = 4,
         Running = 8,
         Dancing = 16,
-        Stealing = 32,
         Sitting = 64,
         Falling = 128,
-        Detained = 256,
+
     }
     
     [Flags]

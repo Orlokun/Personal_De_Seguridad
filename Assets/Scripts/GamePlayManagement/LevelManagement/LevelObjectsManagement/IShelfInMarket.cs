@@ -1,5 +1,5 @@
+using System;
 using GameDirection.GeneralLevelManager;
-using UnityEngine;
 
 namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
@@ -7,5 +7,6 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
     {
         ShopPoiObject GetCustomerPoI { get; }
         IStoreProduct ChooseRandomProduct();
+        public Guid ShelfId { get; }
     }
 }

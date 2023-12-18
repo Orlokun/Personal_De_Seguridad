@@ -17,11 +17,15 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         private Dictionary<int, ProductPositionInShelf> _productPositionsInShelf = new Dictionary<int, ProductPositionInShelf>();
         private Dictionary<int, IStoreProduct> _productsInShelf = new Dictionary<int, IStoreProduct>();
 
+        private Guid _mShelfId;
+        public Guid ShelfId => _mShelfId;
+        
         private void Awake()
         {
             ConfirmPoI();
             PopulateProductPositions();
             PopulateProductsInShelf();
+            _mShelfId = Guid.NewGuid();
         }
 
         private void ConfirmPoI()

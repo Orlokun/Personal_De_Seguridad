@@ -4403,7 +4403,7 @@ GameObject:
   m_Component:
   - component: {fileID: 780936807}
   m_Layer: 0
-  m_Name: CameraPositions
+  m_Name: CameraItemsPositions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8929,6 +8929,12 @@ MonoBehaviour:
   mClientPrefabs:
   - {fileID: 8569396655643029760, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
   mStartPosition: {fileID: 839578824}
+  NavAgents: []
+  AvoidanceType: 3
+  AgentSpeed: 0
+  AgentRadius: 0
+  AvoidancePredictionTime: 2
+  PathfindingIterationsPerFrame: 100
 --- !u!1001 &2048032047
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9426,6 +9432,10 @@ PrefabInstance:
     - target: {fileID: 1456344327033040893, guid: 97fd0565e59d5ee4bbe705014e2e554d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456344328147645485, guid: 97fd0565e59d5ee4bbe705014e2e554d, type: 3}
+      propertyPath: m_NavMeshLayer
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97fd0565e59d5ee4bbe705014e2e554d, type: 3}
