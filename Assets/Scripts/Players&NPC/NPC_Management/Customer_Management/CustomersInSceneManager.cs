@@ -59,7 +59,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 navMesh.speed = 3.5f;
                 navMesh.avoidancePriority = 50;
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
-                Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
+                //Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
                 yield return new WaitForSeconds(_mInstantiationFrequency);
             }
         }

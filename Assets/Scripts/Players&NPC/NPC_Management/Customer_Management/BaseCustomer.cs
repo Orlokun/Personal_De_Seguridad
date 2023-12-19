@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GameDirection.GeneralLevelManager;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
@@ -123,14 +122,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-
-        private void PrepareProductEvaluation()
-        {
-            if ((_mCustomerAttitudeStatus & BaseAttitudeStatus.EvaluatingProduct) != 0)
-            {
-                return;
-            }
-        }
         private void ReleaseCurrentPoI()
         {
             var poi = _positionsManager.GetShelfObject(_currentShelfId).GetCustomerPoI;
@@ -140,7 +131,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
             _positionsManager.ReleasePoi(MCustomerId, poi.GetShelfId);
         }
-        
         private void GoToNextProduct()
         {
             if(_mShelvesOfInterestPurchaseStatus.All(x => x.Value != false))
