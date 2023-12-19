@@ -5,7 +5,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
     public interface IShelfInMarket
     {
-        ShopPoiObject GetCustomerPoI { get; }
+        IShopPoiData GetCustomerPoI { get; }
         IStoreProduct ChooseRandomProduct();
         public Guid ShelfId { get; }
     }

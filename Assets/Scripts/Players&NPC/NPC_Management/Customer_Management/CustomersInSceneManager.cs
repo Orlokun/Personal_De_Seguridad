@@ -53,7 +53,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
-                _mInstantiationFrequency = Random.Range(3, 8);
+                _mInstantiationFrequency = Random.Range(8, 15);
                 var randomPrefabInstantiated = GetRandomClientPrefab();
                 var navMesh = randomPrefabInstantiated.GetComponent<NavMeshAgent>();
                 navMesh.speed = 3.5f;

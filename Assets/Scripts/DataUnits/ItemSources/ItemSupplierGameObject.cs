@@ -213,13 +213,12 @@ namespace DataUnits.ItemSources
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mDeflectionDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
-                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
             }
             Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
         }
         private void LoadImportantDialoguesFromJson(string sourceJson)
         {
-            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
+            Debug.Log($"[ItemSupplier.LoadImportantDialoguesFromJson] Begin request");
             _mImportantDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
             Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mImportantDialogueData == null}. {_mImportantDialogueData}");
             _mImportantDialoguesDict = new Dictionary<int, IDialogueObject>();
@@ -231,7 +230,7 @@ namespace DataUnits.ItemSources
                 var isDialogueNodeIndex = int.TryParse(_mImportantDialogueData.values[i][0], out var currentDialogueObjectIndex);
                 if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadImportantDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
                     return;
                 }
                 if (lastDialogueIndex != currentDialogueObjectIndex || i == 1)
@@ -244,13 +243,13 @@ namespace DataUnits.ItemSources
                 var hasDialogueNodeId = int.TryParse(_mImportantDialogueData.values[i][1], out var dialogueLineId);
                 if (!hasDialogueNodeId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
+                    Debug.LogWarning($"[ItemSupplier.LoadImportantDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
                     return;
                 }
                 var isSpeakerId = int.TryParse(_mImportantDialogueData.values[i][2], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadImportantDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
                 }
 
                 var dialogueLineText = _mImportantDialogueData.values[i][3];
@@ -267,13 +266,12 @@ namespace DataUnits.ItemSources
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mImportantDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
-                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
             }
-            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
+            Debug.Log($"[ItemSupplier.LoadImportantDialoguesFromJson] Finish Important dialogues parse for {StoreName}");
         }
         private void LoadInsistenceDialoguesFromJson(string sourceJson)
         {
-            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
+            Debug.Log($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Begin request");
             _mInsistenceDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
             Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mInsistenceDialogueData == null}. {_mInsistenceDialogueData}");
             _mInsistenceDialoguesDict = new Dictionary<int, IDialogueObject>();
@@ -285,7 +283,7 @@ namespace DataUnits.ItemSources
                 var isDialogueNodeIndex = int.TryParse(_mInsistenceDialogueData.values[i][0], out var currentDialogueObjectIndex);
                 if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Dialogues for Intro must have node Index greater than zero");
                     return;
                 }
                 if (lastDialogueIndex != currentDialogueObjectIndex || i == 1)
@@ -298,13 +296,13 @@ namespace DataUnits.ItemSources
                 var hasDialogueNodeId = int.TryParse(_mInsistenceDialogueData.values[i][1], out var dialogueLineId);
                 if (!hasDialogueNodeId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
+                    Debug.LogWarning($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Dialogues for Intro must have a dialogue node id");
                     return;
                 }
                 var isSpeakerId = int.TryParse(_mInsistenceDialogueData.values[i][2], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
+                    Debug.LogWarning($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
                 }
 
                 var dialogueLineText = _mInsistenceDialogueData.values[i][3];
@@ -321,9 +319,8 @@ namespace DataUnits.ItemSources
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mInsistenceDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
-                Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish dialogue object parse");
             }
-            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
+            Debug.Log($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Finish Insistence dialogues parse for {StoreName}");
         }
 
         #endregion

@@ -22,10 +22,10 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         
         private void Awake()
         {
+            _mShelfId = Guid.NewGuid();
             ConfirmPoI();
             PopulateProductPositions();
             PopulateProductsInShelf();
-            _mShelfId = Guid.NewGuid();
         }
 
         private void ConfirmPoI()
@@ -41,6 +41,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
                 Debug.LogError($"[ConfirmPoi] ShopPoiObject must be a component of the passed transform gameObject.");
                 return;
             }
+            _customerPoIData.AssignShelf(ShelfId);
         }
 
         private void PopulateProductPositions()
@@ -68,7 +69,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
                 var posInShelf = _productPositionsInShelf[i].PositionInShelf;
                 var randomProductPrefabName = storeProducts[randomIndex].PrefabName;
                 var path = ProductPrefabPath + randomProductPrefabName;
-                Debug.Log($"[PopulateProductsInShelf]Start Instantiate of {randomProductPrefabName}");
+                //Debug.Log($"[PopulateProductsInShelf]Start Instantiate of {randomProductPrefabName}");
                 var productCreated = (GameObject)Instantiate(Resources.Load(path), posInShelf, new Quaternion(), transform);
                 var storeProduct = (IStoreProduct)productCreated.AddComponent<StoreProductGameObject>();
                 storeProduct.SetStoreProductGameObjectData(storeProducts[randomIndex], posInShelf);
@@ -89,7 +90,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         }
         
         
-        public ShopPoiObject GetCustomerPoI => customerPoI.GetComponent<ShopPoiObject>();
+        public IShopPoiData GetCustomerPoI => customerPoI.GetComponent<ShopPoiObject>();
         
         public IStoreProduct ChooseRandomProduct()
         {

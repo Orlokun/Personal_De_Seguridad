@@ -11,5 +11,6 @@ namespace GameDirection.GeneralLevelManager
         public bool IsOccupied { get; }
         public void OccupyPoi(Guid occupier);
         public void LeavePoi(Guid leavingId);
+        public Guid OccupierId { get; }
     }
 }

@@ -14,6 +14,7 @@ namespace GameDirection.GeneralLevelManager
         public List<Guid> GetShelvesOfInterestIds(int numberOfPois);
         public List<IShelfInMarket> GetShelvesOfInterestData(List<Guid> poisId);
         public void OccupyPoi(Guid occupier, Guid occupiedPoi);
+        public void ReleasePoi(Guid occupier, Guid occupiedPoi);
         public Vector3 EntrancePosition();
         public Vector3 PayingPosition();
         public Vector3 InstantiatePosition();
@@ -115,7 +116,7 @@ namespace GameDirection.GeneralLevelManager
                 Guid randomPosition;
                 while (pickedShelves.Contains(randomPosition) || randomPosition == Guid.Empty)
                 {
-                    var positionIndex = Random.Range(0, _positionsInLevel);
+                    var positionIndex = Random.Range(0, _positionsInLevel-1);
                     randomPosition = mShelfObjects.Keys.ElementAtOrDefault(positionIndex);
                 }
                 pickedShelves.Add(randomPosition);
@@ -130,6 +131,41 @@ namespace GameDirection.GeneralLevelManager
                 return;
             }   
             mShelfObjects[occupiedPoi].GetCustomerPoI.OccupyPoi(occupier);
+            PrintPoiStatus();
+        }
+
+        public void ReleasePoi(Guid occupier, Guid occupiedPoi)
+        {
+            if (!mShelfObjects.ContainsKey(occupiedPoi))
+            {
+                return;
+            }
+            var poi = mShelfObjects[occupiedPoi].GetCustomerPoI;
+            if (!poi.IsOccupied || poi.OccupierId != occupier)
+            {
+                return;
+            }
+            poi.LeavePoi(occupier);
+            PrintPoiStatus();
+        }
+
+        private void PrintPoiStatus()
+        {
+            var occupiedShelves = 0;
+            var unOccupiedShelves = 0;
+            foreach (var shelfInMarket in mShelfObjects)
+            {
+                var isOccupied = shelfInMarket.Value.GetCustomerPoI.IsOccupied;
+                if (isOccupied)
+                {
+                    occupiedShelves++;
+                }
+                else
+                {
+                    unOccupiedShelves++;
+                }
+            }
+            Debug.Log($"Occupied Shelves: {occupiedShelves}. Unoccupied Shelves: {unOccupiedShelves}");
         }
 
         public Vector3 EntrancePosition()

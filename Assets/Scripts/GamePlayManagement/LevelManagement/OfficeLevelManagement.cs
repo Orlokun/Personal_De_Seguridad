@@ -1,3 +1,4 @@
+using System.Collections;
 using CameraManagement;
 using GameDirection.TimeOfDayManagement;
 using UnityEngine;
@@ -23,8 +24,13 @@ namespace GamePlayManagement.LevelManagement
             {
                 return;
             }
-            var toggle = isOpeningTime ? true : false;
-            ManageClientSpawning(toggle);
+            ManageClientSpawning(isOpeningTime);
+        }
+
+        protected IEnumerator WaitAndDeactivate()
+        {
+            yield return new WaitForSeconds(15);
+            ManageClientSpawning(false);
         }
         
         protected virtual void ManageClientSpawning(bool isActive)

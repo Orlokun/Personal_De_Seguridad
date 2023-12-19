@@ -6,11 +6,11 @@ namespace GameDirection.GeneralLevelManager
     public class ShopPoiObject : MonoBehaviour, IShopPoiData
     {
         private bool _mIsOccupied;
-        
-        private Guid _occupierId = Guid.Empty;
+
+        private Guid _occupierId;
         public Guid OccupierId => _occupierId;
-        
-        private Guid _shelfId = Guid.Empty;
+
+        private Guid _shelfId;
         public Guid GetShelfId => _shelfId;
         public bool IsOccupied => _mIsOccupied;
 
@@ -43,7 +43,7 @@ namespace GameDirection.GeneralLevelManager
         }
         private void EmptyData()
         {
-            _occupierId = Guid.Empty;
+            _occupierId = new Guid();
             _mIsOccupied = false;
         }
     }
