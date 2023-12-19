@@ -31,6 +31,7 @@ namespace ItemPlacement
 
         protected override Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
         {
+            ConfirmCamera();
             Ray ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
             RaycastHit hitInfo;
             Vector3 newPoint;
@@ -46,6 +47,14 @@ namespace ItemPlacement
                 IsPlaceSuccess = false;
             }
             return newPoint;
+        }
+
+        protected void ConfirmCamera()
+        {
+            if (MainCamera == null)
+            {
+                MainCamera = Camera.main;
+            }
         }
     }
 }

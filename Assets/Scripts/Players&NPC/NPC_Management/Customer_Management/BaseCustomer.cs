@@ -40,7 +40,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private int _mNumberOfProductsLookingFor;
         private List<Guid> _mShelvesOfInterest;
 
-        private bool mAnyShelfAvailable;
+        private bool _mAnyShelfAvailable;
         #endregion
 
         #region CurrentCustomerStatus
@@ -51,7 +51,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private Dictionary<Guid, IStoreProductObjectData> _mStolenProducts = new Dictionary<Guid, IStoreProductObjectData>();
         private Dictionary<Guid, IStoreProductObjectData> _mPurchasedProducts = new Dictionary<Guid, IStoreProductObjectData>();
 
-        private Guid currentShelfId;
+        private Guid _currentShelfId;
         #endregion
 
         #region Events
@@ -101,7 +101,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             ManageMovementStatus();
         }
 
-        #region UpdateMangeAttitude
+        #region UpdateManageAttitude
         private void ManageAttitudeStatus()
         {
             switch (_mCustomerAttitudeStatus)
@@ -131,7 +131,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void ReleaseCurrentPoI()
         {
-            var poi = _positionsManager.GetShelfObject(currentShelfId).GetCustomerPoI;
+            var poi = _positionsManager.GetShelfObject(_currentShelfId).GetCustomerPoI;
             if (poi.OccupierId != MCustomerId)
             {
                 return;
@@ -141,11 +141,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
         
         private void GoToNextProduct()
         {
-            //return in idle
-            if(_mShelvesOfInterestPurchaseStatus.All(x => x.Value))
+            if(_mShelvesOfInterestPurchaseStatus.All(x => x.Value != false))
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
                 SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
+                ReleaseCurrentPoI();
                 return;
             }
             var anyPoiAvailable = CheckIfPoisAvailable();
@@ -155,10 +155,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCustomerId}");
                 return;
             }
-            currentShelfId = GetNotVisitedShelf(); 
-            var shelfObject = _positionsManager.GetShelfObject(currentShelfId).GetCustomerPoI;
-            _positionsManager.OccupyPoi(MCustomerId, currentShelfId);
-            Debug.Log($"[GoToNextPoint] Going to Shelf: {currentShelfId}. Name: {shelfObject.gameObject.name}");
+            _currentShelfId = GetNotVisitedShelf(); 
+            var shelfObject = _positionsManager.GetShelfObject(_currentShelfId).GetCustomerPoI;
+            _positionsManager.OccupyPoi(MCustomerId, _currentShelfId);
+            Debug.Log($"[GoToNextPoint] Going to Shelf: {_currentShelfId}. Name: {shelfObject.gameObject.name}");
             NavMeshAgent.SetDestination(shelfObject.GetPosition);
             NavMeshAgent.isStopped = false;
         }
@@ -174,11 +174,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
             }
             Debug.LogError("[GetShelfObjectId] Guid not found");
             return new Guid();
-        }
-
-        private bool ArePoisUnvisited()
-        {
-            return _mShelvesOfInterestPurchaseStatus.Any(x => x.Value == false);
         }
 
         private bool CheckIfPoisAvailable()
@@ -226,8 +221,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;
             }
             var shelves = _positionsManager.GetShelvesOfInterestData(_mShelvesOfInterest);
-            mAnyShelfAvailable =  shelves.Any(x=> x.GetCustomerPoI.IsOccupied != true);
-            if (!mAnyShelfAvailable)
+            _mAnyShelfAvailable =  shelves.Any(x=> x.GetCustomerPoI.IsOccupied != true);
+            if (!_mAnyShelfAvailable)
             {
                 Debug.Log("No shelves available. Will Walk around and try to interact.");
                 //TODO: SetNewStateBehavior
@@ -334,7 +329,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
             _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
             ClearProductInterest();
-            _mShelvesOfInterestPurchaseStatus[currentShelfId] = true;
+            _mShelvesOfInterestPurchaseStatus[_currentShelfId] = true;
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
@@ -356,7 +351,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
-            _mShelvesOfInterestPurchaseStatus[currentShelfId] = true;
+            _mShelvesOfInterestPurchaseStatus[_currentShelfId] = true;
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
@@ -393,37 +388,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-        private void LookAtObject(Transform newTarget)
-        {
-            var targetArray = new WeightedTransformArray(1);
-            var target = new WeightedTransform(newTarget, 1f);
-            targetArray[0] = target;
-            var headObject = mHeadAimConstraint.data.constrainedObject;
-            mHeadAimConstraint.data = new MultiAimConstraintData
-            {
-                constrainedObject = headObject.transform,
-                constrainedXAxis = true,
-                constrainedYAxis = true,
-                constrainedZAxis = true,
-                sourceObjects = targetArray,
-                limits = new Vector2(-90f, 42f)   
-            };
-            BaseAnimator.ChangeAnimationState("StartLook");
-        }
-        private void StopLooking()
-        {
-            mHeadAimConstraint.data.sourceObjects.Clear();
-            mHeadAimConstraint.weight = 1;
-        }
-
-        private void ClearLookAt()
-        {
-            if (mHeadAimConstraint.data.constrainedObject == null)
-            {
-                return;
-            }
-            mHeadAimConstraint.data.constrainedObject = null;
-        }
         private void EvaluateWalking()
         {
             if (NavMeshAgent.destination.Equals(default(Vector3)))
@@ -432,7 +396,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;
             }
 
-            if (NavMeshAgent.remainingDistance < .5f && !NavMeshAgent.isStopped)
+            if (NavMeshAgent.remainingDistance < 1f && !NavMeshAgent.isStopped)
             {
                 NavMeshAgent.isStopped = true;
                 OnWalkingDestinationReached();
@@ -479,7 +443,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (newAttitude)
             {
                 case BaseAttitudeStatus.EvaluatingProduct:
-                    var shelfOfInterest = _positionsManager.GetShelfObject(currentShelfId);
+                    var shelfOfInterest = _positionsManager.GetShelfObject(_currentShelfId);
                     _tempStoreProductOfInterest = shelfOfInterest.ChooseRandomProduct();
                     _tempTargetOfInterest = _tempStoreProductOfInterest.ProductTransform;
                     break;
@@ -510,14 +474,20 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (newMovementStatus)
             {
                 case  BaseCustomerMovementStatus.Walking:
+                    ObstacleComponent.enabled = false;
+                    NavMeshAgent.enabled = true;
                     NavMeshAgent.isStopped = false;
                     BaseAnimator.ChangeAnimationState(WALK);
                     break;
                 case  BaseCustomerMovementStatus.Idle:
+                    ObstacleComponent.enabled = true;
+                    NavMeshAgent.enabled = false;
                     BaseAnimator.ChangeAnimationState(IDLE);
                     NavMeshAgent.isStopped = true;
                     break;
                 case BaseCustomerMovementStatus.EvaluatingProduct:
+                    ObstacleComponent.enabled = true;
+                    NavMeshAgent.enabled = false;
                     BaseAnimator.ChangeAnimationState(IDLE);
                     NavMeshAgent.isStopped = true;
                     break;

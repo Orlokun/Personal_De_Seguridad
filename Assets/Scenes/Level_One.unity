@@ -8933,7 +8933,7 @@ MonoBehaviour:
   AvoidanceType: 3
   AgentSpeed: 0
   AgentRadius: 0
-  AvoidancePredictionTime: 2
+  AvoidancePredictionTime: 0.5
   PathfindingIterationsPerFrame: 100
 --- !u!1001 &2048032047
 PrefabInstance:

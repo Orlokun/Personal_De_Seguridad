@@ -26,7 +26,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         [SerializeField] private float AgentRadius;
         
         [Header("NavMesh Configurations")]
-        public float AvoidancePredictionTime = 2;
+        public float AvoidancePredictionTime;
         public int PathfindingIterationsPerFrame = 100;
 
         
@@ -53,8 +53,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
             while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
-                _mInstantiationFrequency = Random.Range(10, 20);
+                _mInstantiationFrequency = Random.Range(3, 8);
                 var randomPrefabInstantiated = GetRandomClientPrefab();
+                var navMesh = randomPrefabInstantiated.GetComponent<NavMeshAgent>();
+                navMesh.speed = 3.5f;
+                navMesh.avoidancePriority = 50;
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
                 Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
                 yield return new WaitForSeconds(_mInstantiationFrequency);

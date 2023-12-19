@@ -8,6 +8,7 @@ using UnityEngine.AI;
 namespace Players_NPC
 {
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(NavMeshObstacle))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BaseAnimatedAgent))]
     public abstract class BaseCharacterInScene : MonoBehaviour
@@ -21,6 +22,7 @@ namespace Players_NPC
         protected NavMeshAgent NavMeshAgent;
         protected Vector3 MInitialPosition;
         protected IShopPositionsManager _positionsManager;
+        protected NavMeshObstacle ObstacleComponent;
 
 
         protected float MRotationSpeed = 12;
@@ -33,6 +35,8 @@ namespace Players_NPC
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             NavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
+            ObstacleComponent = GetComponent<NavMeshObstacle>();
+            ObstacleComponent.enabled = false;
         }
 
         protected virtual void Start()

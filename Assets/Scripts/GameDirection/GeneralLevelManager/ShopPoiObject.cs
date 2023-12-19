@@ -22,7 +22,7 @@ namespace GameDirection.GeneralLevelManager
         }
         public void OccupyPoi(Guid occupier)
         {
-            if (occupier == _occupierId)
+            if (occupier == _occupierId || IsOccupied)
             {
                 return;
             }
