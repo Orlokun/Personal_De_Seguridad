@@ -28,6 +28,7 @@ namespace ItemPlacement
         {
             base.OnItemClicked();
             FloorPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
+            FloorPlacementManager.Instance.ToggleRoofObject(false);    
         }
     }
 }

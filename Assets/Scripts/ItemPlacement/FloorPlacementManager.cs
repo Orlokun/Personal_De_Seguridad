@@ -5,7 +5,7 @@ namespace ItemPlacement
     public class FloorPlacementManager : BasePlacementManager
     {
         private static FloorPlacementManager _instance;
-        public static FloorPlacementManager Instance
+        public static IBasePlacementManager Instance
         {
             get { return _instance; }
         }
@@ -37,12 +37,14 @@ namespace ItemPlacement
             Vector3 newPoint;
             if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask))
             {
+                Debug.Log($"[FloorPlacementManager.GetPlacementPoint] HIT FLOOR: {hitInfo.collider.gameObject.name}");
                 var hPoint = hitInfo.point + new Vector3(0, deltaY, 0);
                 newPoint = hPoint;
                 IsPlaceSuccess = true;
             }
             else
             {
+                Debug.Log($"[FloorPlacementManager.GetPlacementPoint] DIDNT HIT FLOOR.");
                 newPoint = ray.GetPoint(zDistance);
                 IsPlaceSuccess = false;
             }

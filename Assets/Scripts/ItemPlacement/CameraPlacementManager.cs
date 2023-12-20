@@ -7,7 +7,7 @@ namespace ItemPlacement
     public class CameraPlacementManager : BasePlacementManager
     {
         private static CameraPlacementManager _instance;
-        public static CameraPlacementManager Instance {
+        public static IBasePlacementManager Instance {
             get { return _instance; }
         }
 

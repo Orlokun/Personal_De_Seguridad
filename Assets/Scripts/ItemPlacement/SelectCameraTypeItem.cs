@@ -42,6 +42,7 @@ namespace ItemPlacement
         {
             base.OnItemClicked();
             CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
+            CameraPlacementManager.Instance.ToggleRoofObject(true);    
         }
     }
 }

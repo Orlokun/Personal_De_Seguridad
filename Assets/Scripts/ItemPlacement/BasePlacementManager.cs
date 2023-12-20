@@ -3,7 +3,13 @@ using UnityEngine.SceneManagement;
 
 namespace ItemPlacement
 {
-    public abstract class BasePlacementManager : MonoBehaviour
+    public interface IBasePlacementManager
+    {
+        public void AttachNewObject(GameObject newObject);
+        public void ToggleRoofObject(bool isActive);
+        public void ReleaseDraggedItem();
+    }
+    public abstract class BasePlacementManager : MonoBehaviour, IBasePlacementManager
     {
         protected GameObject CurrentPlacedObject;
         protected GameObject LastInstantiatedGameObject;
@@ -11,7 +17,8 @@ namespace ItemPlacement
         [SerializeField] protected LayerMask targetLayerMask;
         [SerializeField] protected LayerMask blockLayerMasks;
         [SerializeField] protected float deltaY;
-
+        [SerializeField] protected GameObject roofLayerObject;
+        
         protected bool IsPlaceSuccess = false;
         protected int TouchID;
         protected bool IsDragging = false;
@@ -62,6 +69,7 @@ namespace ItemPlacement
                     CurrentPlacedObject.SetActive(IsInsideAllowedZone);
                 }
                 MoveObjectPreview();
+                RotateObjectPreview();
             }
             else
             {
@@ -92,6 +100,14 @@ namespace ItemPlacement
 #endif
             point = GetPlacementPoint(mousePosition);
             CurrentPlacedObject.transform.position = new Vector3(point.x, point.y, point.z);
+        }
+
+        protected void RotateObjectPreview()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                CurrentPlacedObject.transform.Rotate(Vector3.up, 90);
+            }
         }
 
         protected virtual Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
@@ -131,6 +147,17 @@ namespace ItemPlacement
             deltaY = CurrentPlacedObject.transform.localScale.y;
             Debug.Log($"[AttachNewObject] New 'Current Placed Object = {CurrentPlacedObject.name}");
         }
+
+        public void ToggleRoofObject(bool isActive)
+        {
+            if (roofLayerObject == null)
+            {
+                Debug.LogError("[ToggleRoofObject] Roof object must not be null");
+                return;
+            }
+            roofLayerObject.SetActive(isActive);
+        }
+
         public void ReleaseDraggedItem()
         {
             IsMouseReleased = true;
@@ -159,8 +186,6 @@ namespace ItemPlacement
                 Debug.Log("[ObjectSelectedInsideZone] No item selected");
                 return false;
             }
-
-            Debug.Log("[ObjectSelectedInsideZone] Item Selected Correctly");
             var newPoint = Input.mousePosition;
             if (Camera.main != null)
             {
@@ -170,6 +195,10 @@ namespace ItemPlacement
                 {
                     Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
                     return true;
+                }
+                else if(Physics.Raycast(ray, out hitInfo, 1000))
+                {
+                    Debug.Log($"[ObjectSelectedInsideZone] Hit something else. {hitInfo.collider.name}");
                 }
             }
 
