@@ -10,6 +10,7 @@ namespace GamePlayManagement.ProfileDataModules
         public int ElementsActive { get; }
         Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects { get; }
         public JobSupplierBitId CurrentEmployer { get; }
+        public IJobSupplierObject CurrentEmployerData();
         public void SetNewEmployer(JobSupplierBitId newEmployer);
         public void CheckFinishDay();
         public int TotalDaysEmployed { get; }

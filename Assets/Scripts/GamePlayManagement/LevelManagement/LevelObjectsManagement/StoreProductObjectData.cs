@@ -2,7 +2,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
     public class StoreProductObjectData :  IStoreProductObjectData
     {
-        protected int MProductId;
+        protected ProductsLevelEden MProductId;
         protected string MProductName;
         protected int MProductType;
         protected int MQuantity;
@@ -19,7 +19,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         protected string MProductDescription;
 
 
-        public StoreProductObjectData(int id, string name, int type, int quantity, int price, int hideChances, int tempting, int punishment,
+        public StoreProductObjectData(ProductsLevelEden id, string name, int type, int quantity, int price, int hideChances, int tempting, int punishment,
             string prefabName, string productBrand, string productSpriteName,string productDescription)
         {
             MProductId = id;
@@ -39,7 +39,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
             
         }
         
-        public int ProductId => MProductId;
+        public ProductsLevelEden ProductId => MProductId;
         public string ProductName => MProductName;
         public int ProductType => MProductType;
         public int Quantity => MQuantity;

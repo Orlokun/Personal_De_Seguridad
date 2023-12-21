@@ -19,8 +19,8 @@ namespace DataUnits.JobSources
         }
         
         private StoreProductsDataString _mProductsDataString;
-        private Dictionary<int, IStoreProductObjectData> _mProductsInStore;
-        public Dictionary<int, IStoreProductObjectData> ProductsInStore => _mProductsInStore;
+        private Dictionary<ProductsLevelEden, IStoreProductObjectData> _mProductsInStore;
+        public Dictionary<ProductsLevelEden, IStoreProductObjectData> ProductsInStore => _mProductsInStore;
         public void LoadProductData()
         {
             Debug.Log($"START: Collecting Product data for {_supplierObject.StoreName}");
@@ -46,12 +46,13 @@ namespace DataUnits.JobSources
         }
         private void LoadProductsFromJson(string sourceJson)
         {
-            _mProductsInStore = new Dictionary<int, IStoreProductObjectData>();
+            _mProductsInStore = new Dictionary<ProductsLevelEden, IStoreProductObjectData>();
             Debug.Log($"[LoadProductsFromJson] Start Serializing Job supplier's {_supplierObject.StoreName} Product Json data");
             _mProductsDataString = JsonConvert.DeserializeObject<StoreProductsDataString>(sourceJson);
             for (var i = 1; i < _mProductsDataString.values.Count; i++)
             {
                 var gotId = int.TryParse(_mProductsDataString.values[i][0], out var productId);
+                var productBitId = (ProductsLevelEden) productId;
                 if (productId == 0 || !gotId)
                 {
                     Debug.LogWarning(
@@ -117,7 +118,7 @@ namespace DataUnits.JobSources
                 var prefabSpriteName = _mProductsDataString.values[i][10];
                 var productDescription = _mProductsDataString.values[i][11];
 
-                var productObject = new StoreProductObjectData(productId, productName, productType, productQuantity,
+                var productObject = new StoreProductObjectData(productBitId, productName, productType, productQuantity,
                     productPrice, productHideValue, productTempting, productPunish, prefabName, productBrand, 
                     prefabSpriteName, productDescription);
                 _mProductsInStore.Add(productObject.ProductId, productObject);

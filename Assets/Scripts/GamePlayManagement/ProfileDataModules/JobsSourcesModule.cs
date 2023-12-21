@@ -25,7 +25,16 @@ namespace GamePlayManagement.ProfileDataModules
         public Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects => _mJobSuppliers;
         private JobSupplierBitId _mCurrentActiveEmployer;
         public JobSupplierBitId CurrentEmployer => _mCurrentActiveEmployer;
-        
+
+        public IJobSupplierObject CurrentEmployerData()
+        {
+            if (_mCurrentActiveEmployer == 0)
+            {
+                Debug.LogWarning("[CurrentEmployerData] Current Employer Data must not be null");
+                return null;
+            }
+            return _mJobSuppliers[_mCurrentActiveEmployer];
+        }
         public void SetNewEmployer(JobSupplierBitId newEmployer)
         {
             _mStreakWithEmployer = 0;

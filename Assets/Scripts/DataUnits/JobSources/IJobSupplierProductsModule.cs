@@ -6,6 +6,6 @@ namespace DataUnits.JobSources
     public interface IJobSupplierProductsModule
     {
         public void LoadProductData();
-        public Dictionary<int, IStoreProductObjectData> ProductsInStore { get; }
+        public Dictionary<ProductsLevelEden, IStoreProductObjectData> ProductsInStore { get; }
     }
 }

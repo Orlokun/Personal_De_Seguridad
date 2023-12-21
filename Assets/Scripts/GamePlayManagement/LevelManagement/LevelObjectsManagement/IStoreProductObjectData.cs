@@ -11,7 +11,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
     }
     public interface IStoreProductObjectData
     {
-        public int ProductId { get; }
+        public ProductsLevelEden ProductId { get; }
         public string ProductName { get; }
         public int ProductType { get; }
         public int Quantity { get; }

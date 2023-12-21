@@ -1,79 +1,45 @@
 using System;
 using System.Collections.Generic;
-using GameDirection;
+using System.Linq;
 using GameDirection.GeneralLevelManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
-    public class ShelfInMarket : MonoBehaviour, IShelfInMarket
+    public class ShelfInMarket : MonoBehaviour, IShelfInMarket 
     {
-        [SerializeField] private Transform customerPoI;
-        [SerializeField] private List<Transform> positionTranforms;
-
-        private const string ProductPrefabPath = "LevelManagementPrefabs/ProductPrefabs/";
-        private IShopPoiData _customerPoIData;   //Shop Poi Data to know where the client should go
+        [SerializeField] private List<ShopPoiObject> customerPoIsData;   //Shop Poi Data to know where the client should go
         private Dictionary<int, ProductPositionInShelf> _productPositionsInShelf = new Dictionary<int, ProductPositionInShelf>();
         private Dictionary<int, IStoreProduct> _productsInShelf = new Dictionary<int, IStoreProduct>();
-
+        
         private Guid _mShelfId;
         public Guid ShelfId => _mShelfId;
+        public bool IsInitialized => _mIsInitialized;
+        private bool _mIsInitialized;
         
-        private void Awake()
+        public void Initialize()
         {
+            if (_mIsInitialized)
+            {
+                return;
+            }
             _mShelfId = Guid.NewGuid();
-            ConfirmPoI();
-            PopulateProductPositions();
-            PopulateProductsInShelf();
+            ConfirmPoIs();
+            _mIsInitialized = true;
         }
-
-        private void ConfirmPoI()
+        private void ConfirmPoIs()
         {
-            if (customerPoI == null)
+            if (customerPoIsData.Count <= 0)
             {
                 Debug.LogError($"[ConfirmPoi] Shelf named {gameObject.name} must have a customer PoI");
                 return;
             }
-            _customerPoIData = customerPoI.GetComponent<ShopPoiObject>();
-            if (_customerPoIData == null)
+            for (int i = 0; i < customerPoIsData.Count; i++)
             {
-                Debug.LogError($"[ConfirmPoi] ShopPoiObject must be a component of the passed transform gameObject.");
-                return;
-            }
-            _customerPoIData.AssignShelf(ShelfId);
-        }
-
-        private void PopulateProductPositions()
-        {
-            for (var i = 0; i < positionTranforms.Count; i++)
-            {
-                var positionTransform = positionTranforms[i];
-                var newProductPosition = new ProductPositionInShelf(positionTransform);
-                _productPositionsInShelf.Add(i,newProductPosition);
-            }
-            positionTranforms.Clear();
-        }
-        
-        private void PopulateProductsInShelf()
-        {
-            Debug.Log($"[PopulateProductsInShelf] Start Populating Products");
-            var activeJobsModule = GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule();
-            var currentSupplierId = activeJobsModule.CurrentEmployer;
-            var storeProducts = activeJobsModule.JobObjects[currentSupplierId].JobProductsModule.ProductsInStore;
-            
-            for (var i = 0; i < _productPositionsInShelf.Count; i++)
-            {
-                //Set 0 or 1
-                var randomIndex = RandomProductIndex();
-                var posInShelf = _productPositionsInShelf[i].PositionInShelf;
-                var randomProductPrefabName = storeProducts[randomIndex].PrefabName;
-                var path = ProductPrefabPath + randomProductPrefabName;
-                //Debug.Log($"[PopulateProductsInShelf]Start Instantiate of {randomProductPrefabName}");
-                var productCreated = (GameObject)Instantiate(Resources.Load(path), posInShelf, new Quaternion(), transform);
-                var storeProduct = (IStoreProduct)productCreated.AddComponent<StoreProductGameObject>();
-                storeProduct.SetStoreProductGameObjectData(storeProducts[randomIndex], posInShelf);
-                _productsInShelf.Add(i, storeProduct);
+                var poiData = customerPoIsData[i];
+                var poiGuid = Guid.NewGuid();
+                poiData.Initialize(ShelfId, poiGuid);
             }
         }
 
@@ -88,9 +54,26 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
             }
             return returnId;
         }
+
+        public bool IsAnyPoiAvailable()
+        {
+            return customerPoIsData.Any(x => x.IsOccupied != true);
+        }
+        public IShopPoiData ReturnAvailablePoi()
+        {
+            return customerPoIsData.SingleOrDefault(x => x.IsOccupied != true);
+        }
         
-        
-        public IShopPoiData GetCustomerPoI => customerPoI.GetComponent<ShopPoiObject>();
+        public IShopPoiData GetCustomerPoi(Guid poiId)
+        {
+            if(customerPoIsData.All(x => x.PoiId != poiId))
+            {
+                Debug.LogWarning("[shelfInMarket.GetCustomerPoi] Poi Guid must be available");
+                return null;
+            }
+            return customerPoIsData.SingleOrDefault(x => x.PoiId == poiId);
+        }
+        public List<ShopPoiObject> GetAllPois => customerPoIsData;
         
         public IStoreProduct ChooseRandomProduct()
         {

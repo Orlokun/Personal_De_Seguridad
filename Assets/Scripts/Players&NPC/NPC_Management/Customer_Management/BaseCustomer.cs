@@ -26,8 +26,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
         [SerializeField] protected Transform rightHand;
         
         private bool _productInHand;
-        
-        private IStoreProduct _tempStoreProductOfInterest;
+
+        private Tuple<Transform, IStoreProductObjectData> _tempStoreProductOfInterest;
         private Transform _tempTargetOfInterest;
         private GameObject _tempProductCopy;
         
@@ -48,11 +48,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private BaseCustomerMovementStatus _mCustomerMovementStatus = 0;
         private BaseAttitudeStatus _mCustomerAttitudeStatus = 0;
 
-        private Dictionary<Guid, bool> _mShelvesOfInterestPurchaseStatus = new Dictionary<Guid, bool>();
+        private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
         private Dictionary<Guid, IStoreProductObjectData> _mStolenProducts = new Dictionary<Guid, IStoreProductObjectData>();
         private Dictionary<Guid, IStoreProductObjectData> _mPurchasedProducts = new Dictionary<Guid, IStoreProductObjectData>();
 
-        private Guid _currentShelfId;
+        private Guid _currentPoiId;
         #endregion
 
         #region Events
@@ -84,10 +84,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         private void PopulateShelvesOfInterestData()
         {
-            _mShelvesOfInterest = _positionsManager.GetShelvesOfInterestIds(_mNumberOfProductsLookingFor);
+            _mShelvesOfInterest = _positionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
             foreach (var guid in _mShelvesOfInterest)
             {
-                _mShelvesOfInterestPurchaseStatus.Add(guid, false);
+                _mPoisPurchaseStatus.Add(guid, false);
             }
         }
         private void StartWalking()
@@ -124,7 +124,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void ReleaseCurrentPoI()
         {
-            var poi = _positionsManager.GetShelfObject(_currentShelfId).GetCustomerPoI;
+            var poi = _positionsManager.GetPoiData(_currentPoiId);
             if (!poi.IsOccupied || poi.OccupierId != MCustomerId)
             {
                 return;
@@ -133,7 +133,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void GoToNextProduct()
         {
-            if(_mShelvesOfInterestPurchaseStatus.All(x => x.Value != false))
+            if(_mPoisPurchaseStatus.All(x => x.Value != false))
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
                 SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
@@ -147,49 +147,56 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCustomerId}");
                 return;
             }
-            _currentShelfId = GetNotVisitedShelf(); 
-            var shelfObject = (ShopPoiObject)_positionsManager.GetShelfObject(_currentShelfId).GetCustomerPoI;
-            _positionsManager.OccupyPoi(MCustomerId, _currentShelfId);
-            Debug.Log($"[GoToNextPoint] Going to Shelf: {_currentShelfId}. Name: {shelfObject.gameObject.name}");
-            NavMeshAgent.SetDestination(shelfObject.GetPosition);
+            _currentPoiId = GetNotVisitedShelfPoi(); 
+            var poiObject = _positionsManager.GetPoiData(_currentPoiId);
+            _positionsManager.OccupyPoi(MCustomerId, _currentPoiId);
+            Debug.Log($"[GoToNextPoint] Going to Poi: {_currentPoiId}.");
+            NavMeshAgent.SetDestination(poiObject.GetPosition);
             NavMeshAgent.isStopped = false;
         }
 
-        private Guid GetNotVisitedShelf()
+        private Guid GetNotVisitedShelfPoi()
         {
             var notVisitedShelves = new List<Guid>();
-            foreach (var shelf in _mShelvesOfInterestPurchaseStatus)
+            foreach (var shelf in _mPoisPurchaseStatus)
             {
                 if (shelf.Value == false)
                 {
                     notVisitedShelves.Add(shelf.Key);
                 }
             }
-            IShopPoiData poiObject = null;
-            var notVisitedShelvesCount = notVisitedShelves.Count;
-            for (int i = 0; i < notVisitedShelvesCount; i++)
+            var notVisitedPoisCount = notVisitedShelves.Count;
+            if (notVisitedShelves.Count == 0)
             {
-                var poi = _positionsManager.GetShelfObject(notVisitedShelves[i]).GetCustomerPoI;
-                if (poi.IsOccupied)
+                Debug.LogWarning("[GetNotVisitedShelf] Not visited shelf must be more than 0");
+                return new Guid();
+            }
+
+            IShopPoiData poiObject = null;
+            for (int i = 0; i < notVisitedPoisCount; i++)
+            {
+                var isPoiOccupied = _positionsManager.GetPoiData(notVisitedShelves[i]).IsOccupied;
+                if (isPoiOccupied)
                 {
                     continue;
                 }
-                poiObject = poi;
+                poiObject = _positionsManager.GetPoiData(notVisitedShelves[i]);
             }
+            
             if (poiObject == null)
             {
                Debug.LogWarning("[GetNotVisitedShelf] Not visited shelf must not be null");
                return new Guid();
             }
-            return poiObject.GetShelfId;
+            return poiObject.PoiId;
         }
 
         private bool CheckIfPoisAvailable()
         {
-            var unPurchasedPoiIds = _mShelvesOfInterestPurchaseStatus.Where(x => x.Value == false);
+            var unPurchasedPoiIds = _mPoisPurchaseStatus.Where(x => x.Value == false);
             var unPurchasedPoisKeys = unPurchasedPoiIds.Select(x => x.Key);
-            var unpurchasedList = _positionsManager.GetShelvesOfInterestData(unPurchasedPoisKeys.ToList());
-            var anyPoiAvailable = unpurchasedList.Any(x => x.GetCustomerPoI.IsOccupied != true);
+            var availablePoisList = _positionsManager.GetPoisOfInterestData(unPurchasedPoisKeys.ToList());
+            var anyPoiAvailable = availablePoisList.Any(x => x.IsOccupied==false);
             return anyPoiAvailable;
         }
 
@@ -228,11 +235,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
             {
                 return;
             }
-            var shelves = _positionsManager.GetShelvesOfInterestData(_mShelvesOfInterest);
-            _mAnyShelfAvailable =  shelves.Any(x=> x.GetCustomerPoI.IsOccupied != true);
+            var pois = _positionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
+            _mAnyShelfAvailable =  pois.Any(x=> x.IsOccupied == false);
             if (!_mAnyShelfAvailable)
             {
-                Debug.Log("No shelves available. Will Walk around and try to interact.");
+                Debug.Log("No shelve has a Poi available. Will Walk around and try to interact.");
                 //TODO: SetNewStateBehavior
                 return;                
             }
@@ -254,9 +261,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private bool EvaluateProductStealingChances()
         {
-            var hasStealAbility = _tempStoreProductOfInterest.GetData.HideChances <= _mCustomerTypeData.StealAbility ? 1 : 0;
-            var isTempting = _tempStoreProductOfInterest.GetData.Tempting >= _mCustomerTypeData.Corruptibility ? 1 : 0;
-            var isDetermined = _tempStoreProductOfInterest.GetData.Punishment <= _mCustomerTypeData.Fearful ? 1 : 0;
+            var hasStealAbility = _tempStoreProductOfInterest.Item2.HideChances <= _mCustomerTypeData.StealAbility ? 1 : 0;
+            var isTempting = _tempStoreProductOfInterest.Item2.Tempting >= _mCustomerTypeData.Corruptibility ? 1 : 0;
+            var isDetermined = _tempStoreProductOfInterest.Item2.Punishment <= _mCustomerTypeData.Fearful ? 1 : 0;
 
             return hasStealAbility + isTempting + isDetermined >= 2;
         }
@@ -285,10 +292,10 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void InstantiateProductInHand()
         {
-            var path = ProductPrefabPath + _tempStoreProductOfInterest.GetData.PrefabName;
+            var path = ProductPrefabPath + _tempStoreProductOfInterest.Item2.PrefabName;
             _tempProductCopy = (GameObject)Instantiate(Resources.Load(path),rightHand, false);
             _productInHand = true;
-            _tempProductCopy.transform.localScale *= .2f;
+            _tempProductCopy.transform.localScale *= .4f;
             _tempProductCopy.transform.localPosition = new Vector3(0,0,0);
             _tempTargetOfInterest = _tempProductCopy.transform;
         }
@@ -335,9 +342,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
             Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
             await Task.Delay(Random.Range(4500, 10000));
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
+            _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
             ClearProductInterest();
-            _mShelvesOfInterestPurchaseStatus[_currentShelfId] = true;
+            _mPoisPurchaseStatus[_currentPoiId] = true;
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
@@ -354,12 +361,12 @@ namespace Players_NPC.NPC_Management.Customer_Management
             await Task.Delay(8000);
             
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mStolenProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.GetData);
-            Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.GetData.ProductName}!");
+            _mStolenProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
+            Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
             ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Shopping);
-            _mShelvesOfInterestPurchaseStatus[_currentShelfId] = true;
+            _mPoisPurchaseStatus[_currentPoiId] = true;
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
@@ -451,9 +458,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (newAttitude)
             {
                 case BaseAttitudeStatus.EvaluatingProduct:
-                    var shelfOfInterest = _positionsManager.GetShelfObject(_currentShelfId);
-                    _tempStoreProductOfInterest = shelfOfInterest.ChooseRandomProduct();
-                    _tempTargetOfInterest = _tempStoreProductOfInterest.ProductTransform;
+                    var pointOfInterest = _positionsManager.GetPoiData(_currentPoiId);
+                    _tempStoreProductOfInterest = pointOfInterest.ChooseRandomProduct();
+                    _tempTargetOfInterest = _tempStoreProductOfInterest.Item1;
                     break;
                 
                 case BaseAttitudeStatus.Paying:

@@ -1,12 +1,16 @@
 using System;
+using System.Collections.Generic;
 using GameDirection.GeneralLevelManager;
+using Utils;
 
 namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
 {
-    public interface IShelfInMarket
+    public interface IShelfInMarket : IInitialize
     {
-        IShopPoiData GetCustomerPoI { get; }
-        IStoreProduct ChooseRandomProduct();
+        public bool IsAnyPoiAvailable();
+        public IShopPoiData ReturnAvailablePoi();
+        public IShopPoiData GetCustomerPoi(Guid poiId);
+        public List<ShopPoiObject> GetAllPois { get; }        
         public Guid ShelfId { get; }
     }
 }

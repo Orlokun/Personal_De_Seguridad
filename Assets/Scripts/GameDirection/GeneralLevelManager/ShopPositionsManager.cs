@@ -11,15 +11,16 @@ namespace GameDirection.GeneralLevelManager
     public interface IShopPositionsManager
     {
         public void Initialize();
-        public List<Guid> GetShelvesOfInterestIds(int numberOfPois);
-        public List<IShelfInMarket> GetShelvesOfInterestData(List<Guid> poisId);
+        public List<Guid> GetFirstPoiOfInterestIds(int numberOfPois);
+        public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId);
         public void OccupyPoi(Guid occupier, Guid occupiedPoi);
         public void ReleasePoi(Guid occupier, Guid occupiedPoi);
         public Vector3 EntrancePosition();
         public Vector3 PayingPosition();
         public Vector3 InstantiatePosition();
-        public Dictionary<Guid,IShelfInMarket> ShelfObjects { get; }
-        public IShelfInMarket GetShelfObject(Guid shelfId);
+        public IShopPoiData GetPoiData(Guid poiId);
+        public Dictionary<Guid, IShopPoiData> GetAllPoisData { get; }
+
     }
 
     /// <summary>
@@ -31,34 +32,32 @@ namespace GameDirection.GeneralLevelManager
     /// </summary>
     public class ShopPositionsManager : InitializeManager, IShopPositionsManager
     {
-        private int _positionsInLevel;
-
-        private Dictionary<Guid, IShelfInMarket> mShelfObjects = new Dictionary<Guid, IShelfInMarket>();
+        private Dictionary<Guid, IShopPoiData> mPoiDatas = new Dictionary<Guid, IShopPoiData>();
+        public Dictionary<Guid, IShopPoiData> GetAllPoisData => mPoiDatas;
 
         [SerializeField] private Transform payingPosition;
         [SerializeField] private Transform entranceTransform;
         [SerializeField] private Transform customerInstantiationTransform;
-        public Dictionary<Guid, IShelfInMarket> ShelfObjects => mShelfObjects;
 
-        public List<IShelfInMarket> GetShelvesOfInterestData(List<Guid> poisId)
+        private int _positionsInLevel;
+        public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId)
         {
-            var shelves = new List<IShelfInMarket>();
+            var poisData = new List<IShopPoiData>();
             foreach (var poiId in poisId)
             {
-                if (!mShelfObjects.ContainsKey(poiId))
+                if (!mPoiDatas.ContainsKey(poiId))
                 {
                     continue;
                 }
-                shelves.Add(mShelfObjects[poiId]);
+                poisData.Add(mPoiDatas[poiId]);
             }
-            return shelves;
+            return poisData;
         }
 
         private void Awake()
         {
             this.Initialize();
         }
-
         public override void Initialize()
         {
             if (MIsInitialized)
@@ -67,35 +66,35 @@ namespace GameDirection.GeneralLevelManager
             }
             BaseInitialization();
         }
-
         protected void BaseInitialization()
         {
             // ReSharper disable once CoVariantArrayConversion
-            PopulateShelves();
-            _positionsInLevel = mShelfObjects.Count;
+            PopulatePois();
+            _positionsInLevel = mPoiDatas.Count;
             MIsInitialized = true;
         }
-
-        private void PopulateShelves()
+        private void PopulatePois()
         {
             var shelfObjects = FindObjectsOfType<ShelfInMarket>();
             foreach (var shelfObject in shelfObjects)
             {
-                var id = shelfObject.ShelfId;
-                mShelfObjects.Add(id, shelfObject);
+                shelfObject.Initialize();
+                foreach (var poi in shelfObject.GetAllPois)
+                {
+                    mPoiDatas.Add(poi.PoiId, poi);
+                }
             }
         }
-
-        public IShelfInMarket GetShelfObject(Guid shelfId)
+        public IShopPoiData GetPoiData(Guid poiId)
         {
-            if (!mShelfObjects.ContainsKey(shelfId))
+            if (!mPoiDatas.ContainsKey(poiId))
             {
+                Debug.LogWarning("[GetPoiData] Poi key must be available in dict");
                 return null;
             }
-            return mShelfObjects[shelfId];
+            return mPoiDatas[poiId];
         }
-    
-        public List<Guid> GetShelvesOfInterestIds(int numberOfPois)
+        public List<Guid> GetFirstPoiOfInterestIds(int numberOfPois)
         {
             if (!MIsInitialized)
             {
@@ -110,37 +109,35 @@ namespace GameDirection.GeneralLevelManager
             }
 
             Random.InitState(DateTime.Now.Millisecond);
-            var pickedShelves = new List<Guid>();
+            var pickedPois = new List<Guid>();
             for (var i = 0; i < numberOfPois; i++)
             {
                 Guid randomPosition;
-                while (pickedShelves.Contains(randomPosition) || randomPosition == Guid.Empty)
+                while (pickedPois.Contains(randomPosition) || randomPosition == Guid.Empty)
                 {
                     var positionIndex = Random.Range(0, _positionsInLevel-1);
-                    randomPosition = mShelfObjects.Keys.ElementAtOrDefault(positionIndex);
+                    randomPosition = mPoiDatas.Keys.ElementAtOrDefault(positionIndex);
                 }
-                pickedShelves.Add(randomPosition);
+                pickedPois.Add(randomPosition);
             }
-            return pickedShelves;
+            return pickedPois;
         }
-
         public void OccupyPoi(Guid occupier, Guid occupiedPoi)
         {
-            if (!mShelfObjects.ContainsKey(occupiedPoi))
+            if (!mPoiDatas.ContainsKey(occupiedPoi))
             {
                 return;
             }   
-            mShelfObjects[occupiedPoi].GetCustomerPoI.OccupyPoi(occupier);
+            mPoiDatas[occupiedPoi].OccupyPoi(occupier);
             PrintPoiStatus();
         }
-
         public void ReleasePoi(Guid occupier, Guid occupiedPoi)
         {
-            if (!mShelfObjects.ContainsKey(occupiedPoi))
+            if (!mPoiDatas.ContainsKey(occupiedPoi))
             {
                 return;
             }
-            var poi = mShelfObjects[occupiedPoi].GetCustomerPoI;
+            var poi = mPoiDatas[occupiedPoi];
             if (!poi.IsOccupied || poi.OccupierId != occupier)
             {
                 return;
@@ -148,15 +145,14 @@ namespace GameDirection.GeneralLevelManager
             poi.LeavePoi(occupier);
             PrintPoiStatus();
         }
-
         private void PrintPoiStatus()
         {
             var occupiedShelves = 0;
             var unOccupiedShelves = 0;
-            foreach (var shelfInMarket in mShelfObjects)
+
+            foreach (var poi in mPoiDatas)
             {
-                var isOccupied = shelfInMarket.Value.GetCustomerPoI.IsOccupied;
-                if (isOccupied)
+                if (poi.Value.IsOccupied)
                 {
                     occupiedShelves++;
                 }
@@ -167,7 +163,6 @@ namespace GameDirection.GeneralLevelManager
             }
             Debug.Log($"Occupied Shelves: {occupiedShelves}. Unoccupied Shelves: {unOccupiedShelves}");
         }
-
         public Vector3 EntrancePosition()
         {
             return entranceTransform.position;
@@ -176,7 +171,6 @@ namespace GameDirection.GeneralLevelManager
         {
             return customerInstantiationTransform.position;
         }
-        
         public Vector3 PayingPosition()
         {
             return payingPosition.position;
