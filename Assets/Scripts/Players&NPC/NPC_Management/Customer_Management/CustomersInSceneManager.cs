@@ -17,7 +17,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         [SerializeField] private GameObject[] mClientPrefabs;
         [SerializeField] private Transform mStartPosition;
         private int _mInstantiationFrequency = 2;
-        private bool _mIsSpawning = false;
+        [SerializeField]private bool _mIsSpawning = false;
         private Coroutine customersCoroutine;
         public List<NavMeshAgent> NavAgents = new List<NavMeshAgent>();
 
@@ -40,6 +40,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (_mIsSpawning)
             {
                 case false:
+                    if (customersCoroutine == null)
+                        break;
                     StopCoroutine(customersCoroutine);
                     break;
                 case true:

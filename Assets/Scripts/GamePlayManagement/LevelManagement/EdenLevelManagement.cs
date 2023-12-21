@@ -11,7 +11,6 @@ namespace GamePlayManagement.LevelManagement
         [SerializeField] private Transform levelCamerasParent;
         private ICustomersInSceneManager _customerSpawner;
 
-
         protected override void Awake()
         {
             base.Awake();

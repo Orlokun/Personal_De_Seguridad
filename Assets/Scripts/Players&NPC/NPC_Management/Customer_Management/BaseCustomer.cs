@@ -41,7 +41,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private int _mNumberOfProductsLookingFor;
         private List<Guid> _mShelvesOfInterest;
 
-        private bool _mAnyShelfAvailable;
+        private bool _mAnyPoiAvailable;
         #endregion
 
         #region CurrentCustomerStatus
@@ -129,7 +129,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             {
                 return;
             }
-            _positionsManager.ReleasePoi(MCustomerId, poi.GetShelfId);
+            _positionsManager.ReleasePoi(MCustomerId, _currentPoiId);
         }
         private void GoToNextProduct()
         {
@@ -147,7 +147,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCustomerId}");
                 return;
             }
-            _currentPoiId = GetNotVisitedShelfPoi(); 
+            _currentPoiId = GetNotVisitedPoi(); 
             var poiObject = _positionsManager.GetPoiData(_currentPoiId);
             _positionsManager.OccupyPoi(MCustomerId, _currentPoiId);
             Debug.Log($"[GoToNextPoint] Going to Poi: {_currentPoiId}.");
@@ -155,37 +155,37 @@ namespace Players_NPC.NPC_Management.Customer_Management
             NavMeshAgent.isStopped = false;
         }
 
-        private Guid GetNotVisitedShelfPoi()
+        private Guid GetNotVisitedPoi()
         {
-            var notVisitedShelves = new List<Guid>();
-            foreach (var shelf in _mPoisPurchaseStatus)
+            var notVisitedPois = new List<Guid>();
+            foreach (var poi in _mPoisPurchaseStatus)
             {
-                if (shelf.Value == false)
+                if (poi.Value == false)
                 {
-                    notVisitedShelves.Add(shelf.Key);
+                    notVisitedPois.Add(poi.Key);
                 }
             }
-            var notVisitedPoisCount = notVisitedShelves.Count;
-            if (notVisitedShelves.Count == 0)
+            var notVisitedPoisCount = notVisitedPois.Count;
+            if (notVisitedPois.Count == 0)
             {
-                Debug.LogWarning("[GetNotVisitedShelf] Not visited shelf must be more than 0");
+                Debug.LogWarning("[GetNotVisitedPoi] Not visited Poi must be more than 0");
                 return new Guid();
             }
 
             IShopPoiData poiObject = null;
             for (int i = 0; i < notVisitedPoisCount; i++)
             {
-                var isPoiOccupied = _positionsManager.GetPoiData(notVisitedShelves[i]).IsOccupied;
+                var isPoiOccupied = _positionsManager.GetPoiData(notVisitedPois[i]).IsOccupied;
                 if (isPoiOccupied)
                 {
                     continue;
                 }
-                poiObject = _positionsManager.GetPoiData(notVisitedShelves[i]);
+                poiObject = _positionsManager.GetPoiData(notVisitedPois[i]);
             }
             
             if (poiObject == null)
             {
-               Debug.LogWarning("[GetNotVisitedShelf] Not visited shelf must not be null");
+               Debug.LogWarning("[GetNotVisitedPoi] Not visited Poi must not be null");
                return new Guid();
             }
             return poiObject.PoiId;
@@ -236,8 +236,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 return;
             }
             var pois = _positionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
-            _mAnyShelfAvailable =  pois.Any(x=> x.IsOccupied == false);
-            if (!_mAnyShelfAvailable)
+            _mAnyPoiAvailable =  pois.Any(x=> x.IsOccupied == false);
+            if (!_mAnyPoiAvailable)
             {
                 Debug.Log("No shelve has a Poi available. Will Walk around and try to interact.");
                 //TODO: SetNewStateBehavior
