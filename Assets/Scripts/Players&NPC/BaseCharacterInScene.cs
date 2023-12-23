@@ -4,7 +4,6 @@ using Players_NPC.Animations;
 using Players_NPC.Animations.Interfaces;
 using UnityEngine;
 using UnityEngine.AI;
-
 namespace Players_NPC
 {
     [RequireComponent(typeof(NavMeshAgent))]
@@ -13,24 +12,22 @@ namespace Players_NPC
     [RequireComponent(typeof(BaseAnimatedAgent))]
     public abstract class BaseCharacterInScene : MonoBehaviour
     {
-        protected const string IDLE = "Idle";
-        protected const string WALK = "Walk";
-
+        protected const string Idle = "Idle";
+        protected const string Walk = "Walk";
         
-        protected Guid MCustomerId;
+        protected Guid MCharacterId;
         protected IBaseAnimatedAgent BaseAnimator;
         protected NavMeshAgent NavMeshAgent;
         protected Vector3 MInitialPosition;
-        protected IShopPositionsManager _positionsManager;
+        protected IShopPositionsManager PositionsManager;
         protected NavMeshObstacle ObstacleComponent;
-
 
         protected float MRotationSpeed = 12;
         [SerializeField] protected Transform headTransform;     
 
         protected virtual void Awake()
         {
-            MCustomerId = Guid.NewGuid();
+            MCharacterId = Guid.NewGuid();
             MInitialPosition = transform.position;
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             NavMeshAgent = GetComponent<NavMeshAgent>();
@@ -38,10 +35,9 @@ namespace Players_NPC
             ObstacleComponent = GetComponent<NavMeshObstacle>();
             ObstacleComponent.enabled = false;
         }
-
         protected virtual void Start()
         {
-            _positionsManager = FindObjectOfType<ShopPositionsManager>();
+            PositionsManager = FindObjectOfType<ShopPositionsManager>();
         }
         protected virtual void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
         {
@@ -51,7 +47,6 @@ namespace Players_NPC
             // Smoothly rotate towards the target
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, MRotationSpeed * Time.deltaTime);
         }
-        
         protected virtual void RotateTowards(Transform rotatingObject, Transform facingTowards)
         {
             Vector3 targetDirection = facingTowards.position - rotatingObject.position;

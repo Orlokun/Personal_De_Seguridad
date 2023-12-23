@@ -74,7 +74,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         protected override void Start()
         {
             base.Start();
-            _mPayingPosition = _positionsManager.PayingPosition();
+            _mPayingPosition = PositionsManager.PayingPosition();
             PopulateShelvesOfInterestData();
             SetCustomerAttitudeStatus(BaseAttitudeStatus.Entering);
             StartWalking();
@@ -84,7 +84,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         private void PopulateShelvesOfInterestData()
         {
-            _mShelvesOfInterest = _positionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
+            _mShelvesOfInterest = PositionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
             foreach (var guid in _mShelvesOfInterest)
             {
                 _mPoisPurchaseStatus.Add(guid, false);
@@ -93,7 +93,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private void StartWalking()
         {
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
-            BaseAnimator.ChangeAnimationState(WALK);
+            BaseAnimator.ChangeAnimationState(Walk);
         }
         #endregion
         private void Update()
@@ -124,12 +124,12 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void ReleaseCurrentPoI()
         {
-            var poi = _positionsManager.GetPoiData(_currentPoiId);
-            if (!poi.IsOccupied || poi.OccupierId != MCustomerId)
+            var poi = PositionsManager.GetPoiData(_currentPoiId);
+            if (!poi.IsOccupied || poi.OccupierId != MCharacterId)
             {
                 return;
             }
-            _positionsManager.ReleasePoi(MCustomerId, _currentPoiId);
+            PositionsManager.ReleasePoi(MCharacterId, _currentPoiId);
         }
         private void GoToNextProduct()
         {
@@ -144,12 +144,12 @@ namespace Players_NPC.NPC_Management.Customer_Management
             if (!anyPoiAvailable)
             {
                 //TODO: Walk randomly and find something to do
-                Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCustomerId}");
+                Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCharacterId}");
                 return;
             }
             _currentPoiId = GetNotVisitedPoi(); 
-            var poiObject = _positionsManager.GetPoiData(_currentPoiId);
-            _positionsManager.OccupyPoi(MCustomerId, _currentPoiId);
+            var poiObject = PositionsManager.GetPoiData(_currentPoiId);
+            PositionsManager.OccupyPoi(MCharacterId, _currentPoiId);
             Debug.Log($"[GoToNextPoint] Going to Poi: {_currentPoiId}.");
             NavMeshAgent.SetDestination(poiObject.GetPosition);
             NavMeshAgent.isStopped = false;
@@ -175,12 +175,12 @@ namespace Players_NPC.NPC_Management.Customer_Management
             IShopPoiData poiObject = null;
             for (int i = 0; i < notVisitedPoisCount; i++)
             {
-                var isPoiOccupied = _positionsManager.GetPoiData(notVisitedPois[i]).IsOccupied;
+                var isPoiOccupied = PositionsManager.GetPoiData(notVisitedPois[i]).IsOccupied;
                 if (isPoiOccupied)
                 {
                     continue;
                 }
-                poiObject = _positionsManager.GetPoiData(notVisitedPois[i]);
+                poiObject = PositionsManager.GetPoiData(notVisitedPois[i]);
             }
             
             if (poiObject == null)
@@ -195,7 +195,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         {
             var unPurchasedPoiIds = _mPoisPurchaseStatus.Where(x => x.Value == false);
             var unPurchasedPoisKeys = unPurchasedPoiIds.Select(x => x.Key);
-            var availablePoisList = _positionsManager.GetPoisOfInterestData(unPurchasedPoisKeys.ToList());
+            var availablePoisList = PositionsManager.GetPoisOfInterestData(unPurchasedPoisKeys.ToList());
             var anyPoiAvailable = availablePoisList.Any(x => x.IsOccupied==false);
             return anyPoiAvailable;
         }
@@ -235,7 +235,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             {
                 return;
             }
-            var pois = _positionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
+            var pois = PositionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
             _mAnyPoiAvailable =  pois.Any(x=> x.IsOccupied == false);
             if (!_mAnyPoiAvailable)
             {
@@ -458,7 +458,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             switch (newAttitude)
             {
                 case BaseAttitudeStatus.EvaluatingProduct:
-                    var pointOfInterest = _positionsManager.GetPoiData(_currentPoiId);
+                    var pointOfInterest = PositionsManager.GetPoiData(_currentPoiId);
                     _tempStoreProductOfInterest = pointOfInterest.ChooseRandomProduct();
                     _tempTargetOfInterest = _tempStoreProductOfInterest.Item1;
                     break;
@@ -472,13 +472,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 
                 case BaseAttitudeStatus.Leaving:
                     NavMeshAgent.enabled = true;
-                    NavMeshAgent.SetDestination(_positionsManager.EntrancePosition());
+                    NavMeshAgent.SetDestination(PositionsManager.EntrancePosition());
                     NavMeshAgent.isStopped = false;
                     break;
                 
                 case BaseAttitudeStatus.Entering:
                     NavMeshAgent.enabled = true;
-                    NavMeshAgent.SetDestination(_positionsManager.EntrancePosition());
+                    NavMeshAgent.SetDestination(PositionsManager.EntrancePosition());
                     NavMeshAgent.isStopped = false;
                     break;
             }
@@ -495,20 +495,20 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     ObstacleComponent.enabled = false;
                     NavMeshAgent.enabled = true;
                     NavMeshAgent.isStopped = false;
-                    BaseAnimator.ChangeAnimationState(WALK);
+                    BaseAnimator.ChangeAnimationState(Walk);
                     break;
                 case  BaseCustomerMovementStatus.Idle:
                     NavMeshAgent.isStopped = true;
                     NavMeshAgent.enabled = false;
                     ObstacleComponent.enabled = true;
-                    BaseAnimator.ChangeAnimationState(IDLE);
+                    BaseAnimator.ChangeAnimationState(Idle);
                     break;
                 case BaseCustomerMovementStatus.EvaluatingProduct:
                     NavMeshAgent.isStopped = true;
                     NavMeshAgent.enabled = false;
 
                     ObstacleComponent.enabled = true;
-                    BaseAnimator.ChangeAnimationState(IDLE);
+                    BaseAnimator.ChangeAnimationState(Idle);
 
                     break;
             }
