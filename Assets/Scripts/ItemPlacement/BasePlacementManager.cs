@@ -25,6 +25,8 @@ namespace ItemPlacement
         protected bool IsMouseReleased = false;
         protected bool IsInsideAllowedZone = false;
 
+        protected Vector3 mousePosition;
+
         protected Camera MainCamera;
         
         //The scaling factor of the object
@@ -72,30 +74,21 @@ namespace ItemPlacement
             }
         }
 
-        protected void MoveObjectPreview()
+        protected virtual void MoveObjectPreview()
         {
-            ICameraPlacementPosition cameraPosition;
-            Vector3 mousePosition;
-
 #if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
         Touch touch = Input.GetTouch (touchID);
         screenPosition = new Vector3 (touch.position.x, touch.position.y, 0);
 #else
             mousePosition = Input.mousePosition;
 #endif
-            cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(mousePosition);
-            CurrentPlacedObject.transform.position = new Vector3(cameraPosition.CameraPosition.x, cameraPosition.CameraPosition.y, cameraPosition.CameraPosition.z);
-            if (!CurrentPlacedObject.activeInHierarchy)
-            {
-                CurrentPlacedObject.SetActive(true);
-            }
         }
 
         protected void RotateObjectPreview()
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                CurrentPlacedObject.transform.Rotate(Vector3.up, 90);
+                CurrentPlacedObject.transform.Rotate(0f, 45f, 0f, Space.World);
             }
         }
         protected abstract IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition);

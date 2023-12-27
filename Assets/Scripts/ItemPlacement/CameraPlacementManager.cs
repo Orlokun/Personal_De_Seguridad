@@ -35,6 +35,7 @@ namespace ItemPlacement
             _cameraPositionId = cameraPositionId;
             _cameraPosition = cameraPosition;
             _isOccupied = false;
+            _positionName = positionName;
         }
 
         public string PositionName => _positionName;
@@ -84,6 +85,20 @@ namespace ItemPlacement
         protected new void Update()
         {
             base.Update();
+        }
+
+        protected override void MoveObjectPreview()
+        {
+            ICameraPlacementPosition cameraPosition;
+            base.MoveObjectPreview();
+            cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(mousePosition);
+            var currentCameraRotationManager = (IItemCameraRotation)CurrentPlacedObject.GetComponent<ItemCameraRotation>();
+            currentCameraRotationManager.SetNewPosition(cameraPosition.CameraPosition);
+            CurrentPlacedObject.transform.position = new Vector3(cameraPosition.CameraPosition.x, cameraPosition.CameraPosition.y, cameraPosition.CameraPosition.z);
+            if (!CurrentPlacedObject.activeInHierarchy)
+            {
+                CurrentPlacedObject.SetActive(true);
+            }
         }
         
         protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)

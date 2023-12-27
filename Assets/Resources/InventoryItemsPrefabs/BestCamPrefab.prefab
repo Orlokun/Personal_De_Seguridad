@@ -58,8 +58,8 @@ GameObject:
   - component: {fileID: 1260554030587089717}
   - component: {fileID: 1165470346}
   - component: {fileID: 9213300813894591522}
-  - component: {fileID: 1717468885158706658}
   - component: {fileID: 8685407650118850411}
+  - component: {fileID: 1717468885158706658}
   m_Layer: 10
   m_Name: BestCamPrefab
   m_TagString: Untagged
@@ -212,19 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08fc9d71d623f4c4091c51fc385bf91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1717468885158706658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4815206346376209766}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d4572c0b37347129f4ec873f7dfebd2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myMaterial: {fileID: 2100000, guid: 37ba7098778ba5e43a88d3e0d98f73dd, type: 2}
 --- !u!114 &8685407650118850411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -511,3 +498,16 @@ MonoBehaviour:
   missIndexs: 
   hitIndexCount: 0
   missIndexCount: 0
+--- !u!114 &1717468885158706658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4815206346376209766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d4572c0b37347129f4ec873f7dfebd2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myMaterial: {fileID: 2100000, guid: 37ba7098778ba5e43a88d3e0d98f73dd, type: 2}
