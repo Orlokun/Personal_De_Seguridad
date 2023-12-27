@@ -1,4 +1,5 @@
 using UnityEngine;
+using Utils;
 
 namespace ItemPlacement
 {
@@ -29,23 +30,25 @@ namespace ItemPlacement
             CurrentPlacedObject.transform.Rotate(0,45,0);
         }
 
-        protected override Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
+        protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)
         {
             ConfirmCamera();
-            Ray ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
+            var ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
             RaycastHit hitInfo;
-            Vector3 newPoint;
-            if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask))
+            IBasePlacementPosition newPoint;
+            if (Physics.Raycast(ray, out hitInfo, 500, targetLayerMask))
             {
                 Debug.Log($"[FloorPlacementManager.GetPlacementPoint] HIT FLOOR: {hitInfo.collider.gameObject.name}");
                 var hPoint = hitInfo.point + new Vector3(0, deltaY, 0);
-                newPoint = hPoint;
+                var placementPosition = Factory.CreateFloorPlacementPosition(hPoint);
+                newPoint = placementPosition;
                 IsPlaceSuccess = true;
             }
             else
             {
-                Debug.Log($"[FloorPlacementManager.GetPlacementPoint] DIDNT HIT FLOOR.");
-                newPoint = ray.GetPoint(zDistance);
+                Debug.Log($"[FloorPlacementManager.GetPlacementPoint] DIDN'T HIT FLOOR.");
+                var placementPosition = Factory.CreateFloorPlacementPosition(ray.GetPoint(zDistance));
+                newPoint = placementPosition;
                 IsPlaceSuccess = false;
             }
             return newPoint;

@@ -1,3 +1,4 @@
+using System;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using DialogueSystem;
@@ -5,15 +6,32 @@ using GameDirection.DayLevelSceneManagers;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
+using ItemPlacement;
 using Players_NPC.NPC_Management.Customer_Management;
+using UnityEngine;
 
 namespace Utils
 {
     public static class Factory
     {
+        public static FloorPlacementPosition CreateFloorPlacementPosition(Vector3 position)
+        {
+            return new FloorPlacementPosition(position);
+        }
+        public static CameraPlacementPosition CreateCameraPlacementPosition(Guid id, Vector3 position, string positionName)
+        {
+            return new CameraPlacementPosition(id, position, positionName);
+        }
+        public static StoreProductObjectData CreateStoreProductObject(ProductsLevelEden id, string name, int type, int quantity, int price, int hideChances, int tempting, int punishment,
+            string prefabName, string productBrand, string productSpriteName,string productDescription)
+        {
+            return new StoreProductObjectData(id, name, type, quantity, price, hideChances, tempting, punishment,
+                 prefabName, productBrand, productSpriteName, productDescription);
+        }
         public static BaseCustomerTypeData CreateBaseCustomerTypeData()
         {
             return new BaseCustomerTypeData();

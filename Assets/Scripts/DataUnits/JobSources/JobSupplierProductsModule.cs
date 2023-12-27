@@ -78,7 +78,6 @@ namespace DataUnits.JobSources
                         $"Quantity greater than zero");
                     return;
                 }
-                
                 var gotPrice = int.TryParse(_mProductsDataString.values[i][4], out var productPrice);
                 if (productPrice == 0 || !gotPrice)
                 {
@@ -103,7 +102,6 @@ namespace DataUnits.JobSources
                         $"Tempting greater than zero");
                     return;
                 }
-                
                 var gotPunish = int.TryParse(_mProductsDataString.values[i][7], out var productPunish);
                 if (productPunish == 0 || !gotPunish)
                 {
@@ -113,14 +111,16 @@ namespace DataUnits.JobSources
                     return;
                 }
                 
+                
                 var prefabName = _mProductsDataString.values[i][8];
                 var productBrand = _mProductsDataString.values[i][9];
                 var prefabSpriteName = _mProductsDataString.values[i][10];
                 var productDescription = _mProductsDataString.values[i][11];
 
-                var productObject = new StoreProductObjectData(productBitId, productName, productType, productQuantity,
-                    productPrice, productHideValue, productTempting, productPunish, prefabName, productBrand, 
+                var productObject = Factory.CreateStoreProductObject(productBitId, productName, productType, productQuantity,
+                    productPrice, productHideValue, productTempting, productPunish, prefabName, productBrand,
                     prefabSpriteName, productDescription);
+                
                 _mProductsInStore.Add(productObject.ProductId, productObject);
             }
             Debug.Log($"[LoadProductsFromJson] Finish Serializing Job supplier's {_supplierObject.StoreName} Product Json data");

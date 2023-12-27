@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using ExternalAssets._3DFOV.Scripts;
+
 namespace FOV3D
 
 {

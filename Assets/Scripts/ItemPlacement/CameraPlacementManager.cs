@@ -1,19 +1,63 @@
+using System;
 using System.Collections.Generic;
-using Cinemachine;
+using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
+using Utils;
 
 namespace ItemPlacement
 {
+    public class FloorPlacementPosition : IBasePlacementPosition
+    {
+        public Vector3 CameraPosition { get; }
+        public FloorPlacementPosition(Vector3 cameraPosition)
+        {
+            CameraPosition = cameraPosition;
+        }
+    }
+    public interface IBasePlacementPosition
+    {
+        public Vector3 CameraPosition { get; }
+    }
+    public interface ICameraPlacementPosition : IBasePlacementPosition
+    {
+        public string PositionName { get; }
+        public Guid Id { get; }
+        public bool IsOccupied { get; }
+    }
+    public class CameraPlacementPosition : ICameraPlacementPosition
+    {
+        private Guid _cameraPositionId;
+        private Vector3 _cameraPosition;
+        private bool _isOccupied;
+        private string _positionName;
+        public CameraPlacementPosition(Guid cameraPositionId, Vector3 cameraPosition, string positionName)
+        {
+            _cameraPositionId = cameraPositionId;
+            _cameraPosition = cameraPosition;
+            _isOccupied = false;
+        }
+
+        public string PositionName => _positionName;
+        public Guid Id => _cameraPositionId;
+        public Vector3 CameraPosition => _cameraPosition;
+        public bool IsOccupied => _isOccupied;
+    }
+    
     public class CameraPlacementManager : BasePlacementManager
     {
         private static CameraPlacementManager _instance;
         public static IBasePlacementManager Instance {
             get { return _instance; }
         }
-
+        
+        #region Camera Positions In Scene
         [SerializeField] private Transform cameraObjectsParent;
-        private List<Vector3> m_cameraPositions = new List<Vector3>();
+        private Dictionary<Guid, ICameraPlacementPosition> m_cameraPositions = new Dictionary<Guid, ICameraPlacementPosition>();
         [SerializeField] private float zDistance;
+
+        private ICameraPlacementPosition CurrentPlacementPosition;
+        #endregion
+        
         protected override void Awake()
         {
             _instance = this;
@@ -32,7 +76,8 @@ namespace ItemPlacement
             for (var i= 0; i<_instance.cameraObjectsParent.childCount;i++)
             {
                 var cameraObject = cameraObjectsParent.GetChild(i);
-                m_cameraPositions.Add(cameraObject.position);
+                var cameraPositionData = Factory.CreateCameraPlacementPosition(Guid.NewGuid(), cameraObject.position, cameraObject.gameObject.name);
+                m_cameraPositions.Add(cameraPositionData.Id, cameraPositionData);
             }
         }
         
@@ -41,56 +86,68 @@ namespace ItemPlacement
             base.Update();
         }
         
-        protected override Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
+        protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)
         {
-            Ray ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
+            ConfirmCamera();
+            var ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
             RaycastHit hitInfo;
             
-            var newPoint = new Vector3();
+            var hitPoint = new Vector3();
             
-            if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask))
+            if (Physics.Raycast(ray, out hitInfo, 500, targetLayerMask))
             {
-                newPoint = hitInfo.point;
-                var closestCameraPoint = GetClosestCameraPoint(newPoint);
-                var newPointDistanceToClosestCamera = Vector3.Distance(newPoint, closestCameraPoint);
-                if (newPointDistanceToClosestCamera <= 5)
-                {
-                    newPoint = closestCameraPoint;
-                }
+                hitPoint = hitInfo.point;
+                var closestCameraPoint = GetClosestCameraPoint(hitPoint);
+                CurrentPlacementPosition = closestCameraPoint;
+                return closestCameraPoint;
             }
             else
             {
-                newPoint = ray.GetPoint(zDistance);
+                hitPoint = ray.GetPoint(zDistance);
+                return null;
             }
-            Debug.Log($"Current Position of selected item: {newPoint}");
-            return newPoint;
+            Debug.Log($"Current Position of selected item: {CurrentPlacementPosition.CameraPosition}");
         }
 
         protected override void CreateObjectInPlace()
         {
             base.CreateObjectInPlace();
-            var cineMachineComponent = LastInstantiatedGameObject.GetComponent<CameraItemPrefab>();
-
+            var fov = LastInstantiatedGameObject.GetComponent<FieldOfView3D>();
+            fov.ToggleInGameFoV(false);
         }
 
-        private Vector3 GetClosestCameraPoint(Vector3 point)
+        protected override void AttachObjectProcess(GameObject newObject)
+        {
+            base.AttachObjectProcess(newObject);
+            var fov = (IFieldOfView3D)CurrentPlacedObject.GetComponent<FieldOfView3D>();
+            fov.ToggleInGameFoV(true);
+        }
+
+        private ICameraPlacementPosition GetClosestCameraPoint(Vector3 point)
         {
             var closestCameraDistance = 100f;
-            var closestCameraPosition = point;
-            for (var i = 0;i<m_cameraPositions.Count;i++)
+            ICameraPlacementPosition closestCameraPosition;
+            foreach (var cameraPosition in m_cameraPositions)
             {
-                if (Vector3.Distance(point, m_cameraPositions[i]) > 5)
+                var positionData = cameraPosition.Value;
+                if (positionData.IsOccupied)
                 {
                     continue;
                 }
-                var distance = Vector3.Distance(point, m_cameraPositions[i]);
+                if (Vector3.Distance(point, positionData.CameraPosition) > 5)
+                {
+                    continue;
+                }
+                var distance = Vector3.Distance(point, positionData.CameraPosition);
+
                 if (distance<closestCameraDistance)
                 {
                     closestCameraDistance = distance;
-                    closestCameraPosition = m_cameraPositions[i];
+                    closestCameraPosition = positionData;
+                    return closestCameraPosition;
                 }
             }
-            return closestCameraPosition;
+            return null;
         }
     }
 }

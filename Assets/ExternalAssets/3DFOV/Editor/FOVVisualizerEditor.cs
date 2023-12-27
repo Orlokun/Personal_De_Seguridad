@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
+using ExternalAssets._3DFOV.Scripts;
 
 
 namespace FOV3D

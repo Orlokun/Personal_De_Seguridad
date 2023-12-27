@@ -21,7 +21,7 @@ namespace ItemPlacement
         
         protected bool IsPlaceSuccess = false;
         protected int TouchID;
-        protected bool IsDragging = false;
+        protected bool IsAttemptingPlacement = false;
         protected bool IsMouseReleased = false;
         protected bool IsInsideAllowedZone = false;
 
@@ -41,42 +41,27 @@ namespace ItemPlacement
             {
                 return;
             }
-
-            if (IsDraggingObject())
-            {
-                Debug.Log("[Update] User clicked or is inside zone");
-                IsDragging = true;
-            }
-            else
-            {
-                IsDragging = false;
-            }
             
-            if (IsDragging)
+            if (IsAttemptingPlacement)
             {
-                MoveObjectPreview();
-            }
-            if (IsDragging && IsMouseReleased)
-            {
-                CheckIfDragReleaseIsAllowed();
-            }
-
-            if (MouseTouchesExpectedLayerAndCurrentObjectIsActive())
-            {
-                IsInsideAllowedZone = true;
-                if (!CurrentPlacedObject.activeInHierarchy)
+                if (MouseTouchesExpectedLayer())
                 {
-                    CurrentPlacedObject.SetActive(IsInsideAllowedZone);
+                    Debug.Log($"{CurrentPlacedObject.name}: Object is inside Placement zone");
+                    IsInsideAllowedZone = true;
+                    if (!CurrentPlacedObject.activeInHierarchy)
+                    {
+                        CurrentPlacedObject.SetActive(IsInsideAllowedZone);
+                    }
+                    MoveObjectPreview();
+                    RotateObjectPreview();
                 }
-                MoveObjectPreview();
-                RotateObjectPreview();
-            }
-            else
-            {
-                if (CurrentPlacedObject != null && IsInsideAllowedZone && CurrentPlacedObject.activeInHierarchy)
+                else
                 {
-                    IsInsideAllowedZone = false;
-                    CurrentPlacedObject.SetActive(IsInsideAllowedZone);
+                    if (CurrentPlacedObject != null && IsInsideAllowedZone && CurrentPlacedObject.activeInHierarchy)
+                    {
+                        IsInsideAllowedZone = false;
+                        CurrentPlacedObject.SetActive(IsInsideAllowedZone);
+                    }
                 }
             }
             
@@ -89,7 +74,7 @@ namespace ItemPlacement
 
         protected void MoveObjectPreview()
         {
-            Vector3 point;
+            ICameraPlacementPosition cameraPosition;
             Vector3 mousePosition;
 
 #if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
@@ -98,8 +83,12 @@ namespace ItemPlacement
 #else
             mousePosition = Input.mousePosition;
 #endif
-            point = GetPlacementPoint(mousePosition);
-            CurrentPlacedObject.transform.position = new Vector3(point.x, point.y, point.z);
+            cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(mousePosition);
+            CurrentPlacedObject.transform.position = new Vector3(cameraPosition.CameraPosition.x, cameraPosition.CameraPosition.y, cameraPosition.CameraPosition.z);
+            if (!CurrentPlacedObject.activeInHierarchy)
+            {
+                CurrentPlacedObject.SetActive(true);
+            }
         }
 
         protected void RotateObjectPreview()
@@ -109,10 +98,13 @@ namespace ItemPlacement
                 CurrentPlacedObject.transform.Rotate(Vector3.up, 90);
             }
         }
-
-        protected virtual Vector3 GetPlacementPoint(Vector3 mouseScreenPosition)
+        protected abstract IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition);
+        protected void ConfirmCamera()
         {
-            return default;
+            if (MainCamera == null)
+            {
+                MainCamera = Camera.main;
+            }
         }
 
         protected bool IsDraggingObject()
@@ -138,14 +130,20 @@ namespace ItemPlacement
         }
         public void AttachNewObject(GameObject newObject)
         {
+            AttachObjectProcess(newObject);
+        }
+
+        protected virtual void AttachObjectProcess(GameObject newObject)
+        {
             if (CurrentPlacedObject)
             {
                 CurrentPlacedObject.SetActive(false);
             }
-
             CurrentPlacedObject = newObject;
             deltaY = CurrentPlacedObject.transform.localScale.y;
             Debug.Log($"[AttachNewObject] New 'Current Placed Object = {CurrentPlacedObject.name}");
+            CurrentPlacedObject.SetActive(true);
+            IsAttemptingPlacement = true;
         }
 
         public void ToggleRoofObject(bool isActive)
@@ -165,47 +163,42 @@ namespace ItemPlacement
         
         protected void ResetSelectedObject()
         {
-            IsDragging = false;
+            IsAttemptingPlacement = false;
             CurrentPlacedObject.SetActive(false);
             CurrentPlacedObject = null;
         }
+        
         protected virtual void CreateObjectInPlace()
         {
-            GameObject obj = Instantiate(CurrentPlacedObject);
-            SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));      
+            var obj = Instantiate(CurrentPlacedObject);
+            SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
             LastInstantiatedGameObject = obj;
             obj.transform.position = CurrentPlacedObject.transform.position;
             obj.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;
             obj.transform.localScale *= scaleFactor;
         }
         
-        protected bool MouseTouchesExpectedLayerAndCurrentObjectIsActive()
+        protected bool MouseTouchesExpectedLayer()
         {
-            if (!CurrentPlacedObject)
-            {
-                Debug.Log("[ObjectSelectedInsideZone] No item selected");
-                return false;
-            }
             var newPoint = Input.mousePosition;
             if (Camera.main != null)
             {
                 Ray ray = Camera.main.ScreenPointToRay(newPoint);
                 RaycastHit hitInfo;
-                if (Physics.Raycast(ray, out hitInfo, 1000, targetLayerMask) && !Physics.Raycast(ray, 1000, blockLayerMasks))
+                if (Physics.Raycast(ray, out hitInfo, 500, targetLayerMask) && !Physics.Raycast(ray, 1000, blockLayerMasks))
                 {
                     Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
                     return true;
                 }
-                else if(Physics.Raycast(ray, out hitInfo, 1000))
+                if(Physics.Raycast(ray, out hitInfo, 500))
                 {
                     Debug.Log($"[ObjectSelectedInsideZone] Hit something else. {hitInfo.collider.name}");
                 }
             }
-
             return false;
         }
         
-        protected void CheckIfDragReleaseIsAllowed()
+        protected void CheckIfClickIsAllowed()
         {
             Debug.Log("[CheckIfPlaceSuccess] Checking if place meets conditions");
             if (IsPlaceSuccess)

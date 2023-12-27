@@ -3,7 +3,6 @@ using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
-using ItemPlacement;
 using UI.TabManagement.AbstractClasses;
 using UnityEngine;
 namespace UI.TabManagement

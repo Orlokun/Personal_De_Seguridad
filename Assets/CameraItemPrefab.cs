@@ -10,12 +10,12 @@ public class CameraItemPrefab : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         beingUsed = false;
-        myVc = GetComponent<CinemachineVirtualCamera>();
+        /*myVc = GetComponent<CinemachineVirtualCamera>();
         if (myVc == null)
         {
             Debug.LogError("Camera Item must have a camera available");
         }
-        
+        */
     }
 
     public void OnPointerClick(PointerEventData eventData)

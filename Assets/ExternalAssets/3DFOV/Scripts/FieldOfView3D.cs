@@ -1,16 +1,20 @@
-using System;
 using System.Collections;
-using System.Linq;
 using System.Collections.Generic;
-using ExternalAssets._3DFOV.Scripts;
+using System.Linq;
+using FOV3D;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace FOV3D
+namespace ExternalAssets._3DFOV.Scripts
 {
+    public interface IFieldOfView3D
+    {
+        public void ToggleInGameFoV(bool isActive);
+    }
+    
     [ExecuteInEditMode]
     [RequireComponent(typeof(DrawFoVLines))]
-    public class FieldOfView3D : MonoBehaviour
+    public class FieldOfView3D : MonoBehaviour, IFieldOfView3D
     {
         #region Variables
         [Range(0f, 50f)] public float viewRadius = 5f;
@@ -25,23 +29,24 @@ namespace FOV3D
             Spherecast
         }
         public DetectionType detectionType;
-
         [Range(0.1f, 1f)] public float sphereCastRadius = 0.1f;
 
+        #region Target Detection
         public List<GameObject> seenObjects = new List<GameObject>();
-
         public List<GameObject> targetObjects = new List<GameObject>();
         public UnityEvent onTargetSeen;
         public UnityEvent onTargetLost;
 
         [SerializeField] private bool detectionActive = true;
+        #endregion
 
         private bool m_goldenRatio = true;
         [Range(0f, 2f)] private float turnFraction;
         private float power = 1;
 
         private FOVVisualizer fovV;
-        private IDrawLines _drawLines;
+        private IDrawFoVLines _drawFoVLines;
+        private bool isDrawFoVActive;
 
         [HideInInspector] public List<Vector3> m_directions = new List<Vector3>();
         [HideInInspector] public List<Vector3> m_point = new List<Vector3>();
@@ -59,34 +64,39 @@ namespace FOV3D
             seenObjects = new List<GameObject>();
             m_point = new List<Vector3>();
             tempbool = false;
-            _drawLines = gameObject.GetComponent<DrawFoVLines>();
+            isDrawFoVActive = false;
+            _drawFoVLines = gameObject.GetComponent<DrawFoVLines>();
         }
+        
         private void Update()
         {
             if (m_directions.Count != viewResolution)
+            {
                 StartCoroutine(ListSetup(m_directions, viewResolution));
-
+            }
+            #region UpdateSetup
             if (m_goldenRatio) turnFraction = goldenRatio;
-            float angleIncrement = Mathf.PI * 2 * turnFraction;
-            float radians = viewAngle * Mathf.Deg2Rad;
-            float c = -1 * Mathf.Cos(radians) + 1;
+            var angleIncrement = Mathf.PI * 2 * turnFraction;
+            var radians = viewAngle * Mathf.Deg2Rad;
+            var c = -1 * Mathf.Cos(radians) + 1;
 
             Vector3 rot = transform.rotation.eulerAngles;
             rot = new Vector3(rot.x + 270, rot.y, 180);
             Quaternion myRotation = Quaternion.Euler(rot);
-            _drawLines.ClearAllLines();
-            for (int i = 0; i < viewResolution; i++)
+            _drawFoVLines.ClearAllLines();
+            #endregion
+            for (var i = 0; i < viewResolution; i++)
             {
-                float t = (float)i / viewResolution;
-                float inclination = Mathf.Acos(1 - c * t);
+                var t = (float)i / viewResolution;
+                var inclination = Mathf.Acos(1 - c * t);
                 inclination = Mathf.Pow(inclination, power);
-                float azimuth = angleIncrement * i;
+                var azimuth = angleIncrement * i;
 
-                float x = Mathf.Sin(inclination) * Mathf.Cos(azimuth) * viewRadius;
-                float y = Mathf.Sin(inclination) * Mathf.Sin(azimuth) * viewRadius;
-                float z = Mathf.Cos(inclination) * viewRadius;
+                var x = Mathf.Sin(inclination) * Mathf.Cos(azimuth) * viewRadius;
+                var y = Mathf.Sin(inclination) * Mathf.Sin(azimuth) * viewRadius;
+                var z = Mathf.Cos(inclination) * viewRadius;
 
-                Vector3 endPoint = new Vector3(x, z, y);
+                var endPoint = new Vector3(x, z, y);
                 endPoint = myRotation * endPoint;
 
                 m_directions[i] = endPoint;
@@ -95,7 +105,7 @@ namespace FOV3D
                 if (detectionActive)
                 {
                     RaycastHit hit;
-                    Vector3 dir = (m_directions[i]).normalized;
+                    var dir = (m_directions[i]).normalized;
 
                     if (i == 0)
                     {
@@ -133,31 +143,36 @@ namespace FOV3D
                             }                                                          
                             break;
                     }
-
                 }
-                
-                /*RaycastHit myHit;
-                if (Physics.Raycast(transform.position, m_directions[i], out myHit, viewRadius, layerMask))
-                {
-                    m_directions[i] = myHit.point;
-                }*/
                 if ((ValidateVisualizer()) && (fovV.viewAllRaycastLines)) fovV.DrawRaycastLines(i);
-                _drawLines.DrawDirectionLine(m_directions[i]);
+                ProcessInGameVisualization(m_directions[i]);
             }
         }
+        private void ProcessInGameVisualization(Vector3 direction)
+        {
+            if (isDrawFoVActive)
+            {
+                _drawFoVLines.DrawDirectionLine(direction);
+            }
+        }
+        public void ToggleInGameFoV(bool isActive)
+        {
+            isDrawFoVActive = isActive;
+        }
+        
         private Vector3 SphereCase(RaycastHit hit, int i)
         {
-            Vector3 midPoint = new Vector3();
+            var midPoint = new Vector3();
             if (seenObjects != null)
             {
                 Ray r = new Ray(transform.position, m_directions[i]);
-                Vector3 a = transform.position;
-                Vector3 b = hit.point;
-                Vector3 c = r.GetPoint(viewRadius - sphereCastRadius);
+                var a = transform.position;
+                var b = hit.point;
+                var c = r.GetPoint(viewRadius - sphereCastRadius);
 
-                float v1 = Vector3.Dot((c - a), (c - a));
-                float v2 = Vector3.Dot((b - a), (c - a));
-                float t = v2 / v1;
+                var v1 = Vector3.Dot((c - a), (c - a));
+                var v2 = Vector3.Dot((b - a), (c - a));
+                var t = v2 / v1;
 
                 midPoint = (a + t * (c - a));       
                 return midPoint;
@@ -178,7 +193,7 @@ namespace FOV3D
             {
                 if (seenObjects.Count() > 0)
                 {
-                    int index = seenObjects.IndexOf(viewObj);
+                    var index = seenObjects.IndexOf(viewObj);
                     if (Vector3.Distance(transform.position, hit.point) < viewRadius)
                         m_point[index] = hit.point;
                 }
@@ -242,12 +257,12 @@ namespace FOV3D
         }
         bool CheckObstruction(GameObject og, Vector3 point)
         {
-            Vector3 dir = (point - transform.position);
+            var dir = (point - transform.position);
             float dis = Vector3.Distance(transform.position, point);
             RaycastHit hitCheck;
             if (Physics.Linecast(transform.position, point, out hitCheck, layerMask))
             {
-                GameObject g = hitCheck.collider.gameObject;
+                var g = hitCheck.collider.gameObject;
                 if (og != g)
                     return false;
                 else
@@ -255,7 +270,7 @@ namespace FOV3D
             }
             else if (Physics.Raycast(transform.position, dir, out hitCheck, dis, layerMask))
             {
-                GameObject g = hitCheck.collider.gameObject;
+                var g = hitCheck.collider.gameObject;
                 if (og != g)
                     return false;
                 else
@@ -263,7 +278,7 @@ namespace FOV3D
             }
             else if (Physics.SphereCast(transform.position, .01f, dir, out hitCheck, dis, layerMask))
             {
-                GameObject g = hitCheck.collider.gameObject;
+                var g = hitCheck.collider.gameObject;
                 if (og != g)
                     return false;
                 else
@@ -301,6 +316,4 @@ namespace FOV3D
                 return false;
         }
     }
-
-
 }
