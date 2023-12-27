@@ -1,29 +1,28 @@
 using Cinemachine;
+using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CameraItemPrefab : MonoBehaviour, IPointerClickHandler
+public class CameraItemPrefab : MonoBehaviour, IInteractiveClickableObject
 {
     public bool beingUsed;
     private CinemachineVirtualCamera myVc;
     public CinemachineVirtualCamera VirtualCamera => myVc;
+
+    private DrawFoVLines myDrawFieldOfView;
+    private FieldOfView3D my3dFieldOfView;
     private void Awake()
     {
         beingUsed = false;
-        /*myVc = GetComponent<CinemachineVirtualCamera>();
-        if (myVc == null)
+        myDrawFieldOfView = GetComponent<DrawFoVLines>();
+        if (myDrawFieldOfView == null)
         {
-            Debug.LogError("Camera Item must have a camera available");
+            Debug.LogError("Camera Item must have a Draw Field of View available");
         }
-        */
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void SendClickObject()
     {
-        Debug.Log("Clicked object!");
-        if (beingUsed)
-        {
-            return;
-        }
+        Debug.Log($"Clicked object!{gameObject.name}");
     }
 }

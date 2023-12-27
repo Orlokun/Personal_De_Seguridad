@@ -154,6 +154,10 @@ namespace ExternalAssets._3DFOV.Scripts
             {
                 _drawFoVLines.DrawDirectionLine(direction);
             }
+            else
+            {
+                _drawFoVLines.ClearAllLines();
+            }
         }
         public void ToggleInGameFoV(bool isActive)
         {

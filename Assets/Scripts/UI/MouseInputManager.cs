@@ -6,8 +6,10 @@ namespace UI
         [SerializeField] private Texture2D interactiveObjectMouseTexture;
         [SerializeField] private Texture2D defaultMouseTexture;
         [SerializeField] private LayerMask officeObjectLayer;
+        [SerializeField] private LayerMask itemObjectsLayer;
 
-        private IOfficeInteractiveObject _mHoveredObject; 
+        private IOfficeInteractiveObject _mHoveredOfficeObject; 
+        private IInteractiveClickableObject _mHoveredInteractiveObject; 
         
         private void Awake()
         {
@@ -26,35 +28,72 @@ namespace UI
 
         private void ManageMouseCursor()
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            ProcessOfficeInteractiveObjects(ray);
+            ProcessItemInteractiveObjects(ray);
+        }
+
+        private void ProcessOfficeInteractiveObjects(Ray ray)
+        {
             if (Physics.Raycast(ray, out var hitInfo, 100, officeObjectLayer))
             {
                 var interactiveObject = hitInfo.collider.gameObject;
-                if (!interactiveObject.TryGetComponent<IOfficeInteractiveObject>(out _mHoveredObject))
+                if (!interactiveObject.TryGetComponent<IOfficeInteractiveObject>(out _mHoveredOfficeObject))
                 {
                     Debug.LogError("[MouseInputManager.ManageMouseCursor] Mouse interactive object component not found");
                     return;
                 }
-                
                 Cursor.SetCursor(interactiveObjectMouseTexture, Vector2.zero, CursorMode.Auto);   
             }
             else
             {            
                 Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);
-                _mHoveredObject = null;
+                _mHoveredOfficeObject = null;
             }
         }
-
+        private void ProcessItemInteractiveObjects(Ray ray)
+        {
+            if (Physics.Raycast(ray, out var hitInfo, 100, itemObjectsLayer))
+            {
+                var interactiveObject = hitInfo.collider.gameObject;
+                if (!interactiveObject.TryGetComponent<IInteractiveClickableObject>(out _mHoveredInteractiveObject))
+                {
+                    Debug.LogError("[MouseInputManager.ProcessItemInteractiveObjects] Mouse interactive object component not found");
+                    return;
+                }
+                Cursor.SetCursor(interactiveObjectMouseTexture, Vector2.zero, CursorMode.Auto);   
+            }
+            else
+            {            
+                Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);
+                _mHoveredInteractiveObject = null;
+            }
+        }
+        
         private void ManageMouseClick()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (_mHoveredObject == null)
-                {
-                    return;
-                }
-                _mHoveredObject.SendClickObject();
+                ProcessOfficeClickedObject();
+                ProcessInteractiveItemClicked();
             }
+        }
+
+        private void ProcessOfficeClickedObject()
+        {
+            if (_mHoveredOfficeObject == null)
+            {
+                return;
+            }
+            _mHoveredOfficeObject.SendClickObject();
+        }
+        private void ProcessInteractiveItemClicked()
+        {
+            if (_mHoveredInteractiveObject == null)
+            {
+                return;
+            }
+            _mHoveredInteractiveObject.SendClickObject();
         }
     }
 }

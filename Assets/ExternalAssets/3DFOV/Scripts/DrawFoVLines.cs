@@ -15,7 +15,7 @@ namespace ExternalAssets._3DFOV.Scripts
 
         void Awake()
         {
-            _mLineRenderer = gameObject.AddComponent<LineRenderer>();
+            _mLineRenderer = gameObject.GetComponent<LineRenderer>();
             ConfigureLine();
         }
 

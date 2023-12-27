@@ -1,8 +1,13 @@
 using UnityEngine;
 
-public interface IOfficeInteractiveObject
+public interface IInteractiveClickableObject 
 {
     public void SendClickObject();
+}
+
+public interface IOfficeInteractiveObject : IInteractiveClickableObject
+{
+    
 }
 
 public class OfficeInteractiveObject : MonoBehaviour, IOfficeInteractiveObject
