@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 177399382}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrabProduct_hint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 260202852}
   - component: {fileID: 260202853}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InspectProduct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 459504346}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrabProduct_hint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 470691031}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InspectProduct_hint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -158,7 +158,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1571836365}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrabProduct_target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1741251303}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: InspectProduct_target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -218,7 +218,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1804054671}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrabProduct_target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -249,7 +249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1877432848}
   - component: {fileID: 1877432849}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrabProduct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -308,7 +308,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2045764403}
   - component: {fileID: 2045764404}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: StealProduct
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -367,7 +367,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3970027066983975022}
   - component: {fileID: 8517131922634902258}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Rigging
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -416,7 +416,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6399521109367656197}
   - component: {fileID: 5990009724308494668}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HeadTracking
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -512,7 +512,7 @@ GameObject:
   - component: {fileID: 1576321611}
   - component: {fileID: 1576321612}
   - component: {fileID: 7565609729846733879}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TestCustomer01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1118,7 +1118,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 8569396655643029760}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.3
   m_Height: 2
   m_Direction: 1
@@ -1287,7 +1287,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800021793331861}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1321,7 +1321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021793655903}
   - component: {fileID: 8868800021793655902}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ARMS_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1459,7 +1459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021811832048}
   - component: {fileID: 8868800021811832063}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FOOT_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1596,7 +1596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800021842794839}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1628,7 +1628,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021853036686}
   - component: {fileID: 8868800021853036685}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FOOT_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1766,7 +1766,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021863179757}
   - component: {fileID: 8868800021863179756}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINLOWER_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1904,7 +1904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021898654592}
   - component: {fileID: 8868800021898654607}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOULDERS_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2041,7 +2041,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800021907174486}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Toe.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2072,7 +2072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021938777130}
   - component: {fileID: 8868800021938777129}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BEARD_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2223,7 +2223,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021944012439}
   - component: {fileID: 8868800021944012438}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FOOT_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2361,7 +2361,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021965146465}
   - component: {fileID: 8868800021965146464}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOULDERS_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2499,7 +2499,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021982604766}
   - component: {fileID: 8868800021982604765}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HEAD_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2672,7 +2672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021997496436}
   - component: {fileID: 8868800021997496435}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HANDS_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2810,7 +2810,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800021997783734}
   - component: {fileID: 8868800021997783733}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINUPPER_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2948,7 +2948,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022024870175}
   - component: {fileID: 8868800022024870174}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HIP_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3086,7 +3086,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022029149551}
   - component: {fileID: 8868800022029149550}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHIRT_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3225,7 +3225,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022041998125}
   - component: {fileID: 8868800022041998124}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: COMBINED_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3359,7 +3359,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022059115999}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3393,7 +3393,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022086158895}
   - component: {fileID: 8868800022086158894}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOULDERS_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3531,7 +3531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022148997164}
   - component: {fileID: 8868800022148997163}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAIR_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3667,7 +3667,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022154963215}
   - component: {fileID: 8868800022154963214}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CHEST_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3804,7 +3804,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022179227543}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: hips
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3836,7 +3836,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022188086500}
   - component: {fileID: 8868800022188086499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOULDERS_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3974,7 +3974,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022212131827}
   - component: {fileID: 8868800022212131826}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BEARD_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4112,7 +4112,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022241437037}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shin.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4144,7 +4144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022248265569}
   - component: {fileID: 8868800022248265568}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINLOWER_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4281,7 +4281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022254663917}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4313,7 +4313,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022259624141}
   - component: {fileID: 8868800022259624140}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ARMS_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4450,7 +4450,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022284177485}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Forearm.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4482,7 +4482,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022303319382}
   - component: {fileID: 8868800022303319381}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHIRT_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4620,7 +4620,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022326616239}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Little.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4651,7 +4651,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022335404387}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thigh.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4683,7 +4683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022340009797}
   - component: {fileID: 8868800022340009796}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HEAD_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4832,7 +4832,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022369660208}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4863,7 +4863,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022374252563}
   - component: {fileID: 8868800022374252562}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ITEM1_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4997,7 +4997,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022400770848}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5028,7 +5028,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022413957289}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Little.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5060,7 +5060,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022422708501}
   - component: {fileID: 8868800022422708500}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAT_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5195,7 +5195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022429462751}
   - component: {fileID: 8868800022429462750}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HANDS_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5333,7 +5333,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022443711044}
   - component: {fileID: 8868800022443711043}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PANTS_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5471,7 +5471,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022449043331}
   - component: {fileID: 8868800022449043330}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ARMS_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5608,7 +5608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022471271882}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5639,7 +5639,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022496718520}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5671,7 +5671,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022502190871}
   - component: {fileID: 8868800022502190870}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LEGS_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5808,7 +5808,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022511298547}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5840,7 +5840,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022529029902}
   - component: {fileID: 8868800022529029901}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CHEST_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5977,7 +5977,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022543815096}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shoulder.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6009,7 +6009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022554993817}
   - component: {fileID: 8868800022554993816}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ACCESSORY_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6146,7 +6146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022564379072}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Clavicle.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6177,7 +6177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022567375028}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6208,7 +6208,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022590821968}
   - component: {fileID: 8868800022590821983}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINLOWER_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6346,7 +6346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022599833933}
   - component: {fileID: 8868800022599833932}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: COMBINED_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6480,7 +6480,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022627368220}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6511,7 +6511,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022646178286}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6541,7 +6541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022650221491}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6572,7 +6572,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022759991709}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hand.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6608,7 +6608,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022796097709}
   - component: {fileID: 8868800022796097708}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: COMBINED_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6742,7 +6742,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022804581931}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Foot.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6774,7 +6774,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022830955522}
   - component: {fileID: 8868800022830955521}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOES_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6912,7 +6912,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022839649708}
   - component: {fileID: 8868800022839649707}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LEGS_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7050,7 +7050,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022876061456}
   - component: {fileID: 8868800022876061471}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHIRT_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7189,7 +7189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022879021718}
   - component: {fileID: 8868800022879021717}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HIP_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7327,7 +7327,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022890631167}
   - component: {fileID: 8868800022890631166}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HIP_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7464,7 +7464,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022912339961}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Probes Anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7494,7 +7494,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022920472938}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shin.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7525,7 +7525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022936260611}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Toe.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7556,7 +7556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022951791343}
   - component: {fileID: 8868800022951791342}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: STOMACH_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7693,7 +7693,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022959927707}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7724,7 +7724,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022962891748}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7756,7 +7756,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022979312893}
   - component: {fileID: 8868800022979312892}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LEGS_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7893,7 +7893,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800022993397084}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7924,7 +7924,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800022997370437}
   - component: {fileID: 8868800022997370436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PANTS_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8062,7 +8062,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023022539505}
   - component: {fileID: 8868800023022539504}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HEAD_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8235,7 +8235,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023026176552}
   - component: {fileID: 8868800023026176599}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINUPPER_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8373,7 +8373,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023044442546}
   - component: {fileID: 8868800023044442545}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINLOWER_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8511,7 +8511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023056815752}
   - component: {fileID: 8868800023056815799}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAIR_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8647,7 +8647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023063721646}
   - component: {fileID: 8868800023063721645}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAT_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8782,7 +8782,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023074788291}
   - component: {fileID: 8868800023074788290}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOES_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8920,7 +8920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023094222103}
   - component: {fileID: 8868800023094222102}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAT_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9055,7 +9055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023102363583}
   - component: {fileID: 8868800023102363582}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINUPPER_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9192,7 +9192,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023137421910}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9224,7 +9224,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023160947264}
   - component: {fileID: 8868800023160947279}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAIR_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9360,7 +9360,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023174089610}
   - component: {fileID: 8868800023174089609}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BEARD_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9514,7 +9514,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023175901589}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9546,7 +9546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023219701843}
   - component: {fileID: 8868800023219701842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ITEM1_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9681,7 +9681,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023262527175}
   - component: {fileID: 8868800023262527174}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ACCESSORY_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9818,7 +9818,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023270451032}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Little.3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9849,7 +9849,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023281372369}
   - component: {fileID: 8868800023281372368}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAT_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9983,7 +9983,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023282462599}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Forearm.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10015,7 +10015,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023286820783}
   - component: {fileID: 8868800023286820782}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHIRT_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10154,7 +10154,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023318777151}
   - component: {fileID: 8868800023318777150}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HANDS_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10291,7 +10291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023342027900}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Neck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10322,7 +10322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023348542629}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.2.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10353,7 +10353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023349138663}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10383,7 +10383,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023358277226}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Middle.3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10414,7 +10414,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023386403281}
   - component: {fileID: 8868800023386403280}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: STOMACH_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10552,7 +10552,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023407599335}
   - component: {fileID: 8868800023407599334}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ACCESSORY_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10689,7 +10689,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023407688821}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10720,7 +10720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023409171481}
   - component: {fileID: 8868800023409171480}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: STOMACH_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10857,7 +10857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023415029008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thigh.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10889,7 +10889,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023422928049}
   - component: {fileID: 8868800023422928048}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HAIR_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11024,7 +11024,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023459817844}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spine1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11056,7 +11056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023487229643}
   - component: {fileID: 8868800023487229642}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FOOT_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11194,7 +11194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023516299736}
   - component: {fileID: 8868800023516299719}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ARMS_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11332,7 +11332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023566559897}
   - component: {fileID: 8868800023566559896}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: STOMACH_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11469,7 +11469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023568775652}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11500,7 +11500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023584595787}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.1.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11532,7 +11532,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023587223449}
   - component: {fileID: 8868800023587223448}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ACCESSORY_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11670,7 +11670,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023587576995}
   - component: {fileID: 8868800023587576994}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PANTS_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11808,7 +11808,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023588821341}
   - component: {fileID: 8868800023588821340}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CHEST_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11945,7 +11945,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023591352308}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ring.3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11976,7 +11976,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023593264698}
   - component: {fileID: 8868800023593264697}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOES_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12113,7 +12113,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023610018272}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: little_l_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12144,7 +12144,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023610789267}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Foot.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12175,7 +12175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023629906289}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Little.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12206,7 +12206,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023635166271}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.1.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12237,7 +12237,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023643021688}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Little.3.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12268,7 +12268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023644873518}
   - component: {fileID: 8868800023644873517}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PANTS_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12405,7 +12405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023644967510}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Index.2.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12437,7 +12437,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023670652722}
   - component: {fileID: 8868800023670652721}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HANDS_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12574,7 +12574,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023671227771}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Thumb.3.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12605,7 +12605,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023679109752}
   - component: {fileID: 8868800023679109735}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CHEST_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12743,7 +12743,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023690259997}
   - component: {fileID: 8868800023690259996}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HEAD_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12925,7 +12925,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023713194568}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hand.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12961,7 +12961,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023725439973}
   - component: {fileID: 8868800023725439972}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: BEARD_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13112,7 +13112,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023761237929}
   - component: {fileID: 8868800023761237928}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: COMBINED_m_lod1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13247,7 +13247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023769622230}
   - component: {fileID: 8868800023769622229}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ITEM1_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13382,7 +13382,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023775208843}
   - component: {fileID: 8868800023775208842}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HIP_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13520,7 +13520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023778467155}
   - component: {fileID: 8868800023778467154}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHOES_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13658,7 +13658,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023806324009}
   - component: {fileID: 8868800023806324008}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: LEGS_m_lod2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13795,7 +13795,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023812029409}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Clavicle.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13827,7 +13827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023876710710}
   - component: {fileID: 8868800023876710709}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SHINUPPER_m_lod0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13964,7 +13964,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8868800023878988274}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shoulder.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13996,7 +13996,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8868800023884377595}
   - component: {fileID: 8868800023884377594}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: ITEM1_m_lod3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

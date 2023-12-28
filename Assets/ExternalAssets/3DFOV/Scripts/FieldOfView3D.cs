@@ -22,7 +22,7 @@ namespace ExternalAssets._3DFOV.Scripts
         [Range(0f, 180f)] public float viewAngle = 30f;
         [Range(1f, 2500f)] public int viewResolution = 1000;
 
-        public LayerMask layerMask = 1;
+        public LayerMask layerMask;
         public enum DetectionType
         {
             Raycast,
@@ -87,6 +87,7 @@ namespace ExternalAssets._3DFOV.Scripts
             rot = new Vector3(rot.x + 270, rot.y, 180);
             Quaternion myRotation = Quaternion.Euler(rot);
             _drawFoVLines.ClearAllLines();
+            _drawFoVLines.ClearTargetLines();
             #endregion
             for (var i = 0; i < viewResolution; i++)
             {
@@ -155,7 +156,7 @@ namespace ExternalAssets._3DFOV.Scripts
         {
             if (isDrawFoVActive)
             {
-                _drawFoVLines.DrawDirectionLine(direction);
+                _drawFoVLines.DrawDirectionLineOfSight(direction);
             }
             else
             {
@@ -186,6 +187,7 @@ namespace ExternalAssets._3DFOV.Scripts
             }
             return midPoint;
         }
+        
         private void Detection(RaycastHit hit, int i)
         {
             m_directions[i] = hit.point - transform.position;
@@ -213,7 +215,17 @@ namespace ExternalAssets._3DFOV.Scripts
                     StartCoroutine(OnTargetEventTrigger(viewObj));
                 }
             }
-            if ((ValidateVisualizer()) && (fovV.viewSeenObjectLines)) fovV.DrawObjectLines();
+
+            if ((ValidateVisualizer()) && (fovV.viewSeenObjectLines))
+            {
+                fovV.DrawObjectLines();
+            }
+            ProcessTargetInGameVisualization(m_directions[i]);
+        }
+
+        private void ProcessTargetInGameVisualization(Vector3 direction)
+        {
+            _drawFoVLines.DrawTargetLineOfSight(direction);
         }
         private void FixedUpdate()
         {
