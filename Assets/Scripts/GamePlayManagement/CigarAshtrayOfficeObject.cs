@@ -1,12 +1,12 @@
 using UI.PopUpManager;
+using UnityEngine;
 
 namespace GamePlayManagement
 {
-    public class CigarAshtrayOfficeObject : OfficeInteractiveObject
+    public class CigarAshtrayOfficeObject : MonoBehaviour, IInteractiveClickableObject
     {
-        public override void SendClickObject()
+        public void SendClickObject()
         {
-            base.SendClickObject();
             if (PopUpOperator.Instance.IsPopupActive(BitPopUpId.CIGAR_CONFIRMATION_POPUP))
             {
                 return;

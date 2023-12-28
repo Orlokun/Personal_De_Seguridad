@@ -35,6 +35,8 @@ namespace ItemPlacement
             //Instantiate prefab
             MInstantiatedObject=Instantiate(instantiatedPrefab);
             MInstantiatedObject.SetActive(false);
+            var objectData = (IBaseItemObject)MInstantiatedObject.GetComponent<CameraItemBaseObject>();
+            objectData.SetInPlacementStatus(true);
         }
     
         public override void OnItemClicked()

@@ -2534,12 +2534,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactiveObjectMouseTexture: {fileID: 2800000, guid: 5ff105de389cb384f80820652a76dfdb, type: 3}
   defaultMouseTexture: {fileID: 2800000, guid: 67e6b3c81c7e2c744ac0392f56da345e, type: 3}
-  officeObjectLayer:
-    serializedVersion: 2
-    m_Bits: 512
   itemObjectsLayer:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 512
 --- !u!1001 &1779290952
 PrefabInstance:
   m_ObjectHideFlags: 0

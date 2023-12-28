@@ -15,8 +15,8 @@ TagManager:
   - Shelf
   - RoofHeight
   - Customer
-  - OfficeInteractiveObject
-  - ItemObjects
+  - InteractiveObject
+  - 
   - 
   - 
   - 

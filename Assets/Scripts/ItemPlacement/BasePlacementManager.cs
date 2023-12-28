@@ -169,6 +169,8 @@ namespace ItemPlacement
             obj.transform.position = CurrentPlacedObject.transform.position;
             obj.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;
             obj.transform.localScale *= scaleFactor;
+            var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
+            objectData.SetInPlacementStatus(false);
         }
         
         protected bool MouseTouchesExpectedLayer()

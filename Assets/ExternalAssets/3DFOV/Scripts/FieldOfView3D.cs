@@ -9,6 +9,7 @@ namespace ExternalAssets._3DFOV.Scripts
 {
     public interface IFieldOfView3D
     {
+        public bool IsDrawActive { get; }
         public void ToggleInGameFoV(bool isActive);
     }
     
@@ -44,6 +45,8 @@ namespace ExternalAssets._3DFOV.Scripts
         [Range(0f, 2f)] private float turnFraction;
         private float power = 1;
 
+
+        public bool IsDrawActive => isDrawFoVActive;
         private FOVVisualizer fovV;
         private IDrawFoVLines _drawFoVLines;
         private bool isDrawFoVActive;
