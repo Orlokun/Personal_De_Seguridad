@@ -86,7 +86,7 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (jobSupplierObject.StoreUnlockPoints <= GeneralOmniCredits)
+                if (jobSupplierObject.StoreUnlockPoints <= _socialStatus)
                 {
                     GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierBitId);
                 }
@@ -97,7 +97,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.StoreUnlockPoints <= GeneralOmniCredits)
+                if (itemSupplier.StoreUnlockPoints <= _socialStatus)
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }
@@ -112,7 +112,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= GeneralOmniCredits)
+                    if (suppliersItem.UnlockPoints <= _socialStatus)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
