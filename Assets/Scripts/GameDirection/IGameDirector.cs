@@ -9,6 +9,7 @@ using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
+using Players_NPC.NPC_Management.Customer_Management;
 using UI;
 namespace GameDirection
 {
@@ -27,6 +28,8 @@ namespace GameDirection
         public IItemsDataController GetItemsDataController { get; }
         public IFeedbackManager GetFeedbackManager { get; }
         public IModularDialogueDataController GetModularDialogueManager { get; }
+        public ICustomersInSceneManager GetCustomerInstantiationManager { get; }
+
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);

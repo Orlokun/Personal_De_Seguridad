@@ -33,6 +33,8 @@ namespace Utils
         /// </summary>
         public static string JobSuppliersGameData =
             "https://sheets.googleapis.com/v4/spreadsheets/1-oli_LmChsRrjEXqW5E8Ajt0V5IuqnY8cx3HilCTBfM/values/JobSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        public static string JobSuppliersCustomerManagementGameData =
+            "https://sheets.googleapis.com/v4/spreadsheets/1-oli_LmChsRrjEXqW5E8Ajt0V5IuqnY8cx3HilCTBfM/values/JobSuppliersLvlData?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
         public static string ItemSuppliersGameData =
             "https://sheets.googleapis.com/v4/spreadsheets/144vHYkW7Bn86_fJ7DZUEZhUITgDAcocH-FKkivNrpQs/values/ItemSuppliers?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
         public static string ItemsCatalogueGameData =

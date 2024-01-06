@@ -21,8 +21,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         #region ProceduralAnimConstraints
         [SerializeField] protected MultiAimConstraint mHeadAimConstraint;
-        [SerializeField] protected TwoBoneIKConstraint MGrabObjectConstraint;
-        [SerializeField] protected TwoBoneIKConstraint MInspectObjectConstraint;
+        [SerializeField] protected TwoBoneIKConstraint mGrabObjectConstraint;
+        [SerializeField] protected TwoBoneIKConstraint mInspectObjectConstraint;
         [SerializeField] protected Transform rightHand;
         
         private bool _productInHand;
@@ -30,12 +30,31 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private Tuple<Transform, IStoreProductObjectData> _tempStoreProductOfInterest;
         private Transform _tempTargetOfInterest;
         private GameObject _tempProductCopy;
+        private IStoreEntrancePosition _entranceData;
         
         #endregion
-        
+
+        #region Characteristics and Theft
         private ICustomerTypeData _mCustomerTypeData;
         public ICustomerTypeData CustomerTypeData => _mCustomerTypeData;
-        
+        private ICustomerPurchaseStealData _mCustomerVisitData;
+        public ICustomerPurchaseStealData GetCustomerVisitData => _mCustomerVisitData;
+        #endregion
+
+        public Guid CustomerId => MCharacterId;
+        public void SetInitialMovementData(IStoreEntrancePosition entranceData)
+        {
+            _entranceData = entranceData;
+            MInitialPosition = entranceData.StartPosition;
+        }
+
+        public void SetCustomerTypeData(ICustomerTypeData customerTypeData)
+        {
+            _mCustomerTypeData = customerTypeData;
+        }
+
+
+
         #region LevelData
         private Vector3 _mPayingPosition;
         private int _mNumberOfProductsLookingFor;
@@ -49,8 +68,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
         private BaseAttitudeStatus _mCustomerAttitudeStatus = 0;
 
         private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
-        private Dictionary<Guid, IStoreProductObjectData> _mStolenProducts = new Dictionary<Guid, IStoreProductObjectData>();
-        private Dictionary<Guid, IStoreProductObjectData> _mPurchasedProducts = new Dictionary<Guid, IStoreProductObjectData>();
 
         private Guid _currentPoiId;
         #endregion
@@ -65,9 +82,9 @@ namespace Players_NPC.NPC_Management.Customer_Management
         protected override void Awake()
         {
             Random.InitState(DateTime.Now.Millisecond);
+            _mCustomerVisitData = new CustomerPurchaseStealData();
             _mNumberOfProductsLookingFor = Random.Range(1, 8);
             base.Awake();
-            _mCustomerTypeData = Factory.CreateBaseCustomerTypeData();
             WalkingDestinationReached += ReachWalkingDestination;
         }
         
@@ -133,7 +150,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         }
         private void GoToNextProduct()
         {
-            if(_mPoisPurchaseStatus.All(x => x.Value != false))
+            if(_mPoisPurchaseStatus.All(x => x.Value))
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
                 SetCustomerAttitudeStatus(BaseAttitudeStatus.Paying);
@@ -273,7 +290,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             Random.InitState(DateTime.Now.Millisecond);
             //Wait To play Grab Animation
             await Task.Delay(Random.Range(1500, 2000));
-            MGrabObjectConstraint.data.target = _tempTargetOfInterest.transform;
+            mGrabObjectConstraint.data.target = _tempTargetOfInterest.transform;
             StartCoroutine(SetGrabObjectConstraint(0,1,1));
             //Wait to instantiate when object is grabbed and look at it
             await Task.Delay(1000);
@@ -320,7 +337,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             float elapsedTime = 0;
             while (elapsedTime < time)
             {
-                MInspectObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
+                mInspectObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
@@ -330,7 +347,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             float elapsedTime = 0;
             while (elapsedTime < time)
             {
-                MGrabObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
+                mGrabObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }
@@ -342,7 +359,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
             Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
             await Task.Delay(Random.Range(4500, 10000));
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mPurchasedProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
+            _mCustomerVisitData.PurchaseProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
             ClearProductInterest();
             _mPoisPurchaseStatus[_currentPoiId] = true;
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
@@ -359,9 +376,8 @@ namespace Players_NPC.NPC_Management.Customer_Management
             StartCoroutine(SetLookObjectWeight(1,0,1.5f));
             BaseAnimator.ChangeAnimationState(SearchAround);
             await Task.Delay(8000);
-            
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mStolenProducts.Add(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
+            _mCustomerVisitData.StealProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
             Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
             ClearProductInterest();
             SetCustomerMovementStatus(BaseCustomerMovementStatus.Walking);
@@ -417,11 +433,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 OnWalkingDestinationReached();
             }
         }
-
-        protected override void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
-        {
-            base.RotateTowardsYOnly(rotatingObject, facingTowards);
-        }
+        
         #endregion
         
         #region Paying
@@ -472,13 +484,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 
                 case BaseAttitudeStatus.Leaving:
                     NavMeshAgent.enabled = true;
-                    NavMeshAgent.SetDestination(PositionsManager.EntrancePosition());
+                    NavMeshAgent.SetDestination(MInitialPosition);
                     NavMeshAgent.isStopped = false;
                     break;
                 
                 case BaseAttitudeStatus.Entering:
                     NavMeshAgent.enabled = true;
-                    NavMeshAgent.SetDestination(PositionsManager.EntrancePosition());
+                    NavMeshAgent.SetDestination(_entranceData.EntrancePosition);
                     NavMeshAgent.isStopped = false;
                     break;
             }

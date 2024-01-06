@@ -10,6 +10,7 @@ using Utils;
 
 namespace DataUnits.JobSources
 {
+    
     public class JobSupplierProductsModule : IJobSupplierProductsModule
     {
         private JobSupplierObject _supplierObject;

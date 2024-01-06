@@ -13,5 +13,13 @@ namespace GamePlayManagement
             }
             PopUpOperator.Instance.ActivatePopUp(BitPopUpId.CIGAR_CONFIRMATION_POPUP);
         }
+
+        private bool _mHasSnippet = false;
+        public string GetSnippetText { get; }
+        public bool HasSnippet => _mHasSnippet;
+        public void DisplaySnippet()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

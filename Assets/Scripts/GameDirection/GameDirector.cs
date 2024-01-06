@@ -11,6 +11,7 @@ using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
+using Players_NPC.NPC_Management.Customer_Management;
 using UI;
 using UnityEngine;
 using Utils;
@@ -47,7 +48,9 @@ namespace GameDirection
         private IClockManagement _mClockManager;
         private IFeedbackManager _mFeedbackManager;
         private IGeneralInputStateManager _mGeneralInputManager;
-        
+        private IModularDialogueDataController _mModularDialogues;
+        private ICustomersInSceneManager _mCustomerInstantiationManager;
+
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
         private IBaseJobsCatalogue _mJobsCatalogue;
@@ -57,7 +60,8 @@ namespace GameDirection
         private IFoodValuesCatalogue _mFoodCatalogueData;
         private ITransportValuesCatalogue _mTransportCatalogueData;
 
-        private IModularDialogueDataController _mModularDialogues;
+        
+        
         
         /// <summary>
         /// Initial Scene Manager
@@ -80,6 +84,7 @@ namespace GameDirection
         public IItemsDataController GetItemsDataController => _mItemDataController;
         public IRentValuesCatalogue GetRentCatalogueData => _mRentCatalogueData;
         public IModularDialogueDataController GetModularDialogueManager => _mModularDialogues;
+        public ICustomersInSceneManager GetCustomerInstantiationManager => _mCustomerInstantiationManager;
 
         #endregion
 
@@ -109,6 +114,9 @@ namespace GameDirection
         {
             _mLevelManager.LoadAdditiveLevel(LevelIndexId.UILvl);
         }
+        /// <summary>
+        /// Start Function of the Game director is when all objects get Centralized
+        /// </summary>
         private void Start()
         {
             _mSoundDirector = SoundDirector.Instance;
@@ -128,7 +136,7 @@ namespace GameDirection
 
             _mModularDialogues = Factory.CreateModularDialoguesDataController();
             _mModularDialogues.Initialize();
-            //TODO: CHANGE ARGS INJECTED INTO INTRO SCENE MANAGER
+            _mCustomerInstantiationManager = CustomersInSceneManager.Instance;
             
             _mUIController.StartMainMenuUI();
             
@@ -181,10 +189,11 @@ namespace GameDirection
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             var calendarModule = Factory.CreateCalendarModule(_mClockManager);
-            var lifestyleModule =
-                Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule);
+            var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
+            var profileStatusModule = Factory.CreatePlayerStatusModule();
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule);
             _mActiveGameProfile.UpdateProfileData();
+            //GetUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
             OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
         }
 

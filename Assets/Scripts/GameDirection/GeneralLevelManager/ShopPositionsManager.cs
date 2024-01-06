@@ -15,12 +15,10 @@ namespace GameDirection.GeneralLevelManager
         public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId);
         public void OccupyPoi(Guid occupier, Guid occupiedPoi);
         public void ReleasePoi(Guid occupier, Guid occupiedPoi);
-        public Vector3 EntrancePosition();
-        public Vector3 PayingPosition();
-        public Vector3 InstantiatePosition();
         public IShopPoiData GetPoiData(Guid poiId);
-        public Dictionary<Guid, IShopPoiData> GetAllPoisData { get; }
-
+        //Customer Instantiation
+        public List<IStoreEntrancePosition> StartPositions { get; }
+        public Vector3 PayingPosition();
     }
 
     /// <summary>
@@ -33,26 +31,17 @@ namespace GameDirection.GeneralLevelManager
     public class ShopPositionsManager : InitializeManager, IShopPositionsManager
     {
         private Dictionary<Guid, IShopPoiData> mPoiDatas = new Dictionary<Guid, IShopPoiData>();
-        public Dictionary<Guid, IShopPoiData> GetAllPoisData => mPoiDatas;
 
         [SerializeField] private Transform payingPosition;
-        [SerializeField] private Transform entranceTransform;
-        [SerializeField] private Transform customerInstantiationTransform;
+        
+        
+        [SerializeField] private List<Transform> entranceTransforms;
+        [SerializeField] private List<Transform> customerInstantiationTransforms;
 
+        private List<IStoreEntrancePosition> _mStartPositions = new List<IStoreEntrancePosition>();
+        public List<IStoreEntrancePosition> StartPositions => _mStartPositions;
+        
         private int _positionsInLevel;
-        public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId)
-        {
-            var poisData = new List<IShopPoiData>();
-            foreach (var poiId in poisId)
-            {
-                if (!mPoiDatas.ContainsKey(poiId))
-                {
-                    continue;
-                }
-                poisData.Add(mPoiDatas[poiId]);
-            }
-            return poisData;
-        }
 
         private void Awake()
         {
@@ -69,9 +58,25 @@ namespace GameDirection.GeneralLevelManager
         protected void BaseInitialization()
         {
             // ReSharper disable once CoVariantArrayConversion
+            PopulateEntrancePositions();
             PopulatePois();
             _positionsInLevel = mPoiDatas.Count;
             MIsInitialized = true;
+        }
+
+        private void PopulateEntrancePositions()
+        {
+            if (entranceTransforms.Count != customerInstantiationTransforms.Count)
+            {
+                Debug.LogWarning("[ShopPositionManager.PopulateEntrancePosition] Entrance and Instantiation positions must be the same");
+            }
+
+            for (var i = 0; i < customerInstantiationTransforms.Count; i++)
+            {
+                var instantiationTransform = customerInstantiationTransforms[i];
+                var startPosition = Factory.CreateStartPosition(instantiationTransform, entranceTransforms[i]);
+                StartPositions.Add(startPosition);
+            }
         }
         private void PopulatePois()
         {
@@ -85,6 +90,21 @@ namespace GameDirection.GeneralLevelManager
                 }
             }
         }
+        public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId)
+        {
+            var poisData = new List<IShopPoiData>();
+            foreach (var poiId in poisId)
+            {
+                if (!mPoiDatas.ContainsKey(poiId))
+                {
+                    continue;
+                }
+                poisData.Add(mPoiDatas[poiId]);
+            }
+            return poisData;
+        }
+
+        #region PoiManagement
         public IShopPoiData GetPoiData(Guid poiId)
         {
             if (!mPoiDatas.ContainsKey(poiId))
@@ -163,17 +183,22 @@ namespace GameDirection.GeneralLevelManager
             }
             Debug.Log($"Occupied Shelves: {occupiedShelves}. Unoccupied Shelves: {unOccupiedShelves}");
         }
-        public Vector3 EntrancePosition()
+        #endregion
+
+        #region CustomerInstantiation
+
+        public IStoreEntrancePosition RandomStartPosition()
         {
-            return entranceTransform.position;
+            Random.InitState(DateTime.Now.Second);
+            var randomEntrance = Random.Range(0, _mStartPositions.Count -1);
+            return _mStartPositions[randomEntrance];        
         }
-        public Vector3 InstantiatePosition()
-        {
-            return customerInstantiationTransform.position;
-        }
+
         public Vector3 PayingPosition()
         {
             return payingPosition.position;
         }
+        #endregion
+
     }
 }

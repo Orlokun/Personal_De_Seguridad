@@ -3,6 +3,7 @@ using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using DialogueSystem;
 using GameDirection.DayLevelSceneManagers;
+using GameDirection.GeneralLevelManager;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -18,6 +19,14 @@ namespace Utils
 {
     public static class Factory
     {
+        public static IStoreEntrancePosition CreateStartPosition(Transform instantiationPos, Transform entrancePos)
+        {
+            return new StoreEntrancePosition(instantiationPos,entrancePos);
+        }
+        public static ICustomersInSceneManagerData CreateCustomersInSceneManagerData(JobSupplierBitId jobId, int gameDifficultyLvl, int maxClients, string clientsPrefabsPath, int[] timeRange)
+        {
+            return new CustomersInSceneManagerData(jobId, gameDifficultyLvl, maxClients, clientsPrefabsPath, timeRange);
+        }
         public static FloorPlacementPosition CreateFloorPlacementPosition(Vector3 position)
         {
             return new FloorPlacementPosition(position);
@@ -123,9 +132,9 @@ namespace Utils
         /// Player Profile Modules
         /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IProfileGameStatusModule statusModule)
         {
-            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule);
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule);
         }
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
@@ -142,6 +151,11 @@ namespace Utils
         public static CalendarModule CreateCalendarModule(IClockManagement clockManagement)
         {
             return new CalendarModule(DayBitId.Day_01, PartOfDay.EarlyMorning, clockManagement);
+        }
+
+        public static ProfileGameStatusModule CreatePlayerStatusModule()
+        {
+            return new ProfileGameStatusModule();
         }
     }
 }

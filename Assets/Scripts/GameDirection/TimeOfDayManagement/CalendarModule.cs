@@ -14,6 +14,7 @@ namespace GameDirection.TimeOfDayManagement
         private IWorkDayObject _currentDayObject;
         private DayBitId _currentDayId;
         private PartOfDay _currentTimeOfDay;
+        public PartOfDay GetCurrentPartOfDay => _currentTimeOfDay;
 
         public CalendarModule(DayBitId loadCurrentDayId, PartOfDay loadPartOfTimeOfDay, IClockManagement clockManagement)
         {

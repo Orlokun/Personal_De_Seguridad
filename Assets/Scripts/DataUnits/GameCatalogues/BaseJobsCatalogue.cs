@@ -139,7 +139,9 @@ namespace DataUnits.GameCatalogues
                 
                 var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
                 jobSupplier.StoreOwnerAge = ownerAge;
-                
+
+                var initialBudget = int.TryParse(_jobsData.values[i][17], out var initBudget);
+                jobSupplier.InitialBudget = initBudget;
                 _mIjobSuppliersInData.Add(jobSupplier);
             }
         }

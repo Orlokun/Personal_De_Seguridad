@@ -18,6 +18,7 @@ namespace GameDirection.TimeOfDayManagement
         //Day Base Data
         public DayBitId BitId{get;}
         public JobSupplierBitId JobSupplierId {get;}
+        public PartOfDay CurrentPartOfDay { get; }
         public int MaxActiveClients{get;}
         public int ThiefClients{get;}
         public int ClientsCompleted{get;}

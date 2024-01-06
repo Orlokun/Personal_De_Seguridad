@@ -1,4 +1,5 @@
 using UnityEngine;
+
 namespace UI
 {
     public class MouseInputManager : MonoBehaviour
@@ -11,6 +12,12 @@ namespace UI
 
         private bool _isTouchingInteractiveObject;
         private Camera _mainCamera;
+        private bool isMouseStill;
+        private bool isSnippetActive;
+        private const float snipetWaitTime = 1.5f;
+        private float currentStillTime = 0f;
+
+        private Vector3 _mLastMousePosition = new Vector3();
         
         private void Awake()
         {
@@ -21,7 +28,27 @@ namespace UI
         {
             ConfirmMainCamera();
             ManageMouseCursor();
+            ManageSnippet();
             ManageMouseClick();
+            _mLastMousePosition = Input.mousePosition;
+        }
+
+        private void ActivateSnippet(string snippetTxt)
+        {
+            Debug.Log("Snippet Available");
+            if (isSnippetActive)
+            {
+                isSnippetActive = true;
+                return;
+            }
+        }
+        private void EraseSnippet()
+        {
+            if (!isSnippetActive)
+            {
+                return;
+            }
+            isSnippetActive = false;
         }
 
         private void ConfirmMainCamera()
@@ -38,13 +65,14 @@ namespace UI
             }
             _mainCamera = Camera.main;
         }
+        #region HoverObject
         private void ManageMouseCursor()
         {
+            
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             ProcessItemInteractiveObjects(ray);
             ProcessCursor();
         }
-        
         private void ProcessItemInteractiveObjects(Ray ray)
         {
             if (Physics.Raycast(ray, out var hitInfo, 100, itemObjectsLayer))
@@ -62,7 +90,6 @@ namespace UI
                 _mHoveredInteractiveObject = null;
             }
         }
-
         private void ProcessCursor()
         {
             if (_isTouchingInteractiveObject)
@@ -75,7 +102,39 @@ namespace UI
             }
             _isTouchingInteractiveObject = false;
         }
+        #endregion
+        #region Snippet
 
+        private void ManageSnippet()
+        {
+            if (_mHoveredInteractiveObject == null)
+            {
+                EraseSnippet();
+                return;
+            }
+
+            if (!_mHoveredInteractiveObject.HasSnippet)
+            {
+                EraseSnippet();
+                return;
+            }
+            var snippetText = _mHoveredInteractiveObject.GetSnippetText;
+            isMouseStill = Input.mousePosition == _mLastMousePosition;
+            if (isMouseStill)
+            {
+                currentStillTime += Time.deltaTime;
+                if (currentStillTime >= snipetWaitTime)
+                {
+                    ActivateSnippet(snippetText);
+                }
+                return;
+            }
+            currentStillTime = 0;
+            EraseSnippet();
+        }
+        
+        #endregion
+        #region ClickObject
         private void ManageMouseClick()
         {
             if (Input.GetMouseButtonDown(0))
@@ -83,7 +142,6 @@ namespace UI
                 ProcessInteractiveItemClicked();
             }
         }
-
         private void ProcessInteractiveItemClicked()
         {
             if (_mHoveredInteractiveObject == null)
@@ -92,5 +150,7 @@ namespace UI
             }
             _mHoveredInteractiveObject.SendClickObject();
         }
+        #endregion
+
     }
 }

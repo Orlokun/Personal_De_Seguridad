@@ -8,6 +8,7 @@ using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using Newtonsoft.Json;
+using Players_NPC.NPC_Management.Customer_Management;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
@@ -26,7 +27,8 @@ namespace GameDirection.DayLevelSceneManagers
         protected Dictionary<int, IDialogueObject> DayBaseDialogues = new Dictionary<int, IDialogueObject>();
         protected IDialogueObject ModularDialogue;
         protected int DialogueIndex;
-    
+        protected ICustomersInSceneManager _customerSpawner;
+
         
         protected DialogueObjectsFromData DialoguesBaseDataString;
 
@@ -172,14 +174,14 @@ namespace GameDirection.DayLevelSceneManagers
         {
             return null;
         }
-        protected virtual void ReleaseFromDialogueStateAndStartClock()
+        protected virtual void ReleaseFromInitialDialogueAndStartClock()
         {
             Debug.Log("[DayLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Start Day Game");
             MGameDirector.ReleaseFromDialogueStateToGame();
             MGameDirector.GetUIController.ReturnToBaseGamePlayCanvasState();
             MGameDirector.GetClockInDayManagement.SetClockAtDaytime(PartOfDay.EarlyMorning);
             MGameDirector.GetClockInDayManagement.PlayPauseClock(true);
-            MGameDirector.GetDialogueOperator.OnDialogueCompleted -= ReleaseFromDialogueStateAndStartClock;
+            MGameDirector.GetDialogueOperator.OnDialogueCompleted -= ReleaseFromInitialDialogueAndStartClock;
         }
     }
 }

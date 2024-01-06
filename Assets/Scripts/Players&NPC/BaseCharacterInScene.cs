@@ -28,7 +28,6 @@ namespace Players_NPC
         protected virtual void Awake()
         {
             MCharacterId = Guid.NewGuid();
-            MInitialPosition = transform.position;
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             NavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());

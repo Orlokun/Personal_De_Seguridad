@@ -25109,8 +25109,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   payingPosition: {fileID: 1868652639}
-  entranceTransform: {fileID: 1332365988}
-  customerInstantiationTransform: {fileID: 839578824}
+  entranceTransforms:
+  - {fileID: 1332365988}
+  customerInstantiationTransforms:
+  - {fileID: 839578824}
 --- !u!1001 &1139187671
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42220,15 +42222,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a700aedf367e4741865f4036378dc610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mClientPrefabs:
-  - {fileID: 8569396655643029760, guid: 7fbafa8be7c39df4eba8c8ec65066fcb, type: 3}
-  mStartPosition: {fileID: 839578824}
   _mIsSpawning: 0
-  NavAgents: []
-  AvoidanceType: 3
+  AvoidanceType: 0
   AgentSpeed: 0
   AgentRadius: 0
-  AvoidancePredictionTime: 0.5
+  AvoidancePredictionTime: 0
   PathfindingIterationsPerFrame: 100
 --- !u!1001 &2037395035
 PrefabInstance:

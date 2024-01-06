@@ -8,14 +8,17 @@ namespace GamePlayManagement
 {
     public interface IPlayerGameProfile
     {
+        public int GameDifficulty { get; }
         public DateTime GameCreationDate { get; }
         public Guid GameId { get; }
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();
         public ILifestyleModule GetLifestyleModule();
+        public IProfileGameStatusModule GetStatusModule();
         public void UpdateProfileData();
-        public int GeneralOmniCredits { get; set; }
+        public int GeneralOmniCredits { get;}
         public void UpdateDataEndOfDay();
+        public IWorkDayObject GetCurrentWorkday();
     }
 }

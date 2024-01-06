@@ -15,12 +15,8 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IProfileGameStatusModule statusModule)
         {
-            _totalOmniCredits = 20000;
-            _socialStatus = 10;
-            _health = 20;
-            
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
             
@@ -32,7 +28,10 @@ namespace GamePlayManagement
             
             _calendarModule = calendarManager;
             _calendarModule.SetProfile(this);
-
+            
+            _gameStatusModule = statusModule;
+            _gameStatusModule.SetProfile(this);
+            
             _lifeStyleModule = lifeStyleModule;
             _lifeStyleModule.SetProfile(this);
         }
@@ -42,15 +41,12 @@ namespace GamePlayManagement
         private IJobsSourcesModule _jobsSourcesModule;
         private ICalendarModule _calendarModule;
         private ILifestyleModule _lifeStyleModule;
+        private IProfileGameStatusModule _gameStatusModule;
         
         //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
-        private int _totalOmniCredits;
-        [Range(-100,100)]
-        private int _socialStatus;
-        [Range(-100,100)]
-        private int _health;
+
         
         //Public Fields
         public DateTime GameCreationDate => _mGameCreationDate;
@@ -74,6 +70,13 @@ namespace GamePlayManagement
             return _lifeStyleModule;
         }
 
+        public IProfileGameStatusModule GetStatusModule()
+        {
+            return _gameStatusModule;
+        }
+        
+        public int GameDifficulty => _gameStatusModule.GameDifficulty;
+
         #region UpdateProfileData
         public void UpdateProfileData()
         {
@@ -86,7 +89,7 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (jobSupplierObject.StoreUnlockPoints <= _socialStatus)
+                if (jobSupplierObject.StoreUnlockPoints <= _gameStatusModule.PlayerSocialStatus)
                 {
                     GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierBitId);
                 }
@@ -97,7 +100,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.StoreUnlockPoints <= _socialStatus)
+                if (itemSupplier.StoreUnlockPoints <= _gameStatusModule.PlayerSocialStatus)
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }
@@ -112,7 +115,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= _socialStatus)
+                    if (suppliersItem.UnlockPoints <= _gameStatusModule.PlayerSocialStatus)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
@@ -135,12 +138,16 @@ namespace GamePlayManagement
 
         public int GeneralOmniCredits
         {
-            get => _totalOmniCredits;
-            set => _totalOmniCredits = value;
+            get => _gameStatusModule.PlayerOmniCredits;
         }
         public void UpdateDataEndOfDay()
         {
             _jobsSourcesModule.CheckFinishDay();
+        }
+
+        public IWorkDayObject GetCurrentWorkday()
+        {
+            return _calendarModule.GetCurrentWorkDayObject();
         }
     }
 }

@@ -20,6 +20,16 @@ public abstract class BaseItemGameObject : MonoBehaviour, IBaseItemObject
     {
         InPlacement = inPlacement;
     }
+
+    private bool hasSnippet = false;
+    public bool HasSnippet => hasSnippet;
+
+    public string GetSnippetText { get; }
+
+    public void DisplaySnippet()
+    {
+        
+    }
 }
 
 public class CameraItemBaseObject : BaseItemGameObject, IBaseItemObject

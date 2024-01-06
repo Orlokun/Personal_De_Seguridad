@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using GameDirection;
 using Players_NPC.NPC_Management.Customer_Management;
 using UnityEngine;
 
@@ -10,6 +8,7 @@ namespace GamePlayManagement.LevelManagement
     {
         [SerializeField] private Transform levelCamerasParent;
         private ICustomersInSceneManager _customerSpawner;
+        private IPlayerGameProfile _mPlayerProfile;
 
         protected override void Awake()
         {
@@ -18,6 +17,7 @@ namespace GamePlayManagement.LevelManagement
             SetCamerasInactive();
             _customerSpawner = FindObjectOfType<CustomersInSceneManager>(true);
             _customerSpawner.ToggleSpawning(false);
+            _mPlayerProfile = GameDirector.Instance.GetActiveGameProfile;
         }
 
         protected override void ManageClientSpawning(bool isActive)

@@ -207,7 +207,6 @@ namespace DataUnits.ItemSources
                 
                 var linksToString = _mDeflectionDialogueData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
-                var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,

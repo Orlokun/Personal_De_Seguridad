@@ -35,6 +35,7 @@ namespace GameDirection.TimeOfDayManagement
         public int TimesStolen => MTimesStolen;
         public int ValueStolen => MValueStolen;
         public int OmniCreditsEarned => MOmniCreditsEarnedEarned;
+        public PartOfDay CurrentPartOfDay => _currentPartOfDay;
         public WorkDayObject(DayBitId mBitId)
         {
             MBitId = mBitId;

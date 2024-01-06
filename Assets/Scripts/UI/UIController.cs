@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using GameDirection;
+using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
 using InputManagement;
 using UI.PopUpManager;
@@ -25,6 +27,8 @@ namespace UI
         event UIController.ReturnToBaseCanvasState OnResetCanvas;
         void ToggleDialogueObject(bool isActive);
         void ReturnToBaseGamePlayCanvasState();
+        void InitializeBaseInfoCanvas(IPlayerGameProfile playerProfile);
+        void UpdateInfoUI();
         void UpdateOfficeUIElement(int cameraState);
         void ActivateObject(CanvasBitId canvasBitId, int panel);
         void DeactivateObject(CanvasBitId canvasBitId, int panel);
@@ -40,6 +44,8 @@ namespace UI
         public static UIController Instance => _instance;
         public delegate void ReturnToBaseCanvasState();
         public event ReturnToBaseCanvasState OnResetCanvas;
+
+        private IInfoCanvasManager _mInfoCanvasManager;
         //Manage the activation or deactivation of the Dialogue UI Object and logic
         private IDialogueOperator _mDialogueOperator;
         public IDialogueOperator DialogueOperator => _mDialogueOperator;
@@ -83,6 +89,22 @@ namespace UI
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
         }
+
+        #region Base Info Canvas Management
+        public void InitializeBaseInfoCanvas(IPlayerGameProfile playerProfile)
+        {
+            _mInfoCanvasManager.Initialize(playerProfile);
+        }
+
+        public void UpdateInfoUI()
+        {
+            _mInfoCanvasManager.UpdateInfo();
+        }
+        
+        #endregion
+
+        
+        
         public void UpdateOfficeUIElement(int cameraState)
         {
             var indexBitValue = BitOperator.TurnIndexToBitIndexValue(cameraState);
@@ -158,13 +180,6 @@ namespace UI
             LoadInitialVariables();
             DontDestroyOnLoad(this);
         }
-        /*private IEnumerator ManageTestDialogue()
-        {
-            yield return new WaitForSeconds(4);
-            //ActivateUIElements(new List<int>(){BaseCanvasBitStates.BASE_INFO});
-            //var guardObject = FindObjectOfType<TestGuardNavigation>().gameObject.transform;
-
-        }*/
         private void SingletonAwake()
         {
             if (_instance != null)
@@ -178,6 +193,7 @@ namespace UI
         private void LoadInitialVariables()
         {
             GeneralInputStateManager.Instance.OnGameStateChange += UpdateInputState;
+            _mInfoCanvasManager = FindObjectOfType<InfoCanvasManager>();
             SaveCanvasOperatorsDictionaries();
             _mDialogueOperator = GetComponent<DialogueOperator>();
         }

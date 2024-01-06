@@ -47,17 +47,17 @@ namespace GameDirection.DayLevelSceneManagers
         }
         private IEnumerator SecondDialogue()
         {
-            MGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromDialogueStateAndStartClock;
+            MGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromInitialDialogueAndStartClock;
             yield return new WaitForSeconds(2.5f);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             MGameDirector.GetDialogueOperator.StartNewDialogue(ModularDialogue);
             OnFinishCurrentDialogueEvent();
         }
 
-        protected override void ReleaseFromDialogueStateAndStartClock()
+        protected override void ReleaseFromInitialDialogueAndStartClock()
         {
             Debug.Log("[DayTwoLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Start");
-            base.ReleaseFromDialogueStateAndStartClock();
+            base.ReleaseFromInitialDialogueAndStartClock();
             MGameDirector.ActCoroutine(PrepareFirstFeedback());
             Debug.Log("[DayTwoLevelSceneManagement.ReleaseFromDialogueStateAndStartClock] Done");
         }
