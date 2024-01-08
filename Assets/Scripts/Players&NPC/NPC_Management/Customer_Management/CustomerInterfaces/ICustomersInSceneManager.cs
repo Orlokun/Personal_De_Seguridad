@@ -1,28 +1,18 @@
-using System.Collections.Generic;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.LevelManagement;
 using UnityEngine;
 
-namespace Players_NPC.NPC_Management.Customer_Management
+namespace Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces
 {
     public interface ICustomersInSceneManager
     {
         void ToggleSpawning(bool isSpawning);
         public void RegisterObserver(ICustomerManagementObserver observer);
         public void UnregisterObserver(ICustomerManagementObserver observer);
-
+        public void ClientReachedDestination(IBaseCustomer customerLeaving);
         public void LoadInstantiationProperties(JobSupplierBitId supplierId);
         public void LoadCustomerLevelStartTransforms();
         public GameObject MyGameObject { get; }
 
-    }
-
-    public interface ICustomersInSceneManagerData
-    {
-        public JobSupplierBitId JobId { get; }
-        public int[] InstantiationFrequencyRange { get; }
-        public string ClientPrefabPaths { get; }
-        public int GameDifficultyLvl { get; }
     }
 
     public class CustomersInSceneManagerData : ICustomersInSceneManagerData

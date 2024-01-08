@@ -27,12 +27,20 @@ namespace Players_NPC
 
         protected virtual void Awake()
         {
-            MCharacterId = Guid.NewGuid();
+            CheckId();
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             NavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
             ObstacleComponent = GetComponent<NavMeshObstacle>();
             ObstacleComponent.enabled = false;
+        }
+
+        private void CheckId()
+        {
+            if (MCharacterId == Guid.Empty)
+            {
+                MCharacterId = Guid.NewGuid();
+            }
         }
         protected virtual void Start()
         {

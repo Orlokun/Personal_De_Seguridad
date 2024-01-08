@@ -1,5 +1,6 @@
 using GamePlayManagement;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using TMPro;
 using UnityEngine;
 using Utils;
@@ -50,7 +51,10 @@ namespace UI
                 return;
             }
             var employerData = _mPlayerProfile.GetActiveJobsModule().CurrentEmployerData();
-            budget.text = employerData.InitialBudget.ToString();
+            var workDay = _mPlayerProfile.GetProfileCalendar().GetCurrentWorkDayObject();
+            budget.text = employerData.Budget.ToString();
+            earnings.text = workDay.ValuePurchased.ToString();
+            losses.text = workDay.ValueStolen.ToString();
         }
 
         private void UpdateActiveClientsUI(int newActiveCustomers)
@@ -88,17 +92,17 @@ namespace UI
             _activeCustomers++;
             UpdateActiveClientsUI(_activeCustomers);
         }
-        public void UpdateCustomerRemoved(IBaseCustomer customerData)
+        public void UpdateCustomerRemoved(ICustomerPurchaseStealData customerData)
         {
             _activeCustomers--;
             UpdateActiveClientsUI(_activeCustomers);
             UpdateEarningsData(customerData);
         }
 
-        private void UpdateEarningsData(IBaseCustomer customerData)
+        private void UpdateEarningsData(ICustomerPurchaseStealData customerData)
         {
-            var stolenAmount = customerData.GetCustomerVisitData.StolenProductsValue;
-            var purchasedAmount = customerData.GetCustomerVisitData.PurchasedProductsValue;
+            var stolenAmount = customerData.StolenProductsValue;
+            var purchasedAmount = customerData.PurchasedProductsValue;
 
             var hasCurrentEarnings= int.TryParse(earnings.text, out var result);
             var newEarnings = result + purchasedAmount;

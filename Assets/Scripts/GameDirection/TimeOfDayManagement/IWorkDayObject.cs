@@ -1,15 +1,14 @@
 using System.Collections.Generic;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
+using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 
 namespace GameDirection.TimeOfDayManagement
 {
-    public interface IWorkDayObject
+    public interface IWorkDayObject : ICustomerManagementObserver
     {
         //Day GamePlay Management
-        public void AddActiveClient();
-        public void AddFinishedClient(List<IStoreProductObjectData> productsPurchased);
-        public void AddSteal(List<IStoreProductObjectData> productStolen);
         public void AddDetentions();
         public void UpdatePartOfDay(PartOfDay newPartOfDay);
 
@@ -27,6 +26,7 @@ namespace GameDirection.TimeOfDayManagement
         public int ProductsStolen{get;}
         public int TimesStolen{get;}
         public int ValueStolen{get;}
+        public int ValuePurchased { get; }
         public int OmniCreditsEarned { get; }
     }
 }

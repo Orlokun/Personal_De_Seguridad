@@ -34,7 +34,7 @@ namespace DataUnits.JobSources
         public string StoreType{ get; set; }
         public string StoreName{ get; set; }
         public string StoreOwnerName{ get; set; }
-        public int InitialBudget { get; set; }
+        public int Budget { get; set; }
         public int StoreUnlockPoints{ get; set; }
         public string StoreDescription{ get; set; }
         public int[] StoreMinMaxClients { get; set; }

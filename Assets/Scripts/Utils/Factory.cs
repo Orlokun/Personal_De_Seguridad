@@ -13,6 +13,7 @@ using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using ItemPlacement;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 
 namespace Utils

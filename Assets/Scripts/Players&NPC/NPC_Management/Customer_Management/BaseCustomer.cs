@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameDirection.GeneralLevelManager;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Utils;
@@ -42,6 +43,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         public Guid CustomerId => MCharacterId;
+        public void SetCustomerId(Guid newId)
+        {
+            MCharacterId = newId;
+        }
+
         public void SetInitialMovementData(IStoreEntrancePosition entranceData)
         {
             _entranceData = entranceData;
@@ -52,8 +58,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
         {
             _mCustomerTypeData = customerTypeData;
         }
-
-
 
         #region LevelData
         private Vector3 _mPayingPosition;
@@ -83,7 +87,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
         {
             Random.InitState(DateTime.Now.Millisecond);
             _mCustomerVisitData = new CustomerPurchaseStealData();
-            _mNumberOfProductsLookingFor = Random.Range(1, 8);
+            _mNumberOfProductsLookingFor = Random.Range(1, 4);
             base.Awake();
             WalkingDestinationReached += ReachWalkingDestination;
         }
@@ -235,6 +239,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
                     EvaluateStartShopping();
                     break;
                 case BaseAttitudeStatus.Leaving:
+                    CustomersInSceneManager.Instance.ClientReachedDestination(this);
                     Destroy(gameObject);
                     break;
                 case BaseAttitudeStatus.Fighting:

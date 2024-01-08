@@ -1,5 +1,6 @@
 using GameDirection;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 
 namespace GamePlayManagement.LevelManagement

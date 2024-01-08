@@ -12,6 +12,7 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UI;
 using UnityEngine;
 using Utils;
@@ -72,6 +73,7 @@ namespace GameDirection
         #region Public Fields
         public HighLevelGameStates GetCurrentHighLvlGameState => _mGameState;
         public IPlayerGameProfile GetActiveGameProfile => _mActiveGameProfile;
+
         public ILevelManager GetLevelManager => _mLevelManager;
         public IClockManagement GetClockInDayManagement => _mClockManager;
         public IFeedbackManager GetFeedbackManager => _mFeedbackManager;
@@ -172,7 +174,12 @@ namespace GameDirection
         #endregion
         
         #region Public Functions
-        
+        public void SubscribeCurrentWorkDayToCustomerManagement()
+        {
+            var currentDay = _mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject();
+            _mCustomerInstantiationManager.RegisterObserver(currentDay);
+        }
+
         #region ManageNewGame
         public void StartNewGame()
         {

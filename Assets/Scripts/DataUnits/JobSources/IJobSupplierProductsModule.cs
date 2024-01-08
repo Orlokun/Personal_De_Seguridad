@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 
 namespace DataUnits.JobSources
 {

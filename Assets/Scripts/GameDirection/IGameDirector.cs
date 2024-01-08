@@ -10,12 +10,14 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UI;
 namespace GameDirection
 {
     public interface IGameDirector : IHighLvlGameStateManager, IPlayerProfileManager
     {
         public void StartNewGame();
+        public void SubscribeCurrentWorkDayToCustomerManagement();
         public ILevelManager GetLevelManager { get; }
         public IClockManagement GetClockInDayManagement { get; }
         public IUIController GetUIController { get; }

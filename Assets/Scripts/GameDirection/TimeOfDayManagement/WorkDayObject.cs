@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.LevelManagement.LevelObjectsManagement;
+using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 
 namespace GameDirection.TimeOfDayManagement
 {
@@ -12,7 +12,7 @@ namespace GameDirection.TimeOfDayManagement
         protected int MThiefClients;
         protected int MClientsCompleted;
         protected int MClientsDetained;
-        protected int MProductsPurchasedValue;
+        protected int MValuePurchased;
         protected int MProductsStolen;
         protected int MTimesStolen;
         protected int MValueStolen;
@@ -30,9 +30,10 @@ namespace GameDirection.TimeOfDayManagement
         public int ThiefClients => MThiefClients;
         public int ClientsCompleted => MClientsCompleted;
         public int ClientsDetained => MClientsDetained;
-        public int ProductsPurchased => MProductsPurchasedValue;
+        public int ProductsPurchased => MValuePurchased;
         public int ProductsStolen => MProductsStolen;
         public int TimesStolen => MTimesStolen;
+        public int ValuePurchased => MValuePurchased;
         public int ValueStolen => MValueStolen;
         public int OmniCreditsEarned => MOmniCreditsEarnedEarned;
         public PartOfDay CurrentPartOfDay => _currentPartOfDay;
@@ -45,7 +46,7 @@ namespace GameDirection.TimeOfDayManagement
         {
             MJobSupplierId = newJobSupplier;
         }
-        public void AddActiveClient()
+        private void AddActiveClient()
         {
             _activeClients++;
             if (_activeClients > MMaxActiveClients)
@@ -54,23 +55,24 @@ namespace GameDirection.TimeOfDayManagement
             }
             //Manage stress eventually
         }
-        public void AddFinishedClient(List<IStoreProductObjectData> productsPurchased)
+        private void RemoveActiveClient()
         {
-            foreach (var productInShelf in productsPurchased)
-            {
-                MProductsPurchasedValue += productInShelf.Price;
-            }
             _activeClients--;
-            MClientsCompleted++;
+            //Manage stress eventually
         }
-        public void AddSteal(List<IStoreProductObjectData> productStolen)
+
+        private void AddPurchase(int valuePurchased)
         {
-            foreach (var productInShelf in productStolen)
+            MValuePurchased += valuePurchased;
+        }
+        
+        private void AddSteal(int valueStolen)
+        {
+            MValueStolen += valueStolen;
+            if (valueStolen > 0)
             {
-                MValueStolen += productInShelf.Price;
+                MTimesStolen++;
             }
-            
-            MTimesStolen++;
         }
         public void AddDetentions()
         {
@@ -81,6 +83,17 @@ namespace GameDirection.TimeOfDayManagement
         {
             _currentPartOfDay = newPartOfDay;
         }
-    
+
+        public void UpdateCustomerAdded(IBaseCustomer newcustomerCount)
+        {
+            AddActiveClient();
+        }
+
+        public void UpdateCustomerRemoved(ICustomerPurchaseStealData customerData)
+        {
+            RemoveActiveClient();
+            AddSteal(customerData.StolenProductsValue);
+            AddPurchase(customerData.PurchasedProductsValue);
+        }
     }
 }

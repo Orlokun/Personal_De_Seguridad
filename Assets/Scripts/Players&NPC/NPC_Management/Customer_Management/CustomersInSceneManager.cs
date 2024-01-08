@@ -7,8 +7,8 @@ using DialogueSystem;
 using GameDirection;
 using GameDirection.GeneralLevelManager;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using Newtonsoft.Json;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
@@ -21,7 +21,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
     {
         #region Singelton&Initialize
         public static ICustomersInSceneManager Instance => _mInstance;
-        private static ICustomersInSceneManager _mInstance;
+        private static CustomersInSceneManager _mInstance;
         
         public bool IsInitialized { get; }
         public void Initialize()
@@ -32,9 +32,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         #region Private Members
-
-        
-
         private List<ICustomerManagementObserver> observers = new List<ICustomerManagementObserver>();
 
         //TODO: Get this string according to lvl
@@ -78,14 +75,30 @@ namespace Players_NPC.NPC_Management.Customer_Management
             observers.Remove(observer);
         }
 
+        public void ClientReachedDestination(IBaseCustomer customerLeaving)
+        {
+            ClearClientFromScene(customerLeaving);
+        }
+
         private void ClientCreatedEvent(IBaseCustomer customerData)
         {
+            TrackCustomer(customerData);
             foreach (var observer in observers)
             {
                 observer.UpdateCustomerAdded(customerData);
             }
         }
-        private void ClientRemovedEvent(IBaseCustomer customerData)
+        private void ClearClientFromScene(IBaseCustomer removedCustomer)
+        {
+            if (!_mCustomersInScene.ContainsKey(removedCustomer.CustomerId))
+            {
+                Debug.LogWarning($"[ClearClientFromScene] Guid {removedCustomer.CustomerId} must be available before being removed");
+                return;
+            }
+            _mCustomersInScene.Remove(removedCustomer.CustomerId);
+            ClientRemovedEvent(removedCustomer.GetCustomerVisitData);
+        }
+        private void ClientRemovedEvent(ICustomerPurchaseStealData customerData)
         {
             foreach (var observer in observers)
             {
@@ -96,7 +109,7 @@ namespace Players_NPC.NPC_Management.Customer_Management
 
         private void Awake()
         {
-            if (Instance != null && (CustomersInSceneManager) Instance != this)
+            if (_mInstance != null && _mInstance != this)
             {
                 Destroy(this);
             }
@@ -243,22 +256,20 @@ namespace Players_NPC.NPC_Management.Customer_Management
                 Random.InitState(DateTime.Now.Millisecond);
                 var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
                 var randomPrefabInstantiated = InstantiateRandomClient();
-                TrackCustomer(randomPrefabInstantiated);
                 StartMovingClientAgent(randomPrefabInstantiated);
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
                 //Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
                 yield return new WaitForSeconds(randomRange);
             }
         }
-        private void TrackCustomer(GameObject customer)
+        private void TrackCustomer(IBaseCustomer customer)
         {
-            var customerData = customer.GetComponent<IBaseCustomer>();
-            if (_mCustomersInScene.ContainsKey(customerData.CustomerId))
+            if (_mCustomersInScene.ContainsKey(customer.CustomerId))
             {
-                Debug.LogWarning($"[TrackCustomer] Guid {customerData.CustomerId} is already a tracked client");
+                Debug.LogWarning($"[TrackCustomer] Guid {customer.CustomerId} is already a tracked client");
                 return;
             }
-            _mCustomersInScene.Add(customerData.CustomerId, customerData);
+            _mCustomersInScene.Add(customer.CustomerId, customer);
         }
         private void StartMovingClientAgent(GameObject clientPrefab)
         {
@@ -266,13 +277,11 @@ namespace Players_NPC.NPC_Management.Customer_Management
             navMesh.speed = 3.5f;
             navMesh.avoidancePriority = 50;
         }
-
         private void Update()
         {
             NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
             NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
         }
-
         private GameObject InstantiateRandomClient()
         {
             Random.InitState(DateTime.Now.Millisecond);
@@ -286,13 +295,13 @@ namespace Players_NPC.NPC_Management.Customer_Management
             var randomCustomerData = Factory.CreateBaseCustomerTypeData();
             var client = (GameObject)Instantiate(Resources.Load(customerPath), randomPositionData.StartPosition, new Quaternion(0,0,0,0));
             var customerDataObj = client.GetComponent<IBaseCustomer>();
+            customerDataObj.SetCustomerId(Guid.NewGuid());
             customerDataObj.SetInitialMovementData(randomPositionData);
             customerDataObj.SetCustomerTypeData(randomCustomerData);
             ClientCreatedEvent(customerDataObj);
             client.transform.Rotate(0,80,0);
             return client;
         }
-        
         private void SetupAgent(NavMeshAgent Agent)
         {
             Agent.obstacleAvoidanceType = AvoidanceType;
@@ -301,15 +310,6 @@ namespace Players_NPC.NPC_Management.Customer_Management
             Agent.avoidancePriority = 50;
         }
 
-        private void ClearClientFromScene(IBaseCustomer removedCustomer)
-        {
-            if (!_mCustomersInScene.ContainsKey(removedCustomer.CustomerId))
-            {
-                Debug.LogWarning($"[ClearClientFromScene] Guid {removedCustomer.CustomerId} must be available before being removed");
-                return;
-            }
-            _mCustomersInScene.Remove(removedCustomer.CustomerId);
-            ClientRemovedEvent(removedCustomer);
-        }
+
     }
 }

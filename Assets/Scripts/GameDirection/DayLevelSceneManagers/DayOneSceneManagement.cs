@@ -74,6 +74,7 @@ namespace GameDirection.DayLevelSceneManagers
             //TODO: Remove TEST ADDITION
             MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
             //End remove
+            
             MGameDirector.GetSoundDirector.PlayAmbientMusic();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
@@ -98,12 +99,14 @@ namespace GameDirection.DayLevelSceneManagers
         {
             yield return new WaitForSeconds(1f);
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.OfficeLvl);
+            
             //TODO: Remove EDEN LVL Load. TEST ADDITION
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.EdenLvl);
             var scene = SceneManager.GetSceneAt((int)LevelIndexId.EdenLvl);
             SceneManager.MoveGameObjectToScene(MGameDirector.GetCustomerInstantiationManager.MyGameObject, scene);
             MGameDirector.GetCustomerInstantiationManager.LoadInstantiationProperties(JobSupplierBitId.COPY_OF_EDEN);
             //End Remove
+            MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             MGameDirector.GetLevelManager.UnloadScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(false);

@@ -12,7 +12,7 @@ namespace DataUnits.JobSources
         public string StoreType{ get; set; }
         public string StoreOwnerName{ get; set; }
         public int StoreOwnerAge{ get; set; }
-        public int InitialBudget { get; set; }
+        public int Budget { get; set; }
 
         public int StoreUnlockPoints{ get; set; }
         public string StoreDescription{ get; set; }
