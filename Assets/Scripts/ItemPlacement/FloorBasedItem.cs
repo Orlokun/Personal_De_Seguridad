@@ -22,7 +22,7 @@ namespace ItemPlacement
             //Instantiate prefab
             MInstantiatedObject = Instantiate(instantiatedPrefab);
             MInstantiatedObject.SetActive(false);
-            var objectData = (IBaseItemObject)MInstantiatedObject.GetComponent<GuardItemObject>();
+            var objectData = (IBaseItemObject)MInstantiatedObject.GetComponent<GuardBaseGameObject>();
             objectData.SetInPlacementStatus(true);
         }
     

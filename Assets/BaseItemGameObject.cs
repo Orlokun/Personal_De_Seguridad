@@ -4,7 +4,7 @@ using UnityEngine;
 public interface IHasFieldOfView
 {
     public bool HasfieldOfView { get; }
-    public FieldOfView3D FieldOfView3D { get; }
+    public IFieldOfView3D FieldOfView3D { get; }
 }
 
 public abstract class BaseItemGameObject : MonoBehaviour, IBaseItemObject
@@ -12,6 +12,13 @@ public abstract class BaseItemGameObject : MonoBehaviour, IBaseItemObject
     protected bool InPlacement;
     public bool IsInPlacement => InPlacement;
 
+    protected virtual void Update()
+    {
+        ProcessInViewTargets();
+    }
+    protected virtual void ProcessInViewTargets()
+    {
+    }
     public virtual void SendClickObject()
     {
     }

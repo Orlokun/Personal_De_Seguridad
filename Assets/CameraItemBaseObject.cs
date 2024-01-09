@@ -13,7 +13,7 @@ public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView
     [SerializeField]private FieldOfView3D _my3dFieldOfView;
     
     public bool HasfieldOfView { get; }
-    public FieldOfView3D FieldOfView3D { get; }
+    public IFieldOfView3D FieldOfView3D { get; }
     
     private void Awake()
     {

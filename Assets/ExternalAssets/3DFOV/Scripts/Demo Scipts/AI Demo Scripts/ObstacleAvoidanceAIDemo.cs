@@ -128,9 +128,9 @@ namespace FOV3D.Demo
             Vector3 bestDir = transform.forward;
             float furthUnobDst = 0;
 
-            for (int i = 0; i < fov3d.m_directions.Count; i++)
+            for (int i = 0; i < fov3d.mDirections.Count; i++)
             {
-                Vector3 dir = fov3d.m_directions[i];
+                Vector3 dir = fov3d.mDirections[i];
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, dir, out hit, fov3d.viewRadius, fov3d.layerMask))
                 {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FOV3D;
+using Players_NPC;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,8 @@ namespace ExternalAssets._3DFOV.Scripts
     {
         public bool IsDrawActive { get; }
         public void ToggleInGameFoV(bool isActive);
+        public bool HasTargetsInRange { get; }
+        public List<GameObject> SeenTargetObjects { get; }
     }
     
     [ExecuteInEditMode]
@@ -33,6 +36,8 @@ namespace ExternalAssets._3DFOV.Scripts
         [Range(0.1f, 1f)] public float sphereCastRadius = 0.1f;
 
         #region Target Detection
+
+        public List<IBaseCharacterInScene> seenTargets = new List<IBaseCharacterInScene>();
         public List<GameObject> seenObjects = new List<GameObject>();
         public List<GameObject> targetObjects = new List<GameObject>();
         public UnityEvent onTargetSeen;
@@ -42,17 +47,24 @@ namespace ExternalAssets._3DFOV.Scripts
         #endregion
 
         private bool m_goldenRatio = true;
-        [Range(0f, 2f)] private float turnFraction;
+        [Range(0f, 2f)] private float _turnFraction;
         private float power = 1;
-
-
-        public bool IsDrawActive => isDrawFoVActive;
-        private FOVVisualizer fovV;
+        private FOVVisualizer _fovV;
         private IDrawFoVLines _drawFoVLines;
-        private bool isDrawFoVActive;
+        private bool _isDrawFoVActive;
 
-        [HideInInspector] public List<Vector3> m_directions = new List<Vector3>();
-        [HideInInspector] public List<Vector3> m_point = new List<Vector3>();
+        public void ToggleInGameFoV(bool isActive)
+        {
+            _isDrawFoVActive = isActive;
+        }
+
+        public bool HasTargetsInRange => seenObjects.Count > 0;
+        public List<GameObject> SeenTargetObjects => seenObjects;
+        public bool IsDrawActive => _isDrawFoVActive;
+        
+        
+        [HideInInspector] public List<Vector3> mDirections = new List<Vector3>();
+        [HideInInspector] public List<Vector3> mPoint = new List<Vector3>();
         [HideInInspector] public List<Vector3> spherePoints = new List<Vector3>();
         [HideInInspector] public List<int> hitIndexs = new List<int>();
         [HideInInspector] public List<int> missIndexs = new List<int>();
@@ -63,23 +75,23 @@ namespace ExternalAssets._3DFOV.Scripts
         #endregion
         private void Awake()
         {
-            m_directions = new List<Vector3>(viewResolution);
+            mDirections = new List<Vector3>(viewResolution);
             seenObjects = new List<GameObject>();
-            m_point = new List<Vector3>();
+            mPoint = new List<Vector3>();
             tempbool = false;
-            isDrawFoVActive = false;
+            _isDrawFoVActive = false;
             _drawFoVLines = gameObject.GetComponent<DrawFoVLines>();
         }
         
         private void Update()
         {
-            if (m_directions.Count != viewResolution)
+            if (mDirections.Count != viewResolution)
             {
-                StartCoroutine(ListSetup(m_directions, viewResolution));
+                StartCoroutine(ListSetup(mDirections, viewResolution));
             }
             #region UpdateSetup
-            if (m_goldenRatio) turnFraction = goldenRatio;
-            var angleIncrement = Mathf.PI * 2 * turnFraction;
+            if (m_goldenRatio) _turnFraction = goldenRatio;
+            var angleIncrement = Mathf.PI * 2 * _turnFraction;
             var radians = viewAngle * Mathf.Deg2Rad;
             var c = -1 * Mathf.Cos(radians) + 1;
 
@@ -103,13 +115,12 @@ namespace ExternalAssets._3DFOV.Scripts
                 var endPoint = new Vector3(x, z, y);
                 endPoint = myRotation * endPoint;
 
-                m_directions[i] = endPoint;
-
+                mDirections[i] = endPoint;
                 
                 if (detectionActive)
                 {
                     RaycastHit hit;
-                    var dir = (m_directions[i]).normalized;
+                    var dir = (mDirections[i]).normalized;
 
                     if (i == 0)
                     {
@@ -148,13 +159,22 @@ namespace ExternalAssets._3DFOV.Scripts
                             break;
                     }
                 }
-                if ((ValidateVisualizer()) && (fovV.viewAllRaycastLines)) fovV.DrawRaycastLines(i);
-                ProcessInGameVisualization(m_directions[i]);
+                if ((ValidateVisualizer()) && (_fovV.viewAllRaycastLines)) _fovV.DrawRaycastLines(i);
+                ProcessInGameVisualization(mDirections[i]);
+            }
+            ProcessTargetsInSight();
+        }
+
+        private void ProcessTargetsInSight()
+        {
+            if (seenObjects.Count > 0)
+            {
+                
             }
         }
         private void ProcessInGameVisualization(Vector3 direction)
         {
-            if (isDrawFoVActive)
+            if (_isDrawFoVActive)
             {
                 _drawFoVLines.DrawDirectionLineOfSight(direction);
             }
@@ -163,18 +183,17 @@ namespace ExternalAssets._3DFOV.Scripts
                 _drawFoVLines.ClearAllLines();
             }
         }
-        public void ToggleInGameFoV(bool isActive)
-        {
-            isDrawFoVActive = isActive;
-        }
-        
+
+
         private Vector3 SphereCase(RaycastHit hit, int i)
         {
             var midPoint = new Vector3();
             if (seenObjects != null)
             {
-                Ray r = new Ray(transform.position, m_directions[i]);
-                var a = transform.position;
+                var myTransform = transform;
+                var position = myTransform.position;
+                Ray r = new Ray(position, mDirections[i]);
+                var a = position;
                 var b = hit.point;
                 var c = r.GetPoint(viewRadius - sphereCastRadius);
 
@@ -190,13 +209,17 @@ namespace ExternalAssets._3DFOV.Scripts
         
         private void Detection(RaycastHit hit, int i)
         {
-            m_directions[i] = hit.point - transform.position;
+            mDirections[i] = hit.point - transform.position;
             GameObject viewObj = hit.collider.gameObject;
-
+            var isCharacter = viewObj.TryGetComponent<IBaseCharacterInScene>(out var characterInScene);
+            if (!isCharacter)
+            {
+                return;
+            }
             if (!seenObjects.Contains(viewObj))
             {
                 seenObjects.Add(viewObj);
-                m_point.Add(hit.point);
+                mPoint.Add(hit.point);
             }
             else
             {
@@ -204,7 +227,7 @@ namespace ExternalAssets._3DFOV.Scripts
                 {
                     var index = seenObjects.IndexOf(viewObj);
                     if (Vector3.Distance(transform.position, hit.point) < viewRadius)
-                        m_point[index] = hit.point;
+                        mPoint[index] = hit.point;
                 }
             }
             if (targetObjects.Contains(viewObj))
@@ -216,11 +239,11 @@ namespace ExternalAssets._3DFOV.Scripts
                 }
             }
 
-            if ((ValidateVisualizer()) && (fovV.viewSeenObjectLines))
+            if ((ValidateVisualizer()) && (_fovV.viewSeenObjectLines))
             {
-                fovV.DrawObjectLines();
+                _fovV.DrawObjectLines();
             }
-            ProcessTargetInGameVisualization(m_directions[i]);
+            ProcessTargetInGameVisualization(mDirections[i]);
         }
 
 
@@ -235,21 +258,21 @@ namespace ExternalAssets._3DFOV.Scripts
                 for (int j = 0; j < seenObjects.Count; j++)
                 {
                     Collider collider = seenObjects[j].GetComponent<Collider>();
-                    if (!CheckPointInsideCone(m_point[j], transform.position, transform.forward, viewAngle, viewRadius))
+                    if (!CheckPointInsideCone(mPoint[j], transform.position, transform.forward, viewAngle, viewRadius))
                     {
                         RemoveFromSight(j);
                         break;
                     }
                     else if (!CheckPointInsideCone(collider.bounds.max, transform.position, transform.forward, viewAngle, viewRadius))
                     {
-                        if (collider.bounds.SqrDistance(m_point[j]) > .01f)
+                        if (collider.bounds.SqrDistance(mPoint[j]) > .01f)
                         {
                             RemoveFromSight(j);
                             break;
                         }
                     }
 
-                    if (!CheckObstruction(seenObjects[j], m_point[j]))
+                    if (!CheckObstruction(seenObjects[j], mPoint[j]))
                         RemoveFromSight(j);
                 }
             }
@@ -258,8 +281,8 @@ namespace ExternalAssets._3DFOV.Scripts
         {
             if (j >= 0 && j < seenObjects.Count())
                 seenObjects.RemoveAt(j);
-            if (j >= 0 && j < m_point.Count())
-                m_point.RemoveAt(j);
+            if (j >= 0 && j < mPoint.Count())
+                mPoint.RemoveAt(j);
             if (detectionType == DetectionType.Spherecast)
                 if (j >= 0 && j < spherePoints.Count())
                     spherePoints.RemoveAt(j);
@@ -329,7 +352,7 @@ namespace ExternalAssets._3DFOV.Scripts
         {
             if (this.gameObject.TryGetComponent(out FOVVisualizer f))
             {
-                fovV = f;
+                _fovV = f;
                 return true;
             }
             else

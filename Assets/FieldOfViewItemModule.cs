@@ -2,8 +2,9 @@ using ExternalAssets._3DFOV.Scripts;
 public class FieldOfViewItemModule : IFieldOfViewItemModule
 {
     private DrawFoVLines _myDrawFieldOfView;
-    private FieldOfView3D _my3dFieldOfView;
-    public FieldOfView3D Fov3D => _my3dFieldOfView;
+    private IFieldOfView3D _my3dFieldOfView;
+    public IFieldOfView3D Fov3D => _my3dFieldOfView;
+    public bool TargetsInRange => _my3dFieldOfView.HasTargetsInRange;
     public DrawFoVLines DrawFieldOfView => _myDrawFieldOfView;
     
     

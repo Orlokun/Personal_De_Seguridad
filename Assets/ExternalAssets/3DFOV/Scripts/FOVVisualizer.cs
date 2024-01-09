@@ -63,8 +63,8 @@ namespace FOV3D
                 viewRadius = f.viewRadius;
                 viewAngle = f.viewAngle;
                 viewResolution = f.viewResolution;
-                m_directions = f.m_directions;
-                m_point = f.m_point;
+                m_directions = f.mDirections;
+                m_point = f.mPoint;
                 seenObjects = f.seenObjects;
 
                 spherePoints = f.spherePoints;
@@ -84,8 +84,8 @@ namespace FOV3D
             viewRadius = fov3D.viewRadius;
             viewAngle = fov3D.viewAngle;
             viewResolution = fov3D.viewResolution;
-            m_directions = fov3D.m_directions;
-            m_point = fov3D.m_point;
+            m_directions = fov3D.mDirections;
+            m_point = fov3D.mPoint;
             seenObjects = fov3D.seenObjects;
 
             spherePoints = fov3D.spherePoints;

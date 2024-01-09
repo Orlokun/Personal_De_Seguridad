@@ -91,7 +91,7 @@ namespace ItemPlacement
         protected override void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
             base.AttachObjectProcess(itemData, newObject);
-            var itemObject = (IGuardItemObject)CurrentPlacedObject.GetComponent<GuardItemObject>();
+            var itemObject = (IGuardItemObject)CurrentPlacedObject.GetComponent<GuardBaseGameObject>();
             var fov = itemObject.FieldOfView3D;
             fov.ToggleInGameFoV(true);
             GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.GamePlayCanvas, GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);

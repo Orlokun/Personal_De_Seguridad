@@ -6,15 +6,19 @@ using UnityEngine;
 using UnityEngine.AI;
 namespace Players_NPC
 {
+    public interface IBaseCharacterInScene
+    {
+        public Guid CharacterId { get; }
+    }
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(NavMeshObstacle))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BaseAnimatedAgent))]
-    public abstract class BaseCharacterInScene : MonoBehaviour
+    public abstract class BaseCharacterInScene : MonoBehaviour, IBaseCharacterInScene
     {
         protected const string Idle = "Idle";
         protected const string Walk = "Walk";
-        
+        public Guid CharacterId => MCharacterId;
         protected Guid MCharacterId;
         protected IBaseAnimatedAgent BaseAnimator;
         protected NavMeshAgent NavMeshAgent;
