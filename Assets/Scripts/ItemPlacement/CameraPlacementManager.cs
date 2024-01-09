@@ -8,15 +8,15 @@ namespace ItemPlacement
 {
     public class FloorPlacementPosition : IBasePlacementPosition
     {
-        public Vector3 CameraPosition { get; }
+        public Vector3 ItemPosition { get; }
         public FloorPlacementPosition(Vector3 cameraPosition)
         {
-            CameraPosition = cameraPosition;
+            ItemPosition = cameraPosition;
         }
     }
     public interface IBasePlacementPosition
     {
-        public Vector3 CameraPosition { get; }
+        public Vector3 ItemPosition { get; }
     }
     public interface ICameraPlacementPosition : IBasePlacementPosition
     {
@@ -40,7 +40,7 @@ namespace ItemPlacement
 
         public string PositionName => _positionName;
         public Guid Id => _cameraPositionId;
-        public Vector3 CameraPosition => _cameraPosition;
+        public Vector3 ItemPosition => _cameraPosition;
         public bool IsOccupied => _isOccupied;
     }
     
@@ -93,8 +93,8 @@ namespace ItemPlacement
             base.MoveObjectPreview();
             cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(mousePosition);
             var currentCameraRotationManager = (IItemCameraRotation)CurrentPlacedObject.GetComponent<ItemCameraRotation>();
-            currentCameraRotationManager.SetNewPosition(cameraPosition.CameraPosition);
-            CurrentPlacedObject.transform.position = new Vector3(cameraPosition.CameraPosition.x, cameraPosition.CameraPosition.y, cameraPosition.CameraPosition.z);
+            currentCameraRotationManager.SetNewPosition(cameraPosition.ItemPosition);
+            CurrentPlacedObject.transform.position = new Vector3(cameraPosition.ItemPosition.x, cameraPosition.ItemPosition.y, cameraPosition.ItemPosition.z);
             if (!CurrentPlacedObject.activeInHierarchy)
             {
                 CurrentPlacedObject.SetActive(true);
@@ -121,7 +121,7 @@ namespace ItemPlacement
                 hitPoint = ray.GetPoint(zDistance);
                 return null;
             }
-            Debug.Log($"Current Position of selected item: {CurrentPlacementPosition.CameraPosition}");
+            Debug.Log($"Current Position of selected item: {CurrentPlacementPosition.ItemPosition}");
         }
 
         protected override void CreateObjectInPlace()
@@ -149,11 +149,11 @@ namespace ItemPlacement
                 {
                     continue;
                 }
-                if (Vector3.Distance(point, positionData.CameraPosition) > 5)
+                if (Vector3.Distance(point, positionData.ItemPosition) > 5)
                 {
                     continue;
                 }
-                var distance = Vector3.Distance(point, positionData.CameraPosition);
+                var distance = Vector3.Distance(point, positionData.ItemPosition);
 
                 if (distance<closestCameraDistance)
                 {

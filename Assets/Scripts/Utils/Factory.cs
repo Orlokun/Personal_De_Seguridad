@@ -2,6 +2,7 @@ using System;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using DialogueSystem;
+using ExternalAssets._3DFOV.Scripts;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.GeneralLevelManager;
 using GameDirection.TimeOfDayManagement;
@@ -20,6 +21,10 @@ namespace Utils
 {
     public static class Factory
     {
+        public static IFieldOfViewItemModule CreateFieldOfViewItemModule(DrawFoVLines myDrawFieldOfView, FieldOfView3D my3dFieldOfView)
+        {
+            return new FieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView);
+        }
         public static IStoreEntrancePosition CreateStartPosition(Transform instantiationPos, Transform entrancePos)
         {
             return new StoreEntrancePosition(instantiationPos,entrancePos);

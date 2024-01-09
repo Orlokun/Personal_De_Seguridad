@@ -3,18 +3,24 @@ using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 using Utils;
 
-public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView
+public interface IGuardItemObject : IHasFieldOfView
+{
+
+}
+
+public class GuardItemObject : BaseItemGameObject, IGuardItemObject
 {
     private CinemachineVirtualCamera myVc;
     public CinemachineVirtualCamera VirtualCamera => myVc;
 
-    private IFieldOfViewItemModule _fieldOfViewModule;
-    [SerializeField]private DrawFoVLines _myDrawFieldOfView;
-    [SerializeField]private FieldOfView3D _my3dFieldOfView;
-    
     public bool HasfieldOfView { get; }
-    public FieldOfView3D FieldOfView3D { get; }
+    public FieldOfView3D FieldOfView3D => _fieldOfViewModule.Fov3D;
     
+    [SerializeField] private DrawFoVLines _myDrawFieldOfView;
+    [SerializeField] private FieldOfView3D _my3dFieldOfView;
+
+    private IFieldOfViewItemModule _fieldOfViewModule;
+
     private void Awake()
     {
         InPlacement = false;
@@ -22,11 +28,8 @@ public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView
     }
     private void ProcessFieldOfView()
     {
-        _myDrawFieldOfView = GetComponent<DrawFoVLines>();
-        _my3dFieldOfView = GetComponent<FieldOfView3D>();
         _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(_myDrawFieldOfView, _my3dFieldOfView); 
     }
-
     public override void SendClickObject()
     {
         Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
@@ -36,5 +39,6 @@ public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView
         }
         _fieldOfViewModule.ToggleInGameFoV(!_my3dFieldOfView.IsDrawActive);
     }
+
 
 }

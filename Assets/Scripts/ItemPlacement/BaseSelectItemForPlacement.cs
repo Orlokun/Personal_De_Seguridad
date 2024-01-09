@@ -29,11 +29,17 @@ namespace ItemPlacement
         
         public virtual void OnItemClicked()
         {
+            CheckBudgetRestrictions();
             Debug.Log("[base.OnPointerClick]");
             if (MInstantiatedObject.activeInHierarchy != true)
             {
                 MInstantiatedObject.SetActive(true);
             }
+        }
+
+        protected virtual void CheckBudgetRestrictions()
+        {
+            
         }
     }
 }

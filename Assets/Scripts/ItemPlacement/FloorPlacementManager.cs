@@ -1,3 +1,9 @@
+using ExternalAssets._3DFOV.Scripts;
+using GameDirection;
+using GamePlayManagement.BitDescriptions;
+using Players_NPC.NPC_Management.Customer_Management;
+using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -33,13 +39,14 @@ namespace ItemPlacement
         protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)
         {
             ConfirmCamera();
+            ConfirmNoRoofBlocking();
             var ray = MainCamera.ScreenPointToRay(mouseScreenPosition);
             RaycastHit hitInfo;
             IBasePlacementPosition newPoint;
             if (Physics.Raycast(ray, out hitInfo, 500, targetLayerMask))
             {
                 Debug.Log($"[FloorPlacementManager.GetPlacementPoint] HIT FLOOR: {hitInfo.collider.gameObject.name}");
-                var hPoint = hitInfo.point + new Vector3(0, deltaY, 0);
+                var hPoint = hitInfo.point;
                 var placementPosition = Factory.CreateFloorPlacementPosition(hPoint);
                 newPoint = placementPosition;
                 IsPlaceSuccess = true;
@@ -54,6 +61,24 @@ namespace ItemPlacement
             return newPoint;
         }
 
+        protected override void MoveObjectPreview()
+        {
+            IBasePlacementPosition guardPosition;
+            base.MoveObjectPreview();
+            guardPosition = GetPlacementPoint(mousePosition);
+            CurrentPlacedObject.transform.position = new Vector3(guardPosition.ItemPosition.x, guardPosition.ItemPosition.y, guardPosition.ItemPosition.z);
+            if (!CurrentPlacedObject.activeInHierarchy)
+            {
+                CurrentPlacedObject.SetActive(true);
+            }
+        }
+        protected void ConfirmNoRoofBlocking()
+        {
+            if (roofLayerObject.activeInHierarchy && IsAttemptingPlacement)
+            {
+                roofLayerObject.SetActive(false);
+            }
+        }
         protected void ConfirmCamera()
         {
             if (MainCamera == null)
@@ -61,5 +86,15 @@ namespace ItemPlacement
                 MainCamera = Camera.main;
             }
         }
+        
+        protected override void AttachObjectProcess(GameObject newObject)
+        {
+            base.AttachObjectProcess(newObject);
+            var itemObject = (IGuardItemObject)CurrentPlacedObject.GetComponent<GuardItemObject>();
+            var fov = itemObject.FieldOfView3D;
+            fov.ToggleInGameFoV(true);
+            GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.GamePlayCanvas, GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
+        }
+
     }
 }

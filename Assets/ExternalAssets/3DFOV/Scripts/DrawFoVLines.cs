@@ -13,14 +13,13 @@ namespace ExternalAssets._3DFOV.Scripts
     public class DrawFoVLines : MonoBehaviour, IDrawFoVLines
     {
         private Vector3[] mLineDirections; // Array of directions for each line
-        private LineRenderer _mGeneralSightLines;
+        [SerializeField] private LineRenderer _mGeneralSightLines;
         [SerializeField] private LineRenderer _mTargetLines; 
         [SerializeField] private Material generalSightMaterial;
         [SerializeField] private Material targetSightMaterial;
 
         void Awake()
         {
-            _mGeneralSightLines = gameObject.GetComponent<LineRenderer>();
             ConfigureLines();
         }
 

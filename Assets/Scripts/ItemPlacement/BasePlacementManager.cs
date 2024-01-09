@@ -66,10 +66,17 @@ namespace ItemPlacement
                     }
                 }
             }
-            
+            else if(!IsAttemptingPlacement)
+            {
+                ResetSelectedObject();
+            }
             if (Input.GetMouseButton(0) && CurrentPlacedObject != null && IsInsideAllowedZone)
             {
                 CreateObjectInPlace();
+                ResetSelectedObject();
+            }
+            else if(Input.GetMouseButton(0) && IsAttemptingPlacement)
+            {
                 ResetSelectedObject();
             }
         }
@@ -126,6 +133,7 @@ namespace ItemPlacement
             AttachObjectProcess(newObject);
         }
 
+
         protected virtual void AttachObjectProcess(GameObject newObject)
         {
             if (CurrentPlacedObject)
@@ -135,6 +143,11 @@ namespace ItemPlacement
             CurrentPlacedObject = newObject;
             deltaY = CurrentPlacedObject.transform.localScale.y;
             Debug.Log($"[AttachNewObject] New 'Current Placed Object = {CurrentPlacedObject.name}");
+            ActivatePlacementStatus();
+        }
+
+        private void ActivatePlacementStatus()
+        {
             CurrentPlacedObject.SetActive(true);
             IsAttemptingPlacement = true;
         }
@@ -158,7 +171,6 @@ namespace ItemPlacement
         {
             IsAttemptingPlacement = false;
             CurrentPlacedObject.SetActive(false);
-            CurrentPlacedObject = null;
         }
         
         protected virtual void CreateObjectInPlace()
