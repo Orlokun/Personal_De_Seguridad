@@ -1,8 +1,9 @@
+using DataUnits.ItemScriptableObjects;
 using UnityEngine;
 
 namespace ItemPlacement
 {
-    public class SelectFloorBasedItem : BaseSelectItemForPlacement
+    public class FloorBasedItem : BaseItemPlacement
     {
         //Prefabs that need to be instantiated
         public GameObject instantiatedPrefab;
@@ -25,10 +26,10 @@ namespace ItemPlacement
             objectData.SetInPlacementStatus(true);
         }
     
-        public override void OnItemClicked()
+        public override void OnItemClicked(IItemObject itemData)
         {
-            base.OnItemClicked();
-            FloorPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
+            base.OnItemClicked(itemData);
+            FloorPlacementManager.Instance.AttachNewObject(itemData,MInstantiatedObject);    
             FloorPlacementManager.Instance.ToggleRoofObject(false);    
         }
     }

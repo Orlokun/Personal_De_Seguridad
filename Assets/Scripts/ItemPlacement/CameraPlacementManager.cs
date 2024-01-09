@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 using Utils;
@@ -91,7 +92,7 @@ namespace ItemPlacement
         {
             ICameraPlacementPosition cameraPosition;
             base.MoveObjectPreview();
-            cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(mousePosition);
+            cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(MousePosition);
             var currentCameraRotationManager = (IItemCameraRotation)CurrentPlacedObject.GetComponent<ItemCameraRotation>();
             currentCameraRotationManager.SetNewPosition(cameraPosition.ItemPosition);
             CurrentPlacedObject.transform.position = new Vector3(cameraPosition.ItemPosition.x, cameraPosition.ItemPosition.y, cameraPosition.ItemPosition.z);
@@ -131,9 +132,9 @@ namespace ItemPlacement
             fov.ToggleInGameFoV(false);
         }
 
-        protected override void AttachObjectProcess(GameObject newObject)
+        protected override void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
-            base.AttachObjectProcess(newObject);
+            base.AttachObjectProcess(itemData, newObject);
             var fov = (IFieldOfView3D)CurrentPlacedObject.GetComponent<FieldOfView3D>();
             fov.ToggleInGameFoV(true);
         }

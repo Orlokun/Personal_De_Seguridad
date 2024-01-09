@@ -69,6 +69,11 @@ namespace DataUnits.JobSources
             _productsModuleModule.LoadProductData();
         }
 
+        public void ExpendMoney(int amount)
+        {
+            Budget -= amount;
+        }
+
         #endregion
 
         #region SupplierStats

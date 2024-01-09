@@ -13,7 +13,7 @@ namespace DataUnits.ItemScriptableObjects
         public string ItemName { get; }
         public string ItemDescription { get; }
         public int UnlockPoints { get; }
-        public float Cost { get; }
+        public int Cost { get; }
         public int ItemActions { get; }
         public Sprite ItemIcon{ get; }
         public IItemTypeStats ItemStats {get;}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4073717707268029284}
   - component: {fileID: 3234867541589855444}
   - component: {fileID: 6531389457130956989}
-  - component: {fileID: 5691382515315026454}
+  - component: {fileID: 2087669523840878987}
   m_Layer: 5
   m_Name: cameraItemBaseIconObject
   m_TagString: Untagged
@@ -119,7 +119,7 @@ MonoBehaviour:
   itemNameTextObject: {fileID: 6347459997007014}
   iconImage: {fileID: 6390561400922840387}
   MInfoPanelButton: {fileID: 6494473160649571166}
---- !u!114 &5691382515315026454
+--- !u!114 &2087669523840878987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

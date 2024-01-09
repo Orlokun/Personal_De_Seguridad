@@ -1,3 +1,5 @@
+using DataUnits.ItemScriptableObjects;
+using GameDirection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -5,28 +7,27 @@ namespace ItemPlacement
 {
     public interface IBasePlacementManager
     {
-        public void AttachNewObject(GameObject newObject);
+        public void AttachNewObject(IItemObject itemData, GameObject newObject);
         public void ToggleRoofObject(bool isActive);
-        public void ReleaseDraggedItem();
     }
     public abstract class BasePlacementManager : MonoBehaviour, IBasePlacementManager
     {
         protected GameObject CurrentPlacedObject;
         protected GameObject LastInstantiatedGameObject;
+
+        protected IItemObject CurrentItemData;
         
         [SerializeField] protected LayerMask targetLayerMask;
         [SerializeField] protected LayerMask blockLayerMasks;
-        [SerializeField] protected float deltaY;
         [SerializeField] protected GameObject roofLayerObject;
         
         protected bool IsPlaceSuccess = false;
-        protected int TouchID;
-        protected bool IsAttemptingPlacement = false;
-        protected bool IsMouseReleased = false;
-        protected bool IsInsideAllowedZone = false;
+        protected bool IsAttemptingPlacement;
+        protected bool IsInsideAllowedZone;
 
-        protected Vector3 mousePosition;
-
+        
+        
+        protected Vector3 MousePosition;
         protected Camera MainCamera;
         
         //The scaling factor of the object
@@ -36,58 +37,75 @@ namespace ItemPlacement
         {
             MainCamera = Camera.main;
         }
-
         protected void Update()
         {
             if (CurrentPlacedObject == null)
             {
                 return;
             }
-            
             if (IsAttemptingPlacement)
             {
-                if (MouseTouchesExpectedLayer())
+                ProcessPlacementMovement();
+            }
+            ProcessPlacementActiveStatus();
+        }
+        
+        private void ProcessPlacementMovement()
+        {
+            if (MouseTouchesExpectedLayer())
+            {
+                Debug.Log($"{CurrentPlacedObject.name}: Object is inside Placement zone");
+                IsInsideAllowedZone = true;
+                if (!CurrentPlacedObject.activeInHierarchy)
                 {
-                    Debug.Log($"{CurrentPlacedObject.name}: Object is inside Placement zone");
-                    IsInsideAllowedZone = true;
-                    if (!CurrentPlacedObject.activeInHierarchy)
-                    {
-                        CurrentPlacedObject.SetActive(IsInsideAllowedZone);
-                    }
-                    MoveObjectPreview();
-                    RotateObjectPreview();
+                    CurrentPlacedObject.SetActive(IsInsideAllowedZone);
                 }
-                else
+                MoveObjectPreview();
+                RotateObjectPreview();
+            }
+            else
+            {
+                if (CurrentPlacedObject != null && IsInsideAllowedZone && CurrentPlacedObject.activeInHierarchy)
                 {
-                    if (CurrentPlacedObject != null && IsInsideAllowedZone && CurrentPlacedObject.activeInHierarchy)
-                    {
-                        IsInsideAllowedZone = false;
-                        CurrentPlacedObject.SetActive(IsInsideAllowedZone);
-                    }
+                    IsInsideAllowedZone = false;
+                    CurrentPlacedObject.SetActive(IsInsideAllowedZone);
                 }
             }
-            else if(!IsAttemptingPlacement)
+        }
+        private void ProcessPlacementActiveStatus()
+        {
+            if(!IsAttemptingPlacement)
             {
                 ResetSelectedObject();
             }
-            if (Input.GetMouseButton(0) && CurrentPlacedObject != null && IsInsideAllowedZone)
+            if (Input.GetMouseButton(0) && CurrentPlacedObject != null && IsInsideAllowedZone && IsAttemptingPlacement)
             {
-                CreateObjectInPlace();
-                ResetSelectedObject();
+                AttemptItemPlacement();
             }
-            else if(Input.GetMouseButton(0) && IsAttemptingPlacement)
+            else if(Input.GetMouseButton(0) && IsAttemptingPlacement && !IsInsideAllowedZone)
             {
                 ResetSelectedObject();
             }
         }
-
+        
+        private void AttemptItemPlacement()
+        {
+            ProcessItemExpense(CurrentItemData);
+            CreateObjectInPlace();
+            ResetSelectedObject();
+        }
+        private void ProcessItemExpense(IItemObject itemObject)
+        {
+            GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployerData().ExpendMoney(itemObject.Cost);
+            GameDirector.Instance.GetUIController.UpdateInfoUI();
+        }
         protected virtual void MoveObjectPreview()
         {
 #if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
         Touch touch = Input.GetTouch (touchID);
         screenPosition = new Vector3 (touch.position.x, touch.position.y, 0);
 #else
-            mousePosition = Input.mousePosition;
+            MousePosition = Input.mousePosition;
 #endif
         }
 
@@ -107,72 +125,23 @@ namespace ItemPlacement
             }
         }
 
-        protected bool IsDraggingObject()
+        public void AttachNewObject(IItemObject itemData, GameObject newObject)
         {
-#if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
-        if (Input.touches.Length > 0) {
-            if (!isTouchInput) {
-                isTouchInput = true;
-                touchID = Input.touches[0].fingerId;
-                return true;
-            } else if (Input.GetTouch (touchID).phase == TouchPhase.Ended) {
-                isTouchInput = false;
-                return false;
-            } else {
-                return true;
-            }
+            AttachObjectProcess(itemData, newObject);
         }
-        return false;
-#else
-            var mouseInput = Input.GetMouseButton(0);
-            return mouseInput;
-#endif
-        }
-        public void AttachNewObject(GameObject newObject)
-        {
-            AttachObjectProcess(newObject);
-        }
-
-
-        protected virtual void AttachObjectProcess(GameObject newObject)
+        protected virtual void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
             if (CurrentPlacedObject)
             {
                 CurrentPlacedObject.SetActive(false);
             }
             CurrentPlacedObject = newObject;
-            deltaY = CurrentPlacedObject.transform.localScale.y;
+            CurrentItemData = itemData;
             Debug.Log($"[AttachNewObject] New 'Current Placed Object = {CurrentPlacedObject.name}");
             ActivatePlacementStatus();
         }
 
-        private void ActivatePlacementStatus()
-        {
-            CurrentPlacedObject.SetActive(true);
-            IsAttemptingPlacement = true;
-        }
 
-        public void ToggleRoofObject(bool isActive)
-        {
-            if (roofLayerObject == null)
-            {
-                Debug.LogError("[ToggleRoofObject] Roof object must not be null");
-                return;
-            }
-            roofLayerObject.SetActive(isActive);
-        }
-
-        public void ReleaseDraggedItem()
-        {
-            IsMouseReleased = true;
-        }
-        
-        protected void ResetSelectedObject()
-        {
-            IsAttemptingPlacement = false;
-            CurrentPlacedObject.SetActive(false);
-        }
-        
         protected virtual void CreateObjectInPlace()
         {
             var obj = Instantiate(CurrentPlacedObject);
@@ -184,8 +153,7 @@ namespace ItemPlacement
             var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
             objectData.SetInPlacementStatus(false);
         }
-        
-        protected bool MouseTouchesExpectedLayer()
+        private bool MouseTouchesExpectedLayer()
         {
             var newPoint = Input.mousePosition;
             if (Camera.main != null)
@@ -204,15 +172,28 @@ namespace ItemPlacement
             }
             return false;
         }
-        
-        protected void CheckIfClickIsAllowed()
+
+        #region Utils
+        public void ToggleRoofObject(bool isActive)
         {
-            Debug.Log("[CheckIfPlaceSuccess] Checking if place meets conditions");
-            if (IsPlaceSuccess)
+            if (roofLayerObject == null)
             {
-                CreateObjectInPlace();
+                Debug.LogError("[ToggleRoofObject] Roof object must not be null");
+                return;
             }
-            ResetSelectedObject();
+            roofLayerObject.SetActive(isActive);
         }
+        
+        private void ResetSelectedObject()
+        {
+            IsAttemptingPlacement = false;
+            CurrentPlacedObject.SetActive(false);
+        }
+        private void ActivatePlacementStatus()
+        {
+            CurrentPlacedObject.SetActive(true);
+            IsAttemptingPlacement = true;
+        }
+        #endregion
     }
 }

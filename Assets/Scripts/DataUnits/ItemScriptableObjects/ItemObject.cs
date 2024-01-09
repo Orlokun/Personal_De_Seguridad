@@ -36,7 +36,7 @@ namespace DataUnits.ItemScriptableObjects
         public string ItemName => _itemName;
         public string ItemDescription => _mItemDescription;
         public int UnlockPoints => _mItemUnlockPoints;
-        public float Cost => _mItemCost;
+        public int Cost => _mItemCost;
         public Sprite ItemIcon =>_itemIcon;
         public int ItemActions => _mItemActions;
         public IItemTypeStats ItemStats => _mItemStats;

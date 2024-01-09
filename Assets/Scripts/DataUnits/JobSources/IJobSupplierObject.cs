@@ -32,5 +32,6 @@ namespace DataUnits.JobSources
         
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
+        public void ExpendMoney(int amount);
     }
 }

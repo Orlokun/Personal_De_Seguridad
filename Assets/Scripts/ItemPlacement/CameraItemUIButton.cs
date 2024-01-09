@@ -1,9 +1,10 @@
+using DataUnits.ItemScriptableObjects;
 using UnityEngine;
 using Utils;
 
 namespace ItemPlacement
 {
-    public class SelectCameraTypeItem : BaseSelectItemForPlacement, IInitialize
+    public class CameraItemUIButton : BaseItemPlacement, IInitialize
     {
         private bool _mInitiliazed;
         //Prefabs that need to be instantiated
@@ -39,10 +40,10 @@ namespace ItemPlacement
             objectData.SetInPlacementStatus(true);
         }
     
-        public override void OnItemClicked()
+        public override void OnItemClicked(IItemObject itemData)
         {
-            base.OnItemClicked();
-            CameraPlacementManager.Instance.AttachNewObject(MInstantiatedObject);    
+            base.OnItemClicked(itemData);
+            CameraPlacementManager.Instance.AttachNewObject(itemData, MInstantiatedObject);    
             CameraPlacementManager.Instance.ToggleRoofObject(true);    
         }
     }

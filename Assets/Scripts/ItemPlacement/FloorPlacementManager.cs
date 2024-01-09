@@ -1,3 +1,4 @@
+using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
@@ -65,7 +66,7 @@ namespace ItemPlacement
         {
             IBasePlacementPosition guardPosition;
             base.MoveObjectPreview();
-            guardPosition = GetPlacementPoint(mousePosition);
+            guardPosition = GetPlacementPoint(MousePosition);
             CurrentPlacedObject.transform.position = new Vector3(guardPosition.ItemPosition.x, guardPosition.ItemPosition.y, guardPosition.ItemPosition.z);
             if (!CurrentPlacedObject.activeInHierarchy)
             {
@@ -87,9 +88,9 @@ namespace ItemPlacement
             }
         }
         
-        protected override void AttachObjectProcess(GameObject newObject)
+        protected override void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
-            base.AttachObjectProcess(newObject);
+            base.AttachObjectProcess(itemData, newObject);
             var itemObject = (IGuardItemObject)CurrentPlacedObject.GetComponent<GuardItemObject>();
             var fov = itemObject.FieldOfView3D;
             fov.ToggleInGameFoV(true);
