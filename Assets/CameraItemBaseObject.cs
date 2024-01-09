@@ -36,5 +36,4 @@ public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView
         }
         _fieldOfViewModule.ToggleInGameFoV(!_my3dFieldOfView.IsDrawActive);
     }
-
 }

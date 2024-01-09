@@ -284,6 +284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 706b3c1542ebdf64ca9f9a8ce1e9e5d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _myDrawFieldOfView: {fileID: 1717468885158706658}
+  _my3dFieldOfView: {fileID: 8685407650118850411}
 --- !u!114 &9213300813894591522
 MonoBehaviour:
   m_ObjectHideFlags: 0

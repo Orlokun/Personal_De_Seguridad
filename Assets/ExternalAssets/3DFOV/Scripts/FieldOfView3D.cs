@@ -223,6 +223,7 @@ namespace ExternalAssets._3DFOV.Scripts
             ProcessTargetInGameVisualization(m_directions[i]);
         }
 
+
         private void ProcessTargetInGameVisualization(Vector3 direction)
         {
             _drawFoVLines.DrawTargetLineOfSight(direction);
