@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 9124674965223133124}
   - component: {fileID: 4073717707268029284}
   - component: {fileID: 3234867541589855444}
-  - component: {fileID: 2996163806747782038}
   - component: {fileID: 2579938475535577264}
+  - component: {fileID: 2983797250404931211}
   m_Layer: 5
   m_Name: weaponItemBaseIconObject
   m_TagString: Untagged
@@ -103,20 +103,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2996163806747782038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696657777801829138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88ea3e0a6a574ad4bcbe136b94b23e17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MInstantiatingButton: {fileID: 6261883327165966855}
-  instantiatedPrefab: {fileID: 5085081953980375545, guid: 188ab36b9843c304287f0e325e6ed62a, type: 3}
 --- !u!114 &2579938475535577264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,6 +120,19 @@ MonoBehaviour:
   itemNameTextObject: {fileID: 6347459997007014}
   iconImage: {fileID: 6390561400922840387}
   MInfoPanelButton: {fileID: 6494473160649571166}
+--- !u!114 &2983797250404931211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696657777801829138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81f2e7adf64f48ff974b2639a03aeeb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MInstantiatingButton: {fileID: 6261883327165966855}
 --- !u!1 &2499032398852046459
 GameObject:
   m_ObjectHideFlags: 0

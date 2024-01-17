@@ -18,7 +18,31 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             _mInPlacement = inPlacement;
         }
+
+        public Transform GunParentTransform => mGunPositionTransform;
+        [SerializeField] private Transform mGunPositionTransform;
         private bool _mInPlacement;
+        private IWeaponStats CurrentWeaponStats => (IWeaponStats)_currentWeaponItem?.ItemStats;
+        private IItemObject _currentWeaponItem;
+        public bool HasWeapon => _currentWeaponItem != null;
+        public void ApplyWeapon(IItemObject appliedWeapon)
+        {
+            if (appliedWeapon == null)
+            {
+                return;
+            }
+            _currentWeaponItem = appliedWeapon;
+        }
+        public void ReleaseWeapon()
+        {
+            _currentWeaponItem = null;
+        }
+
+        public void DestroyWeapon()
+        {
+            //TODO: Destroy game object
+            _currentWeaponItem = null;
+        }
         
         #endregion
         /// <summary>

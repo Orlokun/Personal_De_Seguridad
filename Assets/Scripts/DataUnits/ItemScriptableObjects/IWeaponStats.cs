@@ -7,5 +7,6 @@ namespace DataUnits.ItemScriptableObjects
         public int Damage { get; }
         public int Range { get; }
         public int Persuasiveness { get; }
+        public int Precision { get; }
     }
 }

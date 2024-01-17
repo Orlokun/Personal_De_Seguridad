@@ -6,6 +6,5 @@ namespace GamePlayManagement.ItemManagement
         public void SetInPlacementStatus(bool inPlacement);
 
         public void InitializeItem();
-
     }
 }

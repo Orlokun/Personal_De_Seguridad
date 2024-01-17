@@ -1,13 +1,12 @@
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
-using GamePlayManagement.ItemManagement;
 using GamePlayManagement.ItemManagement.Guards;
 using UI;
 using UnityEngine;
 using Utils;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagers
 {
     public class FloorPlacementManager : BasePlacementManager
     {
@@ -18,7 +17,7 @@ namespace GamePlayManagement.ItemPlacement
         }
         
         //The length of the z axis of the object from the camera
-        [SerializeField] private float zDistance = 50f;
+        private float zDistance = 50f;
         private float lastMouseXPos;
         protected override void Awake()
         {
@@ -61,10 +60,10 @@ namespace GamePlayManagement.ItemPlacement
             return newPoint;
         }
 
-        protected override void MoveObjectPreview()
+        protected override void SetCurrentMousePosition()
         {
             IBasePlacementPosition guardPosition;
-            base.MoveObjectPreview();
+            base.SetCurrentMousePosition();
             guardPosition = GetPlacementPoint(MousePosition);
             CurrentPlacedObject.transform.position = new Vector3(guardPosition.ItemPosition.x, guardPosition.ItemPosition.y, guardPosition.ItemPosition.z);
             if (!CurrentPlacedObject.activeInHierarchy)

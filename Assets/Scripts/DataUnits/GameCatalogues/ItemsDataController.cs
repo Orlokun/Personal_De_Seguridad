@@ -377,12 +377,16 @@ namespace DataUnits.GameCatalogues
                     Debug.LogWarning("[LoadWeaponDataFromJson] Weapon Persuasiveness must be available");
                 }
                 
+                var gotPrecision = int.TryParse(_mWeaponStatsFromDataString.values[i][7], out var precision);
+                if (!gotPrecision)
+                {
+                    Debug.LogWarning("[LoadWeaponDataFromJson] Weapon Precision must be available");
+                }
                 IWeaponStats itemDataObject =
-                    new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness);
+                    new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness, precision);
                 _mWeaponsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotWeaponsData = true;
-
         }
         private void LoadTrapDataFromJson(string sourceJson)
         {

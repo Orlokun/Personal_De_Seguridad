@@ -5,7 +5,7 @@ using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 using Utils;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagers
 {
     public class CameraPlacementManager : BasePlacementManager
     {
@@ -50,10 +50,10 @@ namespace GamePlayManagement.ItemPlacement
             base.Update();
         }
 
-        protected override void MoveObjectPreview()
+        protected override void SetCurrentMousePosition()
         {
             ICameraPlacementPosition cameraPosition;
-            base.MoveObjectPreview();
+            base.SetCurrentMousePosition();
             cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(MousePosition);
             var currentCameraRotationManager = (IItemCameraRotation)CurrentPlacedObject.GetComponent<ItemCameraRotation>();
             currentCameraRotationManager.SetNewPosition(cameraPosition.ItemPosition);

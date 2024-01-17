@@ -1,7 +1,6 @@
-using System;
-using System.Linq;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.ItemPlacement.PlacementManagers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -47,7 +46,7 @@ namespace GamePlayManagement.ItemPlacement
 
         protected const string GuardsPath = "InventoryItemsPrefabs/Guards/";
         protected const string CamsPath = "InventoryItemsPrefabs/Camera/";
-        protected const string WeaponsPath = "InventoryItemsPrefabs/Wapons/";
+        protected const string WeaponsPath = "InventoryItemsPrefabs/Weapons/";
         protected const string TrapsPath = "InventoryItemsPrefabs/Traps/";
         protected const string OtherItemsPath = "InventoryItemsPrefabs/Other/";
         protected string GetBaseItemPath(BitItemType itemType, string prefabName)
@@ -79,5 +78,6 @@ namespace GamePlayManagement.ItemPlacement
             var path = string.Concat(basePath, prefabName);
             return path;
         }
+
     }
 }

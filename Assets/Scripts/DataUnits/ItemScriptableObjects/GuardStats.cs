@@ -2,11 +2,6 @@ using System.Collections.Generic;
 
 namespace DataUnits.ItemScriptableObjects
 {
-    public interface IItemTypeStats
-    {
-        public List<int> GetStats();
-    }
-    
     public class GuardStats : IGuardStats
     {
         private readonly int _bitId;

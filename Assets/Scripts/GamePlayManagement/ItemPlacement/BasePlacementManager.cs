@@ -56,7 +56,7 @@ namespace GamePlayManagement.ItemPlacement
                 {
                     CurrentPlacedObject.SetActive(IsInsideAllowedZone);
                 }
-                MoveObjectPreview();
+                SetCurrentMousePosition();
                 RotateObjectPreview();
             }
             else
@@ -95,14 +95,9 @@ namespace GamePlayManagement.ItemPlacement
             GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployerData().ExpendMoney(itemObject.Cost);
             GameDirector.Instance.GetUIController.UpdateInfoUI();
         }
-        protected virtual void MoveObjectPreview()
+        protected virtual void SetCurrentMousePosition()
         {
-#if !UNITY_EDITOR&&(UNITY_ANDROID||UNITY_IOS)
-        Touch touch = Input.GetTouch (touchID);
-        screenPosition = new Vector3 (touch.position.x, touch.position.y, 0);
-#else
             MousePosition = Input.mousePosition;
-#endif
         }
 
         protected void RotateObjectPreview()
@@ -113,7 +108,7 @@ namespace GamePlayManagement.ItemPlacement
             }
         }
         protected abstract IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition);
-        protected virtual void ConfirmCamera()
+        protected void ConfirmCamera()
         {
             if (MainCamera == null)
             {

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1136761605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1136761606}
+  m_Layer: 9
+  m_Name: GunHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1136761606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136761605}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.208, y: 1.199, z: -0.025}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5085081953980375551}
+  m_RootOrder: 82
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &109752915870984265
 GameObject:
   m_ObjectHideFlags: 0
@@ -8134,6 +8165,7 @@ Transform:
   - {fileID: 4211467373937868566}
   - {fileID: 7965158360785965641}
   - {fileID: 3827296817423541994}
+  - {fileID: 1136761606}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 267.509, z: 0}
@@ -8644,6 +8676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2642828159911225153}
+  mGunPositionTransform: {fileID: 1136761606}
   myDrawFieldOfView: {fileID: 3229573116122904400}
   my3dFieldOfView: {fileID: 3489431390109576133}
 --- !u!195 &7198465433987725718
