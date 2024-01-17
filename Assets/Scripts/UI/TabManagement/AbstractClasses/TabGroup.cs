@@ -71,7 +71,7 @@ namespace UI.TabManagement.AbstractClasses
             }
         }
 
-        public virtual void UpdateTabItemGroupTypes(int selectedTabIndex)
+        public virtual void UpdateItemsContent(int selectedTabIndex)
         {
             MActiveTab = selectedTabIndex;
         }

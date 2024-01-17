@@ -35,7 +35,7 @@ namespace UI.TabManagement.NBVerticalTabs
             var verticalTabElements = GetVerticalTabElements(newSource, parentGroup);
             InstantiateVerticalTabs(verticalTabElements);
             UpdateDictionaryData();
-            UpdateTabItemGroupTypes((int)newSource);
+            UpdateItemsContent((int)newSource);
         }
         public override bool ActivateTabInUI()
         {
@@ -170,13 +170,13 @@ namespace UI.TabManagement.NBVerticalTabs
         }
         #endregion
 
-        public override void UpdateTabItemGroupTypes(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex)
         {
             if (_playerProfile == null)
             {
                 _playerProfile = GameDirector.Instance.GetActiveGameProfile;
             }
-            base.UpdateTabItemGroupTypes(selectedTabIndex);
+            base.UpdateItemsContent(selectedTabIndex);
             ClearNotebookContent();
             UpdateContentInPage(_tabGroupSource);
         }

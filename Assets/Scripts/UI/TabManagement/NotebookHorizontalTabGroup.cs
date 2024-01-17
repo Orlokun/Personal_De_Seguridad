@@ -121,9 +121,9 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateTabItemGroupTypes(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex)
         {
-            base.UpdateTabItemGroupTypes(selectedTabIndex);
+            base.UpdateItemsContent(selectedTabIndex);
             _verticalTab.SetNewTabState((NotebookVerticalTabSource)selectedTabIndex, this);
         }
     }

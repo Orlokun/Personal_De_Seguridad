@@ -4,6 +4,7 @@ using GameDirection;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UI.TabManagement.AbstractClasses;
+using UI.TabManagement.ItemTypeTab;
 using UnityEngine;
 namespace UI.TabManagement
 {
@@ -39,9 +40,9 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateTabItemGroupTypes(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex)
         {
-            base.UpdateTabItemGroupTypes(selectedTabIndex);
+            base.UpdateItemsContent(selectedTabIndex);
             if (gridParentObject.childCount > 0)
             {
                 ClearGrid();

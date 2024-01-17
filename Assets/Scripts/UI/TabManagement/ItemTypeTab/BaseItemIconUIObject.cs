@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Utils;
 
-namespace UI.TabManagement
+namespace UI.TabManagement.ItemTypeTab
 {
     public class BaseItemIconUIObject : MonoBehaviour, IInitializeWithArg1<IItemObject>
     {

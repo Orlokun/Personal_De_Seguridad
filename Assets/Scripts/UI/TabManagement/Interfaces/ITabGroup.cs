@@ -6,7 +6,7 @@ namespace UI.TabManagement.Interfaces
         public bool ActivateTabInUI();
         public bool DeactivateGroupInUI();
         public void UpdateDictionaryData();
-        public void UpdateTabItemGroupTypes(int selectedTabIndex);
+        public void UpdateItemsContent(int selectedTabIndex);
         
         public int ActiveTab { get; }
     }
