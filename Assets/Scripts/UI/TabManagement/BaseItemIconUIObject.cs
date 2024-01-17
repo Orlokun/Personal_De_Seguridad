@@ -2,7 +2,7 @@ using System.Globalization;
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
-using ItemPlacement;
+using GamePlayManagement.ItemPlacement;
 using TMPro;
 using UI.PopUpManager;
 using UI.PopUpManager.InfoPanelPopUp;

@@ -5,7 +5,6 @@ using DataUnits.ItemScriptableObjects;
 using DataUnits.ItemSources;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using UI;
 using UnityEngine;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores

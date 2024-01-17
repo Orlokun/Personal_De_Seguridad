@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts.CharacterGenerator
 {
     public static class CharacterGenerator
     {

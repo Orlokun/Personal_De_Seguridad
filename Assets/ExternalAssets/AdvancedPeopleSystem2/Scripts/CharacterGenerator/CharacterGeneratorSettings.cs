@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-namespace AdvancedPeopleSystem
+
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts.CharacterGenerator
 {
     [CreateAssetMenu(fileName = "NewCharacterGenerator", menuName = "Advanced People Pack/CharacterGenerator", order = 1)]
     public class CharacterGeneratorSettings : ScriptableObject

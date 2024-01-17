@@ -1,63 +1,65 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
-[RequireComponent(typeof(Image))]
-public class ScrollDetailTexture : MonoBehaviour
+namespace Unity_UI_Samples.Scripts
 {
-	public bool uniqueMaterial = false;
-	public Vector2 scrollPerSecond = Vector2.zero;
-
-	Matrix4x4 m_Matrix;
-	Material mCopy;
-	Material mOriginal;
-	Image mSprite;
-	Material m_Mat;
-
-	void OnEnable ()
+	[RequireComponent(typeof(Image))]
+	public class ScrollDetailTexture : MonoBehaviour
 	{
-		mSprite = GetComponent<Image>();
-		mOriginal = mSprite.material;
+		public bool uniqueMaterial = false;
+		public Vector2 scrollPerSecond = Vector2.zero;
 
-		if (uniqueMaterial && mSprite.material != null)
+		Matrix4x4 m_Matrix;
+		Material mCopy;
+		Material mOriginal;
+		Image mSprite;
+		Material m_Mat;
+
+		void OnEnable ()
 		{
-			mCopy = new Material(mOriginal);
-			mCopy.name = "Copy of " + mOriginal.name;
-			mCopy.hideFlags = HideFlags.DontSave;
-			mSprite.material = mCopy;
-		}
-	}
+			mSprite = GetComponent<Image>();
+			mOriginal = mSprite.material;
 
-	void OnDisable ()
-	{
-		if (mCopy != null)
-		{
-			mSprite.material = mOriginal;
-			if (Application.isEditor)
-				UnityEngine.Object.DestroyImmediate(mCopy);
-			else
-				UnityEngine.Object.Destroy(mCopy);
-			mCopy = null;
-		}
-		mOriginal = null;
-	}
-
-	void Update ()
-	{
-		Material mat = (mCopy != null) ? mCopy : mOriginal;
-
-		if (mat != null)
-		{
-			Texture tex = mat.GetTexture("_DetailTex");
-
-			if (tex != null)
+			if (uniqueMaterial && mSprite.material != null)
 			{
-				mat.SetTextureOffset("_DetailTex", scrollPerSecond * Time.time);
+				mCopy = new Material(mOriginal);
+				mCopy.name = "Copy of " + mOriginal.name;
+				mCopy.hideFlags = HideFlags.DontSave;
+				mSprite.material = mCopy;
+			}
+		}
 
-				// TODO: It would be better to add support for MaterialBlocks on UIRenderer,
-				// because currently only one Update() function's matrix can be active at a time.
-				// With material block properties, the batching would be correctly broken up instead,
-				// and would work with multiple widgets using this detail shader.
+		void OnDisable ()
+		{
+			if (mCopy != null)
+			{
+				mSprite.material = mOriginal;
+				if (Application.isEditor)
+					UnityEngine.Object.DestroyImmediate(mCopy);
+				else
+					UnityEngine.Object.Destroy(mCopy);
+				mCopy = null;
+			}
+			mOriginal = null;
+		}
+
+		void Update ()
+		{
+			Material mat = (mCopy != null) ? mCopy : mOriginal;
+
+			if (mat != null)
+			{
+				Texture tex = mat.GetTexture("_DetailTex");
+
+				if (tex != null)
+				{
+					mat.SetTextureOffset("_DetailTex", scrollPerSecond * Time.time);
+
+					// TODO: It would be better to add support for MaterialBlocks on UIRenderer,
+					// because currently only one Update() function's matrix can be active at a time.
+					// With material block properties, the batching would be correctly broken up instead,
+					// and would work with multiple widgets using this detail shader.
+				}
 			}
 		}
 	}

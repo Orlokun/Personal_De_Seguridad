@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System;
+using System.Xml.Serialization;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects;
+using UnityEngine;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts
 {
 
     [System.Serializable]

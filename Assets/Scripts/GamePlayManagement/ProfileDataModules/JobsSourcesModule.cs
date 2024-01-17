@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using DataUnits;
 using DataUnits.GameCatalogues;
-using DataUnits.ItemScriptableObjects;
 using DataUnits.JobSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;

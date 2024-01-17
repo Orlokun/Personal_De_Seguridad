@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.JobSources;
+using DialogueSystem;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
 using UnityEngine;

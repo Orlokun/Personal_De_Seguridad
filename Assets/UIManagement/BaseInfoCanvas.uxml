@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="BaseInfoList" tooltip="Base Data Info Panel" style="height: 29px; -unity-background-image-tint-color: rgba(43, 43, 43, 0.2); background-image: url(&apos;project://database/Assets/Sprites/Free%20Paper%20UI%20System%20v1.0/Free%20Paper%20UI%20System/1%20Sprites/Paper%20UI%20Pack/Paper%20UI/Plain/1%20Paper/6.png?fileID=2800000&amp;guid=3b189a8abbff4ec41b43b8f0d990cc22&amp;type=3#6&apos;);" />
+</ui:UXML>

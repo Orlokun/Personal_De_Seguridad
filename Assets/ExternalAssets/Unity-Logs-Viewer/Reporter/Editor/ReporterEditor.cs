@@ -12,7 +12,7 @@ namespace ExternalAssets.Unity_Logs_Viewer.Reporter.Editor
 			const int ReporterExecOrder = -12000;
 			GameObject reporterObj = new GameObject();
 			reporterObj.name = "Reporter";
-			global::Reporter reporter = reporterObj.AddComponent<global::Reporter>();
+			global::ExternalAssets.Unity_Logs_Viewer.Reporter.Reporter reporter = reporterObj.AddComponent<global::ExternalAssets.Unity_Logs_Viewer.Reporter.Reporter>();
 			reporterObj.AddComponent<ReporterMessageReceiver>();
 			//reporterObj.AddComponent<TestReporter>();
 		

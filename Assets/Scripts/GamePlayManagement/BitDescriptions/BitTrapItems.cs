@@ -1,4 +1,4 @@
-namespace GameManagement.BitDescriptions
+namespace GamePlayManagement.BitDescriptions
 {
     public enum BitTrapItems
     {

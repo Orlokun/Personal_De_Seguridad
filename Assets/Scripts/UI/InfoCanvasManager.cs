@@ -1,6 +1,6 @@
 using GamePlayManagement;
-using Players_NPC.NPC_Management.Customer_Management;
-using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using TMPro;
 using UnityEngine;
 using Utils;

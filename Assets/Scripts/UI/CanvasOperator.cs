@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LeanTween.Framework;
 using UnityEngine;
 namespace UI
 {
@@ -162,8 +163,8 @@ namespace UI
                     {
                         if (officeFadeInElement != null)
                         {
-                            LeanTween.alpha(officeFadeInElement, 0, 0);
-                            LeanTween.alpha(officeFadeInElement, 1, 2f).setEase(LeanTweenType.easeOutSine);
+                            LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 0, 0);
+                            LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 1, 2f).setEase(LeanTweenType.easeOutSine);
                         }
                     }
                 } 

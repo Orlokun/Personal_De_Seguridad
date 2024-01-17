@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AdvancedPeopleSystem;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects;
 using UnityEditor;
 using UnityEngine;
 

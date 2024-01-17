@@ -132,7 +132,7 @@ namespace GameDirection.GeneralLevelManager
             var pickedPois = new List<Guid>();
             for (var i = 0; i < numberOfPois; i++)
             {
-                Guid randomPosition;
+                var randomPosition = Guid.Empty;
                 while (pickedPois.Contains(randomPosition) || randomPosition == Guid.Empty)
                 {
                     var positionIndex = Random.Range(0, _positionsInLevel-1);

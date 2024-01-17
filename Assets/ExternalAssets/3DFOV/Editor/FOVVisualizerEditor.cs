@@ -1,14 +1,13 @@
-using UnityEditor;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using ExternalAssets._3DFOV.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-
-namespace FOV3D
+namespace ExternalAssets._3DFOV.Editor
 {
     [CustomEditor(typeof(FOVVisualizer)), CanEditMultipleObjects]
-    public class FOVVisualizerEditor : Editor
+    public class FOVVisualizerEditor : UnityEditor.Editor
     {
         private FOVVisualizer fovV;
         private FOVVisualizer.GizmoType memGizType;

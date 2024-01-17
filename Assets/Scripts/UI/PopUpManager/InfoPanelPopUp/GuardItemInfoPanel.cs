@@ -1,5 +1,4 @@
 using DataUnits.ItemScriptableObjects;
-using DataUnits.JobSources;
 using TMPro;
 using UnityEngine;
 

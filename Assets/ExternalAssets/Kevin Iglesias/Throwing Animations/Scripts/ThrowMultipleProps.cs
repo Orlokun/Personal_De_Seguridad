@@ -4,11 +4,9 @@
 //  Contact Support: support@keviniglesias.com                           //
 ///////////////////////////////////////////////////////////////////////////
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace KevinIglesias {
+namespace ExternalAssets.Kevin_Iglesias.Throwing_Animations.Scripts {
 
     public class ThrowMultipleProps : MonoBehaviour {
 

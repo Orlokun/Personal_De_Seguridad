@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 
-namespace FOV3D.Demo
+namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts
 {
     public class LerpViewDemo : MonoBehaviour
     {

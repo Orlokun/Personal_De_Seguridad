@@ -592,14 +592,16 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadBaseItemDataFromJson] Item Actions must be available in data");
                 }
-                
+                //Step10: GetPrefabName
+                var gamePrefabName = _mItemCatalogueDataString.values[i][9];
+
                 //var itemStats data
                 //IItemTypeStats itemSpecialStats = GetItemSpecialStats(supplierBitId, bitItemType, itemId);
                 
                 //Step 9: Create Item Scriptable Object and add to List in Dictionary
                 IItemObject itemDataObject = ScriptableObject.CreateInstance<ItemObject>();
                 itemDataObject.SetItemObjectData(supplierBitId, bitItemType, itemId, itemName, unlockPoints, 
-                    itemPrice,itemDescription, spriteName, itemActions);
+                    itemPrice,itemDescription, spriteName, itemActions, gamePrefabName);
                 _mBaseCatalogueBaseItemsFromData[supplierBitId].Add(itemDataObject);
                 Debug.Log($"Added Item: {itemDataObject.ItemName}");
                 Debug.Log($"Current Item Supplier: {itemDataObject.ItemSupplier}");

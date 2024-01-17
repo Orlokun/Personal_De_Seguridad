@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ExampleScript : MonoBehaviour
+namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts
 {
-    public void ExampleMethod()
+    public class ExampleScript : MonoBehaviour
     {
-        ///Do Stuff
+        public void ExampleMethod()
+        {
+            ///Do Stuff
+        }
     }
 }

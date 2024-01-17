@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using ExternalAssets._3DFOV.Scripts;
 using UnityEngine;
 
-
-namespace FOV3D
+namespace ExternalAssets._3DFOV.Scripts
 {
     [ExecuteInEditMode]
     public class FOVVisualizer : MonoBehaviour

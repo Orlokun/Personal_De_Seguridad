@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.CharacterGenerator;
 using UnityEngine;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects
 {
     [CreateAssetMenu(fileName = "NewCharacterSettings", menuName = "Advanced People Pack/Settings", order = 1)]
     public class CharacterSettings : ScriptableObject

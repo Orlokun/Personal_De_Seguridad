@@ -4,13 +4,10 @@ using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.TimeOfDayManagement;
-using GameManagement;
-using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement;
-using Players_NPC.NPC_Management.Customer_Management;
-using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UI;
 namespace GameDirection
 {

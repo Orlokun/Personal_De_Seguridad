@@ -68,7 +68,6 @@ namespace UI
         #region HoverObject
         private void ManageMouseCursor()
         {
-            
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             ProcessItemInteractiveObjects(ray);
             ProcessCursor();
@@ -78,6 +77,7 @@ namespace UI
             if (Physics.Raycast(ray, out var hitInfo, 100, itemObjectsLayer))
             {
                 var interactiveObject = hitInfo.collider.gameObject;
+                Debug.Log($"[ProcessItemInteractiveObjects] Object clicked: {interactiveObject.name}");
                 _isTouchingInteractiveObject = true;
                 if (!interactiveObject.TryGetComponent<IInteractiveClickableObject>(out _mHoveredInteractiveObject))
                 {
@@ -86,7 +86,12 @@ namespace UI
                 }
             }
             else
-            {            
+            {
+                /*
+                if (Physics.Raycast(ray, out var otherHit, 100))
+                {
+                    Debug.Log($"[MouseInputManager.ProcessItemInteractiveObjects] Not interactive object touched: {otherHit.collider.name}");
+                }*/
                 _mHoveredInteractiveObject = null;
             }
         }

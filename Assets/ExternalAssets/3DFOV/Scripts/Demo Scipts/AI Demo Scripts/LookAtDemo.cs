@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace FOV3D.Demo
+namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
 {
     public class LookAtDemo : MonoBehaviour
     {

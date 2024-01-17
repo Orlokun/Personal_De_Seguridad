@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using FOV3D;
-using Players_NPC;
+using GamePlayManagement.Players_NPC;
 using UnityEngine;
 using UnityEngine.Events;
 

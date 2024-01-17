@@ -1,15 +1,14 @@
-using UnityEditor;
-using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
-using System;
 using ExternalAssets._3DFOV.Scripts;
+using UnityEditor;
+using UnityEngine;
 
-namespace FOV3D
+namespace ExternalAssets._3DFOV.Editor
 
 {
     [CustomEditor(typeof(FieldOfView3D)), CanEditMultipleObjects]
-    public class FOV3DEditor : Editor
+    public class FOV3DEditor : UnityEditor.Editor
     {
         private void SetFieldCondition()
         {

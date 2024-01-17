@@ -3,7 +3,6 @@ using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
-using UI;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {

@@ -1,4 +1,4 @@
-namespace UI.TabManagement
+namespace UI.TabManagement.Interfaces
 {
     public interface ITabElement
     {

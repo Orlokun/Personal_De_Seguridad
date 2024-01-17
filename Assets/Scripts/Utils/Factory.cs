@@ -8,19 +8,26 @@ using GameDirection.GeneralLevelManager;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.ItemManagement;
+using GamePlayManagement.ItemManagement.Guards;
+using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
+using GamePlayManagement.Players_NPC;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
-using ItemPlacement;
-using Players_NPC.NPC_Management.Customer_Management;
-using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 
 namespace Utils
 {
     public static class Factory
     {
+        public static IGuardStatusModule CreateGuardStatusModule()
+        {
+            return new GuardStatusModule();
+        }
         public static IFieldOfViewItemModule CreateFieldOfViewItemModule(DrawFoVLines myDrawFieldOfView, FieldOfView3D my3dFieldOfView)
         {
             return new FieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView);

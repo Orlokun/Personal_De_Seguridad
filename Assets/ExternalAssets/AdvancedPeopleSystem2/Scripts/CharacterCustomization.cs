@@ -1,14 +1,15 @@
 ﻿using System;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.CharacterGenerator;
+using ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects;
 using UnityEditor;
 using UnityEngine;
-using System.Text.RegularExpressions;
-using System.Globalization;
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts
 {
     /// <summary>
     /// Class for customization character (v2.0)
@@ -1928,7 +1929,7 @@ namespace AdvancedPeopleSystem
         /// </summary>
         public void Randomize()
         {
-            CharacterGenerator.Generate(this);
+            CharacterGenerator.CharacterGenerator.Generate(this);
         }
         /// <summary>
         /// Get character animator
@@ -2068,7 +2069,7 @@ namespace AdvancedPeopleSystem
             if (Application.isPlaying || (instanceStatus == CharacterInstanceStatus.NotAPrefabByUser && !igroneUserNonPrefab))
                 return;
 #if UNITY_EDITOR
-            bool stageOpened = UnityEditor.Experimental.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null;
+            bool stageOpened = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage() != null;
             bool editingInProjectView = (gameObject.scene.name == null);
 
             if (!stageOpened && !editingInProjectView)

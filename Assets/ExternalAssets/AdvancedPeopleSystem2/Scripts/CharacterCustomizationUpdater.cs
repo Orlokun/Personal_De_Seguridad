@@ -1,12 +1,13 @@
-﻿using UnityEditor;
-#if UNITY_EDITOR
+﻿using ExternalAssets.AdvancedPeopleSystem2.Scripts.ScriptableObjects;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditorInternal;
-#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+#endif
 
-namespace AdvancedPeopleSystem
+namespace ExternalAssets.AdvancedPeopleSystem2.Scripts
 {
 #if UNITY_EDITOR
     [InitializeOnLoad]

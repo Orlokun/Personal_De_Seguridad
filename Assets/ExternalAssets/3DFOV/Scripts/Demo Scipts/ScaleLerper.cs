@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace FOV3D.Demo
+namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts
 {
     public class ScaleLerper : MonoBehaviour
     {

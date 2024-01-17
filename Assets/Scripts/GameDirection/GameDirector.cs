@@ -10,9 +10,9 @@ using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement;
-using Players_NPC.NPC_Management.Customer_Management;
-using Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UI;
 using UnityEngine;
 using Utils;
@@ -155,7 +155,7 @@ namespace GameDirection
 
         private async void WaitAndLoadDialogues()
         {
-            await Task.Delay(300);
+            await Task.Delay(400);
             LoadDialoguesForSuppliers();
         }
         private void LoadDialoguesForSuppliers()

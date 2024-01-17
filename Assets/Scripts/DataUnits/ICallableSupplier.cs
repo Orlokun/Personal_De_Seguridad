@@ -1,3 +1,5 @@
+using DialogueSystem;
+
 namespace DataUnits
 {
     public interface ICallableSupplier

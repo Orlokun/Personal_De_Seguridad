@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using GamePlayManagement.ProfileDataModules;
-using Unity.Profiling;
 
 namespace GameDirection.TimeOfDayManagement
 {

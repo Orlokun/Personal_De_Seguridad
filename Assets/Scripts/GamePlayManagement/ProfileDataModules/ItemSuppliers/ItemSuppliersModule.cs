@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DataUnits.GameCatalogues;
-using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;

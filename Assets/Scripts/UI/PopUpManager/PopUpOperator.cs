@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UI.PopUpManager.InfoPanelPopUp;
-using UI.PopUpManager.NotebookScreen;
 using UI.PopUpManager.OfficeRelatedPopUps;
 using UnityEngine;
 

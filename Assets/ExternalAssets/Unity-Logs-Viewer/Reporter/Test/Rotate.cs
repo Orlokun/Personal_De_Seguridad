@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
 
-public class Rotate : MonoBehaviour
+namespace ExternalAssets.Unity_Logs_Viewer.Reporter.Test
 {
-	Vector3 angle;
-
-	void Start()
+	public class Rotate : MonoBehaviour
 	{
-		angle = transform.eulerAngles;
-	}
+		Vector3 angle;
 
-	void Update()
-	{
-		angle.y += Time.deltaTime * 100;
-		transform.eulerAngles = angle;
-	}
+		void Start()
+		{
+			angle = transform.eulerAngles;
+		}
 
+		void Update()
+		{
+			angle.y += Time.deltaTime * 100;
+			transform.eulerAngles = angle;
+		}
+
+	}
 }
