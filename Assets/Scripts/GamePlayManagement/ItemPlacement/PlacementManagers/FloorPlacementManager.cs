@@ -85,7 +85,6 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
             var itemObject = (IBaseGuardGameObject)CurrentPlacedObject.GetComponent<BaseGuardGameObject>();
             var fov = itemObject.FieldOfView3D;
             fov.ToggleInGameFoV(true);
-            GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.GamePlayCanvas, GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
         }
     }
 }

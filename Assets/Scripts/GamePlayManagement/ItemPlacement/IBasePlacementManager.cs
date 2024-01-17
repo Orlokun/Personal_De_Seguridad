@@ -7,5 +7,6 @@ namespace GamePlayManagement.ItemPlacement
     {
         public void AttachNewObject(IItemObject itemData, GameObject newObject);
         public void ToggleRoofObject(bool isActive);
+        public bool IsPlacingObject { get; }
     }
 }

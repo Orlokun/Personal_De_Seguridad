@@ -23,20 +23,36 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         
         protected override void SetCurrentMousePosition()
         {
-            IBasePlacementPosition weaponPosition;
+            IBasePlacementPosition weaponPositionData;
             base.SetCurrentMousePosition();
-            weaponPosition = GetPlacementPoint(MousePosition);
-            if (weaponPosition == null)
+            weaponPositionData = GetPlacementPoint(MousePosition);
+            if (weaponPositionData == null)
             {
                 CurrentPlacedObject.SetActive(false);
                 return;
             }
-            _currentWeaponPosition = (IWeaponPlacementPosition)weaponPosition;
+            _currentWeaponPosition = (IWeaponPlacementPosition)weaponPositionData;
             CurrentPlacedObject.transform.position = _currentWeaponPosition.ItemPosition;
             if (!CurrentPlacedObject.activeInHierarchy)
             {
                 CurrentPlacedObject.SetActive(true);
             }
+        }
+        protected override void SetNewObjectPosition(GameObject gObject)
+        {
+            gObject.transform.position = Vector3.zero;
+            gObject.transform.rotation = new Quaternion();
+            Debug.Log("WeaponPlacementManager needs no Set Object Position");
+        }
+
+        protected override void RotateObjectPreview()
+        {
+            
+        }
+        protected override void CreateObjectInPlace()
+        {
+            base.CreateObjectInPlace();
+            _currentWeaponPosition.GuardObject.GuardData.ApplyWeapon(CurrentItemData);
         }
         protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)
         {

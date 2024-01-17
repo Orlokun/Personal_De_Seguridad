@@ -1,10 +1,12 @@
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ItemManagement;
+using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagers
 {
     public abstract class BasePlacementManager : MonoBehaviour, IBasePlacementManager
     {
@@ -100,7 +102,7 @@ namespace GamePlayManagement.ItemPlacement
             MousePosition = Input.mousePosition;
         }
 
-        protected void RotateObjectPreview()
+        protected virtual void RotateObjectPreview()
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
@@ -131,6 +133,7 @@ namespace GamePlayManagement.ItemPlacement
             CurrentItemData = itemData;
             Debug.Log($"[AttachNewObject] New 'Current Placed Object = {CurrentPlacedObject.name}");
             ActivatePlacementStatus();
+            GameDirector.Instance.GetUIController.DeactivateObject(CanvasBitId.GamePlayCanvas, GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
         }
 
 
@@ -139,13 +142,18 @@ namespace GamePlayManagement.ItemPlacement
             var obj = Instantiate(CurrentPlacedObject);
             SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
             LastInstantiatedGameObject = obj;
-            obj.transform.position = CurrentPlacedObject.transform.position;
-            obj.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;
-            obj.transform.localScale *= scaleFactor;
+            SetNewObjectPosition(obj);
             IsAttemptingPlacement = false;
             var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
             objectData.SetInPlacementStatus(false);
             objectData.InitializeItem();
+        }
+
+        protected virtual void SetNewObjectPosition(GameObject gObject)
+        {
+            gObject.transform.position = CurrentPlacedObject.transform.position;
+            gObject.transform.localEulerAngles = CurrentPlacedObject.transform.localEulerAngles;
+            gObject.transform.localScale *= scaleFactor;
         }
         private bool MouseTouchesExpectedLayer()
         {
@@ -177,7 +185,9 @@ namespace GamePlayManagement.ItemPlacement
             }
             roofLayerObject.SetActive(isActive);
         }
-        
+
+        public bool IsPlacingObject => IsAttemptingPlacement;
+
         private void ResetSelectedObject()
         {
             IsAttemptingPlacement = false;

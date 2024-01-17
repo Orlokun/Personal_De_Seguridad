@@ -4,6 +4,7 @@ using System.Linq;
 using Cinemachine;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
+using GamePlayManagement.ItemPlacement.PlacementManagers;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             _mInPlacement = inPlacement;
         }
 
+        [SerializeField] private ParticleSystem _particleSystem;
         public Transform GunParentTransform => mGunPositionTransform;
         [SerializeField] private Transform mGunPositionTransform;
         private bool _mInPlacement;
@@ -32,12 +34,12 @@ namespace GamePlayManagement.ItemManagement.Guards
                 return;
             }
             _currentWeaponItem = appliedWeapon;
+            _particleSystem.Play();
         }
         public void ReleaseWeapon()
         {
             _currentWeaponItem = null;
         }
-
         public void DestroyWeapon()
         {
             //TODO: Destroy game object
@@ -183,6 +185,10 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         public void SendClickObject()
         {
+            if(WeaponPlacementManager.Instance.IsPlacingObject)
+            {
+                return;
+            }
             Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
             if (_mInPlacement)
             {
