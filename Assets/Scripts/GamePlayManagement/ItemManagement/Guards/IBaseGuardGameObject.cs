@@ -8,10 +8,7 @@ namespace GamePlayManagement.ItemManagement.Guards
     {
         public void SetInPlacementStatus(bool inPlacement);
         public Transform GunParentTransform { get; }
-
-        public void ApplyWeapon(IItemObject appliedWeapon);
-        public void ReleaseWeapon();
+        public void ApplyWeapon(GameObject itemObject, IItemObject appliedWeapon);
         public void DestroyWeapon();
-
     }
 }

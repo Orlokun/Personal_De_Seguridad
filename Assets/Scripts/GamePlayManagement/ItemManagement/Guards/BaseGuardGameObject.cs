@@ -12,47 +12,32 @@ using Utils;
 
 namespace GamePlayManagement.ItemManagement.Guards
 {
-    public class BaseGuardGameObject : BaseCharacterInScene, IInitialize, IInteractiveClickableObject, IBaseGuardGameObject
+    public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject
     {
+        #region Members
         #region PlacementManagement
         public void SetInPlacementStatus(bool inPlacement)
         {
             _mInPlacement = inPlacement;
         }
+        private bool _mInPlacement;
+        #endregion
 
-        [SerializeField] private ParticleSystem _particleSystem;
+        #region WeaponManagementMembers
+        [SerializeField] private ParticleSystem myParticleSystem;
         public Transform GunParentTransform => mGunPositionTransform;
         [SerializeField] private Transform mGunPositionTransform;
-        private bool _mInPlacement;
         private IWeaponStats CurrentWeaponStats => (IWeaponStats)_currentWeaponItem?.ItemStats;
         private IItemObject _currentWeaponItem;
-        public bool HasWeapon => _currentWeaponItem != null;
-        public void ApplyWeapon(IItemObject appliedWeapon)
-        {
-            if (appliedWeapon == null)
-            {
-                return;
-            }
-            _currentWeaponItem = appliedWeapon;
-            _particleSystem.Play();
-        }
-        public void ReleaseWeapon()
-        {
-            _currentWeaponItem = null;
-        }
-        public void DestroyWeapon()
-        {
-            //TODO: Destroy game object
-            _currentWeaponItem = null;
-        }
-        
+        private GameObject _currentWeaponObject;
         #endregion
+        
         /// <summary>
         /// Not Used yet
         /// </summary>
         #region CameraPerspective
-        private CinemachineVirtualCamera myVc;
-        public CinemachineVirtualCamera VirtualCamera => myVc;
+        private CinemachineVirtualCamera _myVc;
+        public CinemachineVirtualCamera VirtualCamera => _myVc;
         #endregion
         
         #region FOV
@@ -70,34 +55,74 @@ namespace GamePlayManagement.ItemManagement.Guards
         private IBaseCustomer _currentCustomerTarget;
         #endregion
 
-        #region StateManagement
-        private IGuardStatusModule _mGuardStatusModule;
+        #region LevelInspectionData
+
+
         #endregion
 
+        #region StateManagement
+        private IGuardStatusModule _mGuardStatusModule;
         private IGuardStats _myStats;
         public IGuardStats Stats => _myStats;
-        // Start is called before the first frame update
-        
-        public bool IsInitialized { get; }
-        public void Initialize()
-        {
-            throw new System.NotImplementedException();
-        }
+        #endregion
+        #endregion
 
+        #region WeaponManagementApi
+        public bool HasWeapon => _currentWeaponItem != null;
+        public void ApplyWeapon(GameObject itemObject, IItemObject appliedWeapon)
+        {
+            if (appliedWeapon == null || itemObject == null)
+            {
+                return;
+            }
+
+            if (_currentWeaponItem != null)
+            {
+                DestroyWeapon();
+            }
+            _currentWeaponItem = appliedWeapon;
+            _currentWeaponObject = itemObject;
+            myParticleSystem.Play();
+        }
+        public void DestroyWeapon()
+        {
+            _currentWeaponItem = null;
+            Destroy(_currentWeaponObject);
+            _currentWeaponObject = null;
+        }
+        #endregion
+        
         protected override void Awake()
         {
             base.Awake();
             _mInPlacement = false;
             PrepareFieldOfView();
         }
+
+        protected override void Start()
+        {
+            base.Start();
+            StartInspecting();
+        }
+
+        private void StartInspecting()
+        {
+            _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
+            EvaluateStatsForInspection();
+        }
+
+        private void EvaluateStatsForInspection()
+        {
+            
+        }
+
         private void PrepareFieldOfView()
         {
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
         }
 
-
         #region TargetTrackingProcess
-        private void ProcessTargetsInView()
+        private void UpdateTargetsInViewData()
         {
             var seenObjects = _fieldOfViewModule.Fov3D.SeenTargetObjects;
             foreach (var seenObject in seenObjects)
@@ -138,11 +163,11 @@ namespace GamePlayManagement.ItemManagement.Guards
         
         protected override void ProcessInViewTargets()
         {
-            if (!_fieldOfViewModule.Fov3D.HasTargetsInRange)
+            if (!_fieldOfViewModule.Fov3D.HasTargetsInRange /*|| !_mGuardStatusModule.IsGuardInspecting*/)
             {
                 return;
             }
-            ProcessTargetsInView();
+            UpdateTargetsInViewData();
             ProcessCustomersSeen();
         }
         private void ProcessCustomersSeen()
@@ -154,6 +179,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                     continue;
                 }
                 StartClientBustedProcess();
+                break;
             }
         }
 
@@ -165,17 +191,43 @@ namespace GamePlayManagement.ItemManagement.Guards
         /// </summary>
         private void StartClientBustedProcess()
         {
-
+            
         }
         #endregion
 
         #region AttitudeStateManagement
-
-        
-
+        protected override void ReachWalkingDestination()
+        {
+            switch (_mGuardStatusModule.CurrentAttitude)
+            {
+                case GuardSpecialAttitudeStatus.Inspecting:
+                    ReachInspectedZone();
+                    break;
+                case GuardSpecialAttitudeStatus.Chasing:
+                    AttemptDetention();
+                    break;
+                case GuardSpecialAttitudeStatus.Following:
+                    EvaluateStartShopping();
+                    break;
+                case GuardSpecialAttitudeStatus.Fighting:
+                    break;
+            }
+        }
+        private void ReachInspectedZone()
+        {
+    
+        }
+        private void AttemptDetention ()
+        {
+    
+        }
+        private void EvaluateStartShopping()
+        {
+    
+        }
         #endregion
 
-        #region ClickInteractiveManagement
+        #region ClickInteractiveManagementApi
         public string GetSnippetText { get; }
         public bool HasSnippet { get; }
         public void DisplaySnippet()

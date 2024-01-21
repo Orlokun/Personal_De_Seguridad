@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
+using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using Utils;
 
 namespace GamePlayManagement.LevelManagement.LevelObjectsManagement

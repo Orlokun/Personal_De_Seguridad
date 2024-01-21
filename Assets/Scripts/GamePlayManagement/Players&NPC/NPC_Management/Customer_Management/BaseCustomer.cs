@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
+using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
+using GameDirection.GeneralLevelManager.ShopPositions.WaitingPositions;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
@@ -67,30 +69,24 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         #region CurrentCustomerStatus
-        private BaseCharacterMovementStatus _mCharacterMovementStatus = 0;
-        private BaseCustomerAttitudeStatus _mCustomerAttitudeCustomerAttitudeStatus = 0;
+        private BaseCustomerAttitudeStatus _mCustomerAttitudeStatus = 0;
         private bool _mIsCustomerStealing;
         public bool IsCustomerStealing => _mIsCustomerStealing;
 
         private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
 
         private Guid _currentPoiId;
+        private ISingleWaitingSpot _currentWaitingSpot;
         #endregion
 
-        #region Events
-        private delegate void ReachDestination();
-        private event ReachDestination WalkingDestinationReached;
-
-        #endregion
 
         #region Init
         protected override void Awake()
         {
             Random.InitState(DateTime.Now.Millisecond);
             _mCustomerVisitData = new CustomerPurchaseStealData();
-            _mNumberOfProductsLookingFor = Random.Range(1, 4);
+            _mNumberOfProductsLookingFor = Random.Range(3, 9);
             base.Awake();
-            WalkingDestinationReached += ReachWalkingDestination;
         }
         
         protected override void Start()
@@ -112,11 +108,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 _mPoisPurchaseStatus.Add(guid, false);
             }
         }
-        private void StartWalking()
-        {
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Walking);
-            BaseAnimator.ChangeAnimationState(Walk);
-        }
+
         #endregion
         private void Update()
         {
@@ -127,7 +119,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #region UpdateManageAttitude
         private void ManageAttitudeStatus()
         {
-            switch (_mCustomerAttitudeCustomerAttitudeStatus)
+            switch (_mCustomerAttitudeStatus)
             {
                 case BaseCustomerAttitudeStatus.Entering:
                     break;
@@ -225,9 +217,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         #region ReachDestinationEvent
-        private void ReachWalkingDestination()
+        protected override void ReachWalkingDestination()
         {
-            switch (_mCustomerAttitudeCustomerAttitudeStatus)
+            switch (_mCustomerAttitudeStatus)
             {
                 case BaseCustomerAttitudeStatus.Shopping:
                     ReachProductDestination();
@@ -245,8 +237,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     break;
                 case BaseCustomerAttitudeStatus.Fighting:
                     break;
+                case BaseCustomerAttitudeStatus.HangingAround:
+                    
+                    break;
             }
         }
+        
+        private IEnumerator 
+        
         private void ReachProductDestination()
         {
             EvaluateProduct();
@@ -254,7 +252,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void EvaluateStartShopping()
         {
-            if ((_mCustomerAttitudeCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Shopping) != 0)
+            if ((_mCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Shopping) != 0)
             {
                 return;
             }
@@ -263,21 +261,47 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             if (!_mAnyPoiAvailable)
             {
                 Debug.Log("No shelve has a Poi available. Will Walk around and try to interact.");
-                //TODO: SetNewStateBehavior
+                StartFreeClientInteraction();
                 return;                
             }
             StartShopping();
         }
+
+        private void StartFreeClientInteraction()
+        {
+            Debug.Log("[StartFreeClientInteraction] Start Looking for chill place");
+            var occupiedWaitingSpot = PositionsManager.OccupyEmptyWaitingSpot(CharacterId);
+            if (occupiedWaitingSpot.Result.Item2 == false)
+            {
+                Debug.LogWarning("[StartFreeClientInteraction] No Empty waiting spot available. Making excuse and retiring back home");
+                MakeExcuse();
+                Leave();
+            }
+            WalkToWaitSpot(occupiedWaitingSpot.Result.Item1);
+        }
+
+        private void WalkToWaitSpot(ISingleWaitingSpot targetWaitSpot)
+        {
+            _currentWaitingSpot = targetWaitSpot;
+            SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.HangingAround);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+        }
+
+        private void MakeExcuse()
+        {
+            
+        }
+
         private void StartShopping()
         {
             SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Walking);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             GoToNextProduct();
         }
         #region ProductStealEvaluation
         private void EvaluateProduct()
         {
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.EvaluatingProduct);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
             SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.EvaluatingProduct);
             var wouldStealProduct = EvaluateProductStealingChances();
             StartProductExamination(wouldStealProduct);
@@ -368,7 +392,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             _mCustomerVisitData.PurchaseProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
             ClearProductInterest();
             _mPoisPurchaseStatus[_currentPoiId] = true;
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Walking);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
             ReleaseCurrentPoI();
             GoToNextProduct();
@@ -386,15 +410,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             _mCustomerVisitData.StealProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
             Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
             ClearProductInterest();
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Walking);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
             _mPoisPurchaseStatus[_currentPoiId] = true;
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
-        #endregion
-
-
         private void ClearProductInterest()
         {
             Destroy(_tempProductCopy);
@@ -402,6 +423,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             _productInHand = false;
             _tempProductCopy = null;
         }
+        #endregion
+
         #endregion
 
         #region UpdateMovementStatus
@@ -412,7 +435,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 case BaseCharacterMovementStatus.Idle:
                     break;
                 case BaseCharacterMovementStatus.Walking:
-                    EvaluateWalking();
+                    EvaluateWalkingDestination();
                     break;
                 case BaseCharacterMovementStatus.EvaluatingProduct:
                     if (_productInHand)
@@ -425,27 +448,13 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-        private void EvaluateWalking()
-        {
-            if (NavMeshAgent.destination.Equals(default(Vector3)))
-            {
-                Debug.LogWarning("Destination to walk to must be already set");
-                return;
-            }
-
-            if (NavMeshAgent.remainingDistance < 1f && !NavMeshAgent.isStopped)
-            {
-                NavMeshAgent.isStopped = true;
-                OnWalkingDestinationReached();
-            }
-        }
         
         #endregion
         
         #region Paying
         private void GoToPay()
         {
-            if ((_mCustomerAttitudeCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Paying) != 0)
+            if ((_mCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Paying) != 0)
             {
                 return;   
             }
@@ -453,26 +462,35 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         }
         private async void PayAndLeave(int timePaying)
         {
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Idle);
-            SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Paying);
-            NavMeshAgent.isStopped = true;
-
+            Pay();
             //Time to do something
             await Task.Delay(timePaying);
-            SetCustomerMovementStatus(BaseCharacterMovementStatus.Walking);
+            Leave();
+        }
+
+        private void Pay()
+        {
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+            SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Paying);
+            NavMeshAgent.isStopped = true;
+        }
+
+        private void Leave()
+        {
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus.Leaving);
 
             NavMeshAgent.SetDestination(MInitialPosition);
             NavMeshAgent.isStopped = false;
         }
+        
         #endregion
 
         #region Utils
         private void SetCustomerAttitudeStatus(BaseCustomerAttitudeStatus newCustomerAttitude)
         {
-            _mCustomerAttitudeCustomerAttitudeStatus = 0;
-            _mCustomerAttitudeCustomerAttitudeStatus |= newCustomerAttitude;
-
+            _mCustomerAttitudeStatus = 0;
+            _mCustomerAttitudeStatus |= newCustomerAttitude;
             switch (newCustomerAttitude)
             {
                 case BaseCustomerAttitudeStatus.EvaluatingProduct:
@@ -499,41 +517,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     NavMeshAgent.SetDestination(_entranceData.EntrancePosition);
                     NavMeshAgent.isStopped = false;
                     break;
-            }
-        }
-        private void SetCustomerMovementStatus(BaseCharacterMovementStatus newMovementStatus)
-        {
-            _mCharacterMovementStatus = 0;
-            _mCharacterMovementStatus |= newMovementStatus;
-            
-            //set
-            switch (newMovementStatus)
-            {
-                case  BaseCharacterMovementStatus.Walking:
-                    ObstacleComponent.enabled = false;
+                case BaseCustomerAttitudeStatus.HangingAround:
                     NavMeshAgent.enabled = true;
+                    NavMeshAgent.SetDestination(_currentWaitingSpot.Position);
                     NavMeshAgent.isStopped = false;
-                    BaseAnimator.ChangeAnimationState(Walk);
-                    break;
-                case  BaseCharacterMovementStatus.Idle:
-                    NavMeshAgent.isStopped = true;
-                    NavMeshAgent.enabled = false;
-                    ObstacleComponent.enabled = true;
-                    BaseAnimator.ChangeAnimationState(Idle);
-                    break;
-                case BaseCharacterMovementStatus.EvaluatingProduct:
-                    NavMeshAgent.isStopped = true;
-                    NavMeshAgent.enabled = false;
-
-                    ObstacleComponent.enabled = true;
-                    BaseAnimator.ChangeAnimationState(Idle);
-
                     break;
             }
-        }
-        protected virtual void OnWalkingDestinationReached()
-        {
-            WalkingDestinationReached?.Invoke();
         }
         #endregion
     }

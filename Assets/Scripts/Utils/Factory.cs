@@ -5,6 +5,7 @@ using DialogueSystem;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -24,9 +25,9 @@ namespace Utils
 {
     public static class Factory
     {
-        public static IGuardStatusModule CreateGuardStatusModule()
+        public static IGuardStatusModule CreateGuardStatusModule(IBaseGuardGameObject baseGuard)
         {
-            return new GuardStatusModule();
+            return new GuardStatusModule(baseGuard);
         }
         public static IFieldOfViewItemModule CreateFieldOfViewItemModule(DrawFoVLines myDrawFieldOfView, FieldOfView3D my3dFieldOfView)
         {

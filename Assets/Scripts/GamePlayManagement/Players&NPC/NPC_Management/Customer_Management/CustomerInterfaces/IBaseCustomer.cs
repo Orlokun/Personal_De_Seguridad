@@ -1,5 +1,6 @@
 using System;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces
 {

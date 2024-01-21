@@ -25,6 +25,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         Paying = 16,
         Leaving = 32,
         Entering = 64,
-        EvaluatingProduct = 128
+        EvaluatingProduct = 128,
+        HangingAround = 256
     }
 }

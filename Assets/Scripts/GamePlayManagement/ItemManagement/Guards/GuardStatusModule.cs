@@ -6,8 +6,14 @@ namespace GamePlayManagement.ItemManagement.Guards
     {
         private BaseCharacterMovementStatus _currentMovementStatus;
         private GuardSpecialAttitudeStatus _currentAttitudeStatus;
-        public GuardSpecialAttitudeStatus GetCurrentStatus => _currentAttitudeStatus;
-        
+        private IBaseGuardGameObject _mGuardObject;
+        public GuardStatusModule(IBaseGuardGameObject guardObject)
+        {
+            _mGuardObject = guardObject;
+        }
+        public bool IsGuardInspecting => CurrentAttitude == GuardSpecialAttitudeStatus.Inspecting;
+        public GuardSpecialAttitudeStatus CurrentAttitude => _currentAttitudeStatus;
+
         public void SetGuardAttitudeStatus(GuardSpecialAttitudeStatus guardAttitude)
         {
             switch (guardAttitude)

@@ -1,7 +1,9 @@
 using System;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.Players_NPC.Animations;
 using GamePlayManagement.Players_NPC.Animations.Interfaces;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,6 +25,8 @@ namespace GamePlayManagement.Players_NPC
         public Guid CharacterId => MCharacterId;
         protected Guid MCharacterId;
         
+        protected BaseCharacterMovementStatus _mCharacterMovementStatus = 0;
+        
         protected IBaseAnimatedAgent BaseAnimator;
         protected NavMeshAgent NavMeshAgent;
         protected Vector3 MInitialPosition;
@@ -32,6 +36,11 @@ namespace GamePlayManagement.Players_NPC
         protected float MRotationSpeed = 12;
         [SerializeField] protected Transform headTransform;     
 
+        #region Events
+        private delegate void ReachDestination();
+        private event ReachDestination WalkingDestinationReached;
+
+        #endregion
         protected virtual void Awake()
         {
             CheckId();
@@ -40,6 +49,7 @@ namespace GamePlayManagement.Players_NPC
             BaseAnimator.Initialize(GetComponent<Animator>());
             ObstacleComponent = GetComponent<NavMeshObstacle>();
             ObstacleComponent.enabled = false;
+            WalkingDestinationReached += ReachWalkingDestination;
         }
 
         private void CheckId()
@@ -69,9 +79,59 @@ namespace GamePlayManagement.Players_NPC
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, MRotationSpeed * Time.deltaTime);
         }
 
+        protected virtual void ReachWalkingDestination()
+        {
+            
+        }
+        
+        protected void StartWalking()
+        {
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            BaseAnimator.ChangeAnimationState(Walk);
+        }
+        protected virtual void SetCharacterMovementStatus(BaseCharacterMovementStatus newMovementStatus)
+        {
+            _mCharacterMovementStatus = 0;
+            _mCharacterMovementStatus |= newMovementStatus;
+            //set
+            switch (newMovementStatus)
+            {
+                case  BaseCharacterMovementStatus.Walking:
+                    ObstacleComponent.enabled = false;
+                    NavMeshAgent.enabled = true;
+                    NavMeshAgent.isStopped = false;
+                    BaseAnimator.ChangeAnimationState(Walk);
+                    break;
+                case  BaseCharacterMovementStatus.Idle:
+                    NavMeshAgent.isStopped = true;
+                    NavMeshAgent.enabled = false;
+                    ObstacleComponent.enabled = true;
+                    BaseAnimator.ChangeAnimationState(Idle);
+                    break;
+            }
+        }
+
         protected virtual void ProcessInViewTargets()
         {
             //Must be implemented by inheritor if used     
+        }
+        protected void EvaluateWalkingDestination()
+        {
+            if (NavMeshAgent.destination.Equals(default(Vector3)))
+            {
+                Debug.LogWarning("Destination to walk to must be already set");
+                return;
+            }
+
+            if (NavMeshAgent.remainingDistance < 1f && !NavMeshAgent.isStopped)
+            {
+                NavMeshAgent.isStopped = true;
+                OnWalkingDestinationReached();
+            }
+        }
+        protected virtual void OnWalkingDestinationReached()
+        {
+            WalkingDestinationReached?.Invoke();
         }
     }
 }

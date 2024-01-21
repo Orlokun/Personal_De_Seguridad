@@ -52,7 +52,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         protected override void CreateObjectInPlace()
         {
             base.CreateObjectInPlace();
-            _currentWeaponPosition.GuardObject.GuardData.ApplyWeapon(CurrentItemData);
+            _currentWeaponPosition.GuardObject.GuardData.ApplyWeapon(LastInstantiatedGameObject, CurrentItemData);
         }
         protected override IBasePlacementPosition GetPlacementPoint(Vector3 mouseScreenPosition)
         {

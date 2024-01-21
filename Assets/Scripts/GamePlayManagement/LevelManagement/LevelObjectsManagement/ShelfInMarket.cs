@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
+using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -61,7 +63,7 @@ namespace GamePlayManagement.LevelManagement.LevelObjectsManagement
         }
         public IShopPoiData ReturnAvailablePoi()
         {
-            return customerPoIsData.SingleOrDefault(x => x.IsOccupied != true);
+            return customerPoIsData.FirstOrDefault(x => x.IsOccupied != true);
         }
         
         public IShopPoiData GetCustomerPoi(Guid poiId)

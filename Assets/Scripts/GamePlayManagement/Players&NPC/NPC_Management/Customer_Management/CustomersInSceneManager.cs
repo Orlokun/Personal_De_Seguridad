@@ -6,6 +6,7 @@ using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem;
 using GameDirection;
 using GameDirection.GeneralLevelManager;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using Newtonsoft.Json;
@@ -254,7 +255,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
-                var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
+                //var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
+                var randomRange = Random.Range(3, 5);
                 var randomPrefabInstantiated = InstantiateRandomClient();
                 StartMovingClientAgent(randomPrefabInstantiated);
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
