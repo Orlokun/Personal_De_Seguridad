@@ -242,8 +242,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     break;
             }
         }
-        
-        private IEnumerator 
+
+        private IEnumerator StartHangingAround()
+        {
+            Debug.Log($"[StartHangingAround] Customer {gameObject.name} started hanging around.");
+            yield return new WaitForSeconds(0);
+        }
         
         private void ReachProductDestination()
         {
