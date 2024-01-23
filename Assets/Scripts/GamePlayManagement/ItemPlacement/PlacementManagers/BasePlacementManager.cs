@@ -52,7 +52,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         {
             if (MouseTouchesExpectedLayer())
             {
-                Debug.Log($"{CurrentPlacedObject.name}: Object is inside Placement zone");
+                //Debug.Log($"{CurrentPlacedObject.name}: Object is inside Placement zone");
                 IsInsideAllowedZone = true;
                 if (!CurrentPlacedObject.activeInHierarchy)
                 {
@@ -146,7 +146,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
             IsAttemptingPlacement = false;
             var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
             objectData.SetInPlacementStatus(false);
-            objectData.InitializeItem();
+            objectData.InitializeItem(CurrentItemData);
         }
 
         protected virtual void SetNewObjectPosition(GameObject gObject)
@@ -164,12 +164,13 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
                 RaycastHit hitInfo;
                 if (Physics.Raycast(ray, out hitInfo, 500, targetLayerMask) && !Physics.Raycast(ray, 1000, blockLayerMasks))
                 {
-                    Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
+                    //Debug.Log("[ObjectSelectedInsideZone] Mouse is inside map");
                     return true;
                 }
+                return false;
                 if(Physics.Raycast(ray, out hitInfo, 500))
                 {
-                    Debug.Log($"[ObjectSelectedInsideZone] Hit something else. {hitInfo.collider.name}");
+                    //Debug.Log($"[ObjectSelectedInsideZone] Hit something else. {hitInfo.collider.name}");
                 }
             }
             return false;

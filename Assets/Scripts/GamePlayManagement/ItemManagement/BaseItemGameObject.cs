@@ -1,4 +1,5 @@
 using System;
+using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GamePlayManagement.BitDescriptions;
 using UnityEngine;
@@ -21,6 +22,9 @@ namespace GamePlayManagement.ItemManagement
         protected bool InPlacement;
         public bool IsInPlacement => InPlacement;
 
+        private IItemObject _itemData;
+        public IItemObject ItemData => _itemData;
+
         public virtual void SendClickObject()
         {
         }
@@ -31,9 +35,10 @@ namespace GamePlayManagement.ItemManagement
             InPlacement = inPlacement;
         }
 
-        public virtual void InitializeItem()
+        public virtual void InitializeItem(IItemObject itemData)
         {
             MItemId = Guid.NewGuid();
+            _itemData = itemData;
         }
         #endregion
     

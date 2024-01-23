@@ -35,13 +35,21 @@ namespace UI
             losses.text = "0";
         }
 
+        private bool _mIsInitialized;
+        public bool IsInitialized => _mIsInitialized;
+
         public void Initialize(IPlayerGameProfile injectionClass)
         {
+            if (IsInitialized)
+            {
+                return;
+            }
             var customerManager = (ICustomersInSceneManager)FindObjectOfType <CustomersInSceneManager>();
             customerManager.RegisterObserver(this);
             
             _mPlayerProfile = injectionClass;
             UpdateInfo();
+            _mIsInitialized = true;
         }
 
         private void UpdateStoreData()

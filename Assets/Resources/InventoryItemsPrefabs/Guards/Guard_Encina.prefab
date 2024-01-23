@@ -13084,7 +13084,7 @@ MonoBehaviour:
     - {fileID: 1538819984743856977}
     - {fileID: 5378042782320199804}
   prefabPath: Assets/AdvancedPeopleSystem2/Prefabs/CustomizableCharacter.prefab
-  instanceStatus: 1
+  instanceStatus: 5
   originHip: {fileID: 4624240754163697216}
   headHip: {fileID: 2642828159911225153}
   clothesAnchors:
@@ -13360,7 +13360,7 @@ Animator:
   m_GameObject: {fileID: 5085081953980375545}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 1b8f3f34252d9ee44823ab05504b31a8, type: 3}
-  m_Controller: {fileID: 9100000, guid: 73dfba487f63297498cf4b2ae53f6fb5, type: 2}
+  m_Controller: {fileID: 9100000, guid: bc8fa3f4bfa92744e9dfc9dd21c4815f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -13490,7 +13490,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headTransform: {fileID: 2642828159911225153}
-  _particleSystem: {fileID: 2060501041}
+  myParticleSystem: {fileID: 2060501041}
   mGunPositionTransform: {fileID: 1136761606}
   myDrawFieldOfView: {fileID: 3229573116122904400}
   my3dFieldOfView: {fileID: 3489431390109576133}

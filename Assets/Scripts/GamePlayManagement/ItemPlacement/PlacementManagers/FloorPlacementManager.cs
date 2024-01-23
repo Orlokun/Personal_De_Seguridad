@@ -83,6 +83,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         {
             base.AttachObjectProcess(itemData, newObject);
             var itemObject = (IBaseGuardGameObject)CurrentPlacedObject.GetComponent<BaseGuardGameObject>();
+            itemObject.Initialize(itemData);
             var fov = itemObject.FieldOfView3D;
             fov.ToggleInGameFoV(true);
         }

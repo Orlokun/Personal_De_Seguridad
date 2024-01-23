@@ -11,16 +11,19 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             _mGuardObject = guardObject;
         }
+
         public bool IsGuardInspecting => CurrentAttitude == GuardSpecialAttitudeStatus.Inspecting;
         public GuardSpecialAttitudeStatus CurrentAttitude => _currentAttitudeStatus;
 
         public void SetGuardAttitudeStatus(GuardSpecialAttitudeStatus guardAttitude)
         {
+            _currentAttitudeStatus = guardAttitude;
             switch (guardAttitude)
             {
                 case GuardSpecialAttitudeStatus.Idle:
                     break;
                 case GuardSpecialAttitudeStatus.Inspecting:
+                    _mGuardObject.GetNavMeshAgent.SetDestination(_mGuardObject.CurrentInspectionPosition.Position);
                     break;
                 case GuardSpecialAttitudeStatus.Slacking:
                     break;

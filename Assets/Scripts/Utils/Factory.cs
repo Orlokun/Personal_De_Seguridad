@@ -25,6 +25,11 @@ namespace Utils
 {
     public static class Factory
     {
+        public static GuardRouteSystemModule CreateGuardSystemModule()
+        {
+            return new GuardRouteSystemModule();
+        }
+        
         public static IGuardStatusModule CreateGuardStatusModule(IBaseGuardGameObject baseGuard)
         {
             return new GuardStatusModule(baseGuard);
@@ -132,6 +137,7 @@ namespace Utils
             return new RentDataObject (mRentId, mRentName, mRentPrice, mUnlockLevel, mSpecialCondition,
                 mRentEnergyBonus, mRentSanityBonus);
         }
+
         public static WorkDayObject CreateWorkday(DayBitId dayBitId)
         {
             return new WorkDayObject(dayBitId);

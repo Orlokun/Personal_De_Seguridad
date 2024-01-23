@@ -9,6 +9,9 @@ namespace DataUnits.ItemScriptableObjects
         public int Aggressive { get; }
         public int Strength { get; }
         public int Agility { get; }
+        public int Persuasiveness { get; }
+        public int Speed { get; }
+        public int FoVRadius { get; }
     }
 
     public interface ITrapStats : IItemTypeStats

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using GameDirection.GeneralLevelManager.ShopPositions.WaitingPositions;
+using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using UnityEngine;
 using Utils;
@@ -20,7 +21,13 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
         public IShopPoiData GetPoiData(Guid poiId);
     }
 
-    public interface IShopPositionsManager : IShopClientPoisManager, IShopGenericWaitingSpots
+    public interface IShopInspectionSpots
+    {
+        public IShopInspectionPosition GetClosestPosition(Vector3 originSpot);
+        public IShopInspectionPosition GetNextPosition(Guid currentSpotId);
+    }
+
+    public interface IShopPositionsManager : IShopClientPoisManager, IShopGenericWaitingSpots, IShopInspectionSpots
     {
         public void Initialize();
         public List<IStoreEntrancePosition> StartPositions { get; }
@@ -38,12 +45,14 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
     {
         private Dictionary<Guid, IShopPoiData> mPoiDatas = new Dictionary<Guid, IShopPoiData>();
         private Dictionary<Guid, IShopWaitingSpots> _mWaitingSpots = new Dictionary<Guid, IShopWaitingSpots>();
+        private Dictionary<Guid, IShopInspectionPosition> _mInspectionPoints = new Dictionary<Guid, IShopInspectionPosition>();
 
         [SerializeField] private Transform payingPosition;
         
         
         [SerializeField] private List<Transform> entranceTransforms;
         [SerializeField] private List<Transform> customerInstantiationTransforms;
+        [SerializeField] private List<Transform> shopInspectionPositions;
 
         private List<IStoreEntrancePosition> _mStartPositions = new List<IStoreEntrancePosition>();
         public List<IStoreEntrancePosition> StartPositions => _mStartPositions;
@@ -80,7 +89,6 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
             {
                 Debug.LogWarning("[ShopPositionManager.PopulateEntrancePosition] Entrance and Instantiation positions must be the same");
             }
-
             for (var i = 0; i < customerInstantiationTransforms.Count; i++)
             {
                 var instantiationTransform = customerInstantiationTransforms[i];
@@ -113,6 +121,13 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
 
         private void PopulateGuardRoutes()
         {
+            foreach (var guardInspectionTransform in shopInspectionPositions)
+            {
+                var guardInspectionSpotData = guardInspectionTransform.GetComponent<IShopInspectionPosition>();
+                var guardSpotInterface = (IShopInspectionPosition) guardInspectionSpotData;
+                guardSpotInterface.Initialize();
+                _mInspectionPoints.Add(guardSpotInterface.Id, guardSpotInterface);
+            }
             Debug.LogWarning("[PopulateGuardRoutes] Not Implemented Yet");
         }
         #endregion
@@ -276,5 +291,36 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
         public bool AnyUnoccupiedSpot => _mWaitingSpots.Any(x => x.Value.AnySpotAvailable);
         #endregion
 
+        public IShopInspectionPosition GetClosestPosition(Vector3 originSpot)
+        {
+            float minorDistance = 9999;
+            IShopInspectionPosition closestPosition = null;
+            foreach (var shopInspectionPosition in _mInspectionPoints)
+            {
+                var inspectionPositionDistance = Vector3.Distance(originSpot, shopInspectionPosition.Value.Position);
+                if (closestPosition == null || inspectionPositionDistance < minorDistance)
+                {
+                    closestPosition = shopInspectionPosition.Value;
+                    minorDistance = inspectionPositionDistance;
+                }
+            }
+
+            if (closestPosition == null)
+            {
+                Debug.LogError("[ShopPositionManager.GetClosestPosition] Some Shop inspection position must be returned");
+            }
+            return closestPosition;
+        }
+
+        public IShopInspectionPosition GetNextPosition(Guid currentSpotId)
+        {
+            if (!_mInspectionPoints.ContainsKey(currentSpotId))
+            {
+                Debug.LogWarning("[GetNextPosition] Shop position manager must have current inspection " +
+                                 "position available in data before requesting the next");
+                return null;
+            }
+            return _mInspectionPoints[currentSpotId].NextInspectionPosition;
+        }
     }
 }

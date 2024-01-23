@@ -7,22 +7,19 @@ using UnityEngine.Events;
 
 namespace ExternalAssets._3DFOV.Scripts
 {
-    public interface IFieldOfView3D
-    {
-        public bool IsDrawActive { get; }
-        public void ToggleInGameFoV(bool isActive);
-        public bool HasTargetsInRange { get; }
-        public List<GameObject> SeenTargetObjects { get; }
-    }
-    
     [ExecuteInEditMode]
     [RequireComponent(typeof(DrawFoVLines))]
     public class FieldOfView3D : MonoBehaviour, IFieldOfView3D
     {
+        #region BaseVariables
+        private const float BaseViewRadius = 5;
+        private const float BaseViewAngle = 30f;
+        #endregion
+        
         #region Variables
-        [Range(0f, 50f)] public float viewRadius = 5f;
-        [Range(0f, 180f)] public float viewAngle = 30f;
-        [Range(1f, 2500f)] public int viewResolution = 1000;
+        [Range(0f, 50f)] private float _viewRadius;
+        [Range(0f, 180f)] private float _viewAngle;
+        [Range(1f, 2500f)] private const int MViewResolution = 150;
 
         public LayerMask layerMask;
         public enum DetectionType
@@ -36,12 +33,13 @@ namespace ExternalAssets._3DFOV.Scripts
 
         #region Target Detection
 
-        public List<IBaseCharacterInScene> seenTargets = new List<IBaseCharacterInScene>();
         public List<GameObject> seenObjects = new List<GameObject>();
         public List<GameObject> targetObjects = new List<GameObject>();
         public UnityEvent onTargetSeen;
         public UnityEvent onTargetLost;
-
+        public int ViewResolution => MViewResolution;
+        public float ViewRadius => _viewRadius;
+        public float ViewAngle => _viewAngle;
         [SerializeField] private bool detectionActive = true;
         #endregion
 
@@ -59,8 +57,14 @@ namespace ExternalAssets._3DFOV.Scripts
 
         public bool HasTargetsInRange => seenObjects.Count > 0;
         public List<GameObject> SeenTargetObjects => seenObjects;
+        public void SetupCharacterFoV(int fovRange)
+        {
+            // ReSharper disable once PossibleLossOfFraction
+            float fovResult = fovRange / 10;
+            _viewRadius = BaseViewRadius * fovResult;
+            _viewAngle = BaseViewAngle * fovResult;
+        }
         public bool IsDrawActive => _isDrawFoVActive;
-        
         
         [HideInInspector] public List<Vector3> mDirections = new List<Vector3>();
         [HideInInspector] public List<Vector3> mPoint = new List<Vector3>();
@@ -70,28 +74,28 @@ namespace ExternalAssets._3DFOV.Scripts
         [HideInInspector] public int hitIndexCount;
         [HideInInspector] public int missIndexCount;
         private float goldenRatio = (1 + Mathf.Sqrt(5)) / 2;
-        private bool tempbool = false;
+        private bool _tempbool;
         #endregion
         private void Awake()
         {
-            mDirections = new List<Vector3>(viewResolution);
+            mDirections = new List<Vector3>(MViewResolution);
             seenObjects = new List<GameObject>();
             mPoint = new List<Vector3>();
-            tempbool = false;
+            _tempbool = false;
             _isDrawFoVActive = false;
             _drawFoVLines = gameObject.GetComponent<DrawFoVLines>();
         }
         
         private void Update()
         {
-            if (mDirections.Count != viewResolution)
+            if (mDirections.Count != MViewResolution)
             {
-                StartCoroutine(ListSetup(mDirections, viewResolution));
+                StartCoroutine(ListSetup(mDirections, MViewResolution));
             }
             #region UpdateSetup
             if (m_goldenRatio) _turnFraction = goldenRatio;
             var angleIncrement = Mathf.PI * 2 * _turnFraction;
-            var radians = viewAngle * Mathf.Deg2Rad;
+            var radians = _viewAngle * Mathf.Deg2Rad;
             var c = -1 * Mathf.Cos(radians) + 1;
 
             Vector3 rot = transform.rotation.eulerAngles;
@@ -100,16 +104,16 @@ namespace ExternalAssets._3DFOV.Scripts
             _drawFoVLines.ClearAllLines();
             _drawFoVLines.ClearTargetLines();
             #endregion
-            for (var i = 0; i < viewResolution; i++)
+            for (var i = 0; i < MViewResolution; i++)
             {
-                var t = (float)i / viewResolution;
+                var t = (float)i / MViewResolution;
                 var inclination = Mathf.Acos(1 - c * t);
                 inclination = Mathf.Pow(inclination, power);
                 var azimuth = angleIncrement * i;
 
-                var x = Mathf.Sin(inclination) * Mathf.Cos(azimuth) * viewRadius;
-                var y = Mathf.Sin(inclination) * Mathf.Sin(azimuth) * viewRadius;
-                var z = Mathf.Cos(inclination) * viewRadius;
+                var x = Mathf.Sin(inclination) * Mathf.Cos(azimuth) * _viewRadius;
+                var y = Mathf.Sin(inclination) * Mathf.Sin(azimuth) * _viewRadius;
+                var z = Mathf.Cos(inclination) * _viewRadius;
 
                 var endPoint = new Vector3(x, z, y);
                 endPoint = myRotation * endPoint;
@@ -132,7 +136,7 @@ namespace ExternalAssets._3DFOV.Scripts
                     switch (detectionType)
                     {
                         case DetectionType.Raycast:
-                            if (Physics.Raycast(transform.position, dir, out hit, viewRadius, layerMask))
+                            if (Physics.Raycast(transform.position, dir, out hit, _viewRadius, layerMask))
                                 Detection(hit, i);
                             break;
                         case DetectionType.Linecast:
@@ -140,7 +144,7 @@ namespace ExternalAssets._3DFOV.Scripts
                                 Detection(hit, i);
                             break;
                         case DetectionType.Spherecast:
-                            if (Physics.SphereCast(transform.position, sphereCastRadius, dir, out hit, viewRadius - sphereCastRadius, layerMask))
+                            if (Physics.SphereCast(transform.position, sphereCastRadius, dir, out hit, _viewRadius - sphereCastRadius, layerMask))
                             {                                
                                 hitIndexs.Add(new int());
                                 hitIndexs[hitIndexCount] = i;
@@ -194,7 +198,7 @@ namespace ExternalAssets._3DFOV.Scripts
                 Ray r = new Ray(position, mDirections[i]);
                 var a = position;
                 var b = hit.point;
-                var c = r.GetPoint(viewRadius - sphereCastRadius);
+                var c = r.GetPoint(_viewRadius - sphereCastRadius);
 
                 var v1 = Vector3.Dot((c - a), (c - a));
                 var v2 = Vector3.Dot((b - a), (c - a));
@@ -210,7 +214,7 @@ namespace ExternalAssets._3DFOV.Scripts
         {
             mDirections[i] = hit.point - transform.position;
             GameObject viewObj = hit.collider.gameObject;
-            var isCharacter = viewObj.TryGetComponent<IBaseCharacterInScene>(out var characterInScene);
+            var isCharacter = viewObj.TryGetComponent<IBaseCharacterInScene>(out _);
             if (!isCharacter)
             {
                 return;
@@ -225,15 +229,15 @@ namespace ExternalAssets._3DFOV.Scripts
                 if (seenObjects.Count() > 0)
                 {
                     var index = seenObjects.IndexOf(viewObj);
-                    if (Vector3.Distance(transform.position, hit.point) < viewRadius)
+                    if (Vector3.Distance(transform.position, hit.point) < _viewRadius)
                         mPoint[index] = hit.point;
                 }
             }
             if (targetObjects.Contains(viewObj))
             {
-                if (!tempbool)
+                if (!_tempbool)
                 {
-                    tempbool = true;
+                    _tempbool = true;
                     StartCoroutine(OnTargetEventTrigger(viewObj));
                 }
             }
@@ -256,15 +260,15 @@ namespace ExternalAssets._3DFOV.Scripts
             {
                 for (int j = 0; j < seenObjects.Count; j++)
                 {
-                    Collider collider = seenObjects[j].GetComponent<Collider>();
-                    if (!CheckPointInsideCone(mPoint[j], transform.position, transform.forward, viewAngle, viewRadius))
+                    Collider myCollider = seenObjects[j].GetComponent<Collider>();
+                    if (!CheckPointInsideCone(mPoint[j], transform.position, transform.forward, _viewAngle, _viewRadius))
                     {
                         RemoveFromSight(j);
                         break;
                     }
-                    else if (!CheckPointInsideCone(collider.bounds.max, transform.position, transform.forward, viewAngle, viewRadius))
+                    else if (!CheckPointInsideCone(myCollider.bounds.max, transform.position, transform.forward, _viewAngle, _viewRadius))
                     {
-                        if (collider.bounds.SqrDistance(mPoint[j]) > .01f)
+                        if (myCollider.bounds.SqrDistance(mPoint[j]) > .01f)
                         {
                             RemoveFromSight(j);
                             break;
@@ -299,8 +303,10 @@ namespace ExternalAssets._3DFOV.Scripts
         }
         bool CheckObstruction(GameObject og, Vector3 point)
         {
-            var dir = (point - transform.position);
-            float dis = Vector3.Distance(transform.position, point);
+            var position = transform.position;
+            var dir = (point - position);
+            
+            float dis = Vector3.Distance(position, point);
             RaycastHit hitCheck;
             if (Physics.Linecast(transform.position, point, out hitCheck, layerMask))
             {
@@ -344,7 +350,7 @@ namespace ExternalAssets._3DFOV.Scripts
         {
             onTargetSeen.Invoke();
             yield return new WaitUntil(() => (!seenObjects.Contains(target)));
-            tempbool = false;
+            _tempbool = false;
             onTargetLost.Invoke();
         }
         private bool ValidateVisualizer()

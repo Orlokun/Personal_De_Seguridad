@@ -1,3 +1,4 @@
+using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.ItemManagement.Guards;
 using UnityEngine;
 
@@ -18,6 +19,13 @@ namespace GamePlayManagement.ItemManagement
         public override void SetInPlacementStatus(bool inPlacement)
         {
             _guardGameObject.SetInPlacementStatus(inPlacement);
+        }
+
+        public override void InitializeItem(IItemObject itemData)
+        {
+            base.InitializeItem(itemData);
+            _guardGameObject.Initialize(itemData);
+            _guardGameObject.StartBehaviorTree();
         }
     }
 }

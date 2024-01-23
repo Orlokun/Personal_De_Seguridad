@@ -24,8 +24,10 @@ namespace UI.TabManagement.ItemTypeTab
 
         protected IItemObject MItemObject;
         protected bool MInitialized;
-    
-    
+
+
+        public bool IsInitialized { get; }
+
         public virtual void Initialize(IItemObject injectionClass)
         {
             if (MInitialized)

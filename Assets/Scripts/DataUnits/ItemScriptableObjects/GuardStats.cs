@@ -11,7 +11,11 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mAggressive;
         private readonly int _mStrength;
         private readonly int _mAgility;
-        public GuardStats(int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, int mAgility)
+        private readonly int _mPersuasiveness;
+        private readonly int _mSpeed;
+        private readonly int _mFoVRadius;
+        public GuardStats(int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, 
+            int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius)
         {
             _bitId = bitId;
             _mIntelligence = mIntelligence;
@@ -20,6 +24,9 @@ namespace DataUnits.ItemScriptableObjects
             _mAggressive = mAggressive;
             _mStrength = mStrength;
             _mAgility = mAgility;
+            _mSpeed = mSpeed;
+            _mPersuasiveness = mPersuasiveness;
+            _mFoVRadius = mFoVRadius;
         }
 
         public int Id => _bitId;
@@ -29,7 +36,11 @@ namespace DataUnits.ItemScriptableObjects
         public int Aggressive => _mAggressive;
         public int Strength => _mStrength;
         public int Agility => _mAgility;
-        
+        public int Persuasiveness => _mPersuasiveness;
+
+        public int Speed => _mSpeed;
+        public int FoVRadius => _mFoVRadius;
+
         public List<int> GetStats()
         {
             return new List<int>()

@@ -182,7 +182,12 @@ namespace DataUnits.GameCatalogues
             
             var lastItemSupplierId = 1;
             var currentSupplierGuardsList = new List<IGuardStats>();
-
+            if (_mGuardStatsFromDataString == null)
+            {
+                Debug.LogError("[LoadGuardDataFromJson] Guard Stats data must be reachable");
+                return;
+            }
+            
             for (var i = 1; i < _mGuardStatsFromDataString.values.Count; i++)
             {
                 //Step 1: Get Item supplier Id
@@ -213,41 +218,61 @@ namespace DataUnits.GameCatalogues
                 var gotIntelligence = int.TryParse(_mGuardStatsFromDataString.values[i][3], out var intelligence);
                 if (!gotIntelligence)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Intelligence must be available in data");
                 }
                 //Step 4: Get Kindness
                 var gotKindness = int.TryParse(_mGuardStatsFromDataString.values[i][4], out var kindness);
                 if (!gotKindness)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Kindness must be available in data");
                 }
                 //Step 5: Get Proactivity
                 var gotProactivity = int.TryParse(_mGuardStatsFromDataString.values[i][5], out var proactivity);
                 if (!gotProactivity)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Proactivity must be available in data");
                 }
                 //Step 6: Get Aggressive
                 var gotAggressive = int.TryParse(_mGuardStatsFromDataString.values[i][6], out var aggressive);
                 if (!gotAggressive)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Aggressive must be available in data");
                 }
                 //Step 7: Get Strength
                 var gotStrength = int.TryParse(_mGuardStatsFromDataString.values[i][7], out var strength);
                 if (!gotStrength)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Strength must be available in data");
                 }
                 //Step 8: Get Agility
                 var gotAgility = int.TryParse(_mGuardStatsFromDataString.values[i][8], out var agility);
                 if (!gotAgility)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Agility must be available in data");
+                }
+                //Step 10: Get Persuasiveness
+                var gotPersuasiveness = int.TryParse(_mGuardStatsFromDataString.values[i][9], out var persuasiveness);
+                if (!gotPersuasiveness)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Persuasiveness must be available in data");
+                }
+                
+                //Step 10: Get Speed
+                var gotSpeed = int.TryParse(_mGuardStatsFromDataString.values[i][10], out var speed);
+                if (!gotSpeed)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Speed must be available in data");
+                }                
+                //Step 11: Get FovRange
+                var gotFovRange = int.TryParse(_mGuardStatsFromDataString.values[i][11], out var fov);
+                if (!gotSpeed)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard Speed must be available in data");
                 }
 
                 IGuardStats itemDataObject =
-                    new GuardStats(itemId,intelligence, kindness, proactivity, aggressive, strength, agility);
+                    new GuardStats(itemId,intelligence, kindness, proactivity, aggressive, strength, agility, 
+                        persuasiveness, speed, fov);
                 _mGuardsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotGuardsData = true;
@@ -260,7 +285,12 @@ namespace DataUnits.GameCatalogues
             
             var lastItemSupplierId = 1;
             var currentSupplierCameraStats = new List<ICameraStats>();
-
+            
+            if (_mCameraStatsFromDataString == null)
+            {
+                Debug.LogError("[LoadCameraItemsDataFromJson] Camera Stats data must be reachable");
+                return;
+            }
             for (var i = 1; i < _mCameraStatsFromDataString.values.Count; i++)
             {
                 //Step 1: Get Item supplier Id
@@ -323,10 +353,13 @@ namespace DataUnits.GameCatalogues
             Debug.Log($"[ItemsDataController.LoadWeaponDataFromJson]");
             _mWeaponStatsFromDataString = JsonConvert.DeserializeObject<WeaponStatsFromData>(sourceJson);
             _mWeaponsSpecialData = new Dictionary<BitItemSupplier, List<IWeaponStats>>();
-            
+            if (_mWeaponStatsFromDataString == null)
+            {
+                Debug.LogError("[LoadWeaponDataFromJson] Weapon Stats data must be reachable");
+                return;
+            }
             var lastItemSupplierId = 1;
             var currentSupplierWeaponList = new List<IWeaponStats>();
-
             for (var i = 1; i < _mWeaponStatsFromDataString.values.Count; i++)
             {
                 //Step 1: Get Item supplier Id
@@ -396,7 +429,11 @@ namespace DataUnits.GameCatalogues
             
             var lastItemSupplierId = 1;
             var currentSupplierTrapList = new List<ITrapStats>();
-
+            if (_mTrapStatsFromDataString == null)
+            {
+                Debug.LogError("[LoadTrapDataFromJson] Trap Stats data must be reachable");
+                return;
+            }
             for (var i = 1; i < _mTrapStatsFromDataString.values.Count; i++)
             {
                 //Step 1: Get Item supplier Id
@@ -461,7 +498,11 @@ namespace DataUnits.GameCatalogues
             
             var lastItemSupplierId = 1;
             var currentSupplierOtherItemsList = new List<IOtherItemsStats>();
-
+            if (_mOtherItemsStatsFromDataString == null)
+            {
+                Debug.LogError("[LoadOtherItemsFromJson] Other items Stats data must be reachable");
+                return;
+            }
             for (var i = 1; i < _mOtherItemsStatsFromDataString.values.Count; i++)
             {
                 //Step 1: Get Item supplier Id
@@ -530,6 +571,11 @@ namespace DataUnits.GameCatalogues
             
             var lastItemSupplierId = 1;
             List<IItemObject> currentSupplierList = new List<IItemObject>();
+            if (_mItemCatalogueDataString == null)
+            {
+                Debug.LogError($"[LoadBaseItemDataFromJson] _mItemCatalogueDataString must be reachable");
+                return;
+            }
             if (_mBaseCatalogueBaseItemsFromData == null)
             {
                 Debug.LogError($"_mItemCatalogueDataString must not be null after parsing");

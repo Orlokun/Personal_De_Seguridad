@@ -57,9 +57,9 @@ namespace ExternalAssets._3DFOV.Scripts
             if (this.gameObject.TryGetComponent(out FieldOfView3D f))
             {
                 fov3D = f;
-                viewRadius = f.viewRadius;
-                viewAngle = f.viewAngle;
-                viewResolution = f.viewResolution;
+                viewRadius = f.ViewRadius;
+                viewAngle = f.ViewAngle;
+                viewResolution = f.ViewResolution;
                 m_directions = f.mDirections;
                 m_point = f.mPoint;
                 seenObjects = f.seenObjects;
@@ -78,9 +78,9 @@ namespace ExternalAssets._3DFOV.Scripts
                 p_viewSpherecasts = false;
 
 
-            viewRadius = fov3D.viewRadius;
-            viewAngle = fov3D.viewAngle;
-            viewResolution = fov3D.viewResolution;
+            viewRadius = fov3D.ViewRadius;
+            viewAngle = fov3D.ViewAngle;
+            viewResolution = fov3D.ViewResolution;
             m_directions = fov3D.mDirections;
             m_point = fov3D.mPoint;
             seenObjects = fov3D.seenObjects;

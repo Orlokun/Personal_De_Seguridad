@@ -1,20 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Cinemachine;
+using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemPlacement.PlacementManagers;
 using GamePlayManagement.Players_NPC;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 using Utils;
+using Random = UnityEngine.Random;
 
 namespace GamePlayManagement.ItemManagement.Guards
 {
-    public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject
+    public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject, IInitializeWithArg1<IItemObject>
     {
         #region Members
+        private IItemObject _myGuardData;
+        public IItemObject GuardBaseData => _myGuardData;
+
         #region PlacementManagement
         public void SetInPlacementStatus(bool inPlacement)
         {
@@ -56,15 +64,18 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region LevelInspectionData
-
+        private IGuardRouteSystemModule _mInspectionSystemModule;
 
         #endregion
 
         #region StateManagement
         private IGuardStatusModule _mGuardStatusModule;
-        private IGuardStats _myStats;
-        public IGuardStats Stats => _myStats;
         #endregion
+
+        #region GuardStats
+        public IGuardStats Stats => (IGuardStats)MyStats;
+        #endregion
+
         #endregion
 
         #region WeaponManagementApi
@@ -90,35 +101,108 @@ namespace GamePlayManagement.ItemManagement.Guards
             Destroy(_currentWeaponObject);
             _currentWeaponObject = null;
         }
-        #endregion
-        
-        protected override void Awake()
-        {
-            base.Awake();
-            _mInPlacement = false;
-            PrepareFieldOfView();
-        }
 
-        protected override void Start()
+
+
+        public IShopInspectionPosition CurrentInspectionPosition =>
+            _mInspectionSystemModule.GetCurrentPosition;
+
+        protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
-            base.Start();
-            StartInspecting();
+            var guardSpeed = (float)Stats.Speed / 10;
+            switch (currentStatus)
+            {
+                case BaseCharacterMovementStatus.Walking:
+                    // ReSharper disable once PossibleLossOfFraction
+                    return BaseWalkSpeed * guardSpeed;
+                case BaseCharacterMovementStatus.Running:
+                    // ReSharper disable once PossibleLossOfFraction
+                    return BaseRunSpeed * guardSpeed;
+                default:
+                    return 1;
+            }
+        }
+        #endregion
+
+        private bool _mIsInitialized;
+        public bool IsInitialized => _mIsInitialized;
+
+        private void SetupInspectionModule()
+        {
+            _mInspectionSystemModule = Factory.CreateGuardSystemModule();
+            var getInspectionPositions = PositionsManager.GetClosestPosition(transform.position);
+            _mInspectionSystemModule.Initialize(getInspectionPositions);
+        }
+        public void StartBehaviorTree()
+        {
+            EvaluateStatsForInspection();
+        }
+        
+        public void Initialize(IItemObject itemObjectData)
+        {
+            if (IsInitialized)
+            {
+                return;
+            }
+            try
+            {
+                _mGuardStatusModule = Factory.CreateGuardStatusModule(this);
+                _myGuardData = itemObjectData;
+                MyStats = ItemsDataController.Instance.GetStatsForGuard(_myGuardData.ItemSupplier, _myGuardData.BitId);
+                PositionsManager = FindObjectOfType<ShopPositionsManager>();
+                PrepareFieldOfView();
+                SetupInspectionModule();
+                _mIsInitialized = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        private async void EvaluateStatsForInspection()
+        {
+            var waitResultTime = BaseAwakeTime / Stats.Proactive;
+            await Task.Delay(waitResultTime);
+            
+            var willWalkAround = RandomChanceDice(Stats.Proactive);
+            if (willWalkAround)
+            {
+                Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} will start inspecting areas");
+                StartInspecting();
+                return;
+            }
+            Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} is lazy, don't feel like working");
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
+        }
+        protected override void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus newGuardStatus)
+        {
+            _mGuardStatusModule.SetGuardAttitudeStatus(newGuardStatus);
         }
 
         private void StartInspecting()
         {
             _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
-            EvaluateStatsForInspection();
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+        }
+        private bool RandomChanceDice(int valueUsed)
+        {
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomNumber = Random.Range(1, 10);
+            return randomNumber <= valueUsed;
         }
 
-        private void EvaluateStatsForInspection()
-        {
-            
-        }
 
-        private void PrepareFieldOfView()
+        public void PrepareFieldOfView()
         {
+            if (_fieldOfViewModule != null)
+            {
+                return;
+            }
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
+            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
         }
 
         #region TargetTrackingProcess
@@ -141,7 +225,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             var removedCustomers = new List<Guid>();
             foreach (var trackedCustomer in _mTrackedCustomers)
             {
-                var customersSeen = seenObjects.Where(x=> x.TryGetComponent<IBaseCustomer>(out var customerData));
+                var customersSeen = seenObjects.Where(x=> x.TryGetComponent<IBaseCustomer>(out _));
                 if (customersSeen.All(x => x.GetComponent<IBaseCustomer>().CustomerId != trackedCustomer.Key))
                 {
                     continue;
@@ -213,9 +297,10 @@ namespace GamePlayManagement.ItemManagement.Guards
                     break;
             }
         }
-        private void ReachInspectedZone()
+        private async void ReachInspectedZone()
         {
-    
+            var getNextInspectionPosition = PositionsManager.GetNextPosition(CurrentInspectionPosition.Id);
+            await Task.Delay(1000);
         }
         private void AttemptDetention ()
         {
@@ -223,7 +308,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         }
         private void EvaluateStartShopping()
         {
-    
+            
         }
         #endregion
 
@@ -241,13 +326,15 @@ namespace GamePlayManagement.ItemManagement.Guards
             {
                 return;
             }
-            Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
             if (_mInPlacement)
             {
                 return;
             }
+            Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
             _fieldOfViewModule.ToggleInGameFoV(!my3dFieldOfView.IsDrawActive);
         }
         #endregion
+
+
     }
 }

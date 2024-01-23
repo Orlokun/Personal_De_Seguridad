@@ -131,7 +131,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
             {
                 Vector3 dir = fov3d.mDirections[i];
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, dir, out hit, fov3d.viewRadius, fov3d.layerMask))
+                if (Physics.Raycast(transform.position, dir, out hit, 5, fov3d.layerMask))
                 {
                     //float dist = Vector3.Distance(dir, transform.position);
                     float dist = Vector3.Distance(hit.point, transform.position);
