@@ -109,6 +109,7 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
+            base.GetStatusSpeed(currentStatus);
             var guardSpeed = (float)Stats.Speed / 10;
             switch (currentStatus)
             {
@@ -184,8 +185,8 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         private void StartInspecting()
         {
-            _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
             SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
         }
         private bool RandomChanceDice(int valueUsed)
         {
@@ -278,7 +279,25 @@ namespace GamePlayManagement.ItemManagement.Guards
             
         }
         #endregion
-
+        private void Update()
+        {
+            ManageMovementStatus();
+        }
+        private void ManageMovementStatus()
+        {
+            switch (MCharacterMovementStatus)
+            {
+                case BaseCharacterMovementStatus.Idle:
+                    break;
+                case BaseCharacterMovementStatus.Walking:
+                    EvaluateWalkingDestination();
+                    break;
+                case BaseCharacterMovementStatus.Running:
+                    EvaluateWalkingDestination();
+                    break;
+            }
+        }
+        
         #region AttitudeStateManagement
         protected override void ReachWalkingDestination()
         {
@@ -299,9 +318,17 @@ namespace GamePlayManagement.ItemManagement.Guards
         }
         private async void ReachInspectedZone()
         {
-            var getNextInspectionPosition = PositionsManager.GetNextPosition(CurrentInspectionPosition.Id);
-            await Task.Delay(1000);
+            var nextPosition = PositionsManager.GetNextPosition(CurrentInspectionPosition.Id);
+            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+            await Task.Delay(500);
+            BaseAnimator.ChangeAnimationState(SearchAround);
+            await Task.Delay(4000);
+            _mInspectionSystemModule.SetNewCurrentPosition(nextPosition);
+            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
         }
+        
         private void AttemptDetention ()
         {
     

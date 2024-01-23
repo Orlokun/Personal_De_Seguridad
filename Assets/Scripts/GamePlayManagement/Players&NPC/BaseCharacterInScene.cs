@@ -28,7 +28,9 @@ namespace GamePlayManagement.Players_NPC
         
         protected const string Idle = "Idle";
         protected const string Walk = "Walk";
-        protected const string Run = "Run";
+        protected const string Run = "Run";        
+        protected const string SearchAround = "SearchAround";
+
         public Guid CharacterId => MCharacterId;
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;
         protected Guid MCharacterId;
@@ -53,6 +55,7 @@ namespace GamePlayManagement.Players_NPC
         protected virtual void Awake()
         {
             CheckId();
+            PositionsManager = FindObjectOfType<ShopPositionsManager>();    
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             MyNavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
@@ -100,6 +103,7 @@ namespace GamePlayManagement.Players_NPC
         }
         protected void SetMovementDestination(Vector3 payingPosition)
         {
+            MyNavMeshAgent.enabled = true;
             MyNavMeshAgent.SetDestination(payingPosition);
         }
 

@@ -23,6 +23,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                 case GuardSpecialAttitudeStatus.Idle:
                     break;
                 case GuardSpecialAttitudeStatus.Inspecting:
+                    _mGuardObject.GetNavMeshAgent.enabled = true;
                     _mGuardObject.GetNavMeshAgent.SetDestination(_mGuardObject.CurrentInspectionPosition.Position);
                     break;
                 case GuardSpecialAttitudeStatus.Slacking:

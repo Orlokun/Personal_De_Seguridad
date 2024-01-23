@@ -18,7 +18,6 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
     {
         #region ConstantData
         private const string ProductPrefabPath = "LevelManagementPrefabs/ProductPrefabs/";
-        private const string SearchAround = "SearchAround";
         #endregion
 
         #region ProceduralAnimConstraints
@@ -85,7 +84,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         {
             Random.InitState(DateTime.Now.Millisecond);
             _mCustomerVisitData = new CustomerPurchaseStealData();
-            _mNumberOfProductsLookingFor = Random.Range(3, 9);
+            _mNumberOfProductsLookingFor = Random.Range(1, 3);
             base.Awake();
         }
         
@@ -115,7 +114,21 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             ManageAttitudeStatus();
             ManageMovementStatus();
         }
-
+        protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        {
+            var guardSpeed = (float)_mCustomerTypeData.Speed / 10;
+            switch (currentStatus)
+            {
+                case BaseCharacterMovementStatus.Walking:
+                    // ReSharper disable once PossibleLossOfFraction
+                    return BaseWalkSpeed * guardSpeed;
+                case BaseCharacterMovementStatus.Running:
+                    // ReSharper disable once PossibleLossOfFraction
+                    return BaseRunSpeed * guardSpeed;
+                default:
+                    return 1;
+            }
+        }
         #region UpdateManageAttitude
         private void ManageAttitudeStatus()
         {
@@ -495,8 +508,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void Leave()
         {
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Leaving);
             SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Leaving);
         }
         
         #endregion

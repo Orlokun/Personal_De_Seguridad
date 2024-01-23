@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem;
 using GameDirection;
-using GameDirection.GeneralLevelManager;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
@@ -18,17 +17,12 @@ using Utils;
 using Random = UnityEngine.Random;
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 {
-    public class CustomersInSceneManager : MonoBehaviour, ICustomersInSceneManager, IInitialize
+    public class CustomersInSceneManager : MonoBehaviour, ICustomersInSceneManager
     {
         #region Singelton&Initialize
         public static ICustomersInSceneManager Instance => _mInstance;
         private static CustomersInSceneManager _mInstance;
-        
-        public bool IsInitialized { get; }
-        public void Initialize()
-        {
-            throw new NotImplementedException();
-        }
+
 
         #endregion
 
@@ -40,26 +34,26 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         //Job suppliers Customer Management data
         private Dictionary<JobSupplierBitId, ICustomersInSceneManagerData> _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInSceneManagerData>();
-        private StoreCustomerManagementData _CustomerManagementRawData;
+        private StoreCustomerManagementData _customerManagementRawData;
         
         //Entrance points for customers
         private List<IStoreEntrancePosition> _mStartPositions;
         
         private int[] _mInstantiationFrequency;
         private bool _mIsSpawning = false;
-        private Coroutine customersCoroutine;
+        private Coroutine _customersCoroutine;
 
         private Dictionary<Guid, IBaseCustomer> _mCustomersInScene = new Dictionary<Guid, IBaseCustomer>();
         #endregion
 
 
-        [SerializeField] private ObstacleAvoidanceType AvoidanceType;
-        [SerializeField] private float AgentSpeed;
-        [SerializeField] private float AgentRadius;
+        [SerializeField] private ObstacleAvoidanceType avoidanceType;
+        [SerializeField] private float agentSpeed;
+        [SerializeField] private float agentRadius;
         
         [Header("NavMesh Configurations")]
-        public float AvoidancePredictionTime = 2;
-        public int PathfindingIterationsPerFrame = 100;
+        public float avoidancePredictionTime = 2;
+        public int pathfindingIterationsPerFrame = 100;
 
         #region Observer
         public void RegisterObserver(ICustomerManagementObserver observer)
@@ -152,11 +146,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         {
             _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInSceneManagerData>();
             Debug.Log($"[LoadCustomerDataFromJson] Start Serializing Job supplier's management Json data");
-            _CustomerManagementRawData = JsonConvert.DeserializeObject<StoreCustomerManagementData>(sourceJson);
-            
-            for (var i = 1; i < _CustomerManagementRawData.values.Count; i++)
+            _customerManagementRawData = JsonConvert.DeserializeObject<StoreCustomerManagementData>(sourceJson);
+            if (_customerManagementRawData == null)
             {
-                var gotId = int.TryParse(_CustomerManagementRawData.values[i][0], out var supplierId);
+                return;
+            }
+            for (var i = 1; i < _customerManagementRawData.values.Count; i++)
+            {
+                var gotId = int.TryParse(_customerManagementRawData.values[i][0], out var supplierId);
                 var supplierBitId = (JobSupplierBitId) supplierId;
                 if (supplierBitId == 0 || !gotId)
                 {
@@ -164,24 +161,24 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                         $"[CustomerInSceneManager.LoadCustomerDataFromJson] Job Supplier must have Id greater than zero");
                     return;
                 }
-                var storeName = _CustomerManagementRawData.values[i][1]; 
+                //var storeName = _customerManagementRawData.values[i][1]; 
                 
-                var gotMaxClients = int.TryParse(_CustomerManagementRawData.values[i][2], out var maxClients);
+                var gotMaxClients = int.TryParse(_customerManagementRawData.values[i][2], out var maxClients);
                 if (maxClients == 0 || !gotMaxClients)
                 {
                     Debug.LogWarning(
                         $"[CustomerInSceneManager.LoadProductsFromJson] Store must have max number of clients");
                     return;
                 }
-                var storePrefabsPath = _CustomerManagementRawData.values[i][3]; 
-                var gotNumberOfPrefabs = int.TryParse(_CustomerManagementRawData.values[i][4], out var maxPrefabs);
+                var storePrefabsPath = _customerManagementRawData.values[i][3]; 
+                var gotNumberOfPrefabs = int.TryParse(_customerManagementRawData.values[i][4], out var maxPrefabs);
                 if (maxPrefabs == 0 || !gotNumberOfPrefabs)
                 {
                     Debug.LogWarning(
                         $"[CustomerInSceneManager.LoadProductsFromJson]");
                     return;
                 }
-                var instantiationRange = _CustomerManagementRawData.values[i][5].Split(',');
+                var instantiationRange = _customerManagementRawData.values[i][5].Split(',');
                 var castedRange = RangeProcessor.ProcessLinksStrings(instantiationRange);
 
                 //TODO: FIX THIS HARDCODED MAGICAL NUMBER!
@@ -195,7 +192,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         /// <summary>
         /// MAke sure a lvl with a Shop position manager is available before calling
         /// </summary>
-        /// <param name="managementData"></param>
+        /// <param name="jobId"></param>
         public void LoadInstantiationProperties(JobSupplierBitId jobId)
         {
             try
@@ -241,12 +238,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             switch (_mIsSpawning)
             {
                 case false:
-                    if (customersCoroutine == null)
+                    if (_customersCoroutine == null)
                         break;
-                    StopCoroutine(customersCoroutine);
+                    StopCoroutine(_customersCoroutine);
                     break;
                 case true:
-                    customersCoroutine = StartCoroutine(StartInstantiatingClients());
+                    _customersCoroutine = StartCoroutine(StartInstantiatingClients());
                     break;
             }
         }
@@ -255,8 +252,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
-                //var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
-                var randomRange = Random.Range(3, 5);
+                var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
+                //var randomRange = Random.Range(3, 5);
                 var randomPrefabInstantiated = InstantiateRandomClient();
                 StartMovingClientAgent(randomPrefabInstantiated);
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
@@ -281,8 +278,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         }
         private void Update()
         {
-            NavMesh.avoidancePredictionTime = AvoidancePredictionTime;
-            NavMesh.pathfindingIterationsPerFrame = PathfindingIterationsPerFrame;
+            NavMesh.avoidancePredictionTime = avoidancePredictionTime;
+            NavMesh.pathfindingIterationsPerFrame = pathfindingIterationsPerFrame;
         }
         private GameObject InstantiateRandomClient()
         {
@@ -304,14 +301,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             client.transform.Rotate(0,80,0);
             return client;
         }
-        private void SetupAgent(NavMeshAgent Agent)
+        private void SetupAgent(NavMeshAgent agent)
         {
-            Agent.obstacleAvoidanceType = AvoidanceType;
-            Agent.radius = AgentRadius;
-            Agent.speed = AgentSpeed;
-            Agent.avoidancePriority = 50;
+            agent.obstacleAvoidanceType = avoidanceType;
+            agent.radius = agentRadius;
+            agent.speed = agentSpeed;
+            agent.avoidancePriority = 50;
         }
-
-
     }
 }
