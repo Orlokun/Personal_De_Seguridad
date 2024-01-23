@@ -4,14 +4,17 @@ namespace UI
 {
     public class MouseInputManager : MonoBehaviour
     {
+        #region MouseSpriteManagement
         [SerializeField] private Texture2D interactiveObjectMouseTexture;
-        [SerializeField] private Texture2D defaultMouseTexture;
-        [SerializeField] private LayerMask itemObjectsLayer;
+        [SerializeField] private Texture2D defaultMouseTexture;        
+        #endregion
 
+        [SerializeField] private LayerMask interactiveObjectsLayer;
         private IInteractiveClickableObject _mHoveredInteractiveObject; 
-
         private bool _isTouchingInteractiveObject;
+        
         private Camera _mainCamera;
+        
         private bool isMouseStill;
         private bool isSnippetActive;
         private const float snipetWaitTime = 1.5f;
@@ -74,7 +77,7 @@ namespace UI
         }
         private void ProcessItemInteractiveObjects(Ray ray)
         {
-            if (Physics.Raycast(ray, out var hitInfo, 100, itemObjectsLayer))
+            if (Physics.Raycast(ray, out var hitInfo, 100, interactiveObjectsLayer))
             {
                 var interactiveObject = hitInfo.collider.gameObject;
                 Debug.Log($"[ProcessItemInteractiveObjects] Object clicked: {interactiveObject.name}");
@@ -87,12 +90,8 @@ namespace UI
             }
             else
             {
-                /*
-                if (Physics.Raycast(ray, out var otherHit, 100))
-                {
-                    Debug.Log($"[MouseInputManager.ProcessItemInteractiveObjects] Not interactive object touched: {otherHit.collider.name}");
-                }*/
                 _mHoveredInteractiveObject = null;
+                _isTouchingInteractiveObject = false;
             }
         }
         private void ProcessCursor()
@@ -149,7 +148,7 @@ namespace UI
         }
         private void ProcessInteractiveItemClicked()
         {
-            if (_mHoveredInteractiveObject == null)
+            if (_mHoveredInteractiveObject == null || !_isTouchingInteractiveObject)
             {
                 return;
             }
