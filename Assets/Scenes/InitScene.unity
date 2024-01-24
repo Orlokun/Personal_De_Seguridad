@@ -2515,7 +2515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactiveObjectMouseTexture: {fileID: 2800000, guid: 5ff105de389cb384f80820652a76dfdb, type: 3}
   defaultMouseTexture: {fileID: 2800000, guid: 67e6b3c81c7e2c744ac0392f56da345e, type: 3}
-  itemObjectsLayer:
+  interactiveObjectsLayer:
     serializedVersion: 2
     m_Bits: 512
 --- !u!1 &1752877822
@@ -2547,11 +2547,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a700aedf367e4741865f4036378dc610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AvoidanceType: 0
-  AgentSpeed: 0
-  AgentRadius: 0
-  AvoidancePredictionTime: 0
-  PathfindingIterationsPerFrame: 100
+  avoidanceType: 0
+  agentSpeed: 0
+  agentRadius: 0
+  avoidancePredictionTime: 2
+  pathfindingIterationsPerFrame: 100
 --- !u!4 &1752877824
 Transform:
   m_ObjectHideFlags: 0

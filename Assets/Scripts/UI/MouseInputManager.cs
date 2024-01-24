@@ -148,7 +148,7 @@ namespace UI
         }
         private void ProcessInteractiveItemClicked()
         {
-            if (_mHoveredInteractiveObject == null || !_isTouchingInteractiveObject)
+            if (_mHoveredInteractiveObject == null)
             {
                 return;
             }

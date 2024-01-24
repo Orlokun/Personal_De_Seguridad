@@ -109,7 +109,6 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
-            base.GetStatusSpeed(currentStatus);
             var guardSpeed = (float)Stats.Speed / 10;
             switch (currentStatus)
             {

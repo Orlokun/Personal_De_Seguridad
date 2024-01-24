@@ -244,6 +244,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         #region ReachDestinationEvent
+        // ReSharper disable Unity.PerformanceAnalysis
         protected override void ReachWalkingDestination()
         {
             switch (_mCustomerAttitudeStatus)
@@ -439,11 +440,11 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             await Task.Delay(8000);
             StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
             _mCustomerVisitData.StealProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
-            Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
+            //Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
             ClearProductInterest();
+            _mPoisPurchaseStatus[_currentPoiId] = true;
             SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
-            _mPoisPurchaseStatus[_currentPoiId] = true;
             ReleaseCurrentPoI();
             GoToNextProduct();
         }
@@ -476,6 +477,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     RotateTowardsYOnly(transform,_tempTargetOfInterest);
                     break;
                 case BaseCharacterMovementStatus.Running:
+                    EvaluateWalkingDestination();
                     break;
             }
         }

@@ -46,7 +46,6 @@ namespace ExternalAssets._3DFOV.Scripts
         private bool m_goldenRatio = true;
         [Range(0f, 2f)] private float _turnFraction;
         private float power = 1;
-        private FOVVisualizer _fovV;
         private IDrawFoVLines _drawFoVLines;
         private bool _isDrawFoVActive;
 
@@ -162,7 +161,7 @@ namespace ExternalAssets._3DFOV.Scripts
                             break;
                     }
                 }
-                if ((ValidateVisualizer()) && (_fovV.viewAllRaycastLines)) _fovV.DrawRaycastLines(i);
+                //if ((ValidateVisualizer()) && (_fovV.viewAllRaycastLines)) _fovV.DrawRaycastLines(i);
                 ProcessInGameVisualization(mDirections[i]);
             }
             ProcessTargetsInSight();
@@ -240,11 +239,6 @@ namespace ExternalAssets._3DFOV.Scripts
                     _tempbool = true;
                     StartCoroutine(OnTargetEventTrigger(viewObj));
                 }
-            }
-
-            if ((ValidateVisualizer()) && (_fovV.viewSeenObjectLines))
-            {
-                _fovV.DrawObjectLines();
             }
             ProcessTargetInGameVisualization(mDirections[i]);
         }
@@ -352,16 +346,6 @@ namespace ExternalAssets._3DFOV.Scripts
             yield return new WaitUntil(() => (!seenObjects.Contains(target)));
             _tempbool = false;
             onTargetLost.Invoke();
-        }
-        private bool ValidateVisualizer()
-        {
-            if (this.gameObject.TryGetComponent(out FOVVisualizer f))
-            {
-                _fovV = f;
-                return true;
-            }
-            else
-                return false;
         }
     }
 }

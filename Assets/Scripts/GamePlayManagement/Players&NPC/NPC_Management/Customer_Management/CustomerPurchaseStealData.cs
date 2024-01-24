@@ -28,7 +28,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         }
         public void ClearAllPurchasedProducts()
         {
-            _mStolenProducts.Clear();
+            _mPurchasedProducts.Clear();
         }
 
         public void ClearAllProducts()

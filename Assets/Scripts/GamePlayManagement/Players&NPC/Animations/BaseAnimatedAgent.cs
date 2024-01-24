@@ -9,14 +9,16 @@ namespace GamePlayManagement.Players_NPC.Animations
     {
         private string _mCurrentAnimState;
         protected Animator Animator;
-
+        protected const string Idle = "Idle";
+        protected const string Walk = "Walk";
+        protected const string Run = "Run";        
         public static List<string> BaseAnimAgentAnimations => new List<string>()
         {
-            "Idle",
-            "Walk",
+            Idle,
+            Walk,
             "Sit",
             "Chatting",
-            "Running",
+            Run,
             "Jumping",
             "Falling",
             "Sitting",

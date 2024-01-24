@@ -101,10 +101,10 @@ namespace GamePlayManagement.Players_NPC
         {
             return 1;
         }
-        protected void SetMovementDestination(Vector3 payingPosition)
+        protected void SetMovementDestination(Vector3 targetPosition)
         {
             MyNavMeshAgent.enabled = true;
-            MyNavMeshAgent.SetDestination(payingPosition);
+            MyNavMeshAgent.SetDestination(targetPosition);
         }
 
         protected virtual void SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus customerAttitudeStatus)
