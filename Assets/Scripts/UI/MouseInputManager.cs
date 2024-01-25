@@ -4,6 +4,9 @@ namespace UI
 {
     public class MouseInputManager : MonoBehaviour
     {
+        private const int RightClick = 0;
+        private const int LeftClick = 1;
+        
         #region MouseSpriteManagement
         [SerializeField] private Texture2D interactiveObjectMouseTexture;
         [SerializeField] private Texture2D defaultMouseTexture;        
@@ -12,6 +15,8 @@ namespace UI
         [SerializeField] private LayerMask interactiveObjectsLayer;
         private IInteractiveClickableObject _mHoveredInteractiveObject; 
         private bool _isTouchingInteractiveObject;
+
+        private IInteractiveClickableObject _currentlyClickedObject;
         
         private Camera _mainCamera;
         
@@ -104,7 +109,6 @@ namespace UI
             {
                 Cursor.SetCursor(defaultMouseTexture, Vector2.zero, CursorMode.Auto);
             }
-            _isTouchingInteractiveObject = false;
         }
         #endregion
         #region Snippet
@@ -139,20 +143,36 @@ namespace UI
         
         #endregion
         #region ClickObject
+        /// <summary>
+        /// Possible cases:
+        /// 1. Nothing clicked - clicks nothing
+        /// 2. Nothing clicked - clicks something
+        /// 3. Something clicked - clicks environment
+        /// 4. Something clicked - clicks viable object
+        /// Questions: How do I know if its a valid click? 
+        /// </summary>
         private void ManageMouseClick()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(LeftClick))
             {
-                ProcessInteractiveItemClicked();
+                if (_currentlyClickedObject == null)
+                {
+                    Debug.Log("[ManageMouseClick] Nothing clicked before. Check if object hovered available");
+                    if (_mHoveredInteractiveObject == null)
+                    {
+                        Debug.Log("[ManageMouseClick]Nothing clicked before, nothing to click now.");
+                        return;
+                    }
+                    Debug.Log($"[ManageMouseClick] Clicked on hovered object {_mHoveredInteractiveObject}.");
+                    ProcessInteractiveItemClicked();
+                }
+                
             }
         }
         private void ProcessInteractiveItemClicked()
         {
-            if (_mHoveredInteractiveObject == null)
-            {
-                return;
-            }
-            _mHoveredInteractiveObject.SendClickObject();
+            _mHoveredInteractiveObject.ReceiveSelectClickEvent();
+            _currentlyClickedObject = _mHoveredInteractiveObject;
         }
         #endregion
 

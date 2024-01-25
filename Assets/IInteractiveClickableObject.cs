@@ -1,6 +1,9 @@
-public interface IInteractiveClickableObject : ISnippetObject 
+public interface IInteractiveClickableObject : ISnippetObject
 {
-    public void SendClickObject();
+    public void ReceiveActionClickedEvent();
+    public void ReceiveDeselectObjectEvent();
+
+    public void ReceiveSelectClickEvent();
 }
 
 public interface ISnippetObject

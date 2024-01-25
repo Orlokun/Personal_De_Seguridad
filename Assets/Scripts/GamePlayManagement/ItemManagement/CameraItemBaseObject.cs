@@ -28,8 +28,8 @@ namespace GamePlayManagement.ItemManagement
             _my3dFieldOfView = GetComponent<FieldOfView3D>();
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(_myDrawFieldOfView, _my3dFieldOfView); 
         }
-
-        public override void SendClickObject()
+        #region Interactive Object Interface
+        public override void ReceiveSelectClickEvent()
         {
             Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
             if (InPlacement)
@@ -38,5 +38,14 @@ namespace GamePlayManagement.ItemManagement
             }
             _fieldOfViewModule.ToggleInGameFoV(!_my3dFieldOfView.IsDrawActive);
         }
-    }
+        public void ReceiveDeselectObjectEvent()
+        {
+            
+        }
+        public void ReceiveActionClickedEvent()
+        {
+            
+        }
+        #endregion
+    }        
 }

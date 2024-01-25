@@ -5,7 +5,22 @@ namespace GamePlayManagement
 {
     public class CigarAshtrayOfficeObject : MonoBehaviour, IInteractiveClickableObject
     {
-        public void SendClickObject()
+        #region Interactive Object Interface
+
+        
+
+        #endregion
+        public void ReceiveActionClickedEvent()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ReceiveDeselectObjectEvent()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ReceiveSelectClickEvent()
         {
             if (PopUpOperator.Instance.IsPopupActive(BitPopUpId.CIGAR_CONFIRMATION_POPUP))
             {

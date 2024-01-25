@@ -346,7 +346,18 @@ namespace GamePlayManagement.ItemManagement.Guards
             throw new NotImplementedException();
         }
 
-        public void SendClickObject()
+        private bool _mIsClicked;
+        public void ReceiveActionClickedEvent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReceiveDeselectObjectEvent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReceiveSelectClickEvent()
         {
             if(WeaponPlacementManager.Instance.IsPlacingObject)
             {

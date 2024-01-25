@@ -25,7 +25,7 @@ namespace GamePlayManagement.ItemManagement
         private IItemObject _itemData;
         public IItemObject ItemData => _itemData;
 
-        public virtual void SendClickObject()
+        public virtual void ReceiveSelectClickEvent()
         {
         }
 
