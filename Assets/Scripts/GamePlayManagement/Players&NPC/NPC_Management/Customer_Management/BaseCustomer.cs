@@ -192,8 +192,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             var poiObject = PositionsManager.GetPoiData(_currentPoiId);
             PositionsManager.OccupyPoi(MCharacterId, _currentPoiId);
             Debug.Log($"[GoToNextPoint] Going to Poi: {_currentPoiId}.");
-            GetNavMeshAgent.SetDestination(poiObject.GetPosition);
-            GetNavMeshAgent.isStopped = false;
+            SetMovementDestination(poiObject.GetPosition);
         }
 
         private Guid GetNotVisitedPoi()

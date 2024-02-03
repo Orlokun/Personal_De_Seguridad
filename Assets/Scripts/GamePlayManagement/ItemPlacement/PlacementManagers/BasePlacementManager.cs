@@ -121,6 +121,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         public void AttachNewObject(IItemObject itemData, GameObject newObject)
         {
             AttachObjectProcess(itemData, newObject);
+            IsAttemptingPlacement = true;
         }
         
         protected virtual void AttachObjectProcess(IItemObject itemData, GameObject newObject)

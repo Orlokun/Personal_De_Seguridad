@@ -3,7 +3,7 @@ using GameDirection;
 using UI;
 using UnityEngine;
 
-namespace InputManagement
+namespace InputManagement.Keyboard
 {
     public class GamePerspectiveManagement : MonoBehaviour
     {

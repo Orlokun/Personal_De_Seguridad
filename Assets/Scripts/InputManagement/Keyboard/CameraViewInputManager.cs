@@ -2,7 +2,7 @@ using CameraManagement;
 using UI;
 using UnityEngine;
 
-namespace InputManagement
+namespace InputManagement.Keyboard
 {
     public class CameraViewInputManager : MonoBehaviour
     {

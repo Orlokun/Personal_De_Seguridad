@@ -1,3 +1,5 @@
+using InputManagement;
+using InputManagement.MouseInput;
 using UI.PopUpManager;
 using UnityEngine;
 
@@ -15,12 +17,17 @@ namespace GamePlayManagement
             throw new System.NotImplementedException();
         }
 
+        public void ReceiveActionClickedEvent(RaycastHit hitInfo)
+        {
+            //Nothing to do, just deselect
+        }
+
         public void ReceiveDeselectObjectEvent()
         {
             throw new System.NotImplementedException();
         }
 
-        public void ReceiveSelectClickEvent()
+        public void ReceiveFirstClickEvent()
         {
             if (PopUpOperator.Instance.IsPopupActive(BitPopUpId.CIGAR_CONFIRMATION_POPUP))
             {

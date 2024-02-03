@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace EpicToonFX
-{
+﻿using System.Collections;
+using UnityEngine;
 
 public class ETFXMouseOrbit : MonoBehaviour
 {
@@ -70,5 +67,4 @@ public class ETFXMouseOrbit : MonoBehaviour
             angle -= 360F;
         return Mathf.Clamp(angle, min, max);
     }
-}
 }

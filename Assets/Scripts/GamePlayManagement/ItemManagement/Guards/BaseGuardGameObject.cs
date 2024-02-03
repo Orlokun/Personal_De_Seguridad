@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Cinemachine;
 using DataUnits.GameCatalogues;
@@ -11,6 +12,7 @@ using GamePlayManagement.ItemPlacement.PlacementManagers;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using InputManagement.MouseInput;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -31,6 +33,12 @@ namespace GamePlayManagement.ItemManagement.Guards
         private bool _mInPlacement;
         #endregion
 
+        #region ClicakbleObjectMembers
+
+        public Vector3 CurrentManualInspectionPosition { get; private set; }
+
+        #endregion
+
         #region WeaponManagementMembers
         [SerializeField] private ParticleSystem myParticleSystem;
         public Transform GunParentTransform => mGunPositionTransform;
@@ -38,8 +46,9 @@ namespace GamePlayManagement.ItemManagement.Guards
         private IWeaponStats CurrentWeaponStats => (IWeaponStats)_currentWeaponItem?.ItemStats;
         private IItemObject _currentWeaponItem;
         private GameObject _currentWeaponObject;
-        #endregion
         
+        
+        #endregion
         /// <summary>
         /// Not Used yet
         /// </summary>
@@ -77,7 +86,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #endregion
-
+        
         #region WeaponManagementApi
         public bool HasWeapon => _currentWeaponItem != null;
         public void ApplyWeapon(GameObject itemObject, IItemObject appliedWeapon)
@@ -102,8 +111,6 @@ namespace GamePlayManagement.ItemManagement.Guards
             _currentWeaponObject = null;
         }
 
-
-
         public IShopInspectionPosition CurrentInspectionPosition =>
             _mInspectionSystemModule.GetCurrentPosition;
 
@@ -124,20 +131,10 @@ namespace GamePlayManagement.ItemManagement.Guards
         }
         #endregion
 
+        #region Initialization
         private bool _mIsInitialized;
         public bool IsInitialized => _mIsInitialized;
 
-        private void SetupInspectionModule()
-        {
-            _mInspectionSystemModule = Factory.CreateGuardSystemModule();
-            var getInspectionPositions = PositionsManager.GetClosestPosition(transform.position);
-            _mInspectionSystemModule.Initialize(getInspectionPositions);
-        }
-        public void StartBehaviorTree()
-        {
-            EvaluateStatsForInspection();
-        }
-        
         public void Initialize(IItemObject itemObjectData)
         {
             if (IsInitialized)
@@ -160,7 +157,29 @@ namespace GamePlayManagement.ItemManagement.Guards
                 throw;
             }
         }
+
+        private void PrepareFieldOfView()
+        {
+            if (_fieldOfViewModule != null)
+            {
+                return;
+            }
+            _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
+            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
+        }
         
+        private void SetupInspectionModule()
+        {
+            _mInspectionSystemModule = Factory.CreateGuardSystemModule();
+            var getInspectionPositions = PositionsManager.GetClosestPosition(transform.position);
+            _mInspectionSystemModule.Initialize(getInspectionPositions);
+        }
+        #endregion
+        
+        public void StartBehaviorTree()
+        {
+            EvaluateStatsForInspection();
+        }
         private async void EvaluateStatsForInspection()
         {
             var waitResultTime = BaseAwakeTime / Stats.Proactive;
@@ -181,28 +200,10 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             _mGuardStatusModule.SetGuardAttitudeStatus(newGuardStatus);
         }
-
         private void StartInspecting()
         {
             SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
             _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
-        }
-        private bool RandomChanceDice(int valueUsed)
-        {
-            Random.InitState(DateTime.Now.Millisecond);
-            var randomNumber = Random.Range(1, 10);
-            return randomNumber <= valueUsed;
-        }
-
-
-        public void PrepareFieldOfView()
-        {
-            if (_fieldOfViewModule != null)
-            {
-                return;
-            }
-            _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
-            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
         }
 
         #region TargetTrackingProcess
@@ -280,7 +281,17 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
         private void Update()
         {
-            ManageMovementStatus();
+            if(_mGuardStatusModule.CurrentAttitude != GuardSpecialAttitudeStatus.ManualInspecting)
+            {
+                Debug.Log($"[BaseGuardGameObject.Update] Guard Named {gameObject.name} simple movement");
+                ManageMovementStatus();
+            }
+            else
+            {
+                Debug.Log($"[Update: Guard Named {gameObject.name} manual movement]");
+                ManageManualMovementStatus();
+            }
+            Debug.Log($"[BaseGuardGameObject] is in nav mesh: {MyNavMeshAgent.isOnNavMesh}");
         }
         private void ManageMovementStatus()
         {
@@ -296,12 +307,20 @@ namespace GamePlayManagement.ItemManagement.Guards
                     break;
             }
         }
-        
+
+        private void ManageManualMovementStatus()
+        {
+            EvaluateManualInspectionDestination();
+        }
+
         #region AttitudeStateManagement
         protected override void ReachWalkingDestination()
         {
             switch (_mGuardStatusModule.CurrentAttitude)
             {
+                case GuardSpecialAttitudeStatus.ManualInspecting:
+                    ReachManuallyInspectedZone();
+                    break;
                 case GuardSpecialAttitudeStatus.Inspecting:
                     ReachInspectedZone();
                     break;
@@ -309,10 +328,52 @@ namespace GamePlayManagement.ItemManagement.Guards
                     AttemptDetention();
                     break;
                 case GuardSpecialAttitudeStatus.Following:
-                    EvaluateStartShopping();
                     break;
                 case GuardSpecialAttitudeStatus.Fighting:
                     break;
+            }
+        }
+
+        private async void ReachManuallyInspectedZone()
+        {
+            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
+            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+
+            await Task.Delay(500);
+            BaseAnimator.ChangeAnimationState(SearchAround);
+            await Task.Delay(4000);
+            
+            BaseAnimator.ChangeAnimationState(Idle);
+        }
+        public void SetGuardDestination(Vector3 targetPosition)
+        {
+            SetMovementDestination(targetPosition);
+        }
+
+        public void IdleInspection()
+        {
+            MyNavMeshAgent.isStopped = true;
+            MyNavMeshAgent.ResetPath();
+        }
+
+        protected void EvaluateManualInspectionDestination()
+        {
+            if (MyNavMeshAgent.destination.Equals(default(Vector3)))
+            {
+                Debug.LogWarning("Destination to walk to must be different than default");
+                return;
+            }
+
+            if (Math.Abs(MyNavMeshAgent.destination.x - CurrentManualInspectionPosition.x) > .01f || Math.Abs(MyNavMeshAgent.destination.z - CurrentManualInspectionPosition.z) > .01f)
+            {
+                Debug.LogWarning("[EvaluateManualInspectionDestination] Destination must be the Current Manual Target");
+                MyNavMeshAgent.SetDestination(CurrentManualInspectionPosition);
+            }
+
+            if (MyNavMeshAgent.remainingDistance < .2f && !MyNavMeshAgent.isStopped)
+            {
+                MyNavMeshAgent.isStopped = true;
+                OnWalkingDestinationReached();
             }
         }
         private async void ReachInspectedZone()
@@ -332,10 +393,6 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
     
         }
-        private void EvaluateStartShopping()
-        {
-            
-        }
         #endregion
 
         #region ClickInteractiveManagementApi
@@ -345,19 +402,45 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             throw new NotImplementedException();
         }
-
         private bool _mIsClicked;
-        public void ReceiveActionClickedEvent()
+
+        public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
-            throw new NotImplementedException();
+            if (!_mIsClicked)
+            {
+                return;
+            }
+            Debug.Log($"[BaseGuardObject.ReceiveActionClickedEvent] Clicked object named{hitInfo.collider.name}");
+            if (hitInfo.collider.gameObject.layer == 3)
+            {
+                HitPointDebugData(hitInfo);
+                CurrentManualInspectionPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+                SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+                SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.ManualInspecting);
+
+            }
+            _fieldOfViewModule.ToggleInGameFoV(!my3dFieldOfView.IsDrawActive);
+            _mIsClicked = false;
         }
 
+        private void HitPointDebugData(RaycastHit hitPoint)
+        {
+            Debug.Log($"[HitPointDebugData] Hit point position = {hitPoint.point}");
+            var position = transform.position;
+            Debug.Log($"[HitPointDebugData] Guard Position = {position}");
+            var distance = Vector3.Distance(hitPoint.point, position);
+            Debug.Log($"[HitPointDebugData] Distance between guard and point: {distance}");
+        }
         public void ReceiveDeselectObjectEvent()
         {
             throw new NotImplementedException();
         }
 
-        public void ReceiveSelectClickEvent()
+        /// <summary>
+        /// 1. Turn on visual feedback
+        /// 2. Prepare for selecting destination
+        /// </summary>
+        public void ReceiveFirstClickEvent()
         {
             if(WeaponPlacementManager.Instance.IsPlacingObject)
             {
@@ -367,11 +450,20 @@ namespace GamePlayManagement.ItemManagement.Guards
             {
                 return;
             }
-            Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
+            _mIsClicked = true;
+            Debug.Log($"[BaseGuardObject.ReceiveFirstClickEvent] Clicked object named{gameObject.name}");
             _fieldOfViewModule.ToggleInGameFoV(!my3dFieldOfView.IsDrawActive);
+            
         }
         #endregion
 
-
+        #region Private Utils
+        private bool RandomChanceDice(int valueUsed)
+        {
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomNumber = Random.Range(1, 10);
+            return randomNumber <= valueUsed;
+        }
+        #endregion
     }
 }

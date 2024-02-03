@@ -6,7 +6,7 @@ namespace GamePlayManagement.ItemManagement.Guards
     {
         private BaseCharacterMovementStatus _currentMovementStatus;
         private GuardSpecialAttitudeStatus _currentAttitudeStatus;
-        private IBaseGuardGameObject _mGuardObject;
+        private IBaseInspectionObject _mGuardObject;
         public GuardStatusModule(IBaseGuardGameObject guardObject)
         {
             _mGuardObject = guardObject;
@@ -17,13 +17,17 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         public void SetGuardAttitudeStatus(GuardSpecialAttitudeStatus guardAttitude)
         {
-            _currentAttitudeStatus = guardAttitude;
+            _currentAttitudeStatus = 0;
+            _currentAttitudeStatus |= guardAttitude;
             switch (guardAttitude)
             {
                 case GuardSpecialAttitudeStatus.Idle:
                     break;
+                case GuardSpecialAttitudeStatus.ManualInspecting:
+                    var manualDestination = _mGuardObject.CurrentManualInspectionPosition;
+                    _mGuardObject.SetGuardDestination(manualDestination);
+                    break;
                 case GuardSpecialAttitudeStatus.Inspecting:
-                    _mGuardObject.GetNavMeshAgent.enabled = true;
                     _mGuardObject.GetNavMeshAgent.SetDestination(_mGuardObject.CurrentInspectionPosition.Position);
                     break;
                 case GuardSpecialAttitudeStatus.Slacking:

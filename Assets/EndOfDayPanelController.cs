@@ -15,11 +15,11 @@ public class EndOfDayPanelController : MonoBehaviour, IEndOfDayPanelController
     [SerializeField] private Button mReturnButton;
     [SerializeField] private Button mContinueButton;
 
-    private Color veryGoodValueColor = new Color();
-    private Color goodValueColor = new Color();
-    private Color regularValueColor = new Color();
-    private Color badValueColor = new Color();
-    private Color veryBadValueColor = new Color();
+    private Color _veryGoodValueColor = Color.green;
+    private Color _goodValueColor = new Color();
+    private Color _regularValueColor = new Color();
+    private Color _badValueColor = new Color();
+    private Color _veryBadValueColor = Color.red;
     
     private IWorkDayObject _mDisplayedDay;
     private IRentValuesCatalogue _mRentCatalogue;

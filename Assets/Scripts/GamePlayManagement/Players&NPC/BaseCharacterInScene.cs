@@ -14,10 +14,10 @@ namespace GamePlayManagement.Players_NPC
     {
         public Guid CharacterId { get; }
         public NavMeshAgent GetNavMeshAgent { get; }
+        public void ToggleNavMesh(bool isActive);
     }
     
     [RequireComponent(typeof(NavMeshAgent))]
-    [RequireComponent(typeof(NavMeshObstacle))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BaseAnimatedAgent))]
     public abstract class BaseCharacterInScene : MonoBehaviour, IBaseCharacterInScene
@@ -33,6 +33,21 @@ namespace GamePlayManagement.Players_NPC
 
         public Guid CharacterId => MCharacterId;
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;
+        public void ToggleNavMesh(bool isActive)
+        {
+            //ObstacleComponent.enabled = !isActive;
+            if (MyNavMeshAgent.enabled)
+            {
+                MyNavMeshAgent.isStopped = !isActive;
+                MyNavMeshAgent.enabled = isActive;
+            }
+            else
+            {
+                MyNavMeshAgent.enabled = isActive;
+                MyNavMeshAgent.isStopped = !isActive;
+            }
+        }
+
         protected Guid MCharacterId;
         
         protected IItemTypeStats MyStats;
@@ -42,7 +57,7 @@ namespace GamePlayManagement.Players_NPC
         protected NavMeshAgent MyNavMeshAgent;
         protected Vector3 MInitialPosition;
         protected IShopPositionsManager PositionsManager;
-        protected NavMeshObstacle ObstacleComponent;
+        //protected NavMeshObstacle ObstacleComponent;
 
         protected float MRotationSpeed = 12;
         [SerializeField] protected Transform headTransform;     
@@ -59,8 +74,8 @@ namespace GamePlayManagement.Players_NPC
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             MyNavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
-            ObstacleComponent = GetComponent<NavMeshObstacle>();
-            ObstacleComponent.enabled = false;
+            //ObstacleComponent = GetComponent<NavMeshObstacle>();
+            //ObstacleComponent.enabled = false;
             WalkingDestinationReached += ReachWalkingDestination;
         }
 
@@ -101,9 +116,11 @@ namespace GamePlayManagement.Players_NPC
         {
             return 1;
         }
+
         protected void SetMovementDestination(Vector3 targetPosition)
         {
             MyNavMeshAgent.enabled = true;
+            MyNavMeshAgent.isStopped = false;
             MyNavMeshAgent.SetDestination(targetPosition);
         }
 
@@ -123,23 +140,16 @@ namespace GamePlayManagement.Players_NPC
             switch (newMovementStatus)
             {
                 case  BaseCharacterMovementStatus.Walking:
-                    ObstacleComponent.enabled = false;
-                    MyNavMeshAgent.enabled = true;
-                    MyNavMeshAgent.isStopped = false;
                     NavAgentUpdateStatusStats(BaseCharacterMovementStatus.Walking);
                     BaseAnimator.ChangeAnimationState(Walk);
                     break;
                 case  BaseCharacterMovementStatus.Idle:
-                    MyNavMeshAgent.isStopped = true;
-                    MyNavMeshAgent.enabled = false;
-                    ObstacleComponent.enabled = true;
+                    //ToggleNavMesh(false);
                     BaseAnimator.ChangeAnimationState(Idle);
                     break;
                 case  BaseCharacterMovementStatus.Running:
                     NavAgentUpdateStatusStats(BaseCharacterMovementStatus.Running);
-                    MyNavMeshAgent.isStopped = false;
-                    MyNavMeshAgent.enabled = true;
-                    ObstacleComponent.enabled = false;
+                    //ToggleNavMesh(true);
                     BaseAnimator.ChangeAnimationState(Run);
                     break;
             }
@@ -163,6 +173,7 @@ namespace GamePlayManagement.Players_NPC
                 OnWalkingDestinationReached();
             }
         }
+
         protected virtual void OnWalkingDestinationReached()
         {
             WalkingDestinationReached?.Invoke();

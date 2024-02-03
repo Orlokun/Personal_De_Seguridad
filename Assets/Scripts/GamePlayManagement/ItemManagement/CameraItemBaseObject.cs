@@ -1,5 +1,7 @@
 using Cinemachine;
 using ExternalAssets._3DFOV.Scripts;
+using InputManagement;
+using InputManagement.MouseInput;
 using UnityEngine;
 using Utils;
 
@@ -29,7 +31,7 @@ namespace GamePlayManagement.ItemManagement
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(_myDrawFieldOfView, _my3dFieldOfView); 
         }
         #region Interactive Object Interface
-        public override void ReceiveSelectClickEvent()
+        public override void ReceiveFirstClickEvent()
         {
             Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
             if (InPlacement)
@@ -38,11 +40,13 @@ namespace GamePlayManagement.ItemManagement
             }
             _fieldOfViewModule.ToggleInGameFoV(!_my3dFieldOfView.IsDrawActive);
         }
-        public void ReceiveDeselectObjectEvent()
+
+        public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
-            
+            throw new System.NotImplementedException();
         }
-        public void ReceiveActionClickedEvent()
+
+        public void ReceiveDeselectObjectEvent()
         {
             
         }

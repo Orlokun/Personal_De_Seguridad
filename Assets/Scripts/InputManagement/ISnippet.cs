@@ -1,4 +1,4 @@
-namespace UI
+namespace InputManagement
 {
     public interface ISnippet
     {
