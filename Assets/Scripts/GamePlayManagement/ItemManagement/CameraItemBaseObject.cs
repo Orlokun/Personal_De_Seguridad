@@ -1,39 +1,88 @@
+using System;
 using Cinemachine;
+using DataUnits.GameCatalogues;
+using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
-using InputManagement;
-using InputManagement.MouseInput;
+using GameDirection.GeneralLevelManager.ShopPositions;
+using GamePlayManagement.ItemManagement.Guards;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using UnityEngine;
 using Utils;
 
 namespace GamePlayManagement.ItemManagement
 {
-    public class CameraItemBaseObject : BaseItemGameObject, IHasFieldOfView, IInteractiveClickableObject
+    public class CameraItemBaseObject : BaseItemGameObject, ICameraItemBaseObject
     {
         private CinemachineVirtualCamera myVc;
         public CinemachineVirtualCamera VirtualCamera => myVc;
 
+        
         private IFieldOfViewItemModule _fieldOfViewModule;
         [SerializeField]private DrawFoVLines _myDrawFieldOfView;
         [SerializeField]private FieldOfView3D _my3dFieldOfView;
-    
-        public bool HasFieldOfView { get; }
-        public IFieldOfView3D FieldOfView3D { get; }
+        protected IShopPositionsManager PositionsManager;
+
+        #region CameraStats
+        protected IItemTypeStats MyStats;
+        private ICameraStats Stats => (ICameraStats) MyStats;
+        private IItemObject _myCameraData;
+        public IItemObject CameraBaseData => _myCameraData;
+
+        #endregion
+
+        #region InteractiveClickMembers
+
+        private bool _mIsClicked;
+
+
+        #endregion
+        public bool HasFieldOfView => _fieldOfViewModule != null;
+        public IFieldOfView3D FieldOfView3D => _fieldOfViewModule.Fov3D;
     
         private void Awake()
         {
             InPlacement = false;
-            ProcessFieldOfView();
         }
-        private void ProcessFieldOfView()
+
+        public bool IsInitialized => _mIsInitialized;
+        private bool _mIsInitialized;
+
+        public void Initialize(IItemObject itemObjectData)
         {
+            if (IsInitialized)
+            {
+                return;
+            }
+            try
+            {
+                _myCameraData = itemObjectData;
+                MyStats = ItemsDataController.Instance.GetStatsForCamera(_myCameraData.ItemSupplier, _myCameraData.BitId);
+                PositionsManager = FindObjectOfType<ShopPositionsManager>();
+                PrepareFieldOfView();
+                _mIsInitialized = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        private void PrepareFieldOfView()
+        {
+            if (_fieldOfViewModule != null)
+            {
+                return;
+            }
             _myDrawFieldOfView = GetComponent<DrawFoVLines>();
             _my3dFieldOfView = GetComponent<FieldOfView3D>();
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(_myDrawFieldOfView, _my3dFieldOfView); 
+            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
         }
         #region Interactive Object Interface
         public override void ReceiveFirstClickEvent()
         {
-            Debug.Log($"[CameraItemPrefab.SendClickObject] Clicked object named{gameObject.name}");
+            Debug.Log($"[CameraItemPrefab.ReceiveFirstClickEvent] Clicked camera named{gameObject.name}");
             if (InPlacement)
             {
                 return;
@@ -43,13 +92,37 @@ namespace GamePlayManagement.ItemManagement
 
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
-            throw new System.NotImplementedException();
+            if (!_mIsClicked)
+            {
+                return;
+            }
+            Debug.Log($"[BaseGuardObject.ReceiveActionClickedEvent] Clicked object named{hitInfo.collider.name}");
+            if (hitInfo.collider.gameObject.layer == 3)
+            {
+                HitPointDebugData(hitInfo);
+            }
+            _fieldOfViewModule.ToggleInGameFoV(!_my3dFieldOfView.IsDrawActive);
+            _mIsClicked = false;
         }
-
+        private void HitPointDebugData(RaycastHit hitPoint)
+        {
+            Debug.Log($"[HitPointDebugData] Hit point position = {hitPoint.point}");
+            var position = transform.position;
+            Debug.Log($"[HitPointDebugData] Guard Position = {position}");
+            var distance = Vector3.Distance(hitPoint.point, position);
+            Debug.Log($"[HitPointDebugData] Distance between guard and point: {distance}");
+        }
         public void ReceiveDeselectObjectEvent()
         {
             
         }
+        
+        public override void InitializeItem(IItemObject itemData)
+        {
+            base.InitializeItem(itemData);
+            Initialize(itemData);
+        }
+        
         #endregion
     }        
 }

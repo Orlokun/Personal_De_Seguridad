@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Cinemachine;
 using DataUnits.GameCatalogues;
@@ -34,7 +33,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region ClicakbleObjectMembers
-
+        private bool _mIsClicked;
         public Vector3 CurrentManualInspectionPosition { get; private set; }
 
         #endregion
@@ -402,7 +401,6 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             throw new NotImplementedException();
         }
-        private bool _mIsClicked;
 
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {

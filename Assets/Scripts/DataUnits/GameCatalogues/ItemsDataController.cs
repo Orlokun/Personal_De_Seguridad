@@ -321,29 +321,34 @@ namespace DataUnits.GameCatalogues
                 var gotRange = int.TryParse(_mCameraStatsFromDataString.values[i][3], out var range);
                 if (!gotRange)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a range");
                 }
                 //Step 4: Get People In Sight
                 var gotPiS = int.TryParse(_mCameraStatsFromDataString.values[i][4], out var peopleInSight);
                 if (!gotPiS)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a peopleInSight");
                 }
                 //Step 5: Clarity
                 var gotClarity = int.TryParse(_mCameraStatsFromDataString.values[i][5], out var clarity);
                 if (!gotClarity)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a clarity");
                 }
                 //Step 6: Persuasiveness
                 var gotPersuasiveness = int.TryParse(_mCameraStatsFromDataString.values[i][6], out var persuasiveness);
                 if (!gotPersuasiveness)
                 {
-                    Debug.LogWarning("");
+                    Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a persuasiveness");
+                }
+                var gotFoVRange = int.TryParse(_mCameraStatsFromDataString.values[i][7], out var fovRadius);
+                if (!gotFoVRange)
+                {
+                    Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a fovRadius");
                 }
                 
                 ICameraStats itemDataObject =
-                    new CameraStats(itemId,range, peopleInSight, clarity, persuasiveness);
+                    new CameraStats(itemId,range, peopleInSight, clarity, persuasiveness, fovRadius);
                 _mCamerasSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotCamerasData = true;

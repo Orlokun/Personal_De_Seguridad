@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
-using GameDirection;
-using GamePlayManagement.BitDescriptions;
-using UI;
+using GamePlayManagement.ItemManagement;
 using UnityEngine;
 using Utils;
 
@@ -98,6 +96,8 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagers
         protected override void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
             base.AttachObjectProcess(itemData, newObject);
+            var itemObject = (ICameraItemBaseObject)CurrentPlacedObject.GetComponent<CameraItemBaseObject>();
+            itemObject.Initialize(itemData);
             var fov = (IFieldOfView3D)CurrentPlacedObject.GetComponent<FieldOfView3D>();
             fov.ToggleInGameFoV(true);
         }

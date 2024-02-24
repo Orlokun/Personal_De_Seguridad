@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 namespace ExternalAssets._3DFOV.Scripts
 {
-    [ExecuteInEditMode]
     [RequireComponent(typeof(DrawFoVLines))]
     public class FieldOfView3D : MonoBehaviour, IFieldOfView3D
     {

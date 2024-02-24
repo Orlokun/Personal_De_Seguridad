@@ -7,5 +7,6 @@ namespace DataUnits.ItemScriptableObjects
         public int PeopleInSight { get; }
         public int Clarity { get; }
         public int Persuasiveness { get; }
+        public int FoVRadius { get; }
     }
 }

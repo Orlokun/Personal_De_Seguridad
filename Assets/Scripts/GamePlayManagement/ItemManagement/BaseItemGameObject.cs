@@ -1,17 +1,10 @@
 using System;
 using DataUnits.ItemScriptableObjects;
-using ExternalAssets._3DFOV.Scripts;
 using GamePlayManagement.BitDescriptions;
 using UnityEngine;
 
 namespace GamePlayManagement.ItemManagement
 {
-    public interface IHasFieldOfView
-    {
-        public bool HasFieldOfView { get; }
-        public IFieldOfView3D FieldOfView3D { get; }
-    }
-
     public abstract class BaseItemGameObject : MonoBehaviour, IBaseItemObject
     {
         public BitItemType ItemType => MItemType;
