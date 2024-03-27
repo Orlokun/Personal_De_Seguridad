@@ -38,7 +38,8 @@ namespace InputManagement.MouseInput
         private void Update()
         {
             ConfirmMainCamera();
-            ManageMouseCursor();
+            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            ManageMouseCursor(ray);
             ManageSnippet();
             ManageMouseClick();
             _mLastMousePosition = Input.mousePosition;
@@ -77,9 +78,8 @@ namespace InputManagement.MouseInput
             _mainCamera = Camera.main;
         }
         #region HoverObject
-        private void ManageMouseCursor()
+        private void ManageMouseCursor(Ray ray)
         {
-            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             ProcessObjectHovering(ray);
             ProcessCursor();
         }

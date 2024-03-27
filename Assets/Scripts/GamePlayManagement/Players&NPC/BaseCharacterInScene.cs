@@ -132,7 +132,7 @@ namespace GamePlayManagement.Players_NPC
         {
             
         }
-        protected virtual void SetCharacterMovementStatus(BaseCharacterMovementStatus newMovementStatus)
+        protected void SetCharacterMovementStatus(BaseCharacterMovementStatus newMovementStatus)
         {
             MCharacterMovementStatus = 0;
             MCharacterMovementStatus |= newMovementStatus;
@@ -166,12 +166,17 @@ namespace GamePlayManagement.Players_NPC
                 Debug.LogWarning("Destination to walk to must be already set");
                 return;
             }
-
+            ConfirmAttitudeStatusData();
             if (MyNavMeshAgent.remainingDistance < 1f && !MyNavMeshAgent.isStopped)
             {
                 MyNavMeshAgent.isStopped = true;
                 OnWalkingDestinationReached();
             }
+        }
+
+        protected virtual void ConfirmAttitudeStatusData()
+        {
+            
         }
 
         protected virtual void OnWalkingDestinationReached()

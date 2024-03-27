@@ -344,6 +344,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             
             BaseAnimator.ChangeAnimationState(Idle);
         }
+        
         public void SetGuardDestination(Vector3 targetPosition)
         {
             SetMovementDestination(targetPosition);
@@ -363,11 +364,11 @@ namespace GamePlayManagement.ItemManagement.Guards
                 return;
             }
 
-            if (Math.Abs(MyNavMeshAgent.destination.x - CurrentManualInspectionPosition.x) > .01f || Math.Abs(MyNavMeshAgent.destination.z - CurrentManualInspectionPosition.z) > .01f)
+            /*if (Math.Abs(MyNavMeshAgent.destination.x - CurrentManualInspectionPosition.x) > .01f || Math.Abs(MyNavMeshAgent.destination.z - CurrentManualInspectionPosition.z) > .01f)
             {
                 Debug.LogWarning("[EvaluateManualInspectionDestination] Destination must be the Current Manual Target");
                 MyNavMeshAgent.SetDestination(CurrentManualInspectionPosition);
-            }
+            }*/
 
             if (MyNavMeshAgent.remainingDistance < .2f && !MyNavMeshAgent.isStopped)
             {
@@ -402,6 +403,11 @@ namespace GamePlayManagement.ItemManagement.Guards
             throw new NotImplementedException();
         }
 
+        protected override void ConfirmAttitudeStatusData()
+        {
+            base.ConfirmAttitudeStatusData();
+        }
+
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
             if (!_mIsClicked)
@@ -412,7 +418,8 @@ namespace GamePlayManagement.ItemManagement.Guards
             if (hitInfo.collider.gameObject.layer == 3)
             {
                 HitPointDebugData(hitInfo);
-                CurrentManualInspectionPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+                var inspectionPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
+                CurrentManualInspectionPosition = inspectionPosition;
                 SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
                 SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.ManualInspecting);
 
