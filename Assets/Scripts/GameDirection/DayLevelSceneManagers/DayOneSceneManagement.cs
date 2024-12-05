@@ -72,7 +72,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
             
             //TODO: Remove TEST ADDITION
-            MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
+            //MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
             //End remove
             
             MGameDirector.GetSoundDirector.PlayAmbientMusic();
