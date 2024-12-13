@@ -26,6 +26,8 @@ namespace GameDirection.GeneralLevelManager.ShopPositions.CustomerPois
             Random.InitState(DateTime.Now.Millisecond);
             var randomIndex = Random.Range(0, poiProducts.Length-1);
             var randomPoiProduct = poiProducts[randomIndex];
+
+            
             var productsInStore = _jobSupplier.JobProductsModule.ProductsInStore;
             if (!productsInStore.ContainsKey(randomPoiProduct))
             {
