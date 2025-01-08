@@ -110,7 +110,7 @@ namespace UI.TabManagement.NBVerticalTabs
 
         private GameObject InstantiatePrefabs(int i, GameObject prefab)
         {
-            return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(JobPrefab, rightPage);
+            return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(prefab, rightPage);
         }
         
         private void UpdateContentInPage(NotebookVerticalTabSource notebookInfoSource)
