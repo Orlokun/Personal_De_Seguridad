@@ -248,12 +248,10 @@ namespace GameDirection
 
         public void BeginNewDayProcess()
         {
-            var currentDay = (int)GetActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId;
-            var nextDay = currentDay * 2;
-            var nextDayId = (DayBitId) nextDay;
-            
-            _dayLevelManager = Factory.CreateLevelDayManager(nextDayId);
-            _dayLevelManager.Initialize(this, nextDayId);
+            var newDayId = GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().BitId;
+            GetActiveGameProfile.GetProfileCalendar().SetCurrentWorkDayObject(newDayId);
+            _dayLevelManager = Factory.CreateLevelDayManager(newDayId);
+            _dayLevelManager.Initialize(this, newDayId);
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
 

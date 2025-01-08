@@ -40,6 +40,12 @@ namespace GameDirection.TimeOfDayManagement
             Debug.Log($"[PopulateNewWorkdays] Done. Workdays count: {_AllWorkDays.Count}");
         }
         
+        public void SetCurrentWorkDayObject(DayBitId newDay)
+        {
+            _currentDayId = newDay;
+            _currentDayObject = _AllWorkDays[_currentDayId];
+        }
+        
         public IWorkDayObject GetCurrentWorkDayObject()
         {
             if (_currentDayId != _currentDayObject.BitId)
