@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace CameraManagement
@@ -45,7 +45,7 @@ namespace CameraManagement
         public void SetDialogueFollowObjects(Transform targetsInDialogue)
         {
             var dialogueFollowCamera = _mActiveCameras[0];
-            CinemachineVirtualCamera dialogueCamera;
+            CinemachineCamera dialogueCamera;
 
             if (!dialogueFollowCamera.TryGetComponent(out dialogueCamera))
             {

@@ -1,11 +1,11 @@
 using System;
-using Cinemachine;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using Unity.Cinemachine;
 using UnityEngine;
 using Utils;
 
@@ -13,8 +13,8 @@ namespace GamePlayManagement.ItemManagement
 {
     public class CameraItemBaseObject : BaseItemGameObject, ICameraItemBaseObject
     {
-        private CinemachineVirtualCamera myVc;
-        public CinemachineVirtualCamera VirtualCamera => myVc;
+        private CinemachineCamera myVc;
+        public CinemachineCamera VirtualCamera => myVc;
 
         
         private IFieldOfViewItemModule _fieldOfViewModule;
@@ -80,7 +80,7 @@ namespace GamePlayManagement.ItemManagement
             _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
         }
         #region Interactive Object Interface
-        public override void ReceiveFirstClickEvent()
+        public override void ReceiveClickEvent()
         {
             Debug.Log($"[CameraItemPrefab.ReceiveFirstClickEvent] Clicked camera named{gameObject.name}");
             if (InPlacement)

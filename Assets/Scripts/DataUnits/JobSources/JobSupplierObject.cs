@@ -133,6 +133,8 @@ namespace DataUnits.JobSources
         }
         
         private int _lastCallExp = 0;
+        
+        //TODO: Implement the call system with a class/interface argument for more better management 
         public void StartCalling(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
@@ -156,11 +158,27 @@ namespace DataUnits.JobSources
             Random.InitState(DateTime.Now.Millisecond);
             var randomWaitTime = Random.Range(500, 4500);
             await Task.Delay(randomWaitTime);
-
-            var randomAnswerIndex = Random.Range(StoreUnlockPoints, StoreHighestUnlockedDialogue);
-            var randomDialogue = _dialogueModule.ImportantDialogues[randomAnswerIndex];
+            var unlockedCallIndex = 0;
+            
+            //Step1: Get Only Unlocked Dialogues
+            //Step2: Go from first to last and check conditions: 
+            //          1. If the dialogue has not been activated. Activate it.
+            //          2. If dialogue has been activated, check if has extra conditions before advancing to next.
+            //          3. If condition has been met, flag as done and move to next.
+            
+            
+            
+            if (_dialogueModule.ImportantDialogues.Any(x => x.Value.TimesActivatedCount == 0))
+            {
+                unlockedCallIndex = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 0).Key;
+            }
+            else
+            {
+                unlockedCallIndex = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 1).Key;
+            }
+            var lastUnlockedDialogue = _dialogueModule.ImportantDialogues[unlockedCallIndex];
             PhoneCallOperator.Instance.PlayAnswerSound();
-            GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
+            GameDirector.Instance.GetDialogueOperator.StartNewDialogue(lastUnlockedDialogue);
         }
         
         private async void RandomDeflection()

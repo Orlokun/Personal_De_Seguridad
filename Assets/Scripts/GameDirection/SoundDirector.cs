@@ -3,17 +3,17 @@ namespace GameDirection
 {
     public interface ISoundDirector
     {
-        void PlayAmbientMusic();
+        void PlayAmbientSound();
     }
 
     [RequireComponent(typeof(AudioSource))]
     public class SoundDirector : MonoBehaviour, ISoundDirector
     {
         private static SoundDirector _mInstance;
-
         public static SoundDirector Instance => _mInstance;
         
         private AudioSource _mMainAudioSource;
+        private AudioSource _mRadioSource;
         [SerializeField] private AudioClip ambientWindClip;
 
         private void Awake()
@@ -43,7 +43,7 @@ namespace GameDirection
             _mMainAudioSource.clip = ambientWindClip;
         }
 
-        public void PlayAmbientMusic()
+        public void PlayAmbientSound()
         {
             if (_mMainAudioSource.clip != ambientWindClip)
             {

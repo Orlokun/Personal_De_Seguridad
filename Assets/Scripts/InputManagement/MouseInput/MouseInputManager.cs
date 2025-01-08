@@ -184,10 +184,11 @@ namespace InputManagement.MouseInput
                 }
                 // 2. Nothing clicked - clicks something
                 Debug.Log($"[ManageMouseClick] Clicked on hovered object {_mHoveredInteractiveObject}.");
-                ProcessFirstClick();
+                ProcessClickOnObject();
             }
             else
             {
+                //TODO: Create different interfaces for interactive which may not need this.
                 var hitInfo = GetHitInfo();
                 _currentlyClickedObject.ReceiveActionClickedEvent(hitInfo);
                 ClearCurrentlyClickedObject();
@@ -209,9 +210,9 @@ namespace InputManagement.MouseInput
             _mHoveredInteractiveObject = null;
         }
         
-        private void ProcessFirstClick()
+        private void ProcessClickOnObject()
         {
-            _mHoveredInteractiveObject.ReceiveFirstClickEvent();
+            _mHoveredInteractiveObject.ReceiveClickEvent();
             _currentlyClickedObject = _mHoveredInteractiveObject;
         }
         #endregion

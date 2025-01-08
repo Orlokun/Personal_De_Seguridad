@@ -3,6 +3,7 @@ using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
@@ -28,7 +29,7 @@ namespace GameDirection
         public IFeedbackManager GetFeedbackManager { get; }
         public IModularDialogueDataController GetModularDialogueManager { get; }
         public ICustomersInSceneManager GetCustomerInstantiationManager { get; }
-
+        public INewsNarrativeDirector GetNarrativeNewsDirector { get; }
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);

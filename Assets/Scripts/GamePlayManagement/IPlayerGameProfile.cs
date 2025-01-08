@@ -14,7 +14,7 @@ namespace GamePlayManagement
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();
         public ILifestyleModule GetLifestyleModule();
-        public IProfileGameStatusModule GetStatusModule();
+        public IPlayerGameStatusModule GetStatusModule();
         public void UpdateProfileData();
         public int GeneralOmniCredits { get;}
         public void UpdateDataEndOfDay();

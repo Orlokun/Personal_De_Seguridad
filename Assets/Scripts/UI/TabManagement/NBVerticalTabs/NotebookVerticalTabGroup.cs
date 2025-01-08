@@ -20,7 +20,7 @@ namespace UI.TabManagement.NBVerticalTabs
         [SerializeField] private GameObject SupplierPrefab;
         [SerializeField] private GameObject LawsPrefab;
         [SerializeField] private GameObject RequirementsPrefab;
-        [SerializeField] private GameObject ConfigPrefab;
+        [SerializeField] private GameObject NewsPrefab;
         
         public void SetNewTabState(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup)
         {
@@ -67,7 +67,7 @@ namespace UI.TabManagement.NBVerticalTabs
                 case NotebookVerticalTabSource.CurrentRequirements:
                     verticalTabElements = parentGroup.SpecialReqVerticalTabObjects;
                     break;
-                case NotebookVerticalTabSource.Config:
+                case NotebookVerticalTabSource.News:
                     verticalTabElements = parentGroup.ConfigVerticalTabObjects;
                     break;
                 default:
@@ -127,7 +127,8 @@ namespace UI.TabManagement.NBVerticalTabs
                     break;
                 case NotebookVerticalTabSource.CurrentRequirements:
                     break;
-                case NotebookVerticalTabSource.Config:
+                case NotebookVerticalTabSource.News:
+                    ManageNewsInstantiation();
                     break;
                 default:
                     return;
@@ -165,6 +166,23 @@ namespace UI.TabManagement.NBVerticalTabs
                 var supplierObjectController = prefabObject.GetComponent<NotebookSupplierObject>();
                 //var storeIcon = availableItemSupplier.Value.GetSupplierData.SupplierPortrait;
                 supplierObjectController.SetNotebookObjectValues(availableItemSupplier.Value.GetSupplierData);
+                index++;
+            }
+        }
+        private void ManageNewsInstantiation()
+        {
+            var currentDay = _playerProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId;
+            var dayNews = GameDirector.Instance.GetNarrativeNewsDirector.GetDayNews(currentDay);
+            var index = 0;
+            foreach (var news in dayNews)
+            {
+                if (index ==10)
+                {
+                    break;
+                }
+                var prefabObject = InstantiatePrefabs(index, NewsPrefab);
+                var newsComponent = prefabObject.GetComponent<INewsObjectPrefab>();
+                newsComponent.PopulateNewsPrefab(news);
                 index++;
             }
         }

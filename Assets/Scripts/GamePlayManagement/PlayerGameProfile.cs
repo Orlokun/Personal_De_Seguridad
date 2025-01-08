@@ -14,7 +14,7 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IProfileGameStatusModule statusModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule)
         {
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
@@ -40,7 +40,7 @@ namespace GamePlayManagement
         private IJobsSourcesModule _jobsSourcesModule;
         private ICalendarModule _calendarModule;
         private ILifestyleModule _lifeStyleModule;
-        private IProfileGameStatusModule _gameStatusModule;
+        private IPlayerGameStatusModule _gameStatusModule;
         
         //Members
         private DateTime _mGameCreationDate;
@@ -69,7 +69,7 @@ namespace GamePlayManagement
             return _lifeStyleModule;
         }
 
-        public IProfileGameStatusModule GetStatusModule()
+        public IPlayerGameStatusModule GetStatusModule()
         {
             return _gameStatusModule;
         }
@@ -88,7 +88,7 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (jobSupplierObject.StoreUnlockPoints <= _gameStatusModule.PlayerSocialStatus)
+                if (jobSupplierObject.StoreUnlockPoints <= _gameStatusModule.PlayerXp)
                 {
                     GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierBitId);
                 }
@@ -99,7 +99,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.StoreUnlockPoints <= _gameStatusModule.PlayerSocialStatus)
+                if (itemSupplier.StoreUnlockPoints <= _gameStatusModule.PlayerXp)
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }
@@ -114,7 +114,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= _gameStatusModule.PlayerSocialStatus)
+                    if (suppliersItem.UnlockPoints <= _gameStatusModule.PlayerXp)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");

@@ -87,6 +87,7 @@ namespace DialogueSystem.Units
         [SerializeField] protected List<IDialogueNode> dialogueLines = new List<IDialogueNode>();
         [SerializeField] protected Sprite actorImage;
         [SerializeField] protected string speakerName;
+        private int _mTimesActivated;
 
         public List<IDialogueNode> DialogueNodes
         {
@@ -104,6 +105,11 @@ namespace DialogueSystem.Units
         {
             get => speakerName;
             set => speakerName = value;
+        }
+        public int TimesActivatedCount => _mTimesActivated;
+        public void DialogueRead()
+        {
+            _mTimesActivated++;
         }
     }
 }

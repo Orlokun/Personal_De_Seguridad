@@ -27,7 +27,7 @@ namespace GamePlayManagement
             throw new System.NotImplementedException();
         }
 
-        public void ReceiveFirstClickEvent()
+        public void ReceiveClickEvent()
         {
             if (PopUpOperator.Instance.IsPopupActive(BitPopUpId.CIGAR_CONFIRMATION_POPUP))
             {

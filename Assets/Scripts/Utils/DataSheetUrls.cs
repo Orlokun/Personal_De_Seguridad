@@ -48,6 +48,8 @@ namespace Utils
         public static string ModularDialoguesDataUrl =
             "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/OmniCorpIntroElements?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
+      
+        
         public static string SuppliersDialogueGameData(DialogueSpeakerId speakerIndex, DialogueType dialogueType)
         {
             var dialogueSheetName = "";
@@ -223,6 +225,18 @@ namespace Utils
                     return "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_00?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
             }
             return "";
+        }
+
+        public static string DayNewsDataUrl(DayBitId dayId)
+        {
+            switch (dayId)
+            {
+                case DayBitId.Day_01:
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/FirstDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+
+                default:
+                    return "";
+            }
         }
     }
 }

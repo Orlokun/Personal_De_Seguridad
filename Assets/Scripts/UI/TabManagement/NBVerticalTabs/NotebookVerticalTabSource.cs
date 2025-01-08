@@ -6,6 +6,6 @@ namespace UI.TabManagement.NBVerticalTabs
         Suppliers = 2,
         Laws = 4,
         CurrentRequirements = 8,
-        Config = 16,
+        News = 16,
     }
 }

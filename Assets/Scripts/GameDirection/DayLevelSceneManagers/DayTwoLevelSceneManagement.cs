@@ -14,7 +14,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
             
-            MGameDirector.GetSoundDirector.PlayAmbientMusic();
+            MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(true);

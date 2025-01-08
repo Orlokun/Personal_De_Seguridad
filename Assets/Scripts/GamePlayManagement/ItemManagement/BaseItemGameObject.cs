@@ -18,7 +18,7 @@ namespace GamePlayManagement.ItemManagement
         private IItemObject _itemData;
         public IItemObject ItemData => _itemData;
 
-        public virtual void ReceiveFirstClickEvent()
+        public virtual void ReceiveClickEvent()
         {
         }
 

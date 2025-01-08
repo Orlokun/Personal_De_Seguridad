@@ -98,13 +98,13 @@ namespace DialogueSystem
             {
                 employmentStreak = playerJobModule.DaysEmployedStreak;
                 totalDaysEmployed = playerJobModule.TotalDaysEmployed;
-                TurnEmploymentDataToDialogueEnum(modularDialogues,isPlayerEmployed, employmentStreak, totalDaysEmployed);
+                TurnEmploymentDataToDialogueEnum(modularDialogues,true, employmentStreak, totalDaysEmployed);
             }
             else
             {
                 unemployedStreak = playerJobModule.DaysUnemployedStreak;
                 unemployedTotalDays = playerJobModule.TotalDaysUnemployed;
-                TurnEmploymentDataToDialogueEnum(modularDialogues,isPlayerEmployed, unemployedStreak, unemployedTotalDays);
+                TurnEmploymentDataToDialogueEnum(modularDialogues,false, unemployedStreak, unemployedTotalDays);
             }
         }
 

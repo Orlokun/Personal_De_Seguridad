@@ -1,5 +1,6 @@
 using System.Collections;
 using DialogueSystem.Interfaces;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
@@ -63,19 +64,17 @@ namespace GameDirection.DayLevelSceneManagers
 
     public class DayOneLevelSceneManagement : DayLevelSceneManagement
     {
-
-        
         #region Introduction Region
         public override IEnumerator StartDayManagement()
         {
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
-            
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
             //TODO: Remove TEST ADDITION
             //MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
             //End remove
             
-            MGameDirector.GetSoundDirector.PlayAmbientMusic();
+            MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(true);
@@ -100,12 +99,15 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(1f);
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.OfficeLvl);
             
+            /*
             //TODO: Remove EDEN LVL Load. TEST ADDITION
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.EdenLvl);
             var scene = SceneManager.GetSceneAt((int)LevelIndexId.EdenLvl);
             SceneManager.MoveGameObjectToScene(MGameDirector.GetCustomerInstantiationManager.MyGameObject, scene);
             MGameDirector.GetCustomerInstantiationManager.LoadInstantiationProperties(JobSupplierBitId.COPY_OF_EDEN);
             //End Remove
+            */
+            
             MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             MGameDirector.GetLevelManager.UnloadScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
@@ -118,7 +120,7 @@ namespace GameDirection.DayLevelSceneManagers
         private IEnumerator SecondDialogue()
         {
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromInitialDialogueAndStartClock;
-            MGameDirector.GetCustomerInstantiationManager.LoadCustomerLevelStartTransforms();
+            //MGameDirector.GetCustomerInstantiationManager.LoadCustomerLevelStartTransforms();
             yield return new WaitForSeconds(2.5f);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
             MGameDirector.GetUIController.InitializeBaseInfoCanvas(MGameDirector.GetActiveGameProfile);

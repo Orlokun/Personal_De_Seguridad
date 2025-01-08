@@ -14,11 +14,11 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Cust
         public void LoadCustomerLevelStartTransforms();
     }
 
-    public class CustomersInSceneManagerData : ICustomersInSceneManagerData
+    public class CustomersInstantiationFlowData : ICustomersInstantiationFlowData
     {
         private int maxClients;
 
-        public CustomersInSceneManagerData(JobSupplierBitId jobId, int gameDifficultyLvl, int maxClients,
+        public CustomersInstantiationFlowData(JobSupplierBitId jobId, int gameDifficultyLvl, int maxClients,
             string clientsPrefabsPath, int[] timeRange)
         {
             InstantiationFrequencyRange = timeRange;

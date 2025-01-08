@@ -41,4 +41,5 @@ namespace UI.TabManagement.NBVerticalTabs
             
         }
     }
+
 }

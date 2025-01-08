@@ -6,6 +6,7 @@ using ExternalAssets._3DFOV.Scripts;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.GeneralLevelManager;
 using GameDirection.GeneralLevelManager.ShopPositions;
+using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -42,9 +43,9 @@ namespace Utils
         {
             return new StoreEntrancePosition(instantiationPos,entrancePos);
         }
-        public static ICustomersInSceneManagerData CreateCustomersInSceneManagerData(JobSupplierBitId jobId, int gameDifficultyLvl, int maxClients, string clientsPrefabsPath, int[] timeRange)
+        public static ICustomersInstantiationFlowData CreateCustomersInSceneManagerData(JobSupplierBitId jobId, int gameDifficultyLvl, int maxClients, string clientsPrefabsPath, int[] timeRange)
         {
-            return new CustomersInSceneManagerData(jobId, gameDifficultyLvl, maxClients, clientsPrefabsPath, timeRange);
+            return new CustomersInstantiationFlowData(jobId, gameDifficultyLvl, maxClients, clientsPrefabsPath, timeRange);
         }
         public static FloorPlacementPosition CreateFloorPlacementPosition(Vector3 position)
         {
@@ -152,7 +153,7 @@ namespace Utils
         /// Player Profile Modules
         /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IProfileGameStatusModule statusModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule)
         {
             return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule);
         }
@@ -162,7 +163,7 @@ namespace Utils
         }
         public static IJobsSourcesModule CreateJobSourcesModule(IBaseJobsCatalogue jobsCatalogue)
         {
-            return new JobsSourcesModule(jobsCatalogue);
+            return new JobSourceModule(jobsCatalogue);
         }
         public static ILifestyleModule CreateLifestyleModule(IRentValuesCatalogue rentCatalogue, IFoodValuesCatalogue foodCatalogue, ITransportValuesCatalogue transportsCatalogue)
         {
@@ -173,9 +174,14 @@ namespace Utils
             return new CalendarModule(DayBitId.Day_01, PartOfDay.EarlyMorning, clockManagement);
         }
 
-        public static ProfileGameStatusModule CreatePlayerStatusModule()
+        public static PlayerGameStatusModule CreatePlayerStatusModule()
         {
-            return new ProfileGameStatusModule();
+            return new PlayerGameStatusModule();
+        }
+
+        public static INewsNarrativeDirector CreateNewsNarrativeDirector()
+        {
+            return new NewsNarrativeDirector();
         }
     }
 }

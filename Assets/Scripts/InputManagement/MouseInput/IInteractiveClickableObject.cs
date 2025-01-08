@@ -7,6 +7,6 @@ namespace InputManagement.MouseInput
         public void ReceiveActionClickedEvent(RaycastHit hitInfo);
         public void ReceiveDeselectObjectEvent();
 
-        public void ReceiveFirstClickEvent();
+        public void ReceiveClickEvent();
     }
 }

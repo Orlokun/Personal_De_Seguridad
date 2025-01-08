@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using GameDirection.NewsManagement;
 using UI.PopUpManager.InfoPanelPopUp;
 using UI.PopUpManager.OfficeRelatedPopUps;
+using UI.TabManagement.NBVerticalTabs;
 using UnityEngine;
 
 namespace UI.PopUpManager
@@ -16,6 +18,7 @@ namespace UI.PopUpManager
         TRAP_ITEM_INFO_PANEL = 64,
         OTHER_ITEM_INFO_PANEL = 128,
         ITEM_SUPPLIER_INFO_PANEL = 256,
+        NEWS_DETAIL_POPUP = 512
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -149,6 +152,9 @@ namespace UI.PopUpManager
                 case BitPopUpId.ITEM_SUPPLIER_INFO_PANEL:
                     var itemSupplierInfoPanelPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ItemInfoPanel_ItemSupplier"), transform);
                     return itemSupplierInfoPanelPopup.GetComponent<ItemSupplierInfoPanel>();
+                case BitPopUpId.NEWS_DETAIL_POPUP:
+                    var newsDetailPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_NewsDetailPopUp"), transform);
+                    return newsDetailPopup.GetComponent<NewsDetailPanel>();
                 default:
                     return null;
             }

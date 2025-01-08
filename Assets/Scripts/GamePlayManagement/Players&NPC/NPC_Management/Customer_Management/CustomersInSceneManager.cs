@@ -25,6 +25,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
 
         #endregion
+        
+        private ICustomerDataLoader _mCustomerDataLoader;
+        
 
         #region Private Members
         private List<ICustomerManagementObserver> observers = new List<ICustomerManagementObserver>();
@@ -33,7 +36,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private string BaseCustomersPath = "ClientsPrefabs/EdenCharacters/BaseCostumer";
 
         //Job suppliers Customer Management data
-        private Dictionary<JobSupplierBitId, ICustomersInSceneManagerData> _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInSceneManagerData>();
+        private Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData> _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData>();
         private StoreCustomerManagementData _customerManagementRawData;
         
         //Entrance points for customers
@@ -144,7 +147,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void LoadCustomerDataFromJson(string sourceJson)
         {
-            _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInSceneManagerData>();
+            _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData>();
             Debug.Log($"[LoadCustomerDataFromJson] Start Serializing Job supplier's management Json data");
             _customerManagementRawData = JsonConvert.DeserializeObject<StoreCustomerManagementData>(sourceJson);
             if (_customerManagementRawData == null)

@@ -5,6 +5,7 @@ using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.DayLevelSceneManagers;
+using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
@@ -51,7 +52,8 @@ namespace GameDirection
         private IGeneralInputStateManager _mGeneralInputManager;
         private IModularDialogueDataController _mModularDialogues;
         private ICustomersInSceneManager _mCustomerInstantiationManager;
-
+        private INewsNarrativeDirector _mNarrativeNewsDirector;
+        
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
         private IBaseJobsCatalogue _mJobsCatalogue;
@@ -87,7 +89,7 @@ namespace GameDirection
         public IRentValuesCatalogue GetRentCatalogueData => _mRentCatalogueData;
         public IModularDialogueDataController GetModularDialogueManager => _mModularDialogues;
         public ICustomersInSceneManager GetCustomerInstantiationManager => _mCustomerInstantiationManager;
-
+        public INewsNarrativeDirector GetNarrativeNewsDirector=> _mNarrativeNewsDirector;
         #endregion
 
         #region Init
@@ -193,6 +195,7 @@ namespace GameDirection
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
+            _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             var calendarModule = Factory.CreateCalendarModule(_mClockManager);

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cinemachine;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
@@ -12,6 +11,7 @@ using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement.MouseInput;
+using Unity.Cinemachine;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -52,8 +52,8 @@ namespace GamePlayManagement.ItemManagement.Guards
         /// Not Used yet
         /// </summary>
         #region CameraPerspective
-        private CinemachineVirtualCamera _myVc;
-        public CinemachineVirtualCamera VirtualCamera => _myVc;
+        private CinemachineCamera _myVc;
+        public CinemachineCamera VirtualCamera => _myVc;
         #endregion
         
         #region FOV
@@ -445,7 +445,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         /// 1. Turn on visual feedback
         /// 2. Prepare for selecting destination
         /// </summary>
-        public void ReceiveFirstClickEvent()
+        public void ReceiveClickEvent()
         {
             if(WeaponPlacementManager.Instance.IsPlacingObject)
             {

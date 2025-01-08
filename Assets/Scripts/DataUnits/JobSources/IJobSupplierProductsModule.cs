@@ -7,7 +7,7 @@ namespace DataUnits.JobSources
     public interface IJobSupplierCustomerManagementModule
     {
         public void LoadCustomerManagementData();
-        public ICustomersInSceneManagerData GetCustomerManagementData { get; }
+        public ICustomersInstantiationFlowData GetICustomerManagementData { get; }
         public void StartUnlockCustomerManagementData();
 
     }
