@@ -2,8 +2,9 @@ namespace DialogueSystem
 {
     public enum DialogueSpeakerId
     {
+        Omnicorp = 0,
         //Job Suppliers
-        HappyCopyOfEden = 1,
+        CopyOfEden,
         XOXO,
         Potobras,
         Aristo,

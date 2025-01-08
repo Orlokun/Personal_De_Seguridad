@@ -11,6 +11,7 @@ namespace DataUnits.JobSources
         public JobSupplierBitId JobSupplierBitId { get; set; }
         public string StoreType{ get; set; }
         public string StoreOwnerName{ get; set; }
+
         public int StoreOwnerAge{ get; set; }
         public int Budget { get; set; }
 

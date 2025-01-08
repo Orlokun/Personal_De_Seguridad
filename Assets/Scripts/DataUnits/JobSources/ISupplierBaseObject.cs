@@ -4,5 +4,6 @@ namespace DataUnits.JobSources
     {
         public int StorePhoneNumber { get; set; }
         public string StoreName { get; set; }
+        public string StoreOwnerName { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Linq;
 using System.Threading.Tasks;
 using CameraManagement;
+using DataUnits;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
@@ -253,6 +255,20 @@ namespace GameDirection
             _dayLevelManager = Factory.CreateLevelDayManager(nextDayId);
             _dayLevelManager.Initialize(this, nextDayId);
             StartCoroutine(_dayLevelManager.StartDayManagement());
+        }
+
+        public ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId)
+        {
+
+            if (_mJobsCatalogue.JobSuppliersInData.Any(x => x.SpeakerIndex == dialogueNodeSpeakerId))
+            {
+                return _mJobsCatalogue.JobSuppliersInData.SingleOrDefault(x => x.SpeakerIndex == dialogueNodeSpeakerId);
+            }
+            if (_mItemSuppliersData.GetItemSuppliersInData.Any(x => x.SpeakerIndex == dialogueNodeSpeakerId))
+            {
+                return _mItemSuppliersData.GetItemSuppliersInData.SingleOrDefault(x => x.SpeakerIndex == dialogueNodeSpeakerId);
+            }
+            return null;
         }
 
         private void ManageUIProcessEndOfDay()

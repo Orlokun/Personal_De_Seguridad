@@ -58,8 +58,4 @@ namespace DialogueSystem.Sound
         }
     }
 
-    public enum SpeakerId
-    {
-              
-    }
 }

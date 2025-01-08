@@ -19,6 +19,23 @@ namespace DataUnits.JobSources
     }
     
     [Serializable]
+    public class OmnicorpCallObject : ScriptableObject, ICallableSupplier
+    {
+        public OmnicorpCallObject()
+        {
+            SpeakerIndex = DialogueSpeakerId.Omnicorp;
+        }
+        public string SpeakerName => "Omnicorp";
+        public DialogueSpeakerId SpeakerIndex { get; set; }
+        public void StartCalling(int playerLevel)
+        {
+            
+        }
+
+        public int StoreHighestUnlockedDialogue => 0;
+    }
+    
+    [Serializable]
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
@@ -96,6 +113,8 @@ namespace DataUnits.JobSources
 
         #region Members
         public int StoreHighestUnlockedDialogue => _mStoreHighestUnlockedDialogue;
+        public string SpeakerName => StoreOwnerName;
+        public string SpeakerImageString { get; }
         private int _mStoreHighestUnlockedDialogue;
         
         #endregion

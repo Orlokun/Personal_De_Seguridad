@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Sound;
 using UnityEngine;
 
 namespace DialogueSystem.Units
@@ -15,7 +16,7 @@ namespace DialogueSystem.Units
     {
         public int DialogObjectIndex { get ; }
         public int DialogueLineIndex { get ; }
-        public int SpeakerId { get ; }
+        public DialogueSpeakerId SpeakerId { get ; }
         public string DialogueLine { get ; }
         public bool HasCameraTarget { get ; }
         public string TargetCameraId { get ; }
@@ -28,7 +29,7 @@ namespace DialogueSystem.Units
     {
         private int _dialogObjectIndex;
         private int _dialogueLineIndex;
-        private int _speakerId;
+        private DialogueSpeakerId _speakerId;
         private string _dialogueLine;
         private bool _hasCameraTarget;
         private string _targetCameraId;
@@ -41,7 +42,7 @@ namespace DialogueSystem.Units
         {
             _dialogObjectIndex = dialogObjectIndex;
             _dialogueLineIndex = dialogueLineIndex;
-            _speakerId = speakerId;
+            _speakerId = (DialogueSpeakerId)speakerId;
             _dialogueLine = dialogueLine;
             _hasCameraTarget = hasCameraTarget;
             _targetCameraId = targetCameraId;
@@ -55,7 +56,7 @@ namespace DialogueSystem.Units
         {
             _dialogObjectIndex = (int)dialogObjectIndex;
             _dialogueLineIndex = dialogueLineIndex;
-            _speakerId = speakerId;
+            _speakerId = (DialogueSpeakerId)speakerId;
             _dialogueLine = dialogueLine;
             _hasCameraTarget = hasCameraTarget;
             _targetCameraId = targetCameraId;
@@ -67,7 +68,7 @@ namespace DialogueSystem.Units
         
         public int DialogObjectIndex => _dialogObjectIndex;
         public int DialogueLineIndex => _dialogueLineIndex;
-        public int SpeakerId => _speakerId;
+        public DialogueSpeakerId SpeakerId => _speakerId;
         public string DialogueLine => _dialogueLine;
         public bool HasCameraTarget => _hasCameraTarget;
         public string TargetCameraId => _targetCameraId;
@@ -94,22 +95,15 @@ namespace DialogueSystem.Units
             get => dialogueLines;
             set => dialogueLines = value;
         }
-
-        public Sprite ActorImage
-        {
-            get => actorImage;
-            set => actorImage = value;
-        }
-
-        public string SpeakerName
-        {
-            get => speakerName;
-            set => speakerName = value;
-        }
         public int TimesActivatedCount => _mTimesActivated;
         public void DialogueRead()
         {
             _mTimesActivated++;
+        }
+
+        public DialogueSpeakerId GetSpeakerId(int dialogueLine)
+        {
+            return (DialogueSpeakerId)dialogueLines[dialogueLine].SpeakerId;
         }
     }
 }

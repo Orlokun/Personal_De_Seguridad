@@ -33,12 +33,15 @@ namespace DataUnits.ItemSources
         public Sprite SupplierPortrait =>supplierPortrait;
         public int StorePhoneNumber { get; set; }
         public string StoreName { get; set; }
+        public string StoreOwnerName { get; set; }
         public string StoreDescription { get; set; }
         public BitItemSupplier ItemSupplierId { get; set; }
         public int ItemTypesAvailable { get; set; }
         public int StoreUnlockPoints { get; set; }
+        public string SpeakerName => StoreName;
         public DialogueSpeakerId SpeakerIndex { get; set; }
         public int StoreHighestUnlockedDialogue { get; }
+        
         public int StoreHighestLockedDialogue { get; }
         
         private Dictionary<int, IDialogueObject> _mImportantDialoguesDict = new Dictionary<int, IDialogueObject>();

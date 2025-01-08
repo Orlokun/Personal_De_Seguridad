@@ -13,5 +13,6 @@ namespace DialogueSystem.Interfaces
         void KillDialogue();
         event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
         public List<IDialogueObject> GetDialogueObjectInterfaces(List<DialogueObject> dialogueObjects);
+        public void GetSpeakerDataWithSpeakerId(DialogueSpeakerId speakerId);
     }
 }

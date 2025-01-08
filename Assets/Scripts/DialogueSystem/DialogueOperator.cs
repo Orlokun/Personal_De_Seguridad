@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CameraManagement;
+using DataUnits;
+using DataUnits.JobSources;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Sound;
 using DialogueSystem.Units;
+using GameDirection;
 using InputManagement;
 using TMPro;
 using UI;
@@ -24,6 +27,7 @@ namespace DialogueSystem
     }
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
+        
         #region Static Props/Members
         private static DialogueOperator _mInstance;
         public static IDialogueOperator Instance => _mInstance;
@@ -61,7 +65,9 @@ namespace DialogueSystem
         private Coroutine _typingMachineCoroutine;
         private IUIController _mUIController;
         private IDialogueOperatorSoundMachine _soundMachine;
-
+        private ICallableSupplier _mOmnicorpDialogueInfo;
+        
+        
         #endregion
         
         public delegate void FinishedDialogueReading();
@@ -76,6 +82,11 @@ namespace DialogueSystem
                 dialogueList.Add(baseDialogueObject);
             }
             return dialogueList;
+        }
+
+        public void GetSpeakerDataWithSpeakerId(DialogueSpeakerId speakerId)
+        {
+            throw new NotImplementedException();
         }
 
         public void StartNewDialogue(IDialogueObject newDialogue)
@@ -125,6 +136,7 @@ namespace DialogueSystem
                 Destroy(this);
             }
             _mInstance = this;
+            _mOmnicorpDialogueInfo = ScriptableObject.CreateInstance<OmnicorpCallObject>();
             _soundMachine = GetComponent<DialogueOperatorSoundMachine>();
             OnDialogueCompleted += OnDialogueFinished;
         }
@@ -183,7 +195,7 @@ namespace DialogueSystem
             nextLineButton.SetActive(false);
             
             CheckDialogueLineCameraBehavior(dialogueNode);
-            
+            PlaceSpeakerNameAndImage((DialogueSpeakerId)dialogueNode.SpeakerId);
             foreach (var letter in dialogueNode.DialogueLine)
             {
                 //Check if player is hurrying Dialogue and we have more than 3 characters.
@@ -218,6 +230,12 @@ namespace DialogueSystem
             nextLineButton.SetActive(true);
             _soundMachine.PausePlayingSound();
             _currentState = UIDialogueState.FinishedTypingLine;
+        }
+
+        private void PlaceSpeakerNameAndImage(DialogueSpeakerId dialogueNodeSpeakerId)
+        {
+            var speakerData = dialogueNodeSpeakerId == 0 ? _mOmnicorpDialogueInfo : GameDirector.Instance.GetSpeakerData(dialogueNodeSpeakerId);
+            mSpeakerName.text = speakerData.SpeakerName;
         }
 
         private void CheckDialogueLineCameraBehavior(IDialogueNode dialogueNode)

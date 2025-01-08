@@ -19,7 +19,7 @@ namespace DataUnits.GameCatalogues
         IJobSupplierObject GetJobSupplierObject(JobSupplierBitId jobSupplier);
         List<IJobSupplierObject> JobSuppliersInData { get; }
         public Tuple<bool, int> JobSupplierPhoneNumberExists(int phoneDialed);
-
+        public IJobSupplierObject GetJobSupplierSpeakData(DialogueSpeakerId speakerId);
     }
 
     public class BaseJobsCatalogue : MonoBehaviour, IBaseJobsCatalogue, IInitialize
@@ -170,6 +170,11 @@ namespace DataUnits.GameCatalogues
             }
             var supplierId = (int)_mIjobSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == phoneDialed).JobSupplierBitId;
             return new Tuple<bool, int>(true, supplierId);
+        }
+
+        public IJobSupplierObject GetJobSupplierSpeakData(DialogueSpeakerId speakerId)
+        {
+            return _mIjobSuppliersInData.SingleOrDefault(x => x.SpeakerIndex == speakerId);
         }
     }
 }

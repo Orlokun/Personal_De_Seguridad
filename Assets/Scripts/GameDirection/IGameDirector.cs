@@ -1,5 +1,6 @@
 using System.Collections;
 using CameraManagement;
+using DataUnits;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
@@ -36,5 +37,6 @@ namespace GameDirection
         public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier);
         public void BeginNewDayProcess();
 
+        ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId);
     }
 }

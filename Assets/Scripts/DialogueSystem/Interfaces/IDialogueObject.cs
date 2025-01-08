@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DialogueSystem.Sound;
 using DialogueSystem.Units;
 using UnityEngine;
 
@@ -7,13 +8,14 @@ namespace DialogueSystem.Interfaces
     public interface IDialogueObject : IDialogueObjectBaseData
     {
         public void DialogueRead();
+        public DialogueSpeakerId GetSpeakerId(int dialogueLine);
+
     }
 
     public interface IDialogueObjectBaseData
     {
         public List<IDialogueNode> DialogueNodes { get; set; }
-        public Sprite ActorImage{ get; set; }
-        public string SpeakerName{ get; set; }
+
         public int TimesActivatedCount { get; }
     }
 

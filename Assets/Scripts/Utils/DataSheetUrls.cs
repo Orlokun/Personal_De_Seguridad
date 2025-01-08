@@ -113,7 +113,7 @@ namespace Utils
                 case DialogueSpeakerId.MedievalInnovations:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1GibENZ_H1f02x7r9TOP2rQSf8Ud54gPrc4PDWkcTuPI/values/"  + dialogueSheetName + "?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 //JobSuppliers
-                case DialogueSpeakerId.HappyCopyOfEden:
+                case DialogueSpeakerId.CopyOfEden:
                     var edenDialoguesUrl = "https://sheets.googleapis.com/v4/spreadsheets/1HKIw3cAmtAyQgTH5LrJHIKUhVgr0gR7k3k_BuLfY37A/values/"  + dialogueSheetName + "?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                     return edenDialoguesUrl;
                 case DialogueSpeakerId.XOXO:
