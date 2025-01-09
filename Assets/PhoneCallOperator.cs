@@ -174,7 +174,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
-        itemSupplierObject.ReceivePlayerCall(currentProfile.GeneralOmniCredits);
+        itemSupplierObject.ReceivePlayerCall(currentProfile);
         GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted += FinishCallImmediately;
 
     }
@@ -182,7 +182,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((JobSupplierBitId)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
-        jobSupplierCallingData.ReceivePlayerCall(currentProfile.GeneralOmniCredits);
+        jobSupplierCallingData.ReceivePlayerCall(currentProfile);
         GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted += FinishCallImmediately;
     }
 

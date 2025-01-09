@@ -43,7 +43,7 @@ namespace Utils
         
         public static bool IsActive(int container, int contained)
         {
-            return (container |= contained) != 0;
+            return (container & contained) != 0;
         }
     }
 }

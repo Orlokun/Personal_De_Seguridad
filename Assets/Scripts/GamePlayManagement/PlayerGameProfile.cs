@@ -7,6 +7,7 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UnityEngine;
+using Utils;
 
 namespace GamePlayManagement
 {
@@ -88,9 +89,9 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (jobSupplierObject.StoreUnlockPoints <= _gameStatusModule.PlayerXp)
+                if (BitOperator.IsActive(GetActiveJobsModule().DialogueUnlockedSuppliers, (int)jobSupplierObject.JobSupplierData.JobSupplierBitId))
                 {
-                    GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierBitId);
+                    GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierData.JobSupplierBitId);
                 }
             }
         }

@@ -8,6 +8,7 @@ using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
+using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using Newtonsoft.Json;
@@ -40,6 +41,8 @@ namespace DataUnits.ItemSources
         public int StoreUnlockPoints { get; set; }
         public string SpeakerName => StoreName;
         public DialogueSpeakerId SpeakerIndex { get; set; }
+
+
         public int StoreHighestUnlockedDialogue { get; }
         
         public int StoreHighestLockedDialogue { get; }
@@ -81,9 +84,10 @@ namespace DataUnits.ItemSources
             await Task.Delay(500);
             GameDirector.Instance.ActCoroutine(LoadDialogueDataFromServer(DialogueType.InsistenceDialogue, insistenceDialoguesUrl));
         }
-        public void ReceivePlayerCall(int playerLevel)
+        
+        public void ReceivePlayerCall(IPlayerGameProfile playerData)
         {
-            if (playerLevel < StoreUnlockPoints)
+            if (!BitOperator.IsActive(playerData.GetActiveJobsModule().DialogueUnlockedSuppliers, (int)ItemSupplierId))
             {
                 RandomDeflection();
             }
@@ -91,6 +95,10 @@ namespace DataUnits.ItemSources
             {
                 GetCurrentUnlockedCall();
             }
+        }
+        public void ReceivePlayerCall(int playerLevel)
+        {
+
         }
 
         private async void GetCurrentUnlockedCall()

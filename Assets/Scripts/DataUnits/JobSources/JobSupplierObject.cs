@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DialogueSystem;
 using GameDirection;
+using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,13 +28,51 @@ namespace DataUnits.JobSources
         }
         public string SpeakerName => "Omnicorp";
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public void ReceivePlayerCall(int playerLevel)
+        public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
             
         }
 
         public int StoreHighestUnlockedDialogue => 0;
     }
+
+    public class JobSupplierObjectData : IJobSupplierObjectData
+    {
+        public JobSupplierBitId JobSupplierBitId { get; set; }
+        public string StoreType { get; set; }
+        public string StoreOwnerName { get; set; }
+        public int StoreOwnerAge { get; set; }
+        public int Budget { get; set; }
+        public int StoreUnlockPoints { get; set; }
+        public string StoreDescription { get; set; }
+        public int[] StoreMinMaxClients { get; set; }
+        public string SpriteName { get; set; }
+    }
+
+    public interface IJobSupplierObjectData
+    {
+        //Base Data
+        public JobSupplierBitId JobSupplierBitId { get; set; }
+        public string StoreType{ get; set; }
+        public string StoreOwnerName{ get; set; }
+
+        public int StoreOwnerAge{ get; set; }
+        public int Budget { get; set; }
+
+        public int StoreUnlockPoints{ get; set; }
+        public string StoreDescription{ get; set; }
+        public int[] StoreMinMaxClients { get; set; }
+        public string SpriteName { get; set; }
+    }
+
+    public enum CountPetrolkStates
+    {
+        WaitingForHire = 1,
+        RequiresMindProtection = 2,
+        RequiresProductVigilance = 4,
+        RequiresPunishBloodless = 8
+    }
+    
     
     [Serializable]
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
@@ -41,13 +80,18 @@ namespace DataUnits.JobSources
     {
         private IJobSupplierDialogueModule _dialogueModule;
         private IJobSupplierProductsModule _productsModuleModule;
+        private IJobSupplierObjectData _mSupplierData;
         #region Constructor & API
-        public JobSupplierObject()
+        public void Initialize(JobSupplierBitId id)
         {
+            _mSupplierData = new JobSupplierObjectData();
+            _mSupplierData.JobSupplierBitId = id;
             _dialogueModule = new JobSupplierDialogueModule(this);
             _productsModuleModule = new JobSupplierProductsModule(this);
         }
-        public JobSupplierBitId JobSupplierBitId { get; set; }
+        
+        public  IJobSupplierObjectData JobSupplierData => _mSupplierData;
+        public JobSupplierBitId JobSupplierBitId { get => _mSupplierData.JobSupplierBitId;}
         public string StoreType{ get; set; }
         public string StoreName{ get; set; }
         public string StoreOwnerName{ get; set; }
@@ -155,15 +199,15 @@ namespace DataUnits.JobSources
         private int _lastCallExp = 0;
         
         //TODO: Implement the call system with a class/interface argument for more better management 
-        public void ReceivePlayerCall(int playerLevel)
+        public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
-            if (playerLevel < StoreUnlockPoints)
+            if (playerProfile.GetStatusModule().PlayerXp < StoreUnlockPoints)
             {
                 RandomDeflection();
             }
             else
             {
-                GetCurrentUnlockedCall();
+                StartAnswerBuildingProcess();
             }
         }
 
@@ -172,9 +216,9 @@ namespace DataUnits.JobSources
             
         }
         
-        private async void GetCurrentUnlockedCall()
+        private async void StartAnswerBuildingProcess()
         {
-            Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");
+            Debug.LogWarning("[StartAnswerBuildingProcess] Store can be called");
             Random.InitState(DateTime.Now.Millisecond);
             var randomWaitTime = Random.Range(500, 4500);
             await Task.Delay(randomWaitTime);
@@ -185,8 +229,6 @@ namespace DataUnits.JobSources
             //          1. If the dialogue has not been activated. Activate it.
             //          2. If dialogue has been activated, check if has extra conditions before advancing to next.
             //          3. If condition has been met, flag as done and move to next.
-            
-            
             
             if (_dialogueModule.ImportantDialogues.Any(x => x.Value.TimesActivatedCount == 0))
             {

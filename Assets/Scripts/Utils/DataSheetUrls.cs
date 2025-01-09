@@ -192,7 +192,7 @@ namespace Utils
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case JobSupplierBitId.FIGS_CENTRAL_MARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
-                case JobSupplierBitId.MICHIMALONCO_BLACK_MARKET:
+                case JobSupplierBitId.BLACK_MARKET:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case JobSupplierBitId.MEDIEVAL_FAIR_AND_JUST:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1LucMO2RU7jUoUNim57rMHGE6VPa5d7CTdsWfQ8tzv_s/values/LvlProducts?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";

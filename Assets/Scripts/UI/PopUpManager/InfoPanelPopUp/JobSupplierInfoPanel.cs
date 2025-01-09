@@ -21,10 +21,10 @@ namespace UI.PopUpManager.InfoPanelPopUp
             violenceObj.text = jobSupplierObject.Violence.ToString();
             intelligenceObj.text = jobSupplierObject.Intelligence.ToString();
             moneyObj.text = jobSupplierObject.Money.ToString();
-            supplierDescription.text = jobSupplierObject.StoreDescription;
+            supplierDescription.text = jobSupplierObject.JobSupplierData.StoreDescription;
             supplierName.text = jobSupplierObject.StoreOwnerName;
-            supplierImage.sprite = IconsSpriteData.GetSpriteForItemIcon(jobSupplierObject.SpriteName);
-            supplierAge.text = jobSupplierObject.StoreOwnerAge.ToString();
+            supplierImage.sprite = IconsSpriteData.GetSpriteForItemIcon(jobSupplierObject.JobSupplierData.SpriteName);
+            supplierAge.text = jobSupplierObject.JobSupplierData.StoreOwnerAge.ToString();
         }
     }
 }

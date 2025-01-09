@@ -60,7 +60,7 @@ namespace UI
             }
             var employerData = _mPlayerProfile.GetActiveJobsModule().CurrentEmployerData();
             var workDay = _mPlayerProfile.GetProfileCalendar().GetCurrentWorkDayObject();
-            budget.text = employerData.Budget.ToString();
+            budget.text = employerData.JobSupplierData.Budget.ToString();
             earnings.text = workDay.ValuePurchased.ToString();
             losses.text = workDay.ValueStolen.ToString();
         }

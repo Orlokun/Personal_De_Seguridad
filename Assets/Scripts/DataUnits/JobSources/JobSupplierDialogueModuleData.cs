@@ -29,6 +29,9 @@ namespace DataUnits.JobSources
         public Dictionary<int, IDialogueObject> SupplierCallDialogues =>_mSupplierCallDialogues;
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary =>_mSupplierCallData;
         
+        public int NpcRequirementStatus { get; }
+        private int CurrentRequirementsStatus = 0;
+        
         #region JsonPhoneDialogueManagement
         private SupplierDialoguesData _mImportantDialoguesData; 
         private SupplierDialoguesData _mDeflectionDialoguesData; 
@@ -89,6 +92,8 @@ namespace DataUnits.JobSources
                 }
             }
         }
+
+
         private void LoadImportantDialoguesFromJson(string sourceJson)
         {
             //Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin request");

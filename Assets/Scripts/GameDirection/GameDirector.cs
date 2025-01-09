@@ -203,12 +203,14 @@ namespace GameDirection
             var calendarModule = Factory.CreateCalendarModule(_mClockManager);
             var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
             var profileStatusModule = Factory.CreatePlayerStatusModule();
+            
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule);
+            _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
             _mActiveGameProfile.UpdateProfileData();
             //GetUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
             OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
         }
-
+        
         public void ReleaseFromDialogueStateToGame()
         {
             if (_inputStateManager.CurrentInputGameState != InputGameState.InDialogue)

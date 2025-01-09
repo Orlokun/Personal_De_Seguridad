@@ -27,6 +27,7 @@ namespace DataUnits.JobSources
         public void LoadInitialDeflectionDialogues();
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary { get; }
         public IEnumerator DownloadDialogueData(DialogueType dialogueType, string url);
+        public int NpcRequirementStatus { get; }
 
     }
 

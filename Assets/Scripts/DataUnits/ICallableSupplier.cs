@@ -1,4 +1,5 @@
 using DialogueSystem;
+using GamePlayManagement;
 
 namespace DataUnits
 {
@@ -6,7 +7,7 @@ namespace DataUnits
     {
         public string SpeakerName { get; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public void ReceivePlayerCall(int playerLevel);
+        public void ReceivePlayerCall(IPlayerGameProfile playerData);
         public int StoreHighestUnlockedDialogue { get;}
 
     }

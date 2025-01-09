@@ -10,7 +10,7 @@ namespace GamePlayManagement.BitDescriptions.Suppliers
         LITTLE_OASIS_STRIP_CENTER= 32,
         LIBIDOH_CHINESE_MALL = 64,
         FIGS_CENTRAL_MARKET = 128,
-        MICHIMALONCO_BLACK_MARKET = 256,
+        BLACK_MARKET = 256,
         MEDIEVAL_FAIR_AND_JUST = 512,
         VEGAN_MARKET = 1024,
         JUST_TAKE_IT_MAYORMARKET = 2048,

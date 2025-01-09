@@ -7,18 +7,9 @@ namespace DataUnits.JobSources
 
         public void CheckCallingTime(int hour, int minute);
         public int DaysAsEmployer { get; set; }
-        //Base Data
-        public JobSupplierBitId JobSupplierBitId { get; set; }
-        public string StoreType{ get; set; }
-        public string StoreOwnerName{ get; set; }
-
-        public int StoreOwnerAge{ get; set; }
-        public int Budget { get; set; }
-
-        public int StoreUnlockPoints{ get; set; }
-        public string StoreDescription{ get; set; }
-        public int[] StoreMinMaxClients { get; set; }
-        public string SpriteName { get; set; }
+        
+        //GeneralData
+        public IJobSupplierObjectData JobSupplierData { get; }
         
         //Stats related
         public void SetStats(int sanity, int kindness, int violence, int intelligence, int money);
@@ -34,5 +25,6 @@ namespace DataUnits.JobSources
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
         public void ExpendMoney(int amount);
+        void Initialize(JobSupplierBitId jobId);
     }
 }

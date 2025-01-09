@@ -7,7 +7,7 @@ namespace GamePlayManagement.ProfileDataModules
     public interface IJobsSourcesModule : IProfileModule
     {
         void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier);
-        public int ElementsActive { get; }
+        public int DialogueUnlockedSuppliers { get; }
         Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects { get; }
         public JobSupplierBitId CurrentEmployer { get; }
         public IJobSupplierObject CurrentEmployerData();

@@ -19,7 +19,7 @@ namespace GamePlayManagement.ProfileDataModules
         private int _mDaysUnemployedStreak;
         private int _mStreakWithEmployer;
         
-        public int ElementsActive => unlockedJobSuppliers;
+        public int DialogueUnlockedSuppliers => unlockedJobSuppliers;
         public Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects => _mJobSuppliers;
         private JobSupplierBitId _mCurrentActiveEmployer;
         public JobSupplierBitId CurrentEmployer => _mCurrentActiveEmployer;

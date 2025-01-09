@@ -25,8 +25,8 @@ namespace DataUnits.GameCatalogues
     public class BaseJobsCatalogue : MonoBehaviour, IBaseJobsCatalogue, IInitialize
     {
         //Singleton magament
-        private static BaseJobsCatalogue _instance;
-        public static IBaseJobsCatalogue Instance => _instance;
+        private static BaseJobsCatalogue instance;
+        public static IBaseJobsCatalogue Instance => instance;
         //Catalogue loaded and parsed from server
         private JobsCatalogueFromData _jobsData;
         //Interfaces extracted from loaded data
@@ -44,7 +44,7 @@ namespace DataUnits.GameCatalogues
 
         public void Initialize()
         {
-            if (_instance != null)
+            if (instance != null)
             {
                 Destroy(this);
             }
@@ -53,7 +53,7 @@ namespace DataUnits.GameCatalogues
                 return;
             }
             _mInitialized = true;
-            _instance = this;
+            instance = this;
         }
 
         private void GetJobSuppliersData()
@@ -68,8 +68,7 @@ namespace DataUnits.GameCatalogues
             //
             var webRequest = UnityWebRequest.Get(url);
             yield return webRequest.SendWebRequest();
-            if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
-                webRequest.result == UnityWebRequest.Result.ProtocolError)
+            if (webRequest.result is UnityWebRequest.Result.ConnectionError or UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError("Jobs Catalogue Data must be reachable");
             }
@@ -82,19 +81,19 @@ namespace DataUnits.GameCatalogues
 
         private void LoadJobSuppliersFromJson(string sourceJson)
         {
-            Debug.Log($"BaseJobsCatalogue.LoadJobSuppliersFromJson");
             _jobsData = JsonConvert.DeserializeObject<JobsCatalogueFromData>(sourceJson);
-            Debug.Log($"Finished parsing. Is _jobsCatalogueFromData null?: {_jobsData == null}");
             _mIjobSuppliersInData = new List<IJobSupplierObject>();
             for (var i = 1; i < _jobsData.values.Count;i++)
             {
-                var jobSupplier = (IJobSupplierObject)ScriptableObject.CreateInstance<JobSupplierObject>();
                     
                 int jobId;
                 var gotId = int.TryParse(_jobsData.values[i][0], out jobId);
-                jobSupplier.JobSupplierBitId = (JobSupplierBitId) jobId;
+                var jobSupplier = (IJobSupplierObject)ScriptableObject.CreateInstance<JobSupplierObject>();
+                jobSupplier.Initialize((JobSupplierBitId) jobId);
+
+                jobSupplier.JobSupplierData.JobSupplierBitId = (JobSupplierBitId) jobId;
                     
-                jobSupplier.StoreType = _jobsData.values[i][1];
+                jobSupplier.JobSupplierData.StoreType = _jobsData.values[i][1];
                 jobSupplier.StoreName = _jobsData.values[i][2];
                 jobSupplier.StoreOwnerName = _jobsData.values[i][3];
                     
@@ -102,10 +101,10 @@ namespace DataUnits.GameCatalogues
                 var gotUp = int.TryParse(_jobsData.values[i][4], out unlockPoints);
                 if (!gotUp)
                 {
-                    Debug.LogWarning("GetJobsCatalogueData");
+                    Debug.LogWarning("GetJobsCatalogueData - Unlock Points must be available!");
                 }
-                jobSupplier.StoreUnlockPoints = unlockPoints;
-                jobSupplier.StoreDescription = _jobsData.values[i][5];
+                jobSupplier.JobSupplierData.StoreUnlockPoints = unlockPoints;
+                jobSupplier.JobSupplierData.StoreDescription = _jobsData.values[i][5];
                    
                 var gotPhone = int.TryParse(_jobsData.values[i][6], out var phoneNumber);
                 jobSupplier.StorePhoneNumber = phoneNumber;
@@ -119,7 +118,7 @@ namespace DataUnits.GameCatalogues
                 var clientRange = new int[2];
                 clientRange[0] = clientsMin;
                 clientRange[1] = clientsMax;
-                jobSupplier.StoreMinMaxClients = clientRange;
+                jobSupplier.JobSupplierData.StoreMinMaxClients = clientRange;
                 
                 var gotSanity = int.TryParse(_jobsData.values[i][10], out var sanity);
                 var gotKindness = int.TryParse(_jobsData.values[i][11], out var kindness);
@@ -136,13 +135,13 @@ namespace DataUnits.GameCatalogues
                     jobSupplier.SetStats(sanity, kindness, violence, intelligence, money);
                 }
                 var spriteName = _jobsData.values[i][15];
-                jobSupplier.SpriteName = spriteName;
+                jobSupplier.JobSupplierData.SpriteName = spriteName;
                 
                 var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
-                jobSupplier.StoreOwnerAge = ownerAge;
+                jobSupplier.JobSupplierData.StoreOwnerAge = ownerAge;
 
                 var initialBudget = int.TryParse(_jobsData.values[i][17], out var initBudget);
-                jobSupplier.Budget = initBudget;
+                jobSupplier.JobSupplierData.Budget = initBudget;
                 _mIjobSuppliersInData.Add(jobSupplier);
             }
         }
@@ -154,12 +153,12 @@ namespace DataUnits.GameCatalogues
         /// <returns></returns>
         public bool JobSupplierExists(JobSupplierBitId jobSupplier)
         {
-            return _mIjobSuppliersInData.Any(x => x.JobSupplierBitId == jobSupplier);
+            return _mIjobSuppliersInData.Any(x => x.JobSupplierData.JobSupplierBitId == jobSupplier);
         }
 
         public IJobSupplierObject GetJobSupplierObject(JobSupplierBitId jobSupplier)
         {
-            return _mIjobSuppliersInData.SingleOrDefault(x => x.JobSupplierBitId == jobSupplier);
+            return _mIjobSuppliersInData.SingleOrDefault(x => x.JobSupplierData.JobSupplierBitId == jobSupplier);
         }
         public Tuple<bool, int> JobSupplierPhoneNumberExists(int phoneDialed)
         {
@@ -168,7 +167,7 @@ namespace DataUnits.GameCatalogues
             {
                 return new Tuple<bool, int>(false, 0);
             }
-            var supplierId = (int)_mIjobSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == phoneDialed).JobSupplierBitId;
+            var supplierId = (int)_mIjobSuppliersInData.SingleOrDefault(x => x.StorePhoneNumber == phoneDialed).JobSupplierData.JobSupplierBitId;
             return new Tuple<bool, int>(true, supplierId);
         }
 

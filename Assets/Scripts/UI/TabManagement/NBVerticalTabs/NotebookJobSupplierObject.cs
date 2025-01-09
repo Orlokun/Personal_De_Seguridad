@@ -16,7 +16,7 @@ namespace UI.TabManagement.NBVerticalTabs
         {
             base.SetNotebookObjectValues(supplierData);
             _jobSupplier = (IJobSupplierObject)supplierData;
-            _supplierId = _jobSupplier.JobSupplierBitId;
+            _supplierId = _jobSupplier.JobSupplierData.JobSupplierBitId;
         }
 
         public override void OpenInfoPopUp()
