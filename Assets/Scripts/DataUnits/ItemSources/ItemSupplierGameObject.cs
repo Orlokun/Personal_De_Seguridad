@@ -81,7 +81,7 @@ namespace DataUnits.ItemSources
             await Task.Delay(500);
             GameDirector.Instance.ActCoroutine(LoadDialogueDataFromServer(DialogueType.InsistenceDialogue, insistenceDialoguesUrl));
         }
-        public void StartCalling(int playerLevel)
+        public void ReceivePlayerCall(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
             {

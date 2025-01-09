@@ -6,7 +6,7 @@ namespace DataUnits
     {
         public string SpeakerName { get; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public void StartCalling(int playerLevel);
+        public void ReceivePlayerCall(int playerLevel);
         public int StoreHighestUnlockedDialogue { get;}
 
     }

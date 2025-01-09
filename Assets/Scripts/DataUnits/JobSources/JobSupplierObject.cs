@@ -27,7 +27,7 @@ namespace DataUnits.JobSources
         }
         public string SpeakerName => "Omnicorp";
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public void StartCalling(int playerLevel)
+        public void ReceivePlayerCall(int playerLevel)
         {
             
         }
@@ -113,9 +113,10 @@ namespace DataUnits.JobSources
 
         #region Members
         public int StoreHighestUnlockedDialogue => _mStoreHighestUnlockedDialogue;
+        private int _mStoreHighestUnlockedDialogue;
+
         public string SpeakerName => StoreOwnerName;
         public string SpeakerImageString { get; }
-        private int _mStoreHighestUnlockedDialogue;
         
         #endregion
 
@@ -154,7 +155,7 @@ namespace DataUnits.JobSources
         private int _lastCallExp = 0;
         
         //TODO: Implement the call system with a class/interface argument for more better management 
-        public void StartCalling(int playerLevel)
+        public void ReceivePlayerCall(int playerLevel)
         {
             if (playerLevel < StoreUnlockPoints)
             {
