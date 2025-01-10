@@ -25,6 +25,6 @@ namespace DataUnits.JobSources
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
         public void ExpendMoney(int amount);
-        void Initialize(JobSupplierBitId jobId);
+        void LocalInitialize(JobSupplierBitId jobId);
     }
 }

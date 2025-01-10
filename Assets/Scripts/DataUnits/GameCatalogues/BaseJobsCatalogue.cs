@@ -79,6 +79,17 @@ namespace DataUnits.GameCatalogues
             }
         }
 
+        private IJobSupplierObject CreateJobSupplierObject(JobSupplierBitId jobId)
+        {
+            switch (jobId)
+            {
+                case JobSupplierBitId.COPY_OF_EDEN:
+                    return ScriptableObject.CreateInstance<CountPetrolkSupplierObject>();
+                default:
+                    return ScriptableObject.CreateInstance<JobSupplierObject>();
+            }
+        }
+
         private void LoadJobSuppliersFromJson(string sourceJson)
         {
             _jobsData = JsonConvert.DeserializeObject<JobsCatalogueFromData>(sourceJson);
@@ -88,8 +99,8 @@ namespace DataUnits.GameCatalogues
                     
                 int jobId;
                 var gotId = int.TryParse(_jobsData.values[i][0], out jobId);
-                var jobSupplier = (IJobSupplierObject)ScriptableObject.CreateInstance<JobSupplierObject>();
-                jobSupplier.Initialize((JobSupplierBitId) jobId);
+                var jobSupplier = CreateJobSupplierObject((JobSupplierBitId) jobId);
+                jobSupplier.LocalInitialize((JobSupplierBitId) jobId);
 
                 jobSupplier.JobSupplierData.JobSupplierBitId = (JobSupplierBitId) jobId;
                     

@@ -43,7 +43,7 @@ namespace DataUnits.JobSources
        
         public Dictionary<int, IDialogueObject> DeflectionDialogues => _mDialogueData.DeflectionDialogues;
         public Dictionary<int, IDialogueObject> ImportantDialogues => _mDialogueData.ImportantDialogues;
-        public Dictionary<int, IDialogueObject> InsistenceDialogues => _mDialogueData.ImportantDialogues;
+        public Dictionary<int, IDialogueObject> InsistenceDialogues => _mDialogueData.InsistenceDialogues;
         public Dictionary<int, IDialogueObject> SupplierCallDialogues => _mDialogueData.SupplierCallDialogues;
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary => _mDialogueData.SupplierCallDialoguesDataDictionary;
 
@@ -54,12 +54,12 @@ namespace DataUnits.JobSources
 
         public void StartUnlockDialogueData()
         {
-            GetUnlockedDialogues();
+            DownloadDialogueTypes();
             
             //Subscribe Unlocked NPC to possible phone call events
             GameDirector.Instance.GetClockInDayManagement.OnPassMinute += _supplierObject.CheckCallingTime;
         }
-        private async void GetUnlockedDialogues()
+        private async void DownloadDialogueTypes()
         {
             var importantDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(_supplierObject.SpeakerIndex, DialogueType.ImportantDialogue);
             var insistenceDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(_supplierObject.SpeakerIndex, DialogueType.InsistenceDialogue);

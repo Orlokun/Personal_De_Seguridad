@@ -96,6 +96,7 @@ namespace DialogueSystem
             LoadNewDialogue(newDialogue);
             
             _mUIController.ToggleDialogueObject(true);
+            newDialogue.AddDialogueCount();
             WriteNextDialogueNode(_currentDialogue, 0);
         }
 
@@ -136,7 +137,7 @@ namespace DialogueSystem
                 Destroy(this);
             }
             _mInstance = this;
-            _mOmnicorpDialogueInfo = ScriptableObject.CreateInstance<OmnicorpCallObject>();
+            _mOmnicorpDialogueInfo = ScriptableObject.CreateInstance<OmniCorpCallObject>();
             _soundMachine = GetComponent<DialogueOperatorSoundMachine>();
             OnDialogueCompleted += OnDialogueFinished;
         }

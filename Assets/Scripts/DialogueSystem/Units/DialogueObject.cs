@@ -88,22 +88,30 @@ namespace DialogueSystem.Units
         [SerializeField] protected List<IDialogueNode> dialogueLines = new List<IDialogueNode>();
         [SerializeField] protected Sprite actorImage;
         [SerializeField] protected string speakerName;
-        private int _mTimesActivated;
+        private int _mTimesActivated = 0;
 
         public List<IDialogueNode> DialogueNodes
         {
             get => dialogueLines;
             set => dialogueLines = value;
         }
-        public int TimesActivatedCount => _mTimesActivated;
-        public void DialogueRead()
+
+        private int _mDialogueStatus;
+        public int GetDialogueAssignedStatus => _mDialogueStatus;
+        public void SetDialogueStatus(int status)
         {
-            _mTimesActivated++;
+            _mDialogueStatus = status;
+        }
+        
+        public int TimesActivatedCount => _mTimesActivated;
+        public void AddDialogueCount()
+        {
+             _mTimesActivated++;
         }
 
         public DialogueSpeakerId GetSpeakerId(int dialogueLine)
         {
-            return (DialogueSpeakerId)dialogueLines[dialogueLine].SpeakerId;
+            return dialogueLines[dialogueLine].SpeakerId;
         }
     }
 }

@@ -2,87 +2,74 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using DialogueSystem;
+using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace DataUnits.JobSources
 {
-    public enum DialogueType
-    {
-        Deflections = 1,
-        ImportantDialogue = 2,
-        InsistenceDialogue = 3,
-        CallingDialogues = 4,
-        CallingDialoguesData = 5,
-    }
-    
-    [Serializable]
-    public class OmnicorpCallObject : ScriptableObject, ICallableSupplier
-    {
-        public OmnicorpCallObject()
-        {
-            SpeakerIndex = DialogueSpeakerId.Omnicorp;
-        }
-        public string SpeakerName => "Omnicorp";
-        public DialogueSpeakerId SpeakerIndex { get; set; }
-        public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
-        {
-            
-        }
-
-        public int StoreHighestUnlockedDialogue => 0;
-    }
-
-    public class JobSupplierObjectData : IJobSupplierObjectData
-    {
-        public JobSupplierBitId JobSupplierBitId { get; set; }
-        public string StoreType { get; set; }
-        public string StoreOwnerName { get; set; }
-        public int StoreOwnerAge { get; set; }
-        public int Budget { get; set; }
-        public int StoreUnlockPoints { get; set; }
-        public string StoreDescription { get; set; }
-        public int[] StoreMinMaxClients { get; set; }
-        public string SpriteName { get; set; }
-    }
-
-    public interface IJobSupplierObjectData
-    {
-        //Base Data
-        public JobSupplierBitId JobSupplierBitId { get; set; }
-        public string StoreType{ get; set; }
-        public string StoreOwnerName{ get; set; }
-
-        public int StoreOwnerAge{ get; set; }
-        public int Budget { get; set; }
-
-        public int StoreUnlockPoints{ get; set; }
-        public string StoreDescription{ get; set; }
-        public int[] StoreMinMaxClients { get; set; }
-        public string SpriteName { get; set; }
-    }
-
-    public enum CountPetrolkStates
+    public enum CountPetrolkDialogueStates
     {
         WaitingForHire = 1,
         RequiresMindProtection = 2,
         RequiresProductVigilance = 4,
         RequiresPunishBloodless = 8
     }
-    
+
+    [Serializable]
+    public class CountPetrolkSupplierObject : JobSupplierObject
+    {
+        private CountPetrolkDialogueStates _mDialogueState;
+        public CountPetrolkDialogueStates DialogueState => _mDialogueState;
+        
+
+
+        public override void LocalInitialize(JobSupplierBitId id)
+        {
+            base.LocalInitialize(id);
+            _mDialogueState = CountPetrolkDialogueStates.WaitingForHire;
+        }
+        
+        protected override async void BuildResponseAndAnswer()
+        {
+            base.BuildResponseAndAnswer();
+            if (_dialogueModule.ImportantDialogues.Any(x => x.Value.TimesActivatedCount == 0 && x.Value.GetDialogueAssignedStatus == (int)DialogueState))
+            {
+                var importantDialogue = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 0 && x.Value.GetDialogueAssignedStatus == (int)DialogueState).Value;
+                AnswerPhoneWithDialogueReady(importantDialogue);
+                return;
+            }
+            var insistenceDialoguesCount = _dialogueModule.InsistenceDialogues.Count;
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomInsistenceIndex = Random.Range(1, insistenceDialoguesCount+1);
+            var resultDialogue = _dialogueModule.InsistenceDialogues[randomInsistenceIndex];
+            AnswerPhoneWithDialogueReady(resultDialogue);
+        }
+        
+
+        private void AnswerPhoneWithDialogueReady(IDialogueObject answer)
+        {
+            PhoneCallOperator.Instance.PlayAnswerSound();
+            GameDirector.Instance.GetDialogueOperator.StartNewDialogue(answer);
+        }
+
+    }
     
     [Serializable]
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
-        private IJobSupplierDialogueModule _dialogueModule;
-        private IJobSupplierProductsModule _productsModuleModule;
-        private IJobSupplierObjectData _mSupplierData;
+        protected IJobSupplierDialogueModule _dialogueModule;
+        protected IJobSupplierProductsModule _productsModuleModule;
+        protected IJobSupplierObjectData _mSupplierData;
+        
+        
         #region Constructor & API
-        public void Initialize(JobSupplierBitId id)
+        public virtual void LocalInitialize(JobSupplierBitId id)
         {
             _mSupplierData = new JobSupplierObjectData();
             _mSupplierData.JobSupplierBitId = id;
@@ -201,13 +188,13 @@ namespace DataUnits.JobSources
         //TODO: Implement the call system with a class/interface argument for more better management 
         public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
-            if (playerProfile.GetStatusModule().PlayerXp < StoreUnlockPoints)
+            if (!BitOperator.IsActive(playerProfile.GetActiveJobsModule().DialogueUnlockedSuppliers, (int)JobSupplierBitId))
             {
                 RandomDeflection();
             }
             else
             {
-                StartAnswerBuildingProcess();
+                BuildResponseAndAnswer();
             }
         }
 
@@ -216,31 +203,12 @@ namespace DataUnits.JobSources
             
         }
         
-        private async void StartAnswerBuildingProcess()
+        protected async virtual void BuildResponseAndAnswer()
         {
             Debug.LogWarning("[StartAnswerBuildingProcess] Store can be called");
             Random.InitState(DateTime.Now.Millisecond);
             var randomWaitTime = Random.Range(500, 4500);
             await Task.Delay(randomWaitTime);
-            var unlockedCallIndex = 0;
-            
-            //Step1: Get Only Unlocked Dialogues
-            //Step2: Go from first to last and check conditions: 
-            //          1. If the dialogue has not been activated. Activate it.
-            //          2. If dialogue has been activated, check if has extra conditions before advancing to next.
-            //          3. If condition has been met, flag as done and move to next.
-            
-            if (_dialogueModule.ImportantDialogues.Any(x => x.Value.TimesActivatedCount == 0))
-            {
-                unlockedCallIndex = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 0).Key;
-            }
-            else
-            {
-                unlockedCallIndex = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 1).Key;
-            }
-            var lastUnlockedDialogue = _dialogueModule.ImportantDialogues[unlockedCallIndex];
-            PhoneCallOperator.Instance.PlayAnswerSound();
-            GameDirector.Instance.GetDialogueOperator.StartNewDialogue(lastUnlockedDialogue);
         }
         
         private async void RandomDeflection()

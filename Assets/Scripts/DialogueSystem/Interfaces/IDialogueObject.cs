@@ -1,14 +1,14 @@
 using System.Collections.Generic;
-using DialogueSystem.Sound;
 using DialogueSystem.Units;
-using UnityEngine;
 
 namespace DialogueSystem.Interfaces
 {
     public interface IDialogueObject : IDialogueObjectBaseData
     {
-        public void DialogueRead();
+        public void AddDialogueCount();
         public DialogueSpeakerId GetSpeakerId(int dialogueLine);
+        public int GetDialogueAssignedStatus { get; }
+        public void SetDialogueStatus(int status);
 
     }
 

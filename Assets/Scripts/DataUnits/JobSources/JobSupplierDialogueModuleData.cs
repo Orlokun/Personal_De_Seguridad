@@ -106,39 +106,47 @@ namespace DataUnits.JobSources
             IDialogueObject currentDialogueObject;
             for (var i = 1; i < _mImportantDialoguesData.values.Count; i++)
             {
-                var isDialogueNodeIndex = int.TryParse(_mImportantDialoguesData.values[i][0], out var currentDialogueObjectIndex);
+                var isStatusAssigned = int.TryParse(_mImportantDialoguesData.values[i][0], out var currentDialogueStatusIndex);
+
+                var isDialogueNodeIndex = int.TryParse(_mImportantDialoguesData.values[i][1], out var currentDialogueObjectIndex);
                 if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have node Index greater than zero");
                     return;
                 }
+                
+                
                 if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1)
                 {
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
                     currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    if (currentDialogueStatusIndex != 0)
+                    {
+                        currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
+                    }
                     _mImportantDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
-                var hasDialogueNodeId = int.TryParse(_mImportantDialoguesData.values[i][1], out var dialogueLineId);
+                var hasDialogueNodeId = int.TryParse(_mImportantDialoguesData.values[i][2], out var dialogueLineId);
                 if (!hasDialogueNodeId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
-                var isSpeakerId = int.TryParse(_mImportantDialoguesData.values[i][2], out var speakerId);
+                var isSpeakerId = int.TryParse(_mImportantDialoguesData.values[i][3], out var speakerId);
                 if (!isSpeakerId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
 
-                var dialogueLineText = _mImportantDialoguesData.values[i][3];
-                var cameraTargetName = _mImportantDialoguesData.values[i][4];
+                var dialogueLineText = _mImportantDialoguesData.values[i][4];
+                var cameraTargetName = _mImportantDialoguesData.values[i][5];
                 var hasCameraTarget = cameraTargetName != "0";
-                var eventNameId = _mImportantDialoguesData.values[i][5];
+                var eventNameId = _mImportantDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
-                var linksToString = _mImportantDialoguesData.values[i][6].Split(',');
+                var linksToString = _mImportantDialoguesData.values[i][7].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
@@ -216,8 +224,11 @@ namespace DataUnits.JobSources
             IDialogueObject currentDialogueObject;
             for (var i = 1; i < _mInsistenceDialoguesData.values.Count; i++)
             {
-                var isDialogueNodeIndex = int.TryParse(_mInsistenceDialoguesData.values[i][0], out var currentDialogueObjectIndex);
-                if (currentDialogueObjectIndex == 0 || !isDialogueNodeIndex)
+                var isDialogueStatusSet = int.TryParse(_mInsistenceDialoguesData.values[i][0], out var currentDialogueStatusIndex);
+                
+                var isDialogueGroupId = int.TryParse(_mInsistenceDialoguesData.values[i][1], out var currentDialogueObjectIndex);
+                
+                if (currentDialogueObjectIndex == 0 || !isDialogueGroupId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have node Index greater than zero");
                     return;
@@ -226,29 +237,30 @@ namespace DataUnits.JobSources
                 {
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
                     currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
                     _mInsistenceDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
-                var hasDialogueNodeId = int.TryParse(_mInsistenceDialoguesData.values[i][1], out var dialogueLineId);
-                if (dialogueLineId == 0 || !hasDialogueNodeId)
+                var hasDialogueNodeId = int.TryParse(_mInsistenceDialoguesData.values[i][2], out var dialogueLineId);
+                if (!hasDialogueNodeId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
-                var isSpeakerId = int.TryParse(_mInsistenceDialoguesData.values[i][2], out var speakerId);
+                var isSpeakerId = int.TryParse(_mInsistenceDialoguesData.values[i][3], out var speakerId);
                 if (speakerId == 0 || !isSpeakerId)
                 {
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
 
-                var dialogueLineText = _mInsistenceDialoguesData.values[i][3];
-                var cameraTargetName = _mInsistenceDialoguesData.values[i][4];
+                var dialogueLineText = _mInsistenceDialoguesData.values[i][4];
+                var cameraTargetName = _mInsistenceDialoguesData.values[i][5];
                 var hasCameraTarget = cameraTargetName != "0";
-                var eventNameId = _mInsistenceDialoguesData.values[i][5];
+                var eventNameId = _mInsistenceDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
-                var linksToString = _mInsistenceDialoguesData.values[i][6].Split(',');
+                var linksToString = _mInsistenceDialoguesData.values[i][7].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
