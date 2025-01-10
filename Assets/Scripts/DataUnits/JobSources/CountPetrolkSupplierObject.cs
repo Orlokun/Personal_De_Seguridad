@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace DataUnits.JobSources
@@ -24,6 +26,10 @@ namespace DataUnits.JobSources
         protected override async void BuildResponseAndAnswer()
         {
             base.BuildResponseAndAnswer();
+            Debug.LogWarning("[StartAnswerBuildingProcess] Store can be called");
+            Random.InitState(DateTime.Now.Millisecond);
+            var randomWaitTime = Random.Range(500, 4500);
+            await Task.Delay(randomWaitTime);
             if (_dialogueModule.ImportantDialogues.Any(x => x.Value.TimesActivatedCount == 0 && x.Value.GetDialogueAssignedStatus == (int)DialogueState))
             {
                 var importantDialogue = _dialogueModule.ImportantDialogues.FirstOrDefault(x => x.Value.TimesActivatedCount == 0 && x.Value.GetDialogueAssignedStatus == (int)DialogueState).Value;
@@ -35,9 +41,8 @@ namespace DataUnits.JobSources
             var randomInsistenceIndex = Random.Range(1, insistenceDialoguesCount+1);
             var resultDialogue = _dialogueModule.InsistenceDialogues[randomInsistenceIndex];
             AnswerPhoneWithDialogueReady(resultDialogue);
-        }
-        
 
+        }
         private void AnswerPhoneWithDialogueReady(IDialogueObject answer)
         {
             PhoneCallOperator.Instance.PlayAnswerSound();

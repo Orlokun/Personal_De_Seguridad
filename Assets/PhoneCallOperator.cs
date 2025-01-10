@@ -209,6 +209,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         Debug.Log("[PlayInvalidCall] Empty Number: Play null sound and return");
         _phoneState = PhoneState.HungUp;
         _displayedString = "INVALID CALL";
+        displayedText.text = _displayedString;
         _audioSource.clip = invalidNumberSound;
         _audioSource.Play();
         var waitTime = _audioSource.clip.length;
@@ -218,7 +219,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private async void WaitPhoneSoundAndHungUp(float waitTime)
     {
         cancellationToken = new CancellationTokenSource();
-        await Task.Delay((int)waitTime, cancellationToken.Token);
+        await Task.Delay(TimeSpan.FromSeconds(waitTime), cancellationToken.Token);
         ClearNumbersOrHungUp();
     }
 
