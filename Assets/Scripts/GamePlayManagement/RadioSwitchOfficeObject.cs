@@ -5,7 +5,12 @@ using UnityEngine;
 
 namespace GamePlayManagement
 {
-    public class RadioSwitchOfficeObject : MonoBehaviour, IInteractiveClickableObject
+    public interface IRadioOperator
+    {
+        void TurnRadioPower(bool value);
+    }
+    
+    public class RadioSwitchOfficeObject : MonoBehaviour, IInteractiveClickableObject, IRadioOperator
     {
         #region Interactive Object Interface
         private AudioSource _mAudioSource;
@@ -16,6 +21,12 @@ namespace GamePlayManagement
         private void Start()
         {
             _mAudioSource = GetComponent<AudioSource>();
+            AttepmtToInitialize();
+        }
+
+        private void AttepmtToInitialize()
+        {
+            SoundDirector.Instance.SetRadioSource(_mAudioSource);
         }
 
         #endregion
@@ -26,7 +37,15 @@ namespace GamePlayManagement
 
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
-            //Nothing to do, just deselect
+            if (hitInfo.collider.gameObject.GetComponent<RadioSwitchOfficeObject>())
+            {
+                if (_mAudioSource.isPlaying)
+                {
+                    _mAudioSource.Stop();
+                    return;
+                }
+                _mAudioSource.Play();    
+            }
         }
 
         public void ReceiveDeselectObjectEvent()
@@ -55,6 +74,16 @@ namespace GamePlayManagement
         public void DisplaySnippet()
         {
             throw new System.NotImplementedException();
+        }
+
+        public void TurnRadioPower(bool value)
+        {
+            if (value)
+            {
+                _mAudioSource.Play();
+                return;
+            }
+            _mAudioSource.Stop();
         }
     }
 }

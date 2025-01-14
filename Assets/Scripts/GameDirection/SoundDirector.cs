@@ -1,16 +1,19 @@
+using GamePlayManagement;
 using UnityEngine;
 namespace GameDirection
 {
     public interface ISoundDirector
     {
         void PlayAmbientSound();
+        void StopRadio();
+        void SetRadioSource(AudioSource radioSource);
     }
 
     [RequireComponent(typeof(AudioSource))]
     public class SoundDirector : MonoBehaviour, ISoundDirector
     {
-        private static SoundDirector _mInstance;
-        public static SoundDirector Instance => _mInstance;
+        private static ISoundDirector mInstance;
+        public static ISoundDirector Instance => mInstance;
         
         private AudioSource _mMainAudioSource;
         private AudioSource _mRadioSource;
@@ -18,12 +21,12 @@ namespace GameDirection
 
         private void Awake()
         {
-            if (_mInstance != null && _mInstance != this)
+            if (mInstance != null && mInstance != this)
             {
                 Destroy(this);
             }
             DontDestroyOnLoad(this);
-            _mInstance = this;
+            mInstance = this;
             CheckInitialComponents();
         }
 
@@ -51,6 +54,26 @@ namespace GameDirection
             }
             _mMainAudioSource.volume = .5f;
             _mMainAudioSource.Play();
+        }
+
+        public void StopRadio()
+        {
+            if(FindFirstObjectByType<RadioSwitchOfficeObject>() != null)
+            {
+                IRadioOperator radio = FindFirstObjectByType<RadioSwitchOfficeObject>();
+                if(radio != null)
+                {
+                    radio.TurnRadioPower(false);
+                }
+            }
+        }
+
+        public void SetRadioSource(AudioSource radioSource)
+        {
+            if(_mRadioSource != null)
+            {
+                _mRadioSource = radioSource;
+            }
         }
     }
 }

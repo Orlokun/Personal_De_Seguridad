@@ -276,6 +276,7 @@ namespace GameDirection
             Debug.Log("[ManageUIProcessEndOfDay] Start");
             ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
             _mGeneralInputManager.SetGamePlayState(InputGameState.OnlyOffice);
+            _mSoundDirector.StopRadio();            
             _mGeneralFader.GeneralCurtainAppear();
             UIFinishWorkday();
             _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
