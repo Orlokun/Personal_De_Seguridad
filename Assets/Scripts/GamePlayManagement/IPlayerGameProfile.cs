@@ -1,4 +1,5 @@
 using System;
+using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
@@ -19,5 +20,7 @@ namespace GamePlayManagement
         public int GeneralOmniCredits { get;}
         public void UpdateDataEndOfDay();
         public IWorkDayObject GetCurrentWorkday();
+        void PlayerLost(EndingTypes organSale);
+        void ResetData();
     }
 }

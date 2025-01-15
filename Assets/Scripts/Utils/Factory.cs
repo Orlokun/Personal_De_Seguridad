@@ -3,6 +3,7 @@ using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using DialogueSystem;
 using ExternalAssets._3DFOV.Scripts;
+using GameDirection;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.GeneralLevelManager;
 using GameDirection.GeneralLevelManager.ShopPositions;
@@ -182,6 +183,11 @@ namespace Utils
         public static INewsNarrativeDirector CreateNewsNarrativeDirector()
         {
             return new NewsNarrativeDirector();
+        }
+
+        public static IMetaGameDirector CreateMetaGameDirectory()
+        {
+            return new MetaGameDirector();
         }
     }
 }

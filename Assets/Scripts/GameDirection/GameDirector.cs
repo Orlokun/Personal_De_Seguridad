@@ -55,6 +55,7 @@ namespace GameDirection
         private IModularDialogueDataController _mModularDialogues;
         private ICustomersInSceneManager _mCustomerInstantiationManager;
         private INewsNarrativeDirector _mNarrativeNewsDirector;
+        private IMetaGameDirector _mMetaGameDirector;
         
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
@@ -92,6 +93,7 @@ namespace GameDirection
         public IModularDialogueDataController GetModularDialogueManager => _mModularDialogues;
         public ICustomersInSceneManager GetCustomerInstantiationManager => _mCustomerInstantiationManager;
         public INewsNarrativeDirector GetNarrativeNewsDirector=> _mNarrativeNewsDirector;
+        public IMetaGameDirector GetMetaGameDirector => _mMetaGameDirector;
         #endregion
 
         #region Init
@@ -143,7 +145,8 @@ namespace GameDirection
             _mModularDialogues = Factory.CreateModularDialoguesDataController();
             _mModularDialogues.Initialize();
             _mCustomerInstantiationManager = CustomersInSceneManager.Instance;
-            
+            _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
+            _mMetaGameDirector = Factory.CreateMetaGameDirectory();
             _mUIController.StartMainMenuUI();
             
             _inputStateManager.SetGamePlayState(InputGameState.MainMenu);
@@ -185,6 +188,18 @@ namespace GameDirection
         }
 
         #region ManageNewGame
+
+        public void ContinueGame()
+        {
+            if(_mMetaGameDirector.GetExistingProfile == null)
+            {
+                StartNewGame();
+                return;
+            }
+            _mActiveGameProfile = _mMetaGameDirector.GetExistingProfile;
+            ContinueGameWithProfile();
+        }
+        
         public void StartNewGame()
         {
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
@@ -194,10 +209,18 @@ namespace GameDirection
             _mGameState = HighLevelGameStates.InCutScene;
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
+
+        public void ContinueGameWithProfile()
+        {
+            _mGeneralFader.GeneralCurtainAppear();
+            LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
+            _mGameState = HighLevelGameStates.InCutScene;
+            StartCoroutine(_dayLevelManager.StartDayManagement());
+        }
+
         private void CreateNewProfile()
         {
             _mActiveGameProfile = null;
-            _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
             var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             var calendarModule = Factory.CreateCalendarModule(_mClockManager);
@@ -223,6 +246,27 @@ namespace GameDirection
         public void ChangeHighLvlGameState(HighLevelGameStates newState)
         {
             _mGameState = newState;
+        }
+        
+        public async void PlayerLost(EndingTypes organSale)
+        {
+            await Task.Delay(2500);
+            _mActiveGameProfile.PlayerLost(organSale);
+            _mUIController.DeactivateAllObjects();
+            _mSoundDirector.StopRadio();            
+            _mGeneralFader.GeneralCurtainAppear();
+            ChangeHighLvlGameState(HighLevelGameStates.MainMenu);
+            _mGeneralInputManager.SetGamePlayState(InputGameState.MainMenu);
+            _mLevelManager.ReturnToMainScreen();
+            _mUIController.StartMainMenuUI();
+            await WaitAndOpenCurtain();
+        }
+        
+        private async Task WaitAndOpenCurtain()
+        {
+            await Task.Delay(2000);
+            _mUIController.StartMainMenuUI();
+            _mGeneralFader.GeneralCurtainDisappear();
         }
 
         /// <summary>
@@ -271,6 +315,8 @@ namespace GameDirection
             return null;
         }
 
+
+
         private void ManageUIProcessEndOfDay()
         {
             Debug.Log("[ManageUIProcessEndOfDay] Start");
@@ -301,5 +347,21 @@ namespace GameDirection
         }
         #endregion
         #endregion
+    }
+
+    public interface IMetaGameDirector
+    {
+        public IPlayerGameProfile GetExistingProfile { get; }
+        public void AddNewProfile(IPlayerGameProfile profle);
+    }
+
+    public class MetaGameDirector : IMetaGameDirector
+    {
+        private IPlayerGameProfile _mExistingProfile;
+        public IPlayerGameProfile GetExistingProfile => _mExistingProfile;
+        public void AddNewProfile(IPlayerGameProfile profile)
+        {
+            _mExistingProfile = null;
+        }
     }
 }

@@ -1,17 +1,19 @@
-using System.Collections;
+﻿using System.Collections;
+using GameDirection.TimeOfDayManagement;
 using InputManagement;
 using UnityEngine;
 
 namespace GameDirection.DayLevelSceneManagers
 {
-    public class DayTwoLevelSceneManagement : DayLevelSceneManagement
+    public class DayFourLevelSceneManagement : DayLevelSceneManagement    
     {
         public override IEnumerator StartDayManagement()
         {
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
-            
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
+
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
@@ -20,7 +22,6 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
             MGameDirector.ActCoroutine(StartIntroductionReading());
         }
-
         protected override IEnumerator StartIntroductionReading()
         {
             yield return new WaitForSeconds(2f);

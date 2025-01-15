@@ -1,11 +1,9 @@
 using System.Collections;
 using DialogueSystem.Interfaces;
 using GameDirection.TimeOfDayManagement;
-using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace GameDirection.DayLevelSceneManagers
 {
@@ -51,15 +49,30 @@ namespace GameDirection.DayLevelSceneManagers
     }
     public class DayFiveLevelSceneManagement : DayLevelSceneManagement    
     {
-        
-    }
-    public class DayFourLevelSceneManagement : DayLevelSceneManagement    
-    {
-        
-    }
-    public class DayThreeLevelSceneManagement : DayLevelSceneManagement    
-    {
-        
+        public override IEnumerator StartDayManagement()
+        {
+            MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
+            MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
+
+            MGameDirector.GetSoundDirector.PlayAmbientSound();
+            MGameDirector.GetUIController.DeactivateAllObjects();
+            yield return new WaitForSeconds(2f);
+            MGameDirector.GetUIController.ToggleBackground(true);
+            MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
+            MGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
+            MGameDirector.ActCoroutine(StartIntroductionReading());
+        }
+        protected override IEnumerator StartIntroductionReading()
+        {
+            yield return new WaitForSeconds(2f);
+            MGameDirector.GetDialogueOperator.StartNewDialogue(DayBaseDialogues[DialogueIndex]);
+        }
+        protected override void FinishIntroductionText()
+        {
+            MGameDirector.GetGeneralBackgroundFader.GeneralCurtainAppear();
+            MGameDirector.ActCoroutine(StartModularDialoguePreparations());
+        }
     }
 
     public class DayOneLevelSceneManagement : DayLevelSceneManagement
@@ -91,10 +104,10 @@ namespace GameDirection.DayLevelSceneManagers
         protected override void FinishIntroductionText()
         {
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainAppear();
-            MGameDirector.ActCoroutine(StartModularDialogueReading());
+            MGameDirector.ActCoroutine(StartModularDialoguePreparations());
         }
         
-        protected override IEnumerator StartModularDialogueReading()
+        protected override IEnumerator StartModularDialoguePreparations()
         {
             yield return new WaitForSeconds(1f);
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.OfficeLvl);
@@ -114,10 +127,10 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetUIController.ToggleBackground(false);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
-            MGameDirector.ActCoroutine(SecondDialogue());
+            MGameDirector.ActCoroutine(ReadModularDialogue());
         }
 
-        private IEnumerator SecondDialogue()
+        private IEnumerator ReadModularDialogue()
         {
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += ReleaseFromInitialDialogueAndStartClock;
             //MGameDirector.GetCustomerInstantiationManager.LoadCustomerLevelStartTransforms();

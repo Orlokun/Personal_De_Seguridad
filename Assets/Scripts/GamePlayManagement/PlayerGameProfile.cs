@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
+using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
@@ -148,6 +149,16 @@ namespace GamePlayManagement
         public IWorkDayObject GetCurrentWorkday()
         {
             return _calendarModule.GetCurrentWorkDayObject();
+        }
+
+        public void PlayerLost(EndingTypes organSale)
+        {
+            _gameStatusModule.PlayerLostGame(organSale);
+        }
+
+        public void ResetData()
+        {
+            
         }
     }
 }

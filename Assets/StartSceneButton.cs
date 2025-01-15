@@ -12,6 +12,6 @@ public class StartSceneButton : MonoBehaviour
 
     public void LoadNewGame()
     {
-        _mGameDirector.StartNewGame();
+        _mGameDirector.ContinueGame();
     }
 }

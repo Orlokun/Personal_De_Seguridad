@@ -1,6 +1,8 @@
 using System;
+using DialogueSystem;
 using GamePlayManagement;
 using UnityEngine;
+using Utils;
 
 namespace GameDirection.TimeOfDayManagement
 {
@@ -13,6 +15,9 @@ namespace GameDirection.TimeOfDayManagement
         private int _health;
         private int _stress;
         private int _mGameDifficulty;
+
+        private int _mLastPlayedEnding = 0;
+        private int _mAllPlayedEndings = 0;
         
         private IPlayerGameProfile _mPlayerProfile;
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)
@@ -23,6 +28,30 @@ namespace GameDirection.TimeOfDayManagement
             _health = 20;
             _mGameDifficulty = 1;
         }
+        
+        public void PlayerLostGame(EndingTypes endingType)
+        {
+            var ending = (int)endingType;
+            _mLastPlayedEnding = ending;
+            if (BitOperator.IsActive(_mAllPlayedEndings, ending))
+            {
+                return;
+            }
+            _mAllPlayedEndings += ending;
+            _mPlayerProfile.ResetData();
+            ResetBaseData();
+        }
+
+        public void ResetBaseData()
+        {
+            _totalOmniCredits = 20000;
+            _playerXp = 10;
+            _health = 20;
+            _mGameDifficulty = 1;
+        }
+        
+        public int PlayerKnownEndings { get; }
+        public int PlayerLastEnding { get; }
 
         public int PlayerOmniCredits
         {

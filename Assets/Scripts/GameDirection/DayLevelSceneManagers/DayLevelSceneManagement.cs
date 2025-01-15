@@ -22,11 +22,15 @@ namespace GameDirection.DayLevelSceneManagers
         public delegate void FinishCurrentDialogue();
         public event FinishCurrentDialogue OnFinishCurrentDialogue;
         protected DayBitId DayId;
+        
         protected bool mInitialized;
         protected IGameDirector MGameDirector;
+        
         protected Dictionary<int, IDialogueObject> DayBaseDialogues = new Dictionary<int, IDialogueObject>();
         protected IDialogueObject ModularDialogue;
+        
         protected int DialogueIndex;
+        
         protected ICustomersInSceneManager _customerSpawner;
 
         
@@ -165,7 +169,7 @@ namespace GameDirection.DayLevelSceneManagers
         {
             return null;
         }
-        protected virtual IEnumerator StartModularDialogueReading()
+        protected virtual IEnumerator StartModularDialoguePreparations()
         {
             return null;
         }

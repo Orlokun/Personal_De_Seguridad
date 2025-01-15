@@ -54,8 +54,17 @@ namespace DialogueSystem
                     break;
                 case "ItemUnlocked":
                     break;
+                case "OrganSale":
+                    LaunchPlayerOrganSaleEvent();
+                    break;
             }
         }
+
+        private void LaunchPlayerOrganSaleEvent()
+        {
+            GameDirector.Instance.PlayerLost(EndingTypes.ORGAN_SALE);
+        }
+
         private void LaunchPlayerHiredEvent(string jobSupplier)
         {
             var getJobSupplierId = int.TryParse(jobSupplier, out var supplierId);
@@ -70,5 +79,9 @@ namespace DialogueSystem
         {
             OnHirePlayer?.Invoke(jobSupplier);
         }
+    }
+    public enum EndingTypes
+    {
+        ORGAN_SALE
     }
 }

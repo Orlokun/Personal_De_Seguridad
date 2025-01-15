@@ -16,6 +16,7 @@ namespace GameDirection
     public interface IGameDirector : IHighLvlGameStateManager, IPlayerProfileManager
     {
         public void StartNewGame();
+        public void ContinueGame();
         public void SubscribeCurrentWorkDayToCustomerManagement();
         public ILevelManager GetLevelManager { get; }
         public IClockManagement GetClockInDayManagement { get; }
@@ -38,5 +39,6 @@ namespace GameDirection
         public void BeginNewDayProcess();
 
         ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId);
+        void PlayerLost(EndingTypes organSale);
     }
 }
