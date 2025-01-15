@@ -39,10 +39,11 @@ namespace DataUnits.JobSources
                 AnswerPhoneWithDialogueReady(importantDialogue);
                 return;
             }
-            var insistenceDialoguesCount = _dialogueModule.InsistenceDialogues.Count;
+            var insistenceList = _dialogueModule.InsistenceDialogues.Select(x=>x.Value).Where(x => x.GetDialogueAssignedStatus == (int)DialogueState).ToList();
+            var insistenceDialoguesCount = insistenceList.Count;
             Random.InitState(DateTime.Now.Millisecond);
-            var randomInsistenceIndex = Random.Range(1, insistenceDialoguesCount+1);
-            var resultDialogue = _dialogueModule.InsistenceDialogues[randomInsistenceIndex];
+            var randomInsistenceIndex = Random.Range(0, insistenceDialoguesCount);
+            var resultDialogue = insistenceList[randomInsistenceIndex];
             AnswerPhoneWithDialogueReady(resultDialogue);
 
         }

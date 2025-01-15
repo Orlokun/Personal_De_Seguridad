@@ -220,7 +220,9 @@ namespace DataUnits.JobSources
             _mInsistenceDialogues = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
-            
+            var lastStatusIndex = 0;
+            var pureDialogueIndex = 0;
+
             IDialogueObject currentDialogueObject;
             for (var i = 1; i < _mInsistenceDialoguesData.values.Count; i++)
             {
@@ -233,12 +235,15 @@ namespace DataUnits.JobSources
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have node Index greater than zero");
                     return;
                 }
-                if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1)
+                if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1 || lastStatusIndex != currentDialogueStatusIndex)
                 {
+                    pureDialogueIndex++;
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
+                    lastStatusIndex = currentDialogueStatusIndex;
+                    
                     currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
                     currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
-                    _mInsistenceDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
+                    _mInsistenceDialogues.Add(pureDialogueIndex, currentDialogueObject);
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mInsistenceDialoguesData.values[i][2], out var dialogueLineId);
@@ -263,7 +268,7 @@ namespace DataUnits.JobSources
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
-                _mInsistenceDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
+                _mInsistenceDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
         private void LoadPhoneCallsDialogues(string sourceJson)
