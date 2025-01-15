@@ -102,6 +102,8 @@ namespace DataUnits.JobSources
             _mImportantDialogues = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
+            var lastStatusIndex = 0;
+            var pureDialogueIndex = 0;
             
             IDialogueObject currentDialogueObject;
             for (var i = 1; i < _mImportantDialoguesData.values.Count; i++)
@@ -116,15 +118,17 @@ namespace DataUnits.JobSources
                 }
                 
                 
-                if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1)
+                if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1 || currentDialogueStatusIndex != lastStatusIndex)
                 {
+                    pureDialogueIndex++;
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
+                    lastStatusIndex = currentDialogueStatusIndex;
                     currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
                     if (currentDialogueStatusIndex != 0)
                     {
                         currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
                     }
-                    _mImportantDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
+                    _mImportantDialogues.Add(pureDialogueIndex, currentDialogueObject);
                 }
                 
                 var hasDialogueNodeId = int.TryParse(_mImportantDialoguesData.values[i][2], out var dialogueLineId);
@@ -153,7 +157,7 @@ namespace DataUnits.JobSources
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
                     hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
-                _mImportantDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
+                _mImportantDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
         private void LoadDeflectionDialoguesFromJson(string sourceJson)
@@ -189,12 +193,8 @@ namespace DataUnits.JobSources
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
-                var isSpeakerId = int.TryParse(_mDeflectionDialoguesData.values[i][2], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
-                {
-                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
-                    return;
-                }
+                
+                int.TryParse(_mDeflectionDialoguesData.values[i][2], out var speakerId);
 
                 var dialogueLineText = _mDeflectionDialoguesData.values[i][3];
                 var cameraTargetName = _mDeflectionDialoguesData.values[i][4];
@@ -247,12 +247,8 @@ namespace DataUnits.JobSources
                     Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
                     return;
                 }
-                var isSpeakerId = int.TryParse(_mInsistenceDialoguesData.values[i][3], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
-                {
-                    Debug.LogWarning($"[JobSupplierObject.LoadDialoguesFromJson] Dialogues for {_supplierObject.StoreName} must have Index greater than zero");
-                    return;
-                }
+                
+                int.TryParse(_mInsistenceDialoguesData.values[i][3], out var speakerId);
 
                 var dialogueLineText = _mInsistenceDialoguesData.values[i][4];
                 var cameraTargetName = _mInsistenceDialoguesData.values[i][5];

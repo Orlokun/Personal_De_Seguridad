@@ -14,9 +14,12 @@ namespace DataUnits.JobSources
     {
         private CountPetrolkDialogueStates _mDialogueState;
         public CountPetrolkDialogueStates DialogueState => _mDialogueState;
+
+
+        private int _mOvercomedDialogueStates;
         
-
-
+        
+        
         public override void LocalInitialize(JobSupplierBitId id)
         {
             base.LocalInitialize(id);
@@ -49,5 +52,10 @@ namespace DataUnits.JobSources
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(answer);
         }
 
+        public override void PlayerHired()
+        {
+            _mOvercomedDialogueStates += (int)DialogueState; 
+            _mDialogueState = CountPetrolkDialogueStates.RequiresMindProtection;
+        }
     }
 }

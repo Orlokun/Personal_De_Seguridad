@@ -37,7 +37,12 @@ namespace DataUnits.JobSources
             _dialogueModule = new JobSupplierDialogueModule(this);
             _productsModuleModule = new JobSupplierProductsModule(this);
         }
-        
+
+        public virtual void PlayerHired()
+        {
+            Debug.LogWarning("[JobSupplierObject.PlayerHired] Should not use virtual method. Use override method instead.");
+        }
+
         public  IJobSupplierObjectData JobSupplierData => _mSupplierData;
         public JobSupplierBitId JobSupplierBitId { get => _mSupplierData.JobSupplierBitId;}
         public string StoreType{ get; set; }

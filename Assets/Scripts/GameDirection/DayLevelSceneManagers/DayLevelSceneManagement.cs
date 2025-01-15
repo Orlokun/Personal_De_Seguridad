@@ -105,12 +105,7 @@ namespace GameDirection.DayLevelSceneManagers
                     Debug.LogWarning($"[IntroSceneManagement.LoadFromJson] Dialogues for Intro must have dialoge node id");
                     return;
                 }
-                var isSpeakerId = int.TryParse(DialoguesBaseDataString.values[i][2], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
-                {
-                    Debug.LogWarning($"[IntroSceneManagement.LoadFromJson] Dialogues for Intro must have speaker Index greater than zero");
-                    //return;
-                }
+                int.TryParse(DialoguesBaseDataString.values[i][2], out var speakerId);
 
                 var dialogueLineText = DialoguesBaseDataString.values[i][3];
                 var cameraTargetName = DialoguesBaseDataString.values[i][4];

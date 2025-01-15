@@ -21,10 +21,10 @@ namespace GamePlayManagement
         private void Start()
         {
             _mAudioSource = GetComponent<AudioSource>();
-            AttepmtToInitialize();
+            AttemptInitialize();
         }
 
-        private void AttepmtToInitialize()
+        private void AttemptInitialize()
         {
             SoundDirector.Instance.SetRadioSource(_mAudioSource);
         }

@@ -7,6 +7,9 @@ namespace GameDirection
         void PlayAmbientSound();
         void StopRadio();
         void SetRadioSource(AudioSource radioSource);
+        void LowerMusicVolume();
+        public void RaiseMusicVolume();
+
     }
 
     [RequireComponent(typeof(AudioSource))]
@@ -70,9 +73,29 @@ namespace GameDirection
 
         public void SetRadioSource(AudioSource radioSource)
         {
-            if(_mRadioSource != null)
+            if(_mRadioSource == null)
             {
                 _mRadioSource = radioSource;
+                RaiseMusicVolume();
+            }
+        }
+
+        public void LowerMusicVolume()
+        {
+            if(_mRadioSource != null)
+            {
+                if(_mRadioSource.isPlaying)
+                {
+                    _mRadioSource.volume = .35f;
+                }
+            }
+        }
+
+        public void RaiseMusicVolume()
+        {
+            if(_mRadioSource != null)
+            {
+                _mRadioSource.volume = .75f;
             }
         }
     }

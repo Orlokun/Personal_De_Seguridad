@@ -120,13 +120,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         _dialogueOperator.StartNewDialogue(waitingCall);
         waitingCall = null;
     }
-    public void ClearNumbersOrHungUp()
-    {
-        _displayedString = "";
-        displayedText.text = _displayedString;
-        _phoneState = PhoneState.HungUp;
-        _audioSource.Stop();
-    }
+
     public void PressCall()
     {
         if (_phoneState == PhoneState.ReceivingCall)
@@ -140,6 +134,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     private void StartPhoneCall()
     {
         _phoneState = PhoneState.Calling;
+        CheckVolume();
         if (!IsValidCall(_displayedString))
         {
             PlayInvalidCall();
@@ -169,7 +164,12 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
             return;
         }
     }
-    
+
+    private void CheckVolume()
+    {
+        SoundDirector.Instance.LowerMusicVolume();
+    }
+
     private void WaitAnswerFromItemSupplier(int calledSupplierId)
     {
         var itemSupplierObject = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData((BitItemSupplier)calledSupplierId);
@@ -182,8 +182,8 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         var jobSupplierCallingData = BaseJobsCatalogue.Instance.GetJobSupplierObject((JobSupplierBitId)calledSupplierId);
         var currentProfile = GameDirector.Instance.GetActiveGameProfile;
-        jobSupplierCallingData.ReceivePlayerCall(currentProfile);
         GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted += FinishCallImmediately;
+        jobSupplierCallingData.ReceivePlayerCall(currentProfile);
     }
 
     private bool IsValidCall(string dialedNumber)
@@ -220,7 +220,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         cancellationToken = new CancellationTokenSource();
         await Task.Delay(TimeSpan.FromSeconds(waitTime), cancellationToken.Token);
-        ClearNumbersOrHungUp();
+        FinishCallImmediately();
     }
 
     public void GoToCall(ISupplierBaseObject callReceiver)
@@ -241,6 +241,7 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         displayedText.text = "";
         _audioSource.Stop();
         waitingCall = null;
+        SoundDirector.Instance.RaiseMusicVolume();
         GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted -= FinishCallImmediately;
     }
     

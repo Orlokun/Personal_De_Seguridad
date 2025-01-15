@@ -12,6 +12,7 @@ namespace DataUnits.JobSources
         public IJobSupplierObjectData JobSupplierData { get; }
         
         //Stats related
+        //TODO: This stats should be in data
         public void SetStats(int sanity, int kindness, int violence, int intelligence, int money);
         public int Sanity { get; }
         public int Kindness { get; }
@@ -26,5 +27,6 @@ namespace DataUnits.JobSources
         public void StartUnlockData();
         public void ExpendMoney(int amount);
         void LocalInitialize(JobSupplierBitId jobId);
+        void PlayerHired();
     }
 }

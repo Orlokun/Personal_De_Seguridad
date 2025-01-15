@@ -205,10 +205,7 @@ namespace DataUnits.ItemSources
                     return;
                 }
                 var isSpeakerId = int.TryParse(_mDeflectionDialogueData.values[i][2], out var speakerId);
-                if (speakerId == 0 || !isSpeakerId)
-                {
-                    Debug.LogWarning($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Dialogues for Intro must have a speaker index greater than zero");
-                }
+
 
                 var dialogueLineText = _mDeflectionDialogueData.values[i][3];
                 var cameraTargetName = _mDeflectionDialogueData.values[i][4];

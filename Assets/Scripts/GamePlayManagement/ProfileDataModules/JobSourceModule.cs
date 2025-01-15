@@ -48,6 +48,7 @@ namespace GamePlayManagement.ProfileDataModules
             _mStreakWithEmployer = 0;
             _mDaysUnemployedStreak = 0;
             _mCurrentActiveEmployer = newEmployer;
+            _mJobSuppliers[newEmployer].PlayerHired();
         }
 
         public void QuitFiredFromJob()
