@@ -25,8 +25,8 @@ namespace UI.TabManagement.NBVerticalTabs
 
         private void OpenNewsPopUp()
         {
-            var popUpObject = (INewsDetailPanel)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.NEWS_DETAIL_POPUP);
-            popUpObject.SetAndDisplayNewsData(_mNewsData);
+            var popUpObject = (INewsDetailPopUp)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.NEWS_DETAIL_POPUP);
+            popUpObject.SetAndDisplayNewsInfo(_mNewsData);
         }
 
         public void PopulateNewsPrefab(INewsObject newsObject)
