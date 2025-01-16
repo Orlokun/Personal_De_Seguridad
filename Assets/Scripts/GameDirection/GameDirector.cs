@@ -99,8 +99,8 @@ namespace GameDirection
         #region Init
         private void Awake()
         {
-            DontDestroyOnLoad(this);
             SingletonManagement();
+            DontDestroyOnLoad(this);
             SetComponentManagers();
             LoadUIScene();
         }
@@ -109,6 +109,7 @@ namespace GameDirection
             if (_mInstance != null)
             {
                 Destroy(this);
+                return;
             }
             _mInstance = this;
         }
