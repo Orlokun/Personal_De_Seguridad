@@ -8,7 +8,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
     public interface IItemSuppliersModule : IProfileModule
     {
-        public int AllActiveSuppliers { get; }
+        public int UnlockedItemSuppliers { get; }
         public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects { get; }
 
         //Suppliers API

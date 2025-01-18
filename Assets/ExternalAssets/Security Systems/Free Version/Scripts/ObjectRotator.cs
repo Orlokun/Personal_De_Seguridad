@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ObjectRotator : MonoBehaviour
+namespace ExternalAssets.Security_Systems.Free_Version.Scripts
 {
-    [SerializeField] private Vector3 rotationPerSecond;
-
-    private void Update()
+    public class ObjectRotator : MonoBehaviour
     {
-        transform.Rotate(rotationPerSecond * Time.deltaTime);
+        [SerializeField] private Vector3 rotationPerSecond;
+
+        private void Update()
+        {
+            transform.Rotate(rotationPerSecond * Time.deltaTime);
+        }
     }
 }

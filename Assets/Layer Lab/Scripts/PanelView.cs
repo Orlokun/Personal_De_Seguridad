@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace LayerLab.CasualGame
+namespace Layer_Lab.Scripts
 {
     public class PanelView : MonoBehaviour
     {

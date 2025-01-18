@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -17,6 +19,8 @@ namespace DataUnits.JobSources
 
 
         private int _mOvercomedDialogueStates;
+
+        private List<IJobSupplierChallengeObject> _mChallenges;
         
         
         
@@ -58,5 +62,11 @@ namespace DataUnits.JobSources
             _mOvercomedDialogueStates += (int)DialogueState; 
             _mDialogueState = CountPetrolkDialogueStates.RequiresMindProtection;
         }
+        
+        public override void ActivateChallenge(IJobSupplierChallengeObject openedChallenge)
+        {
+            Debug.Log("CountPetrolkSupplierObject: ActivateChallenge");
+        }
     }
+    
 }

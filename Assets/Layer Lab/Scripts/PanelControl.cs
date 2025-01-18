@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
-#endif
+using UnityEngine.UI;
 
-namespace LayerLab.GUIScripts
+namespace Layer_Lab.Scripts
 {
     public class PanelControl : MonoBehaviour
     {

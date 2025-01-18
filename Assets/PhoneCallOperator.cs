@@ -236,17 +236,12 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     
     public void FinishCallImmediately()
     {
-        Debug.Log($"[FinishCallImmediately] Not Implemented");   
         _phoneState = PhoneState.HungUp;
+        _displayedString = "";
         displayedText.text = "";
         _audioSource.Stop();
         waitingCall = null;
         SoundDirector.Instance.RaiseMusicVolume();
         GameDirector.Instance.GetDialogueOperator.OnDialogueCompleted -= FinishCallImmediately;
-    }
-    
-    private void ToggleDialingSound(bool isSoundActive)
-    {
-        Debug.Log($"[ToggleDialingSound] Not Implemented");   
     }
 }

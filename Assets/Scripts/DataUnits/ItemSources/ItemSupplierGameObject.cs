@@ -87,7 +87,7 @@ namespace DataUnits.ItemSources
         
         public void ReceivePlayerCall(IPlayerGameProfile playerData)
         {
-            if (!BitOperator.IsActive(playerData.GetActiveJobsModule().DialogueUnlockedSuppliers, (int)ItemSupplierId))
+            if (!BitOperator.IsActive(playerData.GetActiveItemSuppliersModule().UnlockedItemSuppliers, (int)ItemSupplierId))
             {
                 RandomDeflection();
             }

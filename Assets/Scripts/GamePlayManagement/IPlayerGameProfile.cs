@@ -6,11 +6,9 @@ using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 
 namespace GamePlayManagement
 {
-    public interface IPlayerGameProfile
+    public interface IPlayerGameProfile : IGameBasedPlayerData
     {
-        public int GameDifficulty { get; }
-        public DateTime GameCreationDate { get; }
-        public Guid GameId { get; }
+
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();
@@ -22,5 +20,12 @@ namespace GamePlayManagement
         public IWorkDayObject GetCurrentWorkday();
         void PlayerLost(EndingTypes organSale);
         void ResetData();
+    }
+
+    public interface IGameBasedPlayerData
+    {
+        public int GameDifficulty { get; }
+        public DateTime GameCreationDate { get; }
+        public Guid GameId { get; }
     }
 }

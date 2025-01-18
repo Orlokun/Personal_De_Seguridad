@@ -50,7 +50,7 @@ namespace GameDirection.NewsManagement
             if (webRequest.result == UnityWebRequest.Result.ConnectionError ||
                 webRequest.result == UnityWebRequest.Result.ProtocolError)
             {
-                Debug.LogError("Jobs Catalogue Data must be reachable");
+                Debug.LogError("GetDayNewsFromServer: Error: " + webRequest.error);
             }
             else
             {
@@ -61,9 +61,9 @@ namespace GameDirection.NewsManagement
 
         private void LoadTodaysNews(string sourceJson)
         {
-            Debug.Log($"BaseJobsCatalogue.LoadJobSuppliersFromJson");
+            Debug.Log($"NewsNarrativeData.LoadTodaysNews");
             var newsData = JsonConvert.DeserializeObject<DayNewsCatalogueData>(sourceJson);
-            Debug.Log($"Finished parsing. Is _jobsCatalogueFromData null?: {newsData == null}");
+            Debug.Log($"Finished parsing. Is newsData null?: {newsData == null}");
             var dayNewsList = new List<INewsObject>();
             for (var i = 1; i < newsData.values.Count;i++)
             {

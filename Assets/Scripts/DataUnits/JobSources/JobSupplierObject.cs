@@ -24,6 +24,7 @@ namespace DataUnits.JobSources
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
+        protected IJobSupplierChallengesModule _challengesModule;
         protected IJobSupplierDialogueModule _dialogueModule;
         protected IJobSupplierProductsModule _productsModuleModule;
         protected IJobSupplierObjectData _mSupplierData;
@@ -154,7 +155,7 @@ namespace DataUnits.JobSources
         //TODO: Implement the call system with a class/interface argument for more better management 
         public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
-            if (!BitOperator.IsActive(playerProfile.GetActiveJobsModule().DialogueUnlockedSuppliers, (int)JobSupplierBitId))
+            if (!BitOperator.IsActive(playerProfile.GetActiveJobsModule().UnlockedJobSuppliers, (int)JobSupplierBitId))
             {
                 RandomDeflection();
             }
@@ -194,5 +195,15 @@ namespace DataUnits.JobSources
             GameDirector.Instance.GetDialogueOperator.StartNewDialogue(randomDialogue);
         }
         #endregion
+
+        public virtual void ActivateChallenge(IJobSupplierChallengeObject openedChallenge)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IJobSupplierChallengesModule
+    {
+        
     }
 }

@@ -1,38 +1,39 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(TabletDisplayController))]
-public class TabletInput : MonoBehaviour
+namespace ExternalAssets.Security_Systems.Free_Version.Scripts
 {
-    [SerializeField,HideInInspector] private TabletDisplayController m_tabletController;
-    [SerializeField] private KeyCode m_cameraDisplayToggle = KeyCode.F12;
-
-    [ContextMenu("Get References For Script")]
-    private void GetReferences()
+    [RequireComponent(typeof(TabletDisplayController))]
+    public class TabletInput : MonoBehaviour
     {
+        [SerializeField,HideInInspector] private TabletDisplayController m_tabletController;
+        [SerializeField] private KeyCode m_cameraDisplayToggle = KeyCode.F12;
 
-        if (m_tabletController == null)
+        [ContextMenu("Get References For Script")]
+        private void GetReferences()
         {
+
+            if (m_tabletController == null)
+            {
 #if UNITY_EDITOR
-            if(!UnityEditor.EditorApplication.isPlaying)
-                UnityEditor.Undo.RecordObject(this, "Obtaining TabletDisplayController reference");
+                if(!UnityEditor.EditorApplication.isPlaying)
+                    UnityEditor.Undo.RecordObject(this, "Obtaining TabletDisplayController reference");
 #endif
-            m_tabletController = GetComponent<TabletDisplayController>();
+                m_tabletController = GetComponent<TabletDisplayController>();
+            }
         }
-    }
 
-    private void Reset()
-    {
-        GetReferences();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(m_cameraDisplayToggle) && m_tabletController != null)
+        private void Reset()
         {
-            m_tabletController.ToggleDisplay();
+            GetReferences();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (Input.GetKeyDown(m_cameraDisplayToggle) && m_tabletController != null)
+            {
+                m_tabletController.ToggleDisplay();
+            }
         }
     }
 }

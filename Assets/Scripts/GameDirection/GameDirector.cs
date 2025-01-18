@@ -230,6 +230,7 @@ namespace GameDirection
             
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule);
             _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
+            //_mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
             _mActiveGameProfile.UpdateProfileData();
             //GetUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
             OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;

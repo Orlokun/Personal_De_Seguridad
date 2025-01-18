@@ -90,7 +90,7 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (BitOperator.IsActive(GetActiveJobsModule().DialogueUnlockedSuppliers, (int)jobSupplierObject.JobSupplierData.JobSupplierBitId))
+                if (BitOperator.IsActive(GetActiveJobsModule().UnlockedJobSuppliers, (int)jobSupplierObject.JobSupplierData.JobSupplierBitId))
                 {
                     GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierData.JobSupplierBitId);
                 }
@@ -101,7 +101,7 @@ namespace GamePlayManagement
             var itemSuppliersInData = BaseItemSuppliersCatalogue.Instance.GetItemSuppliersInData;
             foreach (var itemSupplier in itemSuppliersInData)
             {
-                if (itemSupplier.StoreUnlockPoints <= _gameStatusModule.PlayerXp)
+                if (BitOperator.IsActive(GetActiveItemSuppliersModule().UnlockedItemSuppliers, (int)itemSupplier.ItemSupplierId))
                 {
                     GetActiveItemSuppliersModule().UnlockSupplier(itemSupplier.ItemSupplierId);
                 }

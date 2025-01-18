@@ -1,8 +1,9 @@
+using DialogueSystem;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace DataUnits.JobSources
 {
-    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier
+    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier, INPCRequesterModule
     {
 
         public void CheckCallingTime(int hour, int minute);
@@ -28,5 +29,10 @@ namespace DataUnits.JobSources
         public void ExpendMoney(int amount);
         void LocalInitialize(JobSupplierBitId jobId);
         void PlayerHired();
+    }
+
+    public interface INPCRequesterModule
+    {
+        void ActivateChallenge(IJobSupplierChallengeObject requestIdInt);
     }
 }

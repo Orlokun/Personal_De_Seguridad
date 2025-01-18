@@ -1,31 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class FreebieCameraHookupScript : MonoBehaviour
+namespace ExternalAssets.Security_Systems.Free_Version.Scripts
 {
-    private Camera securityCamera;
-
-    public Camera SecurityCamera
+    public class FreebieCameraHookupScript : MonoBehaviour
     {
-        get 
-        { 
-            if(securityCamera == null)
-            {
-                GetCameraReference();
+        private Camera securityCamera;
+
+        public Camera SecurityCamera
+        {
+            get 
+            { 
+                if(securityCamera == null)
+                {
+                    GetCameraReference();
+                }
+
+                return securityCamera; 
             }
-
-            return securityCamera; 
         }
-    }
 
-    private void Awake()
-    {
-        GetCameraReference();
-    }
+        private void Awake()
+        {
+            GetCameraReference();
+        }
 
-    private void GetCameraReference()
-    {
-        securityCamera = GetComponent<Camera>();
+        private void GetCameraReference()
+        {
+            securityCamera = GetComponent<Camera>();
+        }
     }
 }

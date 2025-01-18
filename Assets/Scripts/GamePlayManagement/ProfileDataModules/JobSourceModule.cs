@@ -9,9 +9,9 @@ namespace GamePlayManagement.ProfileDataModules
     public class JobSourceModule : IJobsSourcesModule
     {
         private IPlayerGameProfile _activePlayer;
-        private int unlockedJobSuppliers = 0;
+        private int _unlockedJobJobSuppliers = 0;
         private int _archivedJobs = 0;
-        private Dictionary<JobSupplierBitId, IJobSupplierObject> _mJobSuppliers = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
+        private Dictionary<JobSupplierBitId, IJobSupplierObject> _mActiveJobSuppliers = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
         
         private int _mTotalDaysEmployed;
         private int _mDaysEmployedStreak;
@@ -19,8 +19,8 @@ namespace GamePlayManagement.ProfileDataModules
         private int _mDaysUnemployedStreak;
         private int _mStreakWithEmployer;
         
-        public int DialogueUnlockedSuppliers => unlockedJobSuppliers;
-        public Dictionary<JobSupplierBitId, IJobSupplierObject> JobObjects => _mJobSuppliers;
+        public int UnlockedJobSuppliers => _unlockedJobJobSuppliers;
+        public Dictionary<JobSupplierBitId, IJobSupplierObject> ActiveJobObjects => _mActiveJobSuppliers;
         private JobSupplierBitId _mCurrentActiveEmployer;
         public JobSupplierBitId CurrentEmployer => _mCurrentActiveEmployer;
         
@@ -41,14 +41,14 @@ namespace GamePlayManagement.ProfileDataModules
                 Debug.LogWarning("[CurrentEmployerData] Current Employer Data must not be 0. Make sure to add a new employer before accessing level");
                 return null;
             }
-            return _mJobSuppliers[_mCurrentActiveEmployer];
+            return _mActiveJobSuppliers[_mCurrentActiveEmployer];
         }
         public void SetNewEmployer(JobSupplierBitId newEmployer)
         {
             _mStreakWithEmployer = 0;
             _mDaysUnemployedStreak = 0;
             _mCurrentActiveEmployer = newEmployer;
-            _mJobSuppliers[newEmployer].PlayerHired();
+            _mActiveJobSuppliers[newEmployer].PlayerHired();
         }
 
         public void QuitFiredFromJob()
@@ -67,7 +67,7 @@ namespace GamePlayManagement.ProfileDataModules
                 _mStreakWithEmployer++;
                 _mDaysEmployedStreak++;
                 _mTotalDaysEmployed++;
-                _mJobSuppliers[_mCurrentActiveEmployer].DaysAsEmployer++;
+                _mActiveJobSuppliers[_mCurrentActiveEmployer].DaysAsEmployer++;
                 _mDaysUnemployedStreak = 0;
             }
         }
@@ -77,20 +77,20 @@ namespace GamePlayManagement.ProfileDataModules
         public int DaysUnemployedStreak => _mDaysUnemployedStreak;
         public int StreakWithEmployer => _mStreakWithEmployer;
 
-        public bool IsModuleActive => unlockedJobSuppliers > 0;
+        public bool IsModuleActive => _unlockedJobJobSuppliers > 0;
 
 
         private IBaseJobsCatalogue _jobsCatalogue;
 
         public void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier)
         {
-            if ((unlockedJobSuppliers & (int) gainedJobSupplier) != 0)
+            if ((_unlockedJobJobSuppliers & (int) gainedJobSupplier) != 0)
             {
                 return;
             }
-            unlockedJobSuppliers |= (int) gainedJobSupplier;
+            _unlockedJobJobSuppliers |= (int) gainedJobSupplier;
 
-            if (_mJobSuppliers.ContainsKey(gainedJobSupplier))
+            if (_mActiveJobSuppliers.ContainsKey(gainedJobSupplier))
             {
                 Debug.LogError("[JobsSourcesModule.AddJobToModule] Job Supplier was already added");
                 return;
@@ -103,16 +103,16 @@ namespace GamePlayManagement.ProfileDataModules
 
             var newSupplier = _jobsCatalogue.GetJobSupplierObject(gainedJobSupplier);
             newSupplier.StartUnlockData();
-            _mJobSuppliers.Add(gainedJobSupplier, newSupplier);
+            _mActiveJobSuppliers.Add(gainedJobSupplier, newSupplier);
         }
         public void ArchiveJob(JobSupplierBitId lostJobSupplier)
         {
             //Remove Job from active ones
-            if ((unlockedJobSuppliers & (int) lostJobSupplier) == 0)
+            if ((_unlockedJobJobSuppliers & (int) lostJobSupplier) == 0)
             {
                 return;
             }
-            unlockedJobSuppliers &= (int)~lostJobSupplier;
+            _unlockedJobJobSuppliers &= (int)~lostJobSupplier;
             
             //Add to archived jobs
             if ((_archivedJobs & (int) lostJobSupplier) != 0)

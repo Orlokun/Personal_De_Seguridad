@@ -18,7 +18,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         private Dictionary<BitItemSupplier, IItemSupplierShop> _activeStores = new Dictionary<BitItemSupplier, IItemSupplierShop>();
         public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects => _activeStores;
 
-        public int AllActiveSuppliers => _mActiveProviders;
+        public int UnlockedItemSuppliers => _mActiveProviders;
 
         public ItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue itemSuppliersDataCatalogue)
         {
@@ -104,17 +104,15 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             Debug.Log($"[ItemSuppliersModule.UnlockSupplier] Start Download Unlocked Dialogues. Item Provider: {provider}");
             var castProvider = (int) provider;
             
-            if ((_mActiveProviders & castProvider) != 0)
+            if(!BitOperator.IsActive(_mActiveProviders, castProvider))
             {
-                return;
+                _mActiveProviders |= castProvider;
             }
-            _mActiveProviders |= castProvider;
-            
+
             if (_activeStores.ContainsKey(provider))
             {
                 return;
             }
-
             var itemSupplier = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(provider);
             itemSupplier.StartUnlockedData();
             var itemSupplierShop = Factory.CreateItemStoreSupplier(provider, _mItemDataController, _mItemSuppliersCatalogue);

@@ -10,6 +10,7 @@ using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
+using GamePlayManagement.BitDescriptions.SupplierChallenges;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ItemManagement;
 using GamePlayManagement.ItemManagement.Guards;
@@ -188,6 +189,13 @@ namespace Utils
         public static IMetaGameDirector CreateMetaGameDirectory()
         {
             return new MetaGameDirector();
+        }
+
+        public static IJobSupplierChallengeObject CreateChallengeObject(JobSupplierBitId supplierBitId, 
+            RequestChallengeType requestType, RequestChallengeLogicOperator requestLogicOperator, ConsideredParameter requestParameterType, int requestParameterValue)
+        {
+            return new JobSupplierChallengeObject(supplierBitId, requestType, requestLogicOperator,
+                requestParameterType, requestParameterValue);
         }
     }
 }
