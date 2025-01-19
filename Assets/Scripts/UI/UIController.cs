@@ -40,7 +40,7 @@ namespace UI
     {
         //Singleton Management to make sure only one UI controller is in scene
         private static UIController _instance;
-        public static UIController Instance => _instance;
+        public static IUIController Instance => _instance;
         public delegate void ReturnToBaseCanvasState();
         public event ReturnToBaseCanvasState OnResetCanvas;
 
@@ -48,8 +48,13 @@ namespace UI
         //Manage the activation or deactivation of the Dialogue UI Object and logic
         private IDialogueOperator _mDialogueOperator;
         public IDialogueOperator DialogueOperator => _mDialogueOperator;
-        //Tracking of canvas objects active objects        
+
+
+
+        //This is the dictionary that holds each CANVAS operator.
         private Dictionary<int, ICanvasOperator> _mActiveCanvasDict;
+        
+        //
         private readonly List<int> _baseObjects = new List<int>() {BasePanelsBitStates.BASE_INFO,BasePanelsBitStates.IN_GAME_CLOCK,
             BasePanelsBitStates.IN_GAME_HELP_BUTTON};
 

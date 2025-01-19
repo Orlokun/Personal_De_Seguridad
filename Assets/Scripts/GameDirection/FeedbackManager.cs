@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DataUnits;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
 using Newtonsoft.Json;
@@ -14,6 +15,9 @@ namespace GameDirection
     public interface IFeedbackManager
     {
         public void StartReadingFeedback(GeneralFeedbackId feedbackType);
+
+        public void ActivatePhoneCallReceivedButton(ICallableSupplier caller);
+        public void DeactivatePhoneCallReceivedButton();
     }
 
     public class FeedbackManager : MonoBehaviour, IInitialize, IFeedbackManager
@@ -31,6 +35,10 @@ namespace GameDirection
 
         private bool _mIsActive;
 
+        [SerializeField] private PhoneAnswerPopUp mPhoneCallObject;
+        
+        
+        
         #region Init
         private void Awake()
         {
@@ -122,6 +130,19 @@ namespace GameDirection
             ReadFeedbackForTime(_feedbackObjects[feedbackType].FeedbackText,
                 _feedbackObjects[feedbackType].FeedbackReadTime);
         }
+
+        public void ActivatePhoneCallReceivedButton(ICallableSupplier caller)
+        {
+            mPhoneCallObject.SetAnswerData(caller);
+            mPhoneCallObject.gameObject.SetActive(true);
+        }
+        
+        public void DeactivatePhoneCallReceivedButton()
+        {
+            mPhoneCallObject.CleanAnswerData();
+            mPhoneCallObject.gameObject.SetActive(false);
+        }
+        
         private void ReadFeedbackForTime(string feedbackText, int timeLength)
         {
             if (_mIsActive)

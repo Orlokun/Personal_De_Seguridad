@@ -7,6 +7,7 @@ using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -22,6 +23,7 @@ public enum PhoneState
 
 public interface IPhoneCallOperator
 {
+    void PressCall();
     void GoToCall(ISupplierBaseObject callReceiver);
     void FinishCallImmediately();
     void DialNumber(int number);
@@ -107,8 +109,10 @@ public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
         Random.InitState(DateTime.Now.Millisecond);
         var randomTime = Random.Range(9000, 12000);
         cancellationToken = new CancellationTokenSource();
-        //TODO: Show feedback button that takes you straight to phone UI elements
+        var callableData = GameDirector.Instance.GetSpeakerData(waitingCall.GetSpeakerId(0));
+        FeedbackManager.Instance.ActivatePhoneCallReceivedButton(callableData);
         await Task.Delay(randomTime, cancellationToken.Token);
+        FeedbackManager.Instance.DeactivatePhoneCallReceivedButton();
         FinishCallImmediately();
     }
 
