@@ -1,4 +1,5 @@
 using System.Collections;
+using GameDirection.TimeOfDayManagement;
 using InputManagement;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace GameDirection.DayLevelSceneManagers
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_02);
+
             
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();

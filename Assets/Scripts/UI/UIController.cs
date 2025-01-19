@@ -89,8 +89,8 @@ namespace UI
             }
             
             //Item Sidebar
-            var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
-            _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
+            //var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+            //_mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
         }
 
