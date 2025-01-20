@@ -240,9 +240,9 @@ namespace Utils
                 case DayBitId.Day_02:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/SecondDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case DayBitId.Day_03:
-                    return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/FirstDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/ThirdDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case DayBitId.Day_04:
-                    return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/FirstDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                    return "https://sheets.googleapis.com/v4/spreadsheets/1e-t-nctVTamY3txBx-m4sazoky6hLEkA0Em9wj-lj3w/values/FourthDay?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 default:
                     return "";
             }
