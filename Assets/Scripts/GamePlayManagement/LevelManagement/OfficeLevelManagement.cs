@@ -1,6 +1,7 @@
 using System.Collections;
 using CameraManagement;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
 
 namespace GamePlayManagement.LevelManagement
@@ -9,6 +10,8 @@ namespace GamePlayManagement.LevelManagement
     {
         protected IGameCameraManager _mGameCameraManager;
         protected IClockManagement _mClockManager;
+        
+        protected JobSupplierBitId MJobSupplierId;
         protected virtual void Awake()
         {
             _mGameCameraManager = GameCameraManager.Instance;

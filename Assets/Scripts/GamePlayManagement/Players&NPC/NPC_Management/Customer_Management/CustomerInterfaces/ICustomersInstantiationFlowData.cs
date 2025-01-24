@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using UnityEngine;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces
 {
@@ -8,5 +11,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Cust
         public int[] InstantiationFrequencyRange { get; }
         public string ClientPrefabPaths { get; }
         public int GameDifficultyLvl { get; }
+        public void SetEntrancePositions(List<IStoreEntrancePosition> storeEntrancePositions);
+        public List <IStoreEntrancePosition> GetEntrancePositions { get; }
     }
 }

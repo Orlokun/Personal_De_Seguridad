@@ -1,6 +1,7 @@
 using System.Collections;
 using DialogueSystem.Interfaces;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UnityEngine;
@@ -83,6 +84,8 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
+            
+            
             //TODO: Remove TEST ADDITION
             //MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
             //End remove

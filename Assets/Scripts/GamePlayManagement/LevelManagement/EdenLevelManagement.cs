@@ -1,4 +1,5 @@
 using GameDirection;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
@@ -10,14 +11,16 @@ namespace GamePlayManagement.LevelManagement
         [SerializeField] private Transform levelCamerasParent;
         private ICustomersInSceneManager _customerSpawner;
         private IPlayerGameProfile _mPlayerProfile;
+        
 
         protected override void Awake()
         {
             base.Awake();
+            MJobSupplierId = JobSupplierBitId.COPY_OF_EDEN;
             _mGameCameraManager.SetLevelCamerasParent(levelCamerasParent);
             SetCamerasInactive();
-            _customerSpawner = FindObjectOfType<CustomersInSceneManager>(true);
-            _customerSpawner.ToggleSpawning(false);
+            _customerSpawner = FindFirstObjectByType<CustomersInSceneManager>(FindObjectsInactive.Include);
+            _customerSpawner.ToggleSpawning(false, MJobSupplierId);
             _mPlayerProfile = GameDirector.Instance.GetActiveGameProfile;
         }
 
@@ -28,7 +31,7 @@ namespace GamePlayManagement.LevelManagement
                 Debug.LogWarning("[EdenLevelManager.ManageClientSpawning] Customer Spawner must be available for toggle");
                 return;
             }
-            _customerSpawner.ToggleSpawning(isActive);
+            _customerSpawner.ToggleSpawning(isActive, MJobSupplierId);
         }
 
         private void SetCamerasInactive()

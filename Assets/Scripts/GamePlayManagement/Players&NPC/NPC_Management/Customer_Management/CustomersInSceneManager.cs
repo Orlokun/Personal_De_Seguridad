@@ -39,10 +39,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData> _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData>();
         private StoreCustomerManagementData _customerManagementRawData;
         
-        //Entrance points for customers
-        private List<IStoreEntrancePosition> _mStartPositions;
         
-        private int[] _mInstantiationFrequency;
+        private ICustomersInstantiationFlowData _mCurrentCustomerInstantiatorData;
+        
+        /// <summary>
+        /// Turnis This into a class
+        /// </summary>
+        //Entrance points for customers
+        
         private bool _mIsSpawning = false;
         private Coroutine _customersCoroutine;
 
@@ -107,9 +111,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void Awake()
         {
-            if (_mInstance != null && _mInstance != this)
+            if (Instance != null && _mInstance != this)
             {
-                Destroy(this);
+                Destroy(gameObject);
             }
             _mInstance = this;
             DontDestroyOnLoad(this);
@@ -148,7 +152,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private void LoadCustomerDataFromJson(string sourceJson)
         {
             _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData>();
-            Debug.Log($"[LoadCustomerDataFromJson] Start Serializing Job supplier's management Json data");
+            Debug.Log($"[LoadCustomerDataFromJson] Start Serializing customer instantiation management data.");
             _customerManagementRawData = JsonConvert.DeserializeObject<StoreCustomerManagementData>(sourceJson);
             if (_customerManagementRawData == null)
             {
@@ -184,7 +188,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 var instantiationRange = _customerManagementRawData.values[i][5].Split(',');
                 var castedRange = RangeProcessor.ProcessLinksStrings(instantiationRange);
 
-                //TODO: FIX THIS HARDCODED MAGICAL NUMBER!
+                //TODO: GAME DIFFICULTY SHOUOLD BE SET SOMEWHERE ELSE
                 var gameDifficulty = 1;
                 var customerManagementData = Factory.CreateCustomersInSceneManagerData(supplierBitId, gameDifficulty, maxClients, storePrefabsPath, castedRange);
                 _mClientManagementData.Add(supplierBitId, customerManagementData);
@@ -193,7 +197,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         /// <summary>
-        /// MAke sure a lvl with a Shop position manager is available before calling
+        /// Make sure a lvl with a Shop position manager is available before calling
         /// </summary>
         /// <param name="jobId"></param>
         public void LoadInstantiationProperties(JobSupplierBitId jobId)
@@ -204,9 +208,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 {
                     return;
                 }
-                var jobClientsData = _mClientManagementData[jobId];
-                _mInstantiationFrequency = jobClientsData.InstantiationFrequencyRange;
-
+                _mCurrentCustomerInstantiatorData = _mClientManagementData[jobId];
             }
             catch (Exception e)
             {
@@ -220,18 +222,17 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         {
             try
             {
-                var shopPositionManager = (IShopPositionsManager)FindObjectOfType<ShopPositionsManager>();
-                _mStartPositions = shopPositionManager.StartPositions;
+                var shopPositionManager = (IShopPositionsManager)FindFirstObjectByType<ShopPositionsManager>();
+                _mCurrentCustomerInstantiatorData.SetEntrancePositions(shopPositionManager.StartPositions);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-
         }
         public GameObject MyGameObject => transform.gameObject;
-        public void ToggleSpawning(bool isSpawning)
+        public void ToggleSpawning(bool isSpawning, JobSupplierBitId storeId)
         {
             if (isSpawning && _mIsSpawning)
             {
@@ -246,6 +247,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                     StopCoroutine(_customersCoroutine);
                     break;
                 case true:
+                    LoadInstantiationProperties(storeId);
+                    LoadCustomerLevelStartTransforms();
                     _customersCoroutine = StartCoroutine(StartInstantiatingClients());
                     break;
             }
@@ -255,7 +258,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             while (_mIsSpawning)
             {
                 Random.InitState(DateTime.Now.Millisecond);
-                var randomRange = Random.Range(_mInstantiationFrequency[0], _mInstantiationFrequency[1]);
+                var randomRange = Random.Range(_mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[0], _mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[1]);
                 //var randomRange = Random.Range(3, 5);
                 var randomPrefabInstantiated = InstantiateRandomClient();
                 StartMovingClientAgent(randomPrefabInstantiated);
@@ -289,9 +292,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             Random.InitState(DateTime.Now.Millisecond);
             //Random costumer index is also used as string in the clients folder
             var randomCustomer = Random.Range(1, 20);
-            var randomIndex = Random.Range(0, _mStartPositions.Count - 1);
+            var randomIndex = Random.Range(0, _mCurrentCustomerInstantiatorData.GetEntrancePositions.Count - 1);
             //Choose a random position from the ones available in the screen
-            var randomPositionData = _mStartPositions[randomIndex];
+            var randomPositionData = _mCurrentCustomerInstantiatorData.GetEntrancePositions[randomIndex];
             
             var customerPath = BaseCustomersPath + randomCustomer;
             var randomCustomerData = Factory.CreateBaseCustomerTypeData();

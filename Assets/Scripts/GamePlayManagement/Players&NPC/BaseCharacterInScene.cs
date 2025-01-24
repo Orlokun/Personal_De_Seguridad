@@ -70,7 +70,7 @@ namespace GamePlayManagement.Players_NPC
         protected virtual void Awake()
         {
             CheckId();
-            PositionsManager = FindObjectOfType<ShopPositionsManager>();    
+            PositionsManager = FindFirstObjectByType<ShopPositionsManager>();    
             BaseAnimator = GetComponent<BaseAnimatedAgent>();
             MyNavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
