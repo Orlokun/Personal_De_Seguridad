@@ -1,6 +1,6 @@
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.ItemManagement;
-using GamePlayManagement.ItemPlacement.PlacementManagers;
+using GamePlayManagement.ItemPlacement.PlacementManagement;
 using UnityEngine;
 
 namespace GamePlayManagement.ItemPlacement.ItemUIButtons

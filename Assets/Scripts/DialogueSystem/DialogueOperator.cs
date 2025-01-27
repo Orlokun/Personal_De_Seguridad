@@ -167,6 +167,7 @@ namespace DialogueSystem
 
             //The following line of code makes the coroutine wait for a frame so as the next WaitUntil is not skipped
             yield return null;
+            CheckDialogueLineEventBehavior(dialogueNode);
             if (dialogueNode.LinkNodes[0] == 0)
             {
                 Debug.Log("[DialogueOperator.WriteDialogueNode] Finished going through dialogur");
@@ -226,7 +227,6 @@ namespace DialogueSystem
                     yield return new WaitForSeconds(typingSpeed);
                 }
             }
-            CheckDialogueLineEventBehavior(dialogueNode);
             CheckDialogueLineChoiceBehavior(dialogueNode);
             nextLineButton.SetActive(true);
             _soundMachine.PausePlayingSound();

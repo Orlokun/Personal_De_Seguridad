@@ -18,7 +18,8 @@ namespace UI.PopUpManager
         TRAP_ITEM_INFO_PANEL = 64,
         OTHER_ITEM_INFO_PANEL = 128,
         ITEM_SUPPLIER_INFO_PANEL = 256,
-        NEWS_DETAIL_POPUP = 512
+        NEWS_DETAIL_POPUP = 512,
+        FEEDBACK_MASK = 1024
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator

@@ -17,11 +17,16 @@ namespace GamePlayManagement.Players_NPC
         public void ToggleNavMesh(bool isActive);
     }
     
+    /// <summary>
+    /// THIS CLASS MUST BE TURNED INTO A PROPER STATE MACHINE
+    /// </summary>
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BaseAnimatedAgent))]
     public abstract class BaseCharacterInScene : MonoBehaviour, IBaseCharacterInScene
     {
+        #region Constants
+        
         protected const float BaseWalkSpeed = 3.5f;
         protected const float BaseRunSpeed = 15f;
         protected const int BaseAwakeTime = 5000;
@@ -30,6 +35,9 @@ namespace GamePlayManagement.Players_NPC
         protected const string Walk = "Walk";
         protected const string Run = "Run";        
         protected const string SearchAround = "SearchAround";
+        
+
+        #endregion
 
         public Guid CharacterId => MCharacterId;
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;

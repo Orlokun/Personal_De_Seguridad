@@ -145,8 +145,8 @@ namespace DataUnits.JobSources
                 }
 
                 var dialogueLineText = _mImportantDialoguesData.values[i][4];
-                var cameraTargetName = _mImportantDialoguesData.values[i][5];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mImportantDialoguesData.values[i][5].Split(',');
+                var hasCameraTarget = cameraArgs.Length > 1;
                 var eventNameId = _mImportantDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
@@ -156,7 +156,7 @@ namespace DataUnits.JobSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mImportantDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -197,8 +197,8 @@ namespace DataUnits.JobSources
                 int.TryParse(_mDeflectionDialoguesData.values[i][2], out var speakerId);
 
                 var dialogueLineText = _mDeflectionDialoguesData.values[i][3];
-                var cameraTargetName = _mDeflectionDialoguesData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mDeflectionDialoguesData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length > 1;
                 var eventNameId = _mDeflectionDialoguesData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -208,7 +208,7 @@ namespace DataUnits.JobSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mDeflectionDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -256,8 +256,8 @@ namespace DataUnits.JobSources
                 int.TryParse(_mInsistenceDialoguesData.values[i][3], out var speakerId);
 
                 var dialogueLineText = _mInsistenceDialoguesData.values[i][4];
-                var cameraTargetName = _mInsistenceDialoguesData.values[i][5];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mInsistenceDialoguesData.values[i][5].Split(',');
+                var hasCameraTarget = cameraArgs.Length > 1;
                 var eventNameId = _mInsistenceDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
@@ -267,7 +267,7 @@ namespace DataUnits.JobSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mInsistenceDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -308,8 +308,8 @@ namespace DataUnits.JobSources
                 }
 
                 var dialogueLineText = _mSupplierCallDialoguesData.values[i][3];
-                var cameraTargetName = _mSupplierCallDialoguesData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mSupplierCallDialoguesData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length > 1;
                 var eventNameId = _mSupplierCallDialoguesData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -319,7 +319,7 @@ namespace DataUnits.JobSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mSupplierCallDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }

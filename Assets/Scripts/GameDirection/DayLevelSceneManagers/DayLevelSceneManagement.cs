@@ -112,8 +112,8 @@ namespace GameDirection.DayLevelSceneManagers
                 int.TryParse(DialoguesBaseDataString.values[i][2], out var speakerId);
 
                 var dialogueLineText = DialoguesBaseDataString.values[i][3];
-                var cameraTargetName = DialoguesBaseDataString.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = DialoguesBaseDataString.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length >1;
                 var eventNameId = DialoguesBaseDataString.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -123,7 +123,7 @@ namespace GameDirection.DayLevelSceneManagers
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 DayBaseDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }

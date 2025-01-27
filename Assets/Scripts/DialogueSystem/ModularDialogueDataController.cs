@@ -198,8 +198,8 @@ namespace DialogueSystem
                 }
 
                 var dialogueLineText = _modularDialoguesData.values[i][3];
-                var cameraTargetName = _modularDialoguesData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _modularDialoguesData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length > 1;
                 var eventNameId = _modularDialoguesData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -209,7 +209,7 @@ namespace DialogueSystem
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueModuleId, dialogueNodeId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _modularIntroDialogues[currentDialogueModuleId].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ModularDialogueDataController.LoadModularDialoguesData] Finish request");

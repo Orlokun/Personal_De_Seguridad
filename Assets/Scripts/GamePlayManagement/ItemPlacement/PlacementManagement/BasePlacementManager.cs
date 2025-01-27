@@ -6,7 +6,7 @@ using UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace GamePlayManagement.ItemPlacement.PlacementManagers
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public abstract class BasePlacementManager : MonoBehaviour, IBasePlacementManager
     {

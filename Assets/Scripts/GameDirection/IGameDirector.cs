@@ -32,10 +32,13 @@ namespace GameDirection
         public IModularDialogueDataController GetModularDialogueManager { get; }
         public ICustomersInSceneManager GetCustomerInstantiationManager { get; }
         public INewsNarrativeDirector GetNarrativeNewsDirector { get; }
+        public void LaunchTutorial();
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);
         public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier);
+        void ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier);
+
         public void BeginNewDayProcess();
 
         ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId);

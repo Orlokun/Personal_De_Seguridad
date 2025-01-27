@@ -1,10 +1,9 @@
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
-using GamePlayManagement.ItemPlacement.PlacementManagers;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     /// <summary>
     /// UI script to Instantiate the game object of the item that will be used by the player

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public class CameraPlacementPosition : ICameraPlacementPosition
     {

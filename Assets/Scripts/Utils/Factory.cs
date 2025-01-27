@@ -15,6 +15,7 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ItemManagement;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.ItemPlacement;
+using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
@@ -196,6 +197,11 @@ namespace Utils
         {
             return new JobSupplierChallengeObject(supplierBitId, requestType, requestLogicOperator,
                 requestParameterType, requestParameterValue);
+        }
+
+        public static IBaseTutorialDialogueData CreateTutorialDialogueData()
+        {
+            return new BaseTutorialDialogueData();
         }
     }
 }

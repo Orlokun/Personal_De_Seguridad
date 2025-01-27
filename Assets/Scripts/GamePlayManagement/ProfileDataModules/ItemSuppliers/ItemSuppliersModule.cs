@@ -4,6 +4,7 @@ using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -118,7 +119,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             var itemSupplierShop = Factory.CreateItemStoreSupplier(provider, _mItemDataController, _mItemSuppliersCatalogue);
             itemSupplier.InitializeStore(itemSupplierShop);
             _activeStores.Add(provider, itemSupplierShop);
-            Debug.Log($"[ItemSuppliersModule.UnlockSupplier] Finish Download Unlocked Dialogues. Item Provider: {provider}");
+            UIController.Instance.ItemUnlockedFeedback(provider);
         }
 
         public void RemoveSupplier(BitItemSupplier provider)

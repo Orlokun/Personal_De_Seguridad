@@ -4,6 +4,7 @@ using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemManagement.Guards;
+using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using Unity.Cinemachine;
 using UnityEngine;

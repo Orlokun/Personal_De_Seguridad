@@ -247,5 +247,11 @@ namespace Utils
                     return "";
             }
         }
+
+        public static string GetTutorialDialogueUrl()
+        {
+            return
+                "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/Tutorial?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        }
     }
 }

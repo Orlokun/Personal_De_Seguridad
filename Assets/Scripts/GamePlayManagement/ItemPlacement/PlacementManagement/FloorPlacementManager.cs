@@ -1,12 +1,9 @@
 using DataUnits.ItemScriptableObjects;
-using GameDirection;
-using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ItemManagement.Guards;
-using UI;
 using UnityEngine;
 using Utils;
 
-namespace GamePlayManagement.ItemPlacement.PlacementManagers
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public class FloorPlacementManager : BasePlacementManager
     {

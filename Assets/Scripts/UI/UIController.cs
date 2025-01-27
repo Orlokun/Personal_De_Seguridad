@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using InputManagement;
 using UI.PopUpManager;
 using UnityEngine;
@@ -33,6 +35,8 @@ namespace UI
         void DeactivateObject(CanvasBitId canvasBitId, int panel);
         void ToggleBackground(bool toggleValue);
         IDialogueOperator DialogueOperator { get; }
+        void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
+        void ItemUnlockedFeedback(BitItemSupplier itemSupplier);
     }
 
     [RequireComponent(typeof(DialogueOperator))]
@@ -94,6 +98,26 @@ namespace UI
             OnResetCanvas?.Invoke();
         }
 
+        
+        public void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier)
+        {
+            var jobSupplierName = BaseJobsCatalogue.Instance.GetJobSupplierObject(newJobSupplier).StoreName;
+            var bannerText = $"New Job Found in: {jobSupplierName}";
+            ShowFeedback(bannerText);
+        }
+        public void ItemUnlockedFeedback(BitItemSupplier itemSupplier)
+        {
+            var jobSupplierName = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(itemSupplier).StoreName;
+            var bannerText = $"Item Supplier Unlocked: {jobSupplierName}";
+            ShowFeedback(bannerText);
+        }
+        
+        private void ShowFeedback(string feedback)
+        {
+            var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
+            bannerObject.ToggleBannerForSeconds(feedback, 4);
+        }
+        
         #region Base Info Canvas Management
         public void InitializeBaseInfoCanvas(IPlayerGameProfile playerProfile)
         {

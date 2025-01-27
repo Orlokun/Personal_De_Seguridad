@@ -6,7 +6,7 @@ using GamePlayManagement.ItemManagement;
 using UnityEngine;
 using Utils;
 
-namespace GamePlayManagement.ItemPlacement.PlacementManagers
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public class CameraPlacementManager : BasePlacementManager
     {

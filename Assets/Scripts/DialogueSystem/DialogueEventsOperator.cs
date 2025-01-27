@@ -14,15 +14,21 @@ namespace DialogueSystem
     {
         public delegate void HirePlayer(JobSupplierBitId supplierId);
         public event HirePlayer OnHirePlayer;
-       
+        
+        
+        public delegate void UnlockItemSupplier(BitItemSupplier itemSupplier);
+        public event UnlockItemSupplier OnUnlockItemSupplier;
+
         /// <summary>
         /// Constructor
         /// </summary>
         public DialogueEventsOperator()
         {
             OnHirePlayer += GameDirector.Instance.ManageNewJobHiredEvent;
-            OnHirePlayer += JobFoundFeedbackEvent;
+            OnUnlockItemSupplier += GameDirector.Instance.ManageNewItemSupplierUnlockedEvent;
         }
+        
+        
         public void HandleDialogueEvent(string eventCompleteCode)
         {
             var eventCodes = SplitEventCodes(eventCompleteCode);
@@ -32,23 +38,6 @@ namespace DialogueSystem
         public void LaunchHireEvent(JobSupplierBitId jobSupplierId)
         {
             LaunchPlayerHiredEvent(jobSupplierId);
-        }
-
-        private void JobFoundFeedbackEvent(JobSupplierBitId newJobSupplier)
-        {
-            var jobSupplierName = BaseJobsCatalogue.Instance.GetJobSupplierObject(newJobSupplier).StoreName;
-            var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-            var bannerText = $"New Job Found in: {jobSupplierName}";
-            bannerObject.ToggleBannerForSeconds(bannerText, 4);
-        }
-        
-        
-        private void ItemSupplierUnlocked(BitItemSupplier newItemSupplier)
-        {
-            var jobSupplierName = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(newItemSupplier).StoreName;
-            var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
-            var bannerText = $"New Item Supplier Unlocked: {jobSupplierName}";
-            bannerObject.ToggleBannerForSeconds(bannerText, 4);
         }
         
         private string[] SplitEventCodes(string completeEventCode)
@@ -85,7 +74,15 @@ namespace DialogueSystem
                 case "UnlockItemSupplier":
                     LaunchUnlockItemSupplierEvent(eventCodes[1]);
                     break;
+                case "LaunchTutorialDialogue":
+                    LaunchTutorialProcessEvent(eventCodes[1]);
+                    break;
             }
+        }
+
+        private void LaunchTutorialProcessEvent(string eventCode)
+        {
+            
         }
 
         private void LaunchUnlockItemSupplierEvent(string eventCode)
@@ -94,16 +91,11 @@ namespace DialogueSystem
             if (!hasSupplierId)
             {
                 Debug.LogError("[LaunchUnlockItemSupplierEvent] Event must have the item supplier id");
-            }
-            var itemSupplierBitId = (BitItemSupplier) supplierIdInt;
-            var playerProfile = GameDirector.Instance.GetActiveGameProfile;
-            var isItemSupplierActive = BitOperator.IsActive(playerProfile.GetActiveItemSuppliersModule().UnlockedItemSuppliers, (int) itemSupplierBitId);
-            if (isItemSupplierActive)
-            {
                 return;
             }
-            playerProfile.GetActiveItemSuppliersModule().UnlockSupplier(itemSupplierBitId);
-            ItemSupplierUnlocked(itemSupplierBitId);
+            
+            var itemSupplierBitId = (BitItemSupplier) supplierIdInt;
+            OnUnlockItemSupplier?.Invoke(itemSupplierBitId);
         }
 
         private void LaunchSupplierRequestEvent(string supplierStringId, string requestTypeString, string requestLogicString, 

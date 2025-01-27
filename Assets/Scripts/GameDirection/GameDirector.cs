@@ -17,6 +17,8 @@ using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement;
 using UI;
+using UI.EndOfDay;
+using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 
@@ -56,6 +58,7 @@ namespace GameDirection
         private ICustomersInSceneManager _mCustomerInstantiationManager;
         private INewsNarrativeDirector _mNarrativeNewsDirector;
         private IMetaGameDirector _mMetaGameDirector;
+        private IBaseTutorialDialogueData _mTutorialDialogueData;
         
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
@@ -145,6 +148,8 @@ namespace GameDirection
 
             _mModularDialogues = Factory.CreateModularDialoguesDataController();
             _mModularDialogues.Initialize();
+            _mTutorialDialogueData = Factory.CreateTutorialDialogueData();
+            
             _mCustomerInstantiationManager = CustomersInSceneManager.Instance;
             _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
             _mMetaGameDirector = Factory.CreateMetaGameDirectory();
@@ -292,8 +297,19 @@ namespace GameDirection
         {
             GetActiveGameProfile.GetActiveJobsModule().SetNewEmployer(newJobSupplier);
             GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);        
+            _mUIController.HiredInJobFoundFeedbackEvent(newJobSupplier);
         }
 
+        public void ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier)
+        {
+            GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(itemsupplier);
+        }
+
+        public void LaunchTutorial()
+        {
+            
+        }
+        
         public void BeginNewDayProcess()
         {
             var newDayId = GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().BitId;

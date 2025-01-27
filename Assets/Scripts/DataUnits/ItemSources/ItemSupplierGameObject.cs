@@ -208,8 +208,8 @@ namespace DataUnits.ItemSources
 
 
                 var dialogueLineText = _mDeflectionDialogueData.values[i][3];
-                var cameraTargetName = _mDeflectionDialogueData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mDeflectionDialogueData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length >1;
                 var eventNameId = _mDeflectionDialogueData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -218,7 +218,7 @@ namespace DataUnits.ItemSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mDeflectionDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
@@ -260,8 +260,8 @@ namespace DataUnits.ItemSources
                 }
 
                 var dialogueLineText = _mImportantDialogueData.values[i][3];
-                var cameraTargetName = _mImportantDialogueData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mImportantDialogueData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length >1;
                 var eventNameId = _mImportantDialogueData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -271,7 +271,7 @@ namespace DataUnits.ItemSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mImportantDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadImportantDialoguesFromJson] Finish Important dialogues parse for {StoreName}");
@@ -313,8 +313,8 @@ namespace DataUnits.ItemSources
                 }
 
                 var dialogueLineText = _mInsistenceDialogueData.values[i][3];
-                var cameraTargetName = _mInsistenceDialogueData.values[i][4];
-                var hasCameraTarget = cameraTargetName != "0";
+                var cameraArgs = _mInsistenceDialogueData.values[i][4].Split(',');
+                var hasCameraTarget = cameraArgs.Length >1;
                 var eventNameId = _mInsistenceDialogueData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
@@ -324,7 +324,7 @@ namespace DataUnits.ItemSources
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraTargetName, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
                 _mInsistenceDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Finish Insistence dialogues parse for {StoreName}");

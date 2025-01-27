@@ -19,7 +19,7 @@ namespace DialogueSystem.Units
         public DialogueSpeakerId SpeakerId { get ; }
         public string DialogueLine { get ; }
         public bool HasCameraTarget { get ; }
-        public string TargetCameraId { get ; }
+        public string[] CameraEvent { get ; }
         public bool HasChoice { get ; }
         public bool HasEvent { get ; }
         public string EventCodes { get ; }
@@ -32,34 +32,34 @@ namespace DialogueSystem.Units
         private DialogueSpeakerId _speakerId;
         private string _dialogueLine;
         private bool _hasCameraTarget;
-        private string _targetCameraId;
+        private string[] _cameraEvent;
         private bool _hasChoice;
         private bool _hasEvent;
         private string _eventNameId;
         private int[] _linkNodes;
         public DialogueNodeData(int dialogObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLine, bool hasCameraTarget, 
-            string targetCameraId, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
+            string[] cameraEvent, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
         {
             _dialogObjectIndex = dialogObjectIndex;
             _dialogueLineIndex = dialogueLineIndex;
             _speakerId = (DialogueSpeakerId)speakerId;
             _dialogueLine = dialogueLine;
             _hasCameraTarget = hasCameraTarget;
-            _targetCameraId = targetCameraId;
+            _cameraEvent = cameraEvent;
             _hasChoice = hasChoice;
             _hasEvent = hasEvent;
             _eventNameId = eventNameId;
             _linkNodes = linkNodes;
         }
         public DialogueNodeData(OmniIntroDialogues dialogObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLine, bool hasCameraTarget, 
-            string targetCameraId, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
+            string[] cameraEvent, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
         {
             _dialogObjectIndex = (int)dialogObjectIndex;
             _dialogueLineIndex = dialogueLineIndex;
             _speakerId = (DialogueSpeakerId)speakerId;
             _dialogueLine = dialogueLine;
             _hasCameraTarget = hasCameraTarget;
-            _targetCameraId = targetCameraId;
+            _cameraEvent = cameraEvent;
             _hasChoice = hasChoice;
             _hasEvent = hasEvent;
             _eventNameId = eventNameId;
@@ -71,7 +71,7 @@ namespace DialogueSystem.Units
         public DialogueSpeakerId SpeakerId => _speakerId;
         public string DialogueLine => _dialogueLine;
         public bool HasCameraTarget => _hasCameraTarget;
-        public string TargetCameraId => _targetCameraId;
+        public string[] CameraEvent => _cameraEvent;
         public bool HasChoice => _hasChoice;
         public bool HasEvent => _hasEvent;
         public string EventCodes => _eventNameId;

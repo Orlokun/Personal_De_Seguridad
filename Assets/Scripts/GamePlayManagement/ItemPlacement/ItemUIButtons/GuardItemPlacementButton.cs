@@ -1,5 +1,5 @@
 using DataUnits.ItemScriptableObjects;
-using GamePlayManagement.ItemPlacement.PlacementManagers;
+using GamePlayManagement.ItemPlacement.PlacementManagement;
 
 namespace GamePlayManagement.ItemPlacement.ItemUIButtons
 {

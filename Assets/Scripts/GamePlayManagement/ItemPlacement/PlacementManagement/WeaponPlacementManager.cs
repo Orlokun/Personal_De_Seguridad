@@ -1,7 +1,7 @@
 using GamePlayManagement.ItemManagement;
 using UnityEngine;
 
-namespace GamePlayManagement.ItemPlacement.PlacementManagers
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public class WeaponPlacementManager : BasePlacementManager
     {

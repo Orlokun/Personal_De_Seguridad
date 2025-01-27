@@ -5,6 +5,7 @@ using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
 using Newtonsoft.Json;
 using TMPro;
+using UI.PopUpManager.OfficeRelatedPopUps;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
