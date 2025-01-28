@@ -4,6 +4,7 @@ using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
+using GamePlayManagement.TutorialManagement;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -86,8 +87,13 @@ namespace DialogueSystem
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
+                //Highlight event
+                var hasHighlightEvent = _mTutorialBaseData.values[i][6] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mTutorialBaseData.values[i][6].Split(',') : emptyString;
+                
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineIndex, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mTutorialDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             

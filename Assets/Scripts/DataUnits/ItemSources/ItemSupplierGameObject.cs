@@ -96,10 +96,6 @@ namespace DataUnits.ItemSources
                 GetCurrentUnlockedCall();
             }
         }
-        public void ReceivePlayerCall(int playerLevel)
-        {
-
-        }
 
         private async void GetCurrentUnlockedCall()
         {
@@ -176,9 +172,7 @@ namespace DataUnits.ItemSources
         }
         private void LoadDeflectionDialoguesFromJson(string sourceJson)
         {
-            Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Begin request");
             _mDeflectionDialogueData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
-            Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDeflectionDialogueData == null}. {_mDeflectionDialogueData}");
             _mDeflectionDialoguesDict = new Dictionary<int, IDialogueObject>();
 
             var lastDialogueIndex = 0;
@@ -206,7 +200,6 @@ namespace DataUnits.ItemSources
                 }
                 var isSpeakerId = int.TryParse(_mDeflectionDialogueData.values[i][2], out var speakerId);
 
-
                 var dialogueLineText = _mDeflectionDialogueData.values[i][3];
                 var cameraArgs = _mDeflectionDialogueData.values[i][4].Split(',');
                 var hasCameraTarget = cameraArgs.Length >1;
@@ -216,9 +209,14 @@ namespace DataUnits.ItemSources
                 var linksToString = _mDeflectionDialogueData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var hasChoices = linksToInts.Length > 1;
+                
+                //Highlight event
+                var hasHighlightEvent = _mDeflectionDialogueData.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mDeflectionDialogueData.values[i][7].Split(',') : emptyString;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mDeflectionDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadDeflectionDialoguesFromJson] Finish Deflection dialogues parse for {StoreName}");
@@ -270,8 +268,14 @@ namespace DataUnits.ItemSources
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
+                //Highlight event
+                var hasHighlightEvent = _mImportantDialogueData.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mImportantDialogueData.values[i][7].Split(',') : emptyString;
+
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
+
                 _mImportantDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadImportantDialoguesFromJson] Finish Important dialogues parse for {StoreName}");
@@ -323,8 +327,15 @@ namespace DataUnits.ItemSources
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
+                //Highlight event
+                var hasHighlightEvent = _mInsistenceDialogueData.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mInsistenceDialogueData.values[i][7].Split(',') : emptyString;
+
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
+
+
                 _mInsistenceDialoguesDict[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
             Debug.Log($"[ItemSupplier.LoadInsistenceDialoguesFromJson] Finish Insistence dialogues parse for {StoreName}");

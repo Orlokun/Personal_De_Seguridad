@@ -121,9 +121,14 @@ namespace GameDirection.DayLevelSceneManagers
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
+                
+                //Highlight event
+                var hasHighlightEvent = DialoguesBaseDataString.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? DialoguesBaseDataString.values[i][7].Split(',') : emptyString;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 DayBaseDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }

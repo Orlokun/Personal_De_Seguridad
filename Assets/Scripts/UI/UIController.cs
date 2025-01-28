@@ -131,8 +131,6 @@ namespace UI
         
         #endregion
 
-        
-        
         public void UpdateOfficeUIElement(int cameraState)
         {
             var indexBitValue = BitOperator.TurnIndexToBitIndexValue(cameraState);

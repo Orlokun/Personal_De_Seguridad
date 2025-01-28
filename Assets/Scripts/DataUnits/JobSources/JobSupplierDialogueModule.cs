@@ -11,19 +11,19 @@ namespace DataUnits.JobSources
     {
         void LoadInitialDeflectionDialogues();
         void StartUnlockDialogueData();
-        public Dictionary<int, IDialogueObject> DeflectionDialogues { get; }
-        public Dictionary<int, IDialogueObject> ImportantDialogues { get; }
-        public Dictionary<int, IDialogueObject> InsistenceDialogues { get; }
-        public Dictionary<int, IDialogueObject> SupplierCallDialogues{ get; }
+        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues{ get; }
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary { get; }
     }
 
     public interface IJobSupplierDialogueModuleData
     {
-        public Dictionary<int, IDialogueObject> DeflectionDialogues { get; }
-        public Dictionary<int, IDialogueObject> ImportantDialogues { get; }
-        public Dictionary<int, IDialogueObject> InsistenceDialogues { get; }
-        public Dictionary<int, IDialogueObject> SupplierCallDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues { get; }
+        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues { get; }
         public void LoadInitialDeflectionDialogues();
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary { get; }
         public IEnumerator DownloadDialogueData(DialogueType dialogueType, string url);
@@ -41,10 +41,10 @@ namespace DataUnits.JobSources
             _mDialogueData = new JobSupplierDialogueModuleData(supplierObject);
         }
        
-        public Dictionary<int, IDialogueObject> DeflectionDialogues => _mDialogueData.DeflectionDialogues;
-        public Dictionary<int, IDialogueObject> ImportantDialogues => _mDialogueData.ImportantDialogues;
-        public Dictionary<int, IDialogueObject> InsistenceDialogues => _mDialogueData.InsistenceDialogues;
-        public Dictionary<int, IDialogueObject> SupplierCallDialogues => _mDialogueData.SupplierCallDialogues;
+        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues => _mDialogueData.DeflectionDialogues;
+        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues => _mDialogueData.ImportantDialogues;
+        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues => _mDialogueData.InsistenceDialogues;
+        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues => _mDialogueData.SupplierCallDialogues;
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary => _mDialogueData.SupplierCallDialoguesDataDictionary;
 
         public void LoadInitialDeflectionDialogues()

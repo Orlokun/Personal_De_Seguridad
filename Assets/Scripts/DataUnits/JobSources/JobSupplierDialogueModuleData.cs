@@ -17,16 +17,16 @@ namespace DataUnits.JobSources
     public class JobSupplierDialogueModuleData : IJobSupplierDialogueModuleData
     {
         private IJobSupplierObject _supplierObject;
-        private Dictionary<int, IDialogueObject> _mDeflectionDialogues = new Dictionary<int, IDialogueObject>();
-        private Dictionary<int, IDialogueObject> _mImportantDialogues = new Dictionary<int, IDialogueObject>();
-        private Dictionary<int, IDialogueObject> _mInsistenceDialogues = new Dictionary<int, IDialogueObject>();
-        private Dictionary<int, IDialogueObject> _mSupplierCallDialogues = new Dictionary<int, IDialogueObject>();
+        private Dictionary<int, ISupplierDialogueObject> _mDeflectionDialogues = new Dictionary<int, ISupplierDialogueObject>();
+        private Dictionary<int, ISupplierDialogueObject> _mImportantDialogues = new Dictionary<int, ISupplierDialogueObject>();
+        private Dictionary<int, ISupplierDialogueObject> _mInsistenceDialogues = new Dictionary<int, ISupplierDialogueObject>();
+        private Dictionary<int, ISupplierDialogueObject> _mSupplierCallDialogues = new Dictionary<int, ISupplierDialogueObject>();
         private Dictionary<int, ISupplierCallDialogueDataObject> _mSupplierCallData = new Dictionary<int, ISupplierCallDialogueDataObject>();
 
-        public Dictionary<int, IDialogueObject> DeflectionDialogues =>_mDeflectionDialogues;
-        public Dictionary<int, IDialogueObject> ImportantDialogues =>_mImportantDialogues;
-        public Dictionary<int, IDialogueObject> InsistenceDialogues =>_mInsistenceDialogues;
-        public Dictionary<int, IDialogueObject> SupplierCallDialogues =>_mSupplierCallDialogues;
+        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues =>_mDeflectionDialogues;
+        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues =>_mImportantDialogues;
+        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues =>_mInsistenceDialogues;
+        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues =>_mSupplierCallDialogues;
         public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary =>_mSupplierCallData;
         
         public int NpcRequirementStatus { get; }
@@ -99,13 +99,13 @@ namespace DataUnits.JobSources
             //Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin request");
             _mImportantDialoguesData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
             //Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mDialogueData == null}. {_mDialogueData}");
-            _mImportantDialogues = new Dictionary<int, IDialogueObject>();
+            _mImportantDialogues = new Dictionary<int, ISupplierDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
             var lastStatusIndex = 0;
             var pureDialogueIndex = 0;
             
-            IDialogueObject currentDialogueObject;
+            ISupplierDialogueObject currentDialogueObject;
             for (var i = 1; i < _mImportantDialoguesData.values.Count; i++)
             {
                 var isStatusAssigned = int.TryParse(_mImportantDialoguesData.values[i][0], out var currentDialogueStatusIndex);
@@ -117,20 +117,22 @@ namespace DataUnits.JobSources
                     return;
                 }
                 
-                
+                //Check if the dialogue status has changed or if the dialogue object has changed
                 if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1 || currentDialogueStatusIndex != lastStatusIndex)
                 {
-                    pureDialogueIndex++;
-                    lastDialogueObjectIndex = currentDialogueObjectIndex;
-                    lastStatusIndex = currentDialogueStatusIndex;
-                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
-                    if (currentDialogueStatusIndex != 0)
+                    pureDialogueIndex++;                                                                //Pure index is used not to repeat the same key in the dictionary
+                    lastDialogueObjectIndex = currentDialogueObjectIndex;                               //Set the last dialogue object index to the current one
+                    lastStatusIndex = currentDialogueStatusIndex;                                       //Set the last status index to the current one
+                    
+                    currentDialogueObject = ScriptableObject.CreateInstance<SupplierDialogueObject>();  //Create the new dialogue object
+                    if (currentDialogueStatusIndex != 0)                                                //Only set status if this is not the default status
                     {
                         currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
                     }
                     _mImportantDialogues.Add(pureDialogueIndex, currentDialogueObject);
                 }
                 
+                //Take pieces of the dialogue node to insert into dialogue object.
                 var hasDialogueNodeId = int.TryParse(_mImportantDialoguesData.values[i][2], out var dialogueLineId);
                 if (!hasDialogueNodeId)
                 {
@@ -150,13 +152,20 @@ namespace DataUnits.JobSources
                 var eventNameId = _mImportantDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
+                //Highlight event
+                var hasHighlightEvent = _mImportantDialoguesData.values[i][8] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mImportantDialoguesData.values[i][7].Split(',') : emptyString;
+                
+                //Links in dialogue node
                 var linksToString = _mImportantDialoguesData.values[i][7].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
+                //Finish
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mImportantDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -164,14 +173,14 @@ namespace DataUnits.JobSources
         {
             Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin Random deflection dialogues request for {_supplierObject.StoreName}");
             _mDeflectionDialoguesData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
-            _mDeflectionDialogues = new Dictionary<int, IDialogueObject>();
+            _mDeflectionDialogues = new Dictionary<int, ISupplierDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
             if (_mDeflectionDialoguesData.values == null)
             {
                 Debug.LogError($"[JobSupplier.LoadImportantDialoguesFromJson] Values were not properly loaded into {_supplierObject.StoreName} dialogues");
             }
-            IDialogueObject currentDialogueObject;
+            ISupplierDialogueObject currentDialogueObject;
             for (var i = 1; i < _mDeflectionDialoguesData.values.Count; i++)
             {
                 var isDialogueNodeIndex = int.TryParse(_mDeflectionDialoguesData.values[i][0], out var currentDialogueObjectIndex);
@@ -183,7 +192,7 @@ namespace DataUnits.JobSources
                 if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1)
                 {
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
-                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    currentDialogueObject = ScriptableObject.CreateInstance<SupplierDialogueObject>();
                     _mDeflectionDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
@@ -202,13 +211,18 @@ namespace DataUnits.JobSources
                 var eventNameId = _mDeflectionDialoguesData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
+                //Highlight event
+                var hasHighlightEvent = _mDeflectionDialoguesData.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mDeflectionDialoguesData.values[i][7].Split(',') : emptyString;
+
                 var linksToString = _mDeflectionDialoguesData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mDeflectionDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -217,13 +231,13 @@ namespace DataUnits.JobSources
             //Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin request");
             _mInsistenceDialoguesData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
             //Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mInsistenceDialoguesData == null}. {_mInsistenceDialoguesData}");
-            _mInsistenceDialogues = new Dictionary<int, IDialogueObject>();
+            _mInsistenceDialogues = new Dictionary<int, ISupplierDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
             var lastStatusIndex = 0;
             var pureDialogueIndex = 0;
 
-            IDialogueObject currentDialogueObject;
+            ISupplierDialogueObject currentDialogueObject;
             for (var i = 1; i < _mInsistenceDialoguesData.values.Count; i++)
             {
                 var isDialogueStatusSet = int.TryParse(_mInsistenceDialoguesData.values[i][0], out var currentDialogueStatusIndex);
@@ -241,7 +255,7 @@ namespace DataUnits.JobSources
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
                     lastStatusIndex = currentDialogueStatusIndex;
                     
-                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    currentDialogueObject = ScriptableObject.CreateInstance<SupplierDialogueObject>();
                     currentDialogueObject.SetDialogueStatus(currentDialogueStatusIndex);
                     _mInsistenceDialogues.Add(pureDialogueIndex, currentDialogueObject);
                 }
@@ -261,13 +275,18 @@ namespace DataUnits.JobSources
                 var eventNameId = _mInsistenceDialoguesData.values[i][6];
                 var hasEventId = eventNameId != "0";
                 
+                //Highlight event
+                var hasHighlightEvent = _mInsistenceDialoguesData.values[i][8] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mInsistenceDialoguesData.values[i][7].Split(',') : emptyString;
+                
                 var linksToString = _mInsistenceDialoguesData.values[i][7].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mInsistenceDialogues[pureDialogueIndex].DialogueNodes.Add(dialogueNode);
             }
         }
@@ -276,11 +295,11 @@ namespace DataUnits.JobSources
             //Debug.Log($"[JobSupplier.LoadImportantDialoguesFromJson] Begin request");
             _mSupplierCallDialoguesData = JsonConvert.DeserializeObject<SupplierDialoguesData>(sourceJson);
             //Debug.Log($"Finished parsing. Is Job Supplier Dialogue null?: {_mInsistenceDialoguesData == null}. {_mInsistenceDialoguesData}");
-            _mSupplierCallDialogues = new Dictionary<int, IDialogueObject>();
+            _mSupplierCallDialogues = new Dictionary<int, ISupplierDialogueObject>();
 
             var lastDialogueObjectIndex = 0;
             
-            IDialogueObject currentDialogueObject;
+            ISupplierDialogueObject currentDialogueObject;
             for (var i = 1; i < _mSupplierCallDialoguesData.values.Count; i++)
             {
                 var isDialogueNodeIndex = int.TryParse(_mSupplierCallDialoguesData.values[i][0], out var currentDialogueObjectIndex);
@@ -292,7 +311,7 @@ namespace DataUnits.JobSources
                 if (lastDialogueObjectIndex != currentDialogueObjectIndex || i == 1)
                 {
                     lastDialogueObjectIndex = currentDialogueObjectIndex;
-                    currentDialogueObject = ScriptableObject.CreateInstance<DialogueObject>();
+                    currentDialogueObject = ScriptableObject.CreateInstance<SupplierDialogueObject>();
                     _mSupplierCallDialogues.Add(currentDialogueObjectIndex, currentDialogueObject);
                 }
                 
@@ -313,13 +332,18 @@ namespace DataUnits.JobSources
                 var eventNameId = _mSupplierCallDialoguesData.values[i][5];
                 var hasEventId = eventNameId != "0";
                 
+                //Highlight event
+                var hasHighlightEvent = _mInsistenceDialoguesData.values[i][7] != "0";
+                var emptyString = new string[1] {"0"};
+                var highlightEvent = hasHighlightEvent ? _mInsistenceDialoguesData.values[i][6].Split(',') : emptyString;
+                
                 var linksToString = _mSupplierCallDialoguesData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);
                 var linksToFinish = linksToInts[0] == 0;
                 var hasChoices = linksToInts.Length > 1;
 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineId, speakerId, dialogueLineText,
-                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts);
+                    hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mSupplierCallDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
         }

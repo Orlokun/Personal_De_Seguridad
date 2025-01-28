@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using DialogueSystem.Interfaces;
-using DialogueSystem.Sound;
+using GamePlayManagement.TutorialManagement;
 using UnityEngine;
 
 namespace DialogueSystem.Units
@@ -11,7 +11,11 @@ namespace DialogueSystem.Units
         DialogueWithChoice = 2,
         DialogueWithCamera = 4,
     }
-    
+
+    public interface ITutorialDialogueNode : IDialogueNode
+    {
+        public FeedbackObjects FeedbackObject { get; }
+    }
     public interface IDialogueNode
     {
         public int DialogObjectIndex { get ; }
@@ -37,20 +41,11 @@ namespace DialogueSystem.Units
         private bool _hasEvent;
         private string _eventNameId;
         private int[] _linkNodes;
-        public DialogueNodeData(int dialogObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLine, bool hasCameraTarget, 
-            string[] cameraEvent, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
-        {
-            _dialogObjectIndex = dialogObjectIndex;
-            _dialogueLineIndex = dialogueLineIndex;
-            _speakerId = (DialogueSpeakerId)speakerId;
-            _dialogueLine = dialogueLine;
-            _hasCameraTarget = hasCameraTarget;
-            _cameraEvent = cameraEvent;
-            _hasChoice = hasChoice;
-            _hasEvent = hasEvent;
-            _eventNameId = eventNameId;
-            _linkNodes = linkNodes;
-        }
+        
+        private bool _mHasHighlightEvent;
+        private string[] _mHighlightEvent;
+        
+
         public DialogueNodeData(OmniIntroDialogues dialogObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLine, bool hasCameraTarget, 
             string[] cameraEvent, bool hasChoice, bool hasEvent, string eventNameId, int[] linkNodes)
         {
@@ -65,7 +60,24 @@ namespace DialogueSystem.Units
             _eventNameId = eventNameId;
             _linkNodes = linkNodes;
         }
-        
+
+        public DialogueNodeData(int currentDialogueObjectIndex, int dialogueLineIndex, int speakerId, string dialogueLineText, bool hasCameraTarget, string[] cameraEvent, bool hasChoices, bool hasEventId, string eventNameId, int[] nodesLined, bool hasHighlightEvent, string[] highlightEvent)
+        {
+            _dialogObjectIndex = currentDialogueObjectIndex;
+            _dialogueLineIndex = dialogueLineIndex;
+            _speakerId = (DialogueSpeakerId)speakerId;
+            _dialogueLine = dialogueLineText;
+            _hasCameraTarget = hasCameraTarget;
+            _cameraEvent = cameraEvent;
+            _hasChoice = hasChoices;
+            _hasEvent = hasEventId;
+            _eventNameId = eventNameId;
+            _linkNodes = nodesLined;
+            
+            _mHasHighlightEvent = hasHighlightEvent;
+            _mHighlightEvent = highlightEvent;
+        }
+
         public int DialogObjectIndex => _dialogObjectIndex;
         public int DialogueLineIndex => _dialogueLineIndex;
         public DialogueSpeakerId SpeakerId => _speakerId;
@@ -88,7 +100,8 @@ namespace DialogueSystem.Units
         [SerializeField] protected List<IDialogueNode> dialogueLines = new List<IDialogueNode>();
         [SerializeField] protected Sprite actorImage;
         [SerializeField] protected string speakerName;
-        private int _mTimesActivated = 0;
+        
+        protected int _mTimesActivated = 0;
 
         public List<IDialogueNode> DialogueNodes
         {
@@ -96,19 +109,16 @@ namespace DialogueSystem.Units
             set => dialogueLines = value;
         }
 
-        private int _mDialogueStatus;
-        public int GetDialogueAssignedStatus => _mDialogueStatus;
-        public void SetDialogueStatus(int status)
+        public virtual List<IDialogueNode> GetDialogueNodes()
         {
-            _mDialogueStatus = status;
+            throw new System.NotImplementedException();
         }
-        
+
         public int TimesActivatedCount => _mTimesActivated;
         public void AddDialogueCount()
         {
              _mTimesActivated++;
         }
-
         public DialogueSpeakerId GetSpeakerId(int dialogueLine)
         {
             return dialogueLines[dialogueLine].SpeakerId;

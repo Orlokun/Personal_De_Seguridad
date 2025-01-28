@@ -4,7 +4,6 @@ using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.SupplierChallenges;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 
@@ -70,17 +69,16 @@ namespace DialogueSystem
                     LaunchSupplierRequestEvent(eventCodes[1], eventCodes[2], 
                         eventCodes[3], eventCodes[4], eventCodes[5]);
                     break;
-                
                 case "UnlockItemSupplier":
                     LaunchUnlockItemSupplierEvent(eventCodes[1]);
                     break;
-                case "LaunchTutorialDialogue":
-                    LaunchTutorialProcessEvent(eventCodes[1]);
+                case "LaunchTutorial":
+                    LaunchTutorialProcessEvent();
                     break;
             }
         }
 
-        private void LaunchTutorialProcessEvent(string eventCode)
+        private void LaunchTutorialProcessEvent()
         {
             
         }
