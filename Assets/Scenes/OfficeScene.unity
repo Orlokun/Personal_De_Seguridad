@@ -4805,7 +4805,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1981227783}
   - component: {fileID: 1981227784}
-  - component: {fileID: 1981227785}
   m_Layer: 0
   m_Name: OfficeLayout
   m_TagString: Untagged
@@ -4843,18 +4842,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelCamerasParent: {fileID: 1581229047}
---- !u!114 &1981227785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1981227782}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb6c2bfe902c488dbfbae39b7b1c31c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2006436218
 GameObject:
   m_ObjectHideFlags: 0

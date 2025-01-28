@@ -12,7 +12,6 @@ namespace DialogueSystem.Interfaces
         void StartNewDialogue(IDialogueObject newDialogue);
         void KillDialogue();
         event DialogueOperator.FinishedDialogueReading OnDialogueCompleted;
-        public event DialogueOperator.StartingNodeReading OnNodeStarted;
         public List<IDialogueObject> GetDialogueObjectInterfaces(List<DialogueObject> dialogueObjects);
         public void GetSpeakerDataWithSpeakerId(DialogueSpeakerId speakerId);
     }

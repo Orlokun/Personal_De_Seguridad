@@ -3,15 +3,15 @@ using DialogueSystem.Units;
 
 namespace DialogueSystem.Interfaces
 {
-    public interface IDialogueObject : IDialogueObjectBaseData<IDialogueNode>
+    public interface IDialogueObject : IDialogueObjectBaseData
     {
         public void AddDialogueCount();
         public DialogueSpeakerId GetSpeakerId(int dialogueLine);
     }
 
-    public interface IDialogueObjectBaseData<T> where T : IDialogueNode
+    public interface IDialogueObjectBaseData
     {
-        public List<T> DialogueNodes { get; set; }
+        public List<IDialogueNode> DialogueNodes { get; set; }
 
         public int TimesActivatedCount { get; }
     }

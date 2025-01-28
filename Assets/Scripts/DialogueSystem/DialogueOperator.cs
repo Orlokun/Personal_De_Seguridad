@@ -9,7 +9,6 @@ using DialogueSystem.Interfaces;
 using DialogueSystem.Sound;
 using DialogueSystem.Units;
 using GameDirection;
-using GamePlayManagement.TutorialManagement;
 using InputManagement;
 using TMPro;
 using UI;
@@ -74,9 +73,6 @@ namespace DialogueSystem
         public delegate void FinishedDialogueReading();
         public event FinishedDialogueReading OnDialogueCompleted;
         
-        public delegate void StartingNodeReading(FeedbackObjects feedbackObjects);
-        public event StartingNodeReading OnNodeStarted;
-
         #region Public Interface
         public List<IDialogueObject> GetDialogueObjectInterfaces(List<DialogueObject> dialogueObjects)
         {
@@ -249,8 +245,11 @@ namespace DialogueSystem
             {
                 return;
             }
+            var viewType = dialogueNode.CameraEvent[0];
+            Enum.TryParse(viewType, out GameCameraState cameraState);
             
-            //TODO: Move camera towards target;
+            var cameraIndex = int.Parse(dialogueNode.CameraEvent[1]);
+            GameCameraManager.Instance.ActivateNewCamera(cameraState, cameraIndex);
         }
         private void CheckDialogueLineEventBehavior(IDialogueNode dialogueNode)
         {

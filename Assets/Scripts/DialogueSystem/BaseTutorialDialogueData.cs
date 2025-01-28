@@ -4,7 +4,6 @@ using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
-using GamePlayManagement.TutorialManagement;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -98,9 +97,23 @@ namespace DialogueSystem
             }
             
         }
+
+        public IDialogueObject GetTutorialDialogue(int dialogueIndex)
+        {
+            if (_mTutorialDialogues.TryGetValue(dialogueIndex, out var dialogue))
+            {
+                return dialogue;
+            }
+            else
+            {
+                Debug.LogWarning($"[BaseTutorialDialogueData.GetTutorialDialogue] Dialogue with index {dialogueIndex} not found");
+                return null;
+            }
+        }
     }
 
     public interface IBaseTutorialDialogueData
     {
+        IDialogueObject GetTutorialDialogue(int dialogueIndex);
     }
 }

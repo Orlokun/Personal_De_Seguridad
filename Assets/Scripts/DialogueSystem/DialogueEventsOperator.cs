@@ -73,14 +73,18 @@ namespace DialogueSystem
                     LaunchUnlockItemSupplierEvent(eventCodes[1]);
                     break;
                 case "LaunchTutorial":
-                    LaunchTutorialProcessEvent();
+                    LaunchTutorialProcessEvent(eventCodes[1]);
                     break;
             }
         }
 
-        private void LaunchTutorialProcessEvent()
+        private void LaunchTutorialProcessEvent(string tutorialIndex)
         {
-            
+            var hasTutorialIndex = int.TryParse(tutorialIndex, out var tutorialIndexInt);
+            if (hasTutorialIndex)
+            {
+                GameDirector.Instance.StartTutorialProcess(tutorialIndexInt);
+            }
         }
 
         private void LaunchUnlockItemSupplierEvent(string eventCode)

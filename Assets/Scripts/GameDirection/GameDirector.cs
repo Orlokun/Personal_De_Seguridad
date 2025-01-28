@@ -268,7 +268,16 @@ namespace GameDirection
             _mUIController.StartMainMenuUI();
             await WaitAndOpenCurtain();
         }
-        
+
+        //TODO: Look for better solution that Task.Delay(). Maybe use a Coroutine
+        public async void StartTutorialProcess(int tutorialIndex)
+        {
+            _mDialogueOperator.KillDialogue();
+            await Task.Delay(300);
+            var tutorialDialogue = _mTutorialDialogueData.GetTutorialDialogue(tutorialIndex);
+            _mDialogueOperator.StartNewDialogue(tutorialDialogue);
+        }
+
         private async Task WaitAndOpenCurtain()
         {
             await Task.Delay(2000);

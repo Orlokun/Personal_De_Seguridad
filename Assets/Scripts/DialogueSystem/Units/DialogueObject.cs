@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DialogueSystem.Interfaces;
-using GamePlayManagement.TutorialManagement;
 using UnityEngine;
 
 namespace DialogueSystem.Units
@@ -10,11 +9,6 @@ namespace DialogueSystem.Units
         SimpleDialogue = 1,
         DialogueWithChoice = 2,
         DialogueWithCamera = 4,
-    }
-
-    public interface ITutorialDialogueNode : IDialogueNode
-    {
-        public FeedbackObjects FeedbackObject { get; }
     }
     public interface IDialogueNode
     {
