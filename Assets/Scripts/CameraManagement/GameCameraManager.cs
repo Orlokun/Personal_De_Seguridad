@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using InputManagement.Keyboard;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace CameraManagement
     public enum OfficeCameraStates
     {
         GeneralDesktop = 0,
-        Notebook = 1,
+        Tablet = 1,
         Phone = 2,
         Cigar = 3
     }
@@ -27,20 +28,28 @@ namespace CameraManagement
     {
         private static GameCameraManager _instance;
         public static IGameCameraManager Instance => _instance;
+        
+        
         /// <summary>
         /// Parents for camera objects
         /// </summary>
         private Transform _levelCamerasParent;
         private Transform _officeCamerasParent;
         [SerializeField] private Transform dialogueCamerasParent;
-        
-        private Transform isometricFollowTarget;
+
+
+        private Dictionary<int, GameObject> _mOfficeCameras;
+        private Dictionary<int, GameObject> _mLevelCameras;
         //Currently active Cameras
+        
+        
         private Dictionary<int, GameObject> _mActiveCameras;
         private Tuple<int, GameCameraState> _mLastCameraState;
         private GameCameraState _currentCameraState = GameCameraState.MainMenu;
         private bool _mInitialized = false;
-
+        private ICameraViewInputManager _mCanvasInputMAnager;
+        
+        
         #region Public Functions
         public void SetDialogueFollowObjects(Transform targetsInDialogue)
         {
@@ -93,6 +102,7 @@ namespace CameraManagement
                     _mLastCameraState = new Tuple<int, GameCameraState>(i, _currentCameraState);
                 }
             }
+            _mCanvasInputMAnager.SyncOfficeUIWithCamera();
         }
         public bool IsCameraManagerReady()
         {
@@ -149,6 +159,11 @@ namespace CameraManagement
             //TurnCameraObjectsOff();
             PopulateActiveCameras();
             _mInitialized = true;
+        }
+
+        private void Start()
+        {
+            _mCanvasInputMAnager = FindFirstObjectByType<CameraViewInputManager>();
         }
     
         #region Camera Objects Management

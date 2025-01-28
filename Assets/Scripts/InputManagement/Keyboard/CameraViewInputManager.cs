@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace InputManagement.Keyboard
 {
-    public class CameraViewInputManager : MonoBehaviour
+    public class CameraViewInputManager : MonoBehaviour, ICameraViewInputManager
     {
         private IGameCameraManager _mGameCameraManager;
         private IUIController _mUIController;
@@ -17,8 +17,6 @@ namespace InputManagement.Keyboard
             GeneralInputStateManager.Instance.OnGameStateChange += OnGameStateChange;
             _mGameCameraManager = GameCameraManager.Instance;
             _mUIController = UIController.Instance;
-            //_mGameCameraManager.ChangeCameraState(GameCameraState.Level);
-            //_mGameCameraManager.ActivateNewCamera(GameCameraState.Level, _currentCameraIndex);
         }
     
         private void Update()
@@ -67,17 +65,21 @@ namespace InputManagement.Keyboard
             
                 if (isCameraInput)
                 {
-                    var currentCameraState = _mGameCameraManager.ActiveState();
-                    if (currentCameraState == GameCameraState.Office)
-                    {
-                        _mUIController.UpdateOfficeUIElement(_currentCameraIndex);
-                    }
-                    _mGameCameraManager.ActivateNewCamera(currentCameraState ,_currentCameraIndex);
+                    SyncOfficeUIWithCamera();
                 }
             }
             #endregion
         }
 
+        public void SyncOfficeUIWithCamera()
+        {
+            var currentCameraState = _mGameCameraManager.ActiveState();
+            if (currentCameraState == GameCameraState.Office)
+            {
+                _mUIController.UpdateOfficeUIElement(_currentCameraIndex);
+            }
+        }
+        
         private void OnGameStateChange(InputGameState newGameState)
         {
             enabled = newGameState == InputGameState.InGame;
@@ -172,5 +174,10 @@ namespace InputManagement.Keyboard
         {
             GeneralInputStateManager.Instance.OnGameStateChange -= OnGameStateChange;
         }
+    }
+
+    public interface ICameraViewInputManager
+    {
+        public void SyncOfficeUIWithCamera();
     }
 }
