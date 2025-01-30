@@ -11,7 +11,7 @@ namespace GameDirection.DayLevelSceneManagers
         {
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
-            MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
+            MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
 
             MGameDirector.GetSoundDirector.PlayAmbientSound();

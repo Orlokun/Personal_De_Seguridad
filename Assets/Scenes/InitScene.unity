@@ -621,8 +621,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 440556443}
-  - component: {fileID: 440556442}
   - component: {fileID: 440556444}
+  - component: {fileID: 440556445}
   m_Layer: 0
   m_Name: CameraDirector
   m_TagString: Untagged
@@ -630,19 +630,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &440556442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 440556441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d44a458d4161ed479641a936cf2f6a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueCamerasParent: {fileID: 1421658933}
 --- !u!4 &440556443
 Transform:
   m_ObjectHideFlags: 0
@@ -668,9 +655,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 440556441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6061cba89e704e5fbecd18b7ffb69367, type: 3}
+  m_Script: {fileID: 11500000, guid: 97fadc492eb73844a95997883758282e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &440556445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440556441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d44a458d4161ed479641a936cf2f6a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueCamerasParent: {fileID: 1421658933}
 --- !u!1001 &516557417
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1927,7 +1927,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1331051267
 GameObject:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1946,7 +1946,7 @@ GameObject:
   m_IsActive: 1
 --- !u!4 &1331051268
 Transform:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1961,7 +1961,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1331051269
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -1983,7 +1983,7 @@ MonoBehaviour:
   m_AngularDamping: 0
 --- !u!114 &1331051270
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -2010,7 +2010,7 @@ MonoBehaviour:
   m_CenterOnActivate: 1
 --- !u!114 &1331051271
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}

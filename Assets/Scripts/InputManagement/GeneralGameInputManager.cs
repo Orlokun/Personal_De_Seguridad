@@ -1,29 +1,31 @@
 using UnityEngine;
 namespace InputManagement
 {
-    public interface IGeneralInputStateManager
+    public interface IGeneralGameInputManager
     {
         InputGameState CurrentInputGameState { get; }
         InputGameState LastInputGameState { get; }
         void SetGamePlayState(InputGameState newGameState);
-        event GeneralInputStateManager.GameStateChangeHandler OnGameStateChange;
+        event IGeneralGameGameInputManager.GameStateChangeHandler OnGameStateChange;
     }
 
-    public class GeneralInputStateManager : IGeneralInputStateManager
+    public class IGeneralGameGameInputManager : IGeneralGameInputManager
     {
-        private static GeneralInputStateManager _mInstance;
-        public static IGeneralInputStateManager Instance
+        #region SingletonInstance
+        private static IGeneralGameGameInputManager mInstance;
+        public static IGeneralGameInputManager Instance
         {
             get
             {
-                if (_mInstance == null)
+                if (mInstance == null)
                 {
-                    _mInstance = new GeneralInputStateManager();
+                    mInstance = new IGeneralGameGameInputManager();
                 }
-                return _mInstance;
+                return mInstance;
             }
         }
-        
+        #endregion
+
         public InputGameState CurrentInputGameState
         {
             get;

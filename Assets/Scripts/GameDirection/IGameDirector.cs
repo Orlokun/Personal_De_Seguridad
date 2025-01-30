@@ -22,8 +22,8 @@ namespace GameDirection
         public IClockManagement GetClockInDayManagement { get; }
         public IUIController GetUIController { get; }
         public IGeneralUIFader GetGeneralBackgroundFader { get; }
-        public IGameCameraManager GetGameCameraManager { get; }
-        public IGeneralInputStateManager GetInputStateManager { get; }
+        public IGameCameraOperator GetGameCameraManager { get; }
+        public IGeneralGameInputManager GetGameInputManager { get; }
         public IDialogueOperator GetDialogueOperator { get; }
         public ISoundDirector GetSoundDirector { get; }
         public IRentValuesCatalogue GetRentCatalogueData { get; }

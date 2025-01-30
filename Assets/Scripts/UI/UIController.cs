@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
@@ -37,6 +38,7 @@ namespace UI
         IDialogueOperator DialogueOperator { get; }
         void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
         void ItemUnlockedFeedback(BitItemSupplier itemSupplier);
+        void UpdateUIState(GameCameraState currentCameraState, int indexCamera);
     }
 
     [RequireComponent(typeof(DialogueOperator))]
@@ -111,7 +113,9 @@ namespace UI
             var bannerText = $"Item Supplier Unlocked: {jobSupplierName}";
             ShowFeedback(bannerText);
         }
-        
+
+
+
         private void ShowFeedback(string feedback)
         {
             var bannerObject = (IBannerObjectController)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.LARGE_HORIZONTAL_BANNER);
@@ -128,7 +132,16 @@ namespace UI
         {
             _mInfoCanvasManager.UpdateInfo();
         }
-        
+        public void UpdateUIState(GameCameraState currentCameraState, int indexCamera)
+        {
+            var indexBitValue = BitOperator.TurnIndexToBitIndexValue(indexCamera);
+            if (!_mActiveCanvasDict.ContainsKey((int) currentCameraState))
+            {
+                Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain invoked camera state id.");
+                return;
+            }
+            
+        }
         #endregion
 
         public void UpdateOfficeUIElement(int cameraState)
@@ -193,10 +206,6 @@ namespace UI
             }
 
         }
-        public void ToggleEndOfDay(bool toggleValue)
-        {
-            
-        }
         #endregion
         
         #region Init
@@ -218,7 +227,7 @@ namespace UI
         }
         private void LoadInitialVariables()
         {
-            GeneralInputStateManager.Instance.OnGameStateChange += UpdateInputState;
+            IGeneralGameGameInputManager.Instance.OnGameStateChange += UpdatePauseState;
             _mInfoCanvasManager = FindObjectOfType<InfoCanvasManager>();
             SaveCanvasOperatorsDictionaries();
             _mDialogueOperator = GetComponent<DialogueOperator>();
@@ -241,16 +250,16 @@ namespace UI
         #region Disable
         private void OnDestroy()
         {
-            GeneralInputStateManager.Instance.OnGameStateChange -= UpdateInputState;
+            IGeneralGameGameInputManager.Instance.OnGameStateChange -= UpdatePauseState;
         }
 
         #endregion
         
-        #region Private Utilities
-        private void UpdateInputState(InputGameState newGameState)
+        #region Input Event Management
+        private void UpdatePauseState(InputGameState newGameState)
         {
             if (newGameState == InputGameState.Pause ||
-                GeneralInputStateManager.Instance.CurrentInputGameState == InputGameState.Pause)
+                IGeneralGameGameInputManager.Instance.CurrentInputGameState == InputGameState.Pause)
             {
                 TogglePausePanel();
             }

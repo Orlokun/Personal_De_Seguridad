@@ -113,7 +113,7 @@ namespace DialogueSystem
         
         private void OnDialogueFinished()
         {
-            GameCameraManager.Instance.ReturnToLastState();
+            GameCameraOperator.Instance.ReturnToLastState();
             KillDialogue();
         }
 
@@ -184,7 +184,7 @@ namespace DialogueSystem
         {
             return Input.GetKeyDown(KeyCode.Space)
                    && _currentState == UIDialogueState.FinishedTypingLine
-                   && GeneralInputStateManager.Instance.CurrentInputGameState != InputGameState.Pause;
+                   && IGeneralGameGameInputManager.Instance.CurrentInputGameState != InputGameState.Pause;
         }
 
         private IEnumerator WriteDialogueLine(IDialogueNode dialogueNode)
@@ -249,7 +249,7 @@ namespace DialogueSystem
             Enum.TryParse(viewType, out GameCameraState cameraState);
             
             var cameraIndex = int.Parse(dialogueNode.CameraEvent[1]);
-            GameCameraManager.Instance.ActivateNewCamera(cameraState, cameraIndex);
+            GameCameraOperator.Instance.ActivateNewCamera(cameraState, cameraIndex);
         }
         private void CheckDialogueLineEventBehavior(IDialogueNode dialogueNode)
         {

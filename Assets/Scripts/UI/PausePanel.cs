@@ -22,8 +22,8 @@ namespace UI
 
         private void ReturnToGame()
         {
-            var lastState = GeneralInputStateManager.Instance.LastInputGameState;
-            GeneralInputStateManager.Instance.SetGamePlayState(lastState);
+            var lastState = IGeneralGameGameInputManager.Instance.LastInputGameState;
+            IGeneralGameGameInputManager.Instance.SetGamePlayState(lastState);
         }
     }
 }

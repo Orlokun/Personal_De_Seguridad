@@ -33,7 +33,7 @@ namespace UI.TabManagement.NBVerticalTabs
         {
             Debug.Log("Start Calling supplier");
             UIController.Instance.UpdateOfficeUIElement((int)OfficeCameraStates.Phone);
-            GameCameraManager.Instance.ActivateNewCamera(GameCameraState.Office, (int)OfficeCameraStates.Phone);
+            GameCameraOperator.Instance.ActivateNewCamera(GameCameraState.Office, (int)OfficeCameraStates.Phone);
             PopUpManager.PopUpOperator.Instance.RemoveAllPopUps();
         }
         public virtual void OpenInfoPopUp()

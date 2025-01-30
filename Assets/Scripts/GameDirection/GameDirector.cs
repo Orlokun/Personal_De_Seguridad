@@ -47,13 +47,13 @@ namespace GameDirection
         private ILevelManager _mLevelManager;
         private IUIController _mUIController;
         private IGeneralUIFader _mGeneralFader;
-        private IGameCameraManager _mGameCameraManager;
-        private IGeneralInputStateManager _inputStateManager;
+        private IGameCameraOperator _mGameCameraManager;
+        private IGeneralGameInputManager _gameInputManager;
         private IDialogueOperator _mDialogueOperator;
         private ISoundDirector _mSoundDirector;
         private IClockManagement _mClockManager;
         private IFeedbackManager _mFeedbackManager;
-        private IGeneralInputStateManager _mGeneralInputManager;
+        private IGeneralGameInputManager _mIGeneralGameInputManager;
         private IModularDialogueDataController _mModularDialogues;
         private ICustomersInSceneManager _mCustomerInstantiationManager;
         private INewsNarrativeDirector _mNarrativeNewsDirector;
@@ -87,8 +87,8 @@ namespace GameDirection
         public IFeedbackManager GetFeedbackManager => _mFeedbackManager;
         public IUIController GetUIController => _mUIController;
         public IGeneralUIFader GetGeneralBackgroundFader => _mGeneralFader;
-        public IGameCameraManager GetGameCameraManager => _mGameCameraManager;
-        public IGeneralInputStateManager GetInputStateManager => _inputStateManager;
+        public IGameCameraOperator GetGameCameraManager => _mGameCameraManager;
+        public IGeneralGameInputManager GetGameInputManager => _gameInputManager;
         public IDialogueOperator GetDialogueOperator => _mDialogueOperator;
         public ISoundDirector GetSoundDirector => _mSoundDirector;
         public IItemsDataController GetItemsDataController => _mItemDataController;
@@ -120,7 +120,7 @@ namespace GameDirection
         {
             _mLevelManager = GetComponent<LevelLoadManager>();
             _mGeneralFader = GetComponent<GeneralUIFader>();
-            _inputStateManager = GeneralInputStateManager.Instance;
+            _gameInputManager = IGeneralGameGameInputManager.Instance;
         }
         private void LoadUIScene()
         {
@@ -139,8 +139,8 @@ namespace GameDirection
             _mItemSuppliersData = BaseItemSuppliersCatalogue.Instance;
             _mClockManager = ClockManagement.Instance;
             _mFeedbackManager = FeedbackManager.Instance;
-            _mGeneralInputManager = GeneralInputStateManager.Instance;
-            _mGameCameraManager = GameCameraManager.Instance;     
+            _mIGeneralGameInputManager = IGeneralGameGameInputManager.Instance;
+            _mGameCameraManager = GameCameraOperator.Instance;     
             
             _mRentCatalogueData = RentValuesCatalogue.Instance;
             _mFoodCatalogueData = FoodValuesCatalogue.Instance;
@@ -155,7 +155,7 @@ namespace GameDirection
             _mMetaGameDirector = Factory.CreateMetaGameDirectory();
             _mUIController.StartMainMenuUI();
             
-            _inputStateManager.SetGamePlayState(InputGameState.MainMenu);
+            _gameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
             WaitAndLoadDialogues();
         }
@@ -243,11 +243,11 @@ namespace GameDirection
         
         public void ReleaseFromDialogueStateToGame()
         {
-            if (_inputStateManager.CurrentInputGameState != InputGameState.InDialogue)
+            if (_gameInputManager.CurrentInputGameState != InputGameState.InDialogue)
             {
                 return;
             }
-            _inputStateManager.SetGamePlayState(InputGameState.InGame);
+            _gameInputManager.SetGamePlayState(InputGameState.InGame);
         }
         #endregion
         public void ChangeHighLvlGameState(HighLevelGameStates newState)
@@ -263,7 +263,7 @@ namespace GameDirection
             _mSoundDirector.StopRadio();            
             _mGeneralFader.GeneralCurtainAppear();
             ChangeHighLvlGameState(HighLevelGameStates.MainMenu);
-            _mGeneralInputManager.SetGamePlayState(InputGameState.MainMenu);
+            _mIGeneralGameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mLevelManager.ReturnToMainScreen();
             _mUIController.StartMainMenuUI();
             await WaitAndOpenCurtain();
@@ -348,7 +348,7 @@ namespace GameDirection
         {
             Debug.Log("[ManageUIProcessEndOfDay] Start");
             ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
-            _mGeneralInputManager.SetGamePlayState(InputGameState.OnlyOffice);
+            _mIGeneralGameInputManager.SetGamePlayState(InputGameState.OnlyOffice);
             _mSoundDirector.StopRadio();            
             _mGeneralFader.GeneralCurtainAppear();
             UIFinishWorkday();

@@ -53,7 +53,7 @@ namespace GameDirection.DayLevelSceneManagers
         public override IEnumerator StartDayManagement()
         {
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
-            MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
+            MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
 
             MGameDirector.GetSoundDirector.PlayAmbientSound();
@@ -82,7 +82,7 @@ namespace GameDirection.DayLevelSceneManagers
         public override IEnumerator StartDayManagement()
         {
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
-            MGameDirector.GetInputStateManager.SetGamePlayState(InputGameState.InDialogue);
+            MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
             
             

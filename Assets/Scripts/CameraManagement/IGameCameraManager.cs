@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace CameraManagement
 {
-    public interface IGameCameraManager
+    public interface IGameCameraOperator
     {
         public void ActivateNewCamera(GameCameraState requestState, int indexCamera);
+        public void ActivateCameraIndex(int indexCamera);
         public int MaxNumberOfCameras();
         public GameCameraState ActiveState();
         public void ChangeCameraState(GameCameraState newCameraState);
-        public void SetDialogueFollowObjects(Transform targetInDialogue);
         public void SetLevelCamerasParent(Transform camerasParentObject);
         public void SetOfficeCamerasParent(Transform camerasParentObject);
         public void ReturnToLastState();
