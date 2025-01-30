@@ -38,7 +38,7 @@ namespace UI
         IDialogueOperator DialogueOperator { get; }
         void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
         void ItemUnlockedFeedback(BitItemSupplier itemSupplier);
-        void UpdateUIState(GameCameraState currentCameraState, int indexCamera);
+        void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera);
     }
 
     [RequireComponent(typeof(DialogueOperator))]
@@ -132,9 +132,17 @@ namespace UI
         {
             _mInfoCanvasManager.UpdateInfo();
         }
-        public void UpdateUIState(GameCameraState currentCameraState, int indexCamera)
+        public void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera)
         {
+            DeactivateAllObjects();
             var indexBitValue = BitOperator.TurnIndexToBitIndexValue(indexCamera);
+            switch (currentCameraState)
+            {
+                case GameCameraState.Office:
+                    UpdateOfficeUIElement(indexBitValue);
+                    break;
+                
+            }
             if (!_mActiveCanvasDict.ContainsKey((int) currentCameraState))
             {
                 Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain invoked camera state id.");
@@ -146,13 +154,12 @@ namespace UI
 
         public void UpdateOfficeUIElement(int cameraState)
         {
-            var indexBitValue = BitOperator.TurnIndexToBitIndexValue(cameraState);
             if (!_mActiveCanvasDict.ContainsKey((int) CanvasBitId.Office))
             {
                 Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain Office canvas id.");
                 return;
             }
-            var bitList = new List<int>() {indexBitValue};
+            var bitList = new List<int>() {cameraState};
             _mActiveCanvasDict[(int)CanvasBitId.Office].ActivateThisElementsOnly(bitList);
             PopUpOperator.Instance.RemoveAllPopUpsExceptOne(BitPopUpId.LARGE_HORIZONTAL_BANNER);
         }

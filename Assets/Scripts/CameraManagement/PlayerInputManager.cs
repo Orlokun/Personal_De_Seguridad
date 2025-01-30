@@ -127,13 +127,13 @@ namespace CameraManagement
         }
         private void ReduceCameraIndex()
         {
-            if (_currentCameraIndex == _mGameCameraManager.MaxNumberOfCameras())
+            if (_currentCameraIndex == 0)
             {
-                _currentCameraIndex = 0;
+                _currentCameraIndex = _mGameCameraManager.MaxNumberOfCameras();
             }
             else
             {
-                _currentCameraIndex++;
+                _currentCameraIndex--;
             }
         }
 

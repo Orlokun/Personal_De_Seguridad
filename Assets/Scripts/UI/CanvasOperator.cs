@@ -148,27 +148,30 @@ namespace UI
             foreach (var bitPanelKvP in _panelsInCanvas)
             {
                 var isActive = (_activeUIElements & bitPanelKvP.Key) != 0;
-                
-                UIOfficePanel component;
                 if (!bitPanelKvP.Value)
                 {
                     continue;
                 }
-                
-                var isOfficePanel = bitPanelKvP.Value.TryGetComponent<UIOfficePanel>(out component);
-                bitPanelKvP.Value.SetActive(isActive);
-                if (GetCanvasID == CanvasBitId.Office && isActive && isOfficePanel)
-                {
-                    foreach (var officeFadeInElement in component.officeFadeInElements)
-                    {
-                        if (officeFadeInElement != null)
-                        {
-                            LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 0, 0);
-                            LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 1, 2f).setEase(LeanTweenType.easeOutSine);
-                        }
-                    }
-                } 
+                CheckOfficeUI(bitPanelKvP, isActive);
             }
+        }
+
+        private void CheckOfficeUI(KeyValuePair<int, GameObject> bitPanelKvP, bool isActive)
+        {
+            UIOfficePanel component;
+            var isOfficePanel = bitPanelKvP.Value.TryGetComponent<UIOfficePanel>(out component);
+            bitPanelKvP.Value.SetActive(isActive);
+            if (GetCanvasID == CanvasBitId.Office && isActive && isOfficePanel)
+            {
+                foreach (var officeFadeInElement in component.officeFadeInElements)
+                {
+                    if (officeFadeInElement != null)
+                    {
+                        LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 0, 0);
+                        LeanTween.Framework.LeanTween.alpha(officeFadeInElement, 1, 2f).setEase(LeanTweenType.easeOutSine);
+                    }
+                }
+            } 
         }
     }
 }
