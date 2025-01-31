@@ -100,6 +100,8 @@ namespace CameraManagement
             {
                 _mUIController.ReturnToBaseGamePlayCanvasState();
             }
+            UIController.Instance.SyncUIStatusWithCameraState(newState, 0);
+
         }
         private void ManagePauseInput()
         {

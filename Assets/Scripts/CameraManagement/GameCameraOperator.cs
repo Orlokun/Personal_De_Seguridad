@@ -148,7 +148,12 @@ namespace CameraManagement
         public void ActivateCameraIndex(int indexCamera)
         {
             ActivateNewCamera(_mCurrentCameraState, indexCamera);
-            UIController.Instance.SyncUIStatusWithCameraState(_mCurrentCameraState, indexCamera);
+            SyncUIStatusWithCameraState();
+        }
+        
+        private void SyncUIStatusWithCameraState()
+        {
+            UIController.Instance.SyncUIStatusWithCameraState(_mCurrentCameraState, _mCurrentCameraIndex);
         }
 
         public bool IsCameraManagerReady()

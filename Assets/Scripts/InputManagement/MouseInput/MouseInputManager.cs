@@ -187,7 +187,7 @@ namespace InputManagement.MouseInput
             {
                 //TODO: Create different interfaces for interactive which may not need this.
                 var hitInfo = GetHitInfo();
-                _currentlyClickedObject.ReceiveActionClickedEvent(hitInfo);
+                _currentlyClickedObject.ReceiveActionClickedEvent(hitInfo); 
                 ClearCurrentlyClickedObject();
             }
         }
