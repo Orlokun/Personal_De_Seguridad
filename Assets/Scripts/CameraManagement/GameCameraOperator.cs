@@ -115,6 +115,7 @@ namespace CameraManagement
                 if (isSelectedCamera)
                 {
                     _mCurrentCameraIndex = i;
+                    PlayerInputManager.Instance.CoordinateInputIndex(_mCurrentCameraIndex);
                 }
                 //Do not save Dialogue state in order to return from it later
                 if (isSelectedCamera && _mCurrentCameraState != GameCameraState.InDialogue)
@@ -133,6 +134,7 @@ namespace CameraManagement
                 if (isSelectedCamera)
                 {
                     _mCurrentCameraIndex = i;
+                    PlayerInputManager.Instance.CoordinateInputIndex(_mCurrentCameraIndex);
                 }
                 //Do not save Dialogue state in order to return from it later
                 if (isSelectedCamera && _mCurrentCameraState != GameCameraState.InDialogue)
@@ -200,6 +202,9 @@ namespace CameraManagement
                 throw;
             }
         }
+
+        public bool AreLevelCamerasActive => _mLevelCameras != null && _mLevelCameras.Count > 0;
+
         #endregion
 
         

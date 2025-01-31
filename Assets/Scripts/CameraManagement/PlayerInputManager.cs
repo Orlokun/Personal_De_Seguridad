@@ -8,8 +8,11 @@ namespace CameraManagement
     /// <summary>
     /// MonoBehaviour class in charge of reading input
     /// </summary>
-    public class PlayerInputManager : MonoBehaviour
+    public class PlayerInputManager : MonoBehaviour, IPlayerInputManager
     {
+        private static IPlayerInputManager mInstance;
+        public static IPlayerInputManager Instance => mInstance;
+        
         private IGeneralGameInputManager _mGameInputManager;
         private IHighLvlGameStateManager _highLvlGameState;
         private IGameCameraOperator _mGameCameraManager;
@@ -20,7 +23,20 @@ namespace CameraManagement
 
         private void Awake()
         {
+            CheckSingletonInstance();
             DontDestroyOnLoad(this);
+        }
+
+        private void CheckSingletonInstance()
+        {
+            if (mInstance == null)
+            {
+                mInstance = this;
+            }
+            else
+            {
+                Destroy(this);
+            }
         }
 
         private void Start()
@@ -55,7 +71,7 @@ namespace CameraManagement
 
         private void ManagePerspectiveGameplayInput()
         {
-            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameInputManager.CurrentInputGameState == InputGameState.Pause)
+            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameInputManager.CurrentInputGameState == InputGameState.Pause || !_mGameCameraManager.AreLevelCamerasActive)
             {
                 return;
             }
@@ -84,7 +100,6 @@ namespace CameraManagement
             {
                 _mUIController.ReturnToBaseGamePlayCanvasState();
             }
-
         }
         private void ManagePauseInput()
         {
@@ -237,5 +252,15 @@ namespace CameraManagement
         {
             IGeneralGameGameInputManager.Instance.OnGameStateChange -= OnGameStateChange;
         }
+
+        public void CoordinateInputIndex(int incomingIndex)
+        {
+            _currentCameraIndex = incomingIndex;
+        }
+    }
+
+    public interface IPlayerInputManager
+    {
+        void CoordinateInputIndex(int incomingIndex);
     }
 }

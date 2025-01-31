@@ -175,15 +175,12 @@ namespace InputManagement.MouseInput
         {
             if (_currentlyClickedObject == null)
             {
-                Debug.Log("[ManageMouseClick] Nothing clicked before. Check if object hovered available");
                 if (_mHoveredInteractiveObject == null)
                 {
                     // 1. Nothing clicked - clicks nothing
-                    Debug.Log("[ManageMouseClick]Nothing clicked before, nothing to click now.");
                     return;
                 }
                 // 2. Nothing clicked - clicks something
-                Debug.Log($"[ManageMouseClick] Clicked on hovered object {_mHoveredInteractiveObject}.");
                 ProcessClickOnObject();
             }
             else

@@ -14,5 +14,6 @@ namespace CameraManagement
         public void SetOfficeCamerasParent(Transform camerasParentObject);
         public void ReturnToLastState();
         public Tuple<int, GameCameraState> GetCurrentCameraState();
+        public bool AreLevelCamerasActive { get; }
     }
 }
