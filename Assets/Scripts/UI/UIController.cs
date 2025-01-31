@@ -95,8 +95,8 @@ namespace UI
             }
             
             //Item Sidebar
-            var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
-            _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
+            //var panelObjects = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+            //_mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(panelObjects);
             OnResetCanvas?.Invoke();
         }
 
@@ -134,22 +134,30 @@ namespace UI
         }
         public void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera)
         {
-            DeactivateAllObjects();
+            ReturnToBaseGamePlayCanvasState();
             var indexBitValue = BitOperator.TurnIndexToBitIndexValue(indexCamera);
             switch (currentCameraState)
             {
                 case GameCameraState.Office:
                     UpdateOfficeUIElement(indexBitValue);
                     break;
-                
+                case GameCameraState.Level:
+                    UpdateLevelUIElements();
+                    break;
             }
-            if (!_mActiveCanvasDict.ContainsKey((int) currentCameraState))
+         }
+
+        private void UpdateLevelUIElements()
+        {
+            if (!_mActiveCanvasDict.ContainsKey((int) CanvasBitId.GamePlayCanvas))
             {
-                Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain invoked camera state id.");
+                Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain GamePlay canvas id.");
                 return;
             }
-            
-        }
+            var levelViewElements = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+            _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(levelViewElements);
+            PopUpOperator.Instance.RemoveAllPopUpsExceptOne(BitPopUpId.LARGE_HORIZONTAL_BANNER);        }
+
         #endregion
 
         public void UpdateOfficeUIElement(int cameraState)

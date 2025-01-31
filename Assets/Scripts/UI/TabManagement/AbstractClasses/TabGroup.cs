@@ -47,8 +47,8 @@ namespace UI.TabManagement.AbstractClasses
 
         protected virtual void OnResetCanvas()
         {
-            var isActive = DeactivateGroupInUI();
-            Debug.Log($"[TabGroup] On Event Deactivate: Is active = {isActive}");
+            //var isActive = DeactivateGroupInUI();
+            //Debug.Log($"[TabGroup] On Event Deactivate: Is active = {isActive}");
         }
 
         private void InitializeTabElementsDataDict()

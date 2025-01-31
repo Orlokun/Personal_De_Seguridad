@@ -51,13 +51,11 @@ namespace CameraManagement
                 _mGameCameraManager.ActivateCameraIndex(_currentCameraIndex);
             }
             //End Camera Input Section
-            
-            
         }
-        
+
         private void ManagePerspectiveGameplayInput()
         {
-            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameInputManager.CurrentInputGameState != InputGameState.InGame)
+            if (!Input.GetKeyDown(KeyCode.Tab) || _mGameInputManager.CurrentInputGameState == InputGameState.Pause)
             {
                 return;
             }
@@ -73,14 +71,20 @@ namespace CameraManagement
             SetCameraPerspectiveState(newState);
         }
         
+        public void SetNewCameraState(GameCameraState newState)
+        {
+            SetCameraPerspectiveState(newState);
+        }
         private void SetCameraPerspectiveState(GameCameraState newState)
         {
+            Debug.Log($"Setting new camera state {newState}");
             _mGameCameraManager.ChangeCameraState(newState);
             _mGameCameraManager.ActivateNewCamera(newState, 0);
             if (_mGameInputManager.CurrentInputGameState != InputGameState.InDialogue)
             {
                 _mUIController.ReturnToBaseGamePlayCanvasState();
             }
+
         }
         private void ManagePauseInput()
         {
