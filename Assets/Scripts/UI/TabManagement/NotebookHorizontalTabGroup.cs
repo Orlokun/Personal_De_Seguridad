@@ -98,7 +98,7 @@ namespace UI.TabManagement
         protected override void Awake()
         {
             base.Awake();
-            _verticalTab = FindObjectOfType<NotebookVerticalTabGroup>();
+            _verticalTab = FindFirstObjectByType<NotebookVerticalTabGroup>();
         }
 
         protected override void Start()

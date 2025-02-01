@@ -12,6 +12,7 @@ using GameDirection;
 using InputManagement;
 using TMPro;
 using UI;
+using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -149,6 +150,8 @@ namespace DialogueSystem
         #endregion
 
         #region PrivateUtils
+
+        #region Main Writing Loop
         private IEnumerator WriteDialogueNode(IDialogueNode dialogueNode)
         {
 
@@ -197,6 +200,7 @@ namespace DialogueSystem
             nextLineButton.SetActive(false);
             
             CheckDialogueLineCameraBehavior(dialogueNode);
+            //CheckDialogueLineHighlightBehavior(dialogueNode);
             PlaceSpeakerNameAndImage((DialogueSpeakerId)dialogueNode.SpeakerId);
             foreach (var letter in dialogueNode.DialogueLine)
             {
@@ -232,6 +236,7 @@ namespace DialogueSystem
             _soundMachine.PausePlayingSound();
             _currentState = UIDialogueState.FinishedTypingLine;
         }
+        #endregion
 
         private void PlaceSpeakerNameAndImage(DialogueSpeakerId dialogueNodeSpeakerId)
         {
@@ -250,6 +255,7 @@ namespace DialogueSystem
             
             var cameraIndex = int.Parse(dialogueNode.CameraEvent[1]);
             GameCameraOperator.Instance.ActivateNewCamera(cameraState, cameraIndex);
+            _mUIController.SyncUIStatusWithCameraState(cameraState, cameraIndex);
         }
         private void CheckDialogueLineEventBehavior(IDialogueNode dialogueNode)
         {
@@ -268,6 +274,52 @@ namespace DialogueSystem
                 return;
             }
             SetDecisionButtons(dialogueNode);
+        }
+
+        private void CheckDialogueLineHighlightBehavior(IDialogueNode dialogueNode)
+        {
+            var isFeedbackActive = PopUpOperator.Instance.IsPopupActive(BitPopUpId.FEEDBACK_MASK);
+            var newNodeHasHighlight = dialogueNode.HasHighlightEvent;
+
+            if (isFeedbackActive && !newNodeHasHighlight)
+            {
+                PopUpOperator.Instance.RemovePopUp(BitPopUpId.FEEDBACK_MASK);
+                return;
+            }
+            if(isFeedbackActive && newNodeHasHighlight)
+            {
+                try
+                {
+                    var activePopUp = (ITutorialMaskOperator)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.FEEDBACK_MASK);
+                    var areArraysEqual = AreArraysEqual(activePopUp.GetLastHighlight, dialogueNode.HighlightEvent);
+                    if (areArraysEqual)
+                    {
+                        return;
+                    }
+                    activePopUp.SetHighlightState(dialogueNode.HighlightEvent);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                
+            }
+            if (!isFeedbackActive && newNodeHasHighlight)
+            {
+                var highlightPopUp = (ITutorialMaskOperator)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.FEEDBACK_MASK);
+                highlightPopUp.SetHighlightState(dialogueNode.HighlightEvent);
+            }
+ 
+            //1. Check If Highlight Already Active
+            //2. Check If new Highlight is needed
+            //3. Check if is same as previous
+            //3.    If needed: Check if is equal to 
+        }
+
+        private bool AreArraysEqual(string[] array1, string[] array2)
+        {
+            return array1.SequenceEqual(array2);
         }
 
         private void SetDecisionButtons(IDialogueNode dialogueNode)

@@ -155,7 +155,10 @@ namespace UI.PopUpManager
                     return itemSupplierInfoPanelPopup.GetComponent<ItemSupplierInfoPanel>();
                 case BitPopUpId.NEWS_DETAIL_POPUP:
                     var newsDetailPopup = (GameObject) Instantiate(Resources.Load("UI/PopUps/NewsDetailPopUp"), transform);
-                    return newsDetailPopup.GetComponent<NewsDetailPopUp>();
+                    return newsDetailPopup.GetComponent<NewsDetailPopUp>();                
+                case BitPopUpId.FEEDBACK_MASK:
+                    var maskPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/HighlightUIPanel"), transform);
+                    return maskPopUp.GetComponent<TutorialMaskOperator>();
                 default:
                     return null;
             }

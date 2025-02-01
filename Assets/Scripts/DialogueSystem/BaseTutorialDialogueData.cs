@@ -87,9 +87,9 @@ namespace DialogueSystem
                 var hasChoices = linksToInts.Length > 1;
 
                 //Highlight event
-                var hasHighlightEvent = _mTutorialBaseData.values[i][6] != "0";
+                var hasHighlightEvent = _mTutorialBaseData.values[i][7] != "0";
                 var emptyString = new string[1] {"0"};
-                var highlightEvent = hasHighlightEvent ? _mTutorialBaseData.values[i][6].Split(',') : emptyString;
+                var highlightEvent = hasHighlightEvent ? _mTutorialBaseData.values[i][7].Split(',') : emptyString;
                 
                 var dialogueNode = new DialogueNodeData(currentDialogueObjectIndex, dialogueLineIndex, speakerId, dialogueLineText,
                     hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
