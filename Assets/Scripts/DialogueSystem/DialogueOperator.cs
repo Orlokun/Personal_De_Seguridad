@@ -200,7 +200,7 @@ namespace DialogueSystem
             nextLineButton.SetActive(false);
             
             CheckDialogueLineCameraBehavior(dialogueNode);
-            //CheckDialogueLineHighlightBehavior(dialogueNode);
+            CheckDialogueLineHighlightBehavior(dialogueNode);
             PlaceSpeakerNameAndImage((DialogueSpeakerId)dialogueNode.SpeakerId);
             foreach (var letter in dialogueNode.DialogueLine)
             {

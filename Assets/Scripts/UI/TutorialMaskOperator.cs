@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DialogueSystem;
 using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +23,8 @@ namespace UI
         [SerializeField] private Sprite mRectSprite;
         
         [SerializeField]private Image mFeedbackMask;
+        [SerializeField] private GameObject mDialogueMaskObject;
+        
         private string[] mLastHighlight;
         
         private void Awake()
@@ -92,6 +95,7 @@ namespace UI
         public void ToggleMaskActive(bool isActive)
         {
             mFeedbackMask.gameObject.SetActive(isActive);
+            mDialogueMaskObject.SetActive(isActive);
         }
     }
 

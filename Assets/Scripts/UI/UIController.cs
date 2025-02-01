@@ -91,6 +91,16 @@ namespace UI
                     canvasOperator.Value.ActivateThisElementsOnly(_baseObjects);
                     continue;
                 }
+
+                if (canvasOperator.Key == (int)CanvasBitId.GamePlayCanvas)
+                {
+                    if (canvasOperator.Value.IsElementActive(GameplayPanelsBitStates.BOTTOM_DIALOGUE))
+                    {
+                        var dialogueCanvas = new List<int>() { GameplayPanelsBitStates.BOTTOM_DIALOGUE };    
+                        canvasOperator.Value.ActivateThisElementsOnly(dialogueCanvas);
+                        continue;
+                    }
+                }
                 canvasOperator.Value.DeactivateAllElements();
             }
             
@@ -145,7 +155,7 @@ namespace UI
                     UpdateLevelUIElements();
                     break;
             }
-         }
+        }
 
         private void UpdateLevelUIElements()
         {
