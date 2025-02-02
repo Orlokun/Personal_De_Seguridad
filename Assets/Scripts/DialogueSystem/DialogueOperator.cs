@@ -175,6 +175,8 @@ namespace DialogueSystem
             {
                 Debug.Log("[DialogueOperator.WriteDialogueNode] Finished going through dialogur");
                 _currentState = UIDialogueState.NotDisplayed;
+
+                PopUpOperator.Instance.RemovePopUp(BitPopUpId.FEEDBACK_MASK);
                 OnDialogueCompleted?.Invoke();
             }
             else if(dialogueNode.LinkNodes.Length == 1)
