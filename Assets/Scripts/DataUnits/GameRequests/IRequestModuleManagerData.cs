@@ -1,0 +1,14 @@
+﻿using System.Collections.Generic;
+using DialogueSystem;
+
+namespace DataUnits.GameRequests
+{
+    internal interface IRequestModuleManagerData
+    {
+        void LoadRequestsData(string url);
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> BaseRequestsData { get; }
+
+        public bool RequestExistsInData(DialogueSpeakerId requesterSpeakerId, int requestId);
+        public void ActivateRequestInData(IGameRequest request);
+    }
+}

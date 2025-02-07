@@ -1,10 +1,11 @@
-﻿using GamePlayManagement.BitDescriptions.RequestParameters;
+﻿using DialogueSystem;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 
 namespace DataUnits.GameRequests
 {
     public interface IGameRequestData
     {
-        public int RequesterSpeakerId{ get; }
+        public DialogueSpeakerId RequesterSpeakerId{ get; }
         public int RequestId{ get; }
         public string ReqTitle{ get; }
         public string ReqDescription { get; }
@@ -17,7 +18,7 @@ namespace DataUnits.GameRequests
     }
     public class GameRequestData : IGameRequestData
     {
-        private int _mRequesterSpeakerId;
+        private DialogueSpeakerId _mRequesterSpeakerId;
         private int _mRequestId;
         private string _mReqTitle;
         private string _mReqDescription;
@@ -33,7 +34,7 @@ namespace DataUnits.GameRequests
             RequirementActionType mChallengeType, RequirementObjectType mChallengeObjectType, RequirementLogicEvaluator mReqLogic,
             RequirementConsideredParameter mReqParameterType, string[] mReqParameterValue, int quantity)
         {
-            _mRequesterSpeakerId = mRequesterSpeakerId;
+            _mRequesterSpeakerId = (DialogueSpeakerId)mRequesterSpeakerId;
             _mRequestId = mRequestId;
             _mReqTitle = mReqTitle;
             _mReqDescription = mReqDescription;
@@ -44,7 +45,7 @@ namespace DataUnits.GameRequests
             _mReqParameterValue = mReqParameterValue;
         }
 
-        public int RequesterSpeakerId => _mRequesterSpeakerId;
+        public DialogueSpeakerId RequesterSpeakerId => _mRequesterSpeakerId;
         public int RequestId => _mRequestId;
         public string ReqTitle => _mReqTitle;
         public string ReqDescription => _mReqDescription;

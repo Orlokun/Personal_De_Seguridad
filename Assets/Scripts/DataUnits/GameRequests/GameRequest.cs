@@ -1,13 +1,14 @@
-﻿using GamePlayManagement.BitDescriptions.RequestParameters;
+﻿using DialogueSystem;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 
 namespace DataUnits.GameRequests
 {
     public interface IGameRequest
     {
-        public int RequesterSpeakerId { get; }
+        public DialogueSpeakerId RequesterSpeakerId { get; }
         public int RequestId { get; }
         public bool IsCompleted { get; }
-        public void CompleteChallenge();
+        public void ProcessEvent();
     }
 
     public class GameRequest : IGameRequest
@@ -20,12 +21,12 @@ namespace DataUnits.GameRequests
             _mRequestData = new GameRequestData(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, mReqParameterValues, quantity);
         }
 
-        public int RequesterSpeakerId => _mRequestData.RequesterSpeakerId;
+        public DialogueSpeakerId RequesterSpeakerId => _mRequestData.RequesterSpeakerId;
         public int RequestId => _mRequestData.RequestId;
         public bool IsCompleted => _mRequestData.IsCompleted;
-        
-        public void CompleteChallenge()
+        public void ProcessEvent()
         {
+            //Not implemented yet
         }
     }
 }

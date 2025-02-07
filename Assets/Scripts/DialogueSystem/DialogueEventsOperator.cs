@@ -1,3 +1,4 @@
+using System;
 using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -55,12 +56,8 @@ namespace DialogueSystem
                 case "OrganSale":
                     LaunchPlayerOrganSaleEvent();
                     break;
-                //Supplier request uses 5 event arguments. 
-                //1. The job supplier id            ex: 1 = countPetrolk
-                //2. RequestTypeId                  ex: 4 = NotUse
-                //3. RequestLogicType               ex: 3 = EqualsTo
-                //4. RequestParameter Type          ex: 2 = race
-                //5. RequestParameter itself        ex: 8 = robot
+                
+                //Argument One is speaker Id, Argument two is request Id
                 case "Request":
                     LaunchSupplierRequestEvent(eventCodes[1], eventCodes[2]);
                     break;
@@ -97,7 +94,9 @@ namespace DialogueSystem
 
         private void LaunchSupplierRequestEvent(string speakerId, string requestId)
         {
-            GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager();
+            var hasSpeakerId = Enum.TryParse(speakerId, out DialogueSpeakerId speaker);
+            var hasRequestId = int.TryParse(requestId, out var requestIdInt);
+            GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager().HandleIncomingRequestActivation(speaker, requestIdInt);
         }
 
 
