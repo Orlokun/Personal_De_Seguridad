@@ -126,7 +126,6 @@ namespace DialogueSystem
             mSpeakerName.text = "";
             mSpeakerImageDisplay.color = new Color(1, 1, 1, 0);
             _mUIController.ToggleDialogueObject(false);
-
         }
         #endregion
 

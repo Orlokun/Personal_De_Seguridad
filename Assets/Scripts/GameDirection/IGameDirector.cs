@@ -2,6 +2,7 @@ using System.Collections;
 using CameraManagement;
 using DataUnits;
 using DataUnits.GameCatalogues;
+using DataUnits.GameRequests;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.NewsManagement;

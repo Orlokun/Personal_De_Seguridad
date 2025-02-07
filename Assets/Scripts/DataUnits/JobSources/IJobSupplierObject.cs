@@ -1,9 +1,11 @@
+using DataUnits.GameRequests;
 using DialogueSystem;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.Players_NPC;
 
 namespace DataUnits.JobSources
 {
-    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier, INPCRequesterModule
+    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier, IRequestModuleFunctions
     {
 
         public void CheckCallingTime(int hour, int minute);
@@ -23,16 +25,22 @@ namespace DataUnits.JobSources
         
         //Modules
         public IJobSupplierProductsModule JobProductsModule { get; }
+        public IRequestModule JobRequestsModule { get; }
         
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
         public void ExpendMoney(int amount);
-        void LocalInitialize(JobSupplierBitId jobId);
+        void LocalInitialize(JobSupplierBitId jobId, DialogueSpeakerId speakerId);
         void PlayerHired();
     }
-
-    public interface INPCRequesterModule
+    public interface IBaseRequesterModule
     {
-        void ActivateChallenge(IJobSupplierChallengeObject requestIdInt);
+        void ActivateChallenge(IGameRequest requestIdInt);
+    }
+
+
+    public interface IRequestModuleFunctions
+    {
+
     }
 }

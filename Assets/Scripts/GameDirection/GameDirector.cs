@@ -153,11 +153,12 @@ namespace GameDirection
             _mCustomerInstantiationManager = CustomersInSceneManager.Instance;
             _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
             _mMetaGameDirector = Factory.CreateMetaGameDirectory();
-            _mUIController.StartMainMenuUI();
             
+            WaitAndLoadDeflectionInitialDialogues();
+                
+            _mUIController.StartMainMenuUI();
             _gameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
-            WaitAndLoadDialogues();
         }
 
         private void LoadDayManagement(DayBitId dayId)
@@ -166,7 +167,10 @@ namespace GameDirection
             _dayLevelManager.Initialize(this, dayId);
         }
 
-        private async void WaitAndLoadDialogues()
+        /// <summary>
+        /// Deflections are loaded before the game starts so the player can call still locked suppliers.
+        /// </summary>
+        private async void WaitAndLoadDeflectionInitialDialogues()
         {
             await Task.Delay(400);
             LoadDialoguesForSuppliers();
@@ -185,16 +189,8 @@ namespace GameDirection
 
 
         #endregion
-        
-        #region Public Functions
-        public void SubscribeCurrentWorkDayToCustomerManagement()
-        {
-            var currentDay = _mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject();
-            _mCustomerInstantiationManager.RegisterObserver(currentDay);
-        }
 
         #region ManageNewGame
-
         public void ContinueGame()
         {
             if(_mMetaGameDirector.GetExistingProfile == null)
@@ -231,9 +227,10 @@ namespace GameDirection
             var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
             var calendarModule = Factory.CreateCalendarModule(_mClockManager);
             var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
+            var requestModuleManager = Factory.CreateRequestsModuleManager();
             var profileStatusModule = Factory.CreatePlayerStatusModule();
             
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule);
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule, requestModuleManager);
             _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
             //_mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
             _mActiveGameProfile.UpdateProfileData();
@@ -250,6 +247,14 @@ namespace GameDirection
             _gameInputManager.SetGamePlayState(InputGameState.InGame);
         }
         #endregion
+
+        #region Public Functions
+        public void SubscribeCurrentWorkDayToCustomerManagement()
+        {
+            var currentDay = _mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject();
+            _mCustomerInstantiationManager.RegisterObserver(currentDay);
+        }
+
         public void ChangeHighLvlGameState(HighLevelGameStates newState)
         {
             _mGameState = newState;

@@ -14,8 +14,11 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mPersuasiveness;
         private readonly int _mSpeed;
         private readonly int _mFoVRadius;
+        private readonly ItemOrigin _mItemOrigin;
+        private readonly int _mItemTypes;
+        private readonly ItemBaseQuality _mItemBaseQuality;
         public GuardStats(int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, 
-            int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius)
+            int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius, ItemOrigin itemOrigin, int itemTypes, ItemBaseQuality itemBaseQuality)
         {
             _bitId = bitId;
             _mIntelligence = mIntelligence;

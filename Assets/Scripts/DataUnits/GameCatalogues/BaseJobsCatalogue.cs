@@ -100,7 +100,11 @@ namespace DataUnits.GameCatalogues
                 int jobId;
                 var gotId = int.TryParse(_jobsData.values[i][0], out jobId);
                 var jobSupplier = CreateJobSupplierObject((JobSupplierBitId) jobId);
-                jobSupplier.LocalInitialize((JobSupplierBitId) jobId);
+                                
+                var gotSpeakerId = int.TryParse(_jobsData.values[i][7], out var speakerIndex);
+                jobSupplier.SpeakerIndex = (DialogueSpeakerId)speakerIndex;
+                
+                jobSupplier.LocalInitialize((JobSupplierBitId) jobId, jobSupplier.SpeakerIndex);
 
                 jobSupplier.JobSupplierData.JobSupplierBitId = (JobSupplierBitId) jobId;
                     
@@ -119,9 +123,7 @@ namespace DataUnits.GameCatalogues
                    
                 var gotPhone = int.TryParse(_jobsData.values[i][6], out var phoneNumber);
                 jobSupplier.StorePhoneNumber = phoneNumber;
-                
-                var gotSpeakerId = int.TryParse(_jobsData.values[i][7], out var speakerIndex);
-                jobSupplier.SpeakerIndex = (DialogueSpeakerId)speakerIndex;
+
                 
                 //Minimum and maximum clients in store
                 var gotClientsMin = int.TryParse(_jobsData.values[i][8], out var clientsMin);

@@ -1,6 +1,7 @@
 using System;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.ItemManagement;
 using UnityEngine;
 using Utils;
 
@@ -8,7 +9,7 @@ namespace DataUnits.ItemScriptableObjects
 {
     [Serializable]
     [CreateAssetMenu(menuName = "Items/BaseItem")]
-    public class ItemObject : ScriptableObject, IItemObject, IInitialize
+    public class ItemObject : ScriptableObject, IItemObject, IInitialize, IBaseItemInformation
     {
         protected BitItemSupplier _itemSupplier;
         protected BitItemType _itemType;
@@ -75,5 +76,39 @@ namespace DataUnits.ItemScriptableObjects
         public void Initialize()
         {
         }
+    }
+
+    public enum ItemOrigin
+    {
+        Unknown = 0,
+        Earth,
+        EarthPrime,
+        Uranus
+    }
+    
+
+    public enum InfoItemType
+    {
+        Regular = 1,
+        Ancient = 2,
+        Robotic = 4,
+        Magical = 8,
+        Human = 16,
+        Undead = 32
+    }
+    
+    public enum ItemBaseQuality
+    {
+        NoApply = 0,
+        Low = 1,
+        Medium,
+        High,
+        Premium,
+        Luxury, 
+        Unique
+    }
+    
+    public interface IBaseItemInformation
+    {
     }
 }

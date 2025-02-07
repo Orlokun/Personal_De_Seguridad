@@ -1,3 +1,5 @@
+using System;
+
 namespace Utils
 {
     public static class BitOperator
@@ -44,6 +46,16 @@ namespace Utils
         public static bool IsActive(int container, int contained)
         {
             return (container & contained) != 0;
+        }
+        
+        public static int TurnEnumsToInt<T>(T[] originEnums) where T : Enum
+        {
+            var result = 0;
+            foreach (var originEnum in originEnums)
+            {
+                result |= Convert.ToInt32(originEnum);
+            }
+            return result;
         }
     }
 }

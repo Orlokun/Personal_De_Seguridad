@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataUnits.GameRequests;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.Players_NPC;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,13 +22,13 @@ namespace DataUnits.JobSources
 
         private int _mOvercomedDialogueStates;
 
-        private List<IJobSupplierChallengeObject> _mChallenges;
+        private List<IGameRequest> _mChallenges;
         
         
         
-        public override void LocalInitialize(JobSupplierBitId id)
+        public override void LocalInitialize(JobSupplierBitId id, DialogueSpeakerId speakerId)
         {
-            base.LocalInitialize(id);
+            base.LocalInitialize(id, speakerId);
             _mDialogueState = CountPetrolkDialogueStates.WaitingForHire;
         }
         
@@ -63,7 +65,7 @@ namespace DataUnits.JobSources
             _mDialogueState = CountPetrolkDialogueStates.RequiresMindProtection;
         }
         
-        public override void ActivateChallenge(IJobSupplierChallengeObject openedChallenge)
+        public override void ActivateRequest(IGameRequest request)
         {
             Debug.Log("CountPetrolkSupplierObject: ActivateChallenge");
         }

@@ -48,7 +48,8 @@ namespace Utils
         public static string ModularDialoguesDataUrl =
             "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/OmniCorpIntroElements?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
 
-      
+        public static string BaseGameRequests = "https://sheets.googleapis.com/v4/spreadsheets/1OMMi1DapbJC-RfyIi5edzBDse1L6_BoQjIDcT1-utSo/values/BaseRequests?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        
         
         public static string SuppliersDialogueGameData(DialogueSpeakerId speakerIndex, DialogueType dialogueType)
         {

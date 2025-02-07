@@ -1,5 +1,6 @@
 using System;
 using DataUnits.GameCatalogues;
+using DataUnits.GameRequests;
 using DataUnits.ItemSources;
 using DialogueSystem;
 using ExternalAssets._3DFOV.Scripts;
@@ -10,7 +11,7 @@ using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
-using GamePlayManagement.BitDescriptions.SupplierChallenges;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ItemManagement;
 using GamePlayManagement.ItemManagement.Guards;
@@ -156,9 +157,9 @@ namespace Utils
         /// Player Profile Modules
         /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager)
         {
-            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule);
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule, requestModuleManager);
         }
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
@@ -192,16 +193,27 @@ namespace Utils
             return new MetaGameDirector();
         }
 
-        public static IJobSupplierChallengeObject CreateChallengeObject(JobSupplierBitId supplierBitId, 
-            RequestChallengeType requestType, RequestChallengeLogicOperator requestLogicOperator, ConsideredParameter requestParameterType, int requestParameterValue)
+        public static IGameRequest CreateGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription,
+            RequirementActionType requestType, RequirementObjectType requiredObjectType,
+            RequirementLogicEvaluator requirementLogicEvaluator, RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
         {
-            return new JobSupplierChallengeObject(supplierBitId, requestType, requestLogicOperator,
-                requestParameterType, requestParameterValue);
+            return new GameRequest(speakerId, reqId, reqTitle,reqDescription, requestType,requiredObjectType,requirementLogicEvaluator,
+                requestParameterType, requestParameterValue, quantity);
         }
 
         public static IBaseTutorialDialogueData CreateTutorialDialogueData()
         {
             return new BaseTutorialDialogueData();
+        }
+
+        public static IRequestsModuleManager CreateRequestsModuleManager()
+        {
+            return new RequestsModuleManager();
+        }
+
+        public static IRequestModuleData CreateRequestModuleData()
+        {
+            return new RequestModuleData();
         }
     }
 }

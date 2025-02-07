@@ -1,11 +1,7 @@
-using DataUnits.GameCatalogues;
-using DataUnits.JobSources;
 using DialogueSystem.Interfaces;
 using GameDirection;
-using GamePlayManagement.BitDescriptions.SupplierChallenges;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
-using Utils;
 
 namespace DialogueSystem
 {
@@ -65,9 +61,8 @@ namespace DialogueSystem
                 //3. RequestLogicType               ex: 3 = EqualsTo
                 //4. RequestParameter Type          ex: 2 = race
                 //5. RequestParameter itself        ex: 8 = robot
-                case "JobSupplierRequest":
-                    LaunchSupplierRequestEvent(eventCodes[1], eventCodes[2], 
-                        eventCodes[3], eventCodes[4], eventCodes[5]);
+                case "Request":
+                    LaunchSupplierRequestEvent(eventCodes[1], eventCodes[2]);
                     break;
                 case "UnlockItemSupplier":
                     LaunchUnlockItemSupplierEvent(eventCodes[1]);
@@ -100,33 +95,9 @@ namespace DialogueSystem
             OnUnlockItemSupplier?.Invoke(itemSupplierBitId);
         }
 
-        private void LaunchSupplierRequestEvent(string supplierStringId, string requestTypeString, string requestLogicString, 
-            string requestParameterTypeString, string parameterValueString)
+        private void LaunchSupplierRequestEvent(string speakerId, string requestId)
         {
-            
-            var hasSupplierId = int.TryParse(supplierStringId, out var supplierIdInt);
-            var hasRequestTypeId = int.TryParse(requestTypeString, out var requestIdInt);
-            var hasLogicType = int.TryParse(requestTypeString, out var requestLogicOperator);
-            var hasParameterType = int.TryParse(requestParameterTypeString, out var requestParameterType);
-            var hasRequestParameterValue = int.TryParse(parameterValueString, out var requestParameterValue);
-            
-            
-            var supplierBitId = (JobSupplierBitId) supplierIdInt;
-            if (!hasSupplierId || !hasRequestTypeId || !hasLogicType || !hasParameterType || !hasRequestParameterValue)
-            {
-                Debug.LogError("[LaunchSupplierRequestEvent] Request Must have all parameters available");
-            }
-            //
-            var playerProfile = GameDirector.Instance.GetActiveGameProfile;
-            var isJobSupplierActive = BitOperator.IsActive(playerProfile.GetActiveJobsModule().UnlockedJobSuppliers, (int) supplierBitId);
-            if (!isJobSupplierActive)
-            {
-                return;
-            }
-            var challengeObject = Factory.CreateChallengeObject(supplierBitId, (RequestChallengeType)requestIdInt, 
-                (RequestChallengeLogicOperator)requestLogicOperator, (ConsideredParameter)requestParameterType, requestParameterValue);
-            var jobSupplier = (INPCRequesterModule)BaseJobsCatalogue.Instance.GetJobSupplierObject(supplierBitId);
-            jobSupplier.ActivateChallenge(challengeObject);
+            GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager();
         }
 
 
@@ -155,9 +126,5 @@ namespace DialogueSystem
         ORGAN_SALE
     }
 
-    public interface IJobSupplierChallengeObject
-    {
-        public bool IsCompleted { get; }
-        public void CompleteChallenge();
-    }
+
 }

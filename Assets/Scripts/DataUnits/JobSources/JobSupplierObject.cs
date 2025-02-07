@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using DataUnits.GameRequests;
 using DialogueSystem;
-using DialogueSystem.Interfaces;
 using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.Players_NPC;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -28,15 +29,17 @@ namespace DataUnits.JobSources
         protected IJobSupplierDialogueModule _dialogueModule;
         protected IJobSupplierProductsModule _productsModuleModule;
         protected IJobSupplierObjectData _mSupplierData;
-        
+        protected IRequestModule _mRequestsModule;
+
         
         #region Constructor & API
-        public virtual void LocalInitialize(JobSupplierBitId id)
+        public virtual void LocalInitialize(JobSupplierBitId id, DialogueSpeakerId speakerId)
         {
             _mSupplierData = new JobSupplierObjectData();
             _mSupplierData.JobSupplierBitId = id;
             _dialogueModule = new JobSupplierDialogueModule(this);
             _productsModuleModule = new JobSupplierProductsModule(this);
+            _mRequestsModule = new RequestModule(speakerId);
         }
 
         public virtual void PlayerHired()
@@ -72,6 +75,7 @@ namespace DataUnits.JobSources
         }
 
         public IJobSupplierProductsModule JobProductsModule => _productsModuleModule;
+        public IRequestModule JobRequestsModule => _mRequestsModule;
 
         public void LoadDeflectionDialoguesData()
         {
@@ -151,7 +155,7 @@ namespace DataUnits.JobSources
         }
         
         private int _lastCallExp = 0;
-        
+
         //TODO: Implement the call system with a class/interface argument for more better management 
         public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
@@ -196,7 +200,7 @@ namespace DataUnits.JobSources
         }
         #endregion
 
-        public virtual void ActivateChallenge(IJobSupplierChallengeObject openedChallenge)
+        public virtual void ActivateRequest(IGameRequest request)
         {
             throw new NotImplementedException();
         }

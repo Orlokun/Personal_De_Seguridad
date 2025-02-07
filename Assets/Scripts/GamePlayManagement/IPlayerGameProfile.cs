@@ -1,4 +1,5 @@
 using System;
+using DataUnits.GameRequests;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.ProfileDataModules;
@@ -8,7 +9,7 @@ namespace GamePlayManagement
 {
     public interface IPlayerGameProfile : IGameBasedPlayerData
     {
-
+        public IRequestsModuleManager GetRequestsModuleManager();
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();

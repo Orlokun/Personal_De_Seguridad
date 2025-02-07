@@ -44,6 +44,8 @@ namespace DataUnits.GameCatalogues
         #endregion
         public Dictionary<BitItemSupplier, List<IItemObject>> ExistingBaseItemsInCatalogue => _mBaseCatalogueBaseItemsFromData;
         private Dictionary<BitItemSupplier, List<IItemObject>> _mBaseCatalogueBaseItemsFromData= new Dictionary<BitItemSupplier, List<IItemObject>>();
+        private bool _mInjectedData;
+
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -69,7 +71,16 @@ namespace DataUnits.GameCatalogues
             StartCoroutine(GetWeaponSpecialData(weaponsSpecialDataUrl));
             StartCoroutine(GetTrapSpecialData(trapsSpecialDataUrl));
             StartCoroutine(GetOtherItemsSpecialData(otherItemsSpecialDataUrl));
+            StartCoroutine(UpdateSpecialData());
+
             //
+        }
+
+        private IEnumerator UpdateSpecialData()
+        {
+            yield return new WaitUntil(() => MAreSpecialStatsReady);
+            Debug.Log($"[ItemsDataController.UpdateSpecialData] All Special Stats are ready");
+            InjectItemSpecialStats();
         }
 
         private void Start()
@@ -269,10 +280,42 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadGuardDataFromJson] Guard Speed must be available in data");
                 }
+                
+                //Step 12: START COMMON SPECS
+                var origin = _mGuardStatsFromDataString.values[i][12];
+                var itemType = _mGuardStatsFromDataString.values[i][13];
+                var quality = _mGuardStatsFromDataString.values[i][14];
+                
+                //Step 12.1: Check Origin
+                var isOriginValid = Enum.TryParse<ItemOrigin>(origin, out var originValue);
+                if (!isOriginValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have origin set");
+                    return;
+                }
+                
+                //Step 12.2: Check ItemType
+                var itemTypes = itemType.Split(',');
+                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                {
+                    Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
+                    return;
+                }
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+
+                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                
+                //Step 12.3: Check Item Quality
+                var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
+                if (!isItemQualityValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have item quality set");
+                    return;
+                }
 
                 IGuardStats itemDataObject =
                     new GuardStats(itemId,intelligence, kindness, proactivity, aggressive, strength, agility, 
-                        persuasiveness, speed, fov);
+                        persuasiveness, speed, fov, originValue, itemTypesFinal, itemQualityValue);
                 _mGuardsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotGuardsData = true;
@@ -688,6 +731,20 @@ namespace DataUnits.GameCatalogues
                 Console.WriteLine(e);
                 throw;
             }
+        }
+        private void InjectItemSpecialStats()
+        {
+            if(_mInjectedData)
+                return;
+            foreach (var itemSupplier in _mBaseCatalogueBaseItemsFromData)
+            {
+                foreach (var itemObject in itemSupplier.Value)
+                {
+                    var specialStats = GetItemStats(itemSupplier.Key, itemObject.ItemType ,itemObject.BitId);
+                    itemObject.SetItemSpecialStats(specialStats);
+                }
+            }
+            _mInjectedData = true;
         }
         #endregion
 

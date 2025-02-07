@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DataUnits.GameCatalogues;
+using DataUnits.GameRequests;
 using DataUnits.ItemScriptableObjects;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
@@ -16,7 +17,7 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager)
         {
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
@@ -35,6 +36,10 @@ namespace GamePlayManagement
             
             _lifeStyleModule = lifeStyleModule;
             _lifeStyleModule.SetProfile(this);
+            
+            _mRequestModuleManager = requestModuleManager;
+            _mRequestModuleManager.SetProfile(this);
+            
         }
         
         //Main Data Modules
@@ -47,8 +52,9 @@ namespace GamePlayManagement
         //Members
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
+        private readonly IRequestsModuleManager _mRequestModuleManager;
 
-        
+
         //Public Fields
         public DateTime GameCreationDate => _mGameCreationDate;
         public Guid GameId => _mGameId;
@@ -75,6 +81,10 @@ namespace GamePlayManagement
         {
             return _gameStatusModule;
         }
+        public IRequestsModuleManager GetRequestsModuleManager()
+        {
+            return _mRequestModuleManager;
+        }
         
         public int GameDifficulty => _gameStatusModule.GameDifficulty;
 
@@ -84,6 +94,7 @@ namespace GamePlayManagement
             UpdateJobSuppliersInProfile();
             UpdateItemSuppliersInProfile();
             UpdateItemsInProfile();
+
         }
         private void UpdateJobSuppliersInProfile()
         {
@@ -110,7 +121,6 @@ namespace GamePlayManagement
         private void UpdateItemsInProfile()
         {
             var itemsInCatalogue = ItemsDataController.Instance.ExistingBaseItemsInCatalogue;
-            UpdateItemsSpecialStats(itemsInCatalogue);
             var activeProviders = GetActiveItemSuppliersModule().ActiveProviderObjects;
             foreach (var itemSupplier in activeProviders)
             {
@@ -124,17 +134,7 @@ namespace GamePlayManagement
                 }
             }
         }
-        private void UpdateItemsSpecialStats(Dictionary<BitItemSupplier, List<IItemObject>> itemsInData)
-        {
-            foreach (var itemSupplier in itemsInData)
-            {
-                foreach (var itemObject in itemSupplier.Value)
-                {
-                    var specialStats = ItemsDataController.Instance.GetItemStats(itemSupplier.Key, itemObject.ItemType ,itemObject.BitId);
-                    itemObject.SetItemSpecialStats(specialStats);
-                }
-            }
-        }
+
         #endregion
 
         public int GeneralOmniCredits
@@ -143,7 +143,7 @@ namespace GamePlayManagement
         }
         public void UpdateDataEndOfDay()
         {
-            _jobsSourcesModule.CheckFinishDay();
+            _jobsSourcesModule.StartFinishDay();
         }
 
         public IWorkDayObject GetCurrentWorkday()

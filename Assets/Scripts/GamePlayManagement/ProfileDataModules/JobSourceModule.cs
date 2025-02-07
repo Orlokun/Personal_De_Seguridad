@@ -55,7 +55,7 @@ namespace GamePlayManagement.ProfileDataModules
         {
             _mCurrentActiveEmployer = 0;
         }
-        public void CheckFinishDay()
+        public void StartFinishDay()
         {
             if (_mCurrentActiveEmployer == 0)
             {

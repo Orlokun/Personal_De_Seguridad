@@ -6,10 +6,9 @@ using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
-    public interface IItemSuppliersModule : IProfileModule
+    public interface IItemSuppliersModule : IProfileModule, IItemSuppliersModuleData
     {
-        public int UnlockedItemSuppliers { get; }
-        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects { get; }
+
 
         //Suppliers API
         public bool IsSupplierActive(BitItemSupplier provider);
@@ -22,5 +21,11 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         public void RemoveItemFromSupplier(BitItemSupplier supplier, int itemBitId);
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId);
         public List<IItemObject> GetItemsOfType(BitItemType itemType);
+    }
+
+    public interface IItemSuppliersModuleData
+    {
+        public int UnlockedItemSuppliers { get; }
+        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects { get; }
     }
 }
