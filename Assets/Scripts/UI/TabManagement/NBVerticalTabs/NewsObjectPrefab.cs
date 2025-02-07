@@ -36,6 +36,4 @@ namespace UI.TabManagement.NBVerticalTabs
             _mSubTitle.text = _mNewsData.NewsSubHead;
         }
     }
-
-
 }

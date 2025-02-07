@@ -11,7 +11,7 @@ namespace UI.TabManagement.AbstractClasses
     {
         private bool _mInitialized;
         private ITabGroup _tabGroup;
-        private int _mIndex;
+        private int _mTabElementIndex;
 
         private bool _mLockState;
 
@@ -27,13 +27,13 @@ namespace UI.TabManagement.AbstractClasses
         public void OnPointerClick(PointerEventData eventData)
         {
             Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");
-            if (_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab != _mIndex)
+            if (_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab != _mTabElementIndex)
             {
-                _tabGroup.UpdateItemsContent(_mIndex);
+                _tabGroup.UpdateItemsContent(_mTabElementIndex, _tabGroup.ActiveTab);
                 return;
             }
             
-            if(_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab == _mIndex)
+            if(_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab == _mTabElementIndex)
             {
                 _tabGroup.DeactivateGroupInUI();
                 return;
@@ -42,7 +42,7 @@ namespace UI.TabManagement.AbstractClasses
             if (!_tabGroup.IsTabGroupActive)
             {
                 _tabGroup.ActivateTabInUI();
-                _tabGroup.UpdateItemsContent(_mIndex);
+                _tabGroup.UpdateItemsContent(_mTabElementIndex, _tabGroup.ActiveTab);
             }
             Debug.Log($"[TabElement.OnPointerClick] Tab Group Named {gameObject.name}");
         }
@@ -60,7 +60,7 @@ namespace UI.TabManagement.AbstractClasses
 
         public void SetTabIndex(int index)
         {
-            _mIndex = index;
+            _mTabElementIndex = index;
         }
     }
 }

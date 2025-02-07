@@ -25,10 +25,12 @@ namespace DataUnits.GameRequests
         }
 
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mActiveRequests = new();
-        private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mAchievedRequests = new();
+        private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mCompletedRequests = new();
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mFailedRequests = new();
 
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mActiveRequests;
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mCompletedRequests;
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mFailedRequests;
         
         public void ActivateRequestInData(IGameRequest request)
         {

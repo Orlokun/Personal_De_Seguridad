@@ -12,7 +12,7 @@ namespace UI.TabManagement.AbstractClasses
 
         protected Dictionary<int, ITabElement> MTabElements = new Dictionary<int, ITabElement>();
         protected bool MIsTabActive;
-        protected int MActiveTab;
+        protected int MActiveTab = 1;
         protected IUIController MuiController;
 
         public int ActiveTab => MActiveTab;
@@ -71,7 +71,7 @@ namespace UI.TabManagement.AbstractClasses
             }
         }
 
-        public virtual void UpdateItemsContent(int selectedTabIndex)
+        public virtual void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
         {
             MActiveTab = selectedTabIndex;
         }

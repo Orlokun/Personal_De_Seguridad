@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 104398e8b98e47f492971192ab71ddee, type: 3}
-  m_Name: ArchivedSpecialReqTabelement
+  m_Name: CompletedRequestIconTab
   m_EditorClassIdentifier: 
-  tabType: 2
-  icon: {fileID: 21300000, guid: 144aa74618b85974a9a50f612c2fa8fd, type: 3}
-  tabElementName: Requerimientos Inactivos
+  type: 2
+  icon: {fileID: 21300000, guid: 3bb8d4798a43049ce924f7f2f15566aa, type: 3}
+  tabElementName: Completed Requests

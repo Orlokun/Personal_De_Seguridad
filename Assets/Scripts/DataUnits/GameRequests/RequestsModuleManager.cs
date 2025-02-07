@@ -11,6 +11,8 @@ namespace DataUnits.GameRequests
     {
         public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId);
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests { get; }
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests { get; }
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests { get; }
     }
     
     public class RequestsModuleManager : IRequestsModuleManager
@@ -21,8 +23,8 @@ namespace DataUnits.GameRequests
         private IItemSuppliersModuleData _mItemSuppliersModule;
 
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mRequestModuleData.ActiveRequests;
-        private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mAchievedRequests = new();
-        private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mFailedRequests = new();
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mRequestModuleData.CompletedRequests;
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mRequestModuleData.FailedRequests;
 
         #region Init
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)

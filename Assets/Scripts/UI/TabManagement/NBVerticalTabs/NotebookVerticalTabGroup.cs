@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using DataUnits.GameRequests;
+using DialogueSystem;
 using GameDirection;
 using GamePlayManagement;
 using UI.TabManagement.AbstractClasses;
+using UI.TabManagement.TabEnums;
 using UnityEngine;
 
 namespace UI.TabManagement.NBVerticalTabs
@@ -22,7 +25,7 @@ namespace UI.TabManagement.NBVerticalTabs
         [SerializeField] private GameObject RequirementsPrefab;
         [SerializeField] private GameObject NewsPrefab;
         
-        public void SetNewTabState(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup)
+        public void SetNewTabState(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup, int verticalTabIndex)
         {
             if (_tabGroupSource == newSource)
             {
@@ -35,7 +38,7 @@ namespace UI.TabManagement.NBVerticalTabs
             var verticalTabElements = GetVerticalTabElements(newSource, parentGroup);
             InstantiateVerticalTabs(verticalTabElements);
             UpdateDictionaryData();
-            UpdateItemsContent((int)newSource);
+            UpdateItemsContent((int)newSource, verticalTabIndex);
         }
         public override bool ActivateTabInUI()
         {
@@ -113,20 +116,21 @@ namespace UI.TabManagement.NBVerticalTabs
             return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(prefab, rightPage);
         }
         
-        private void UpdateContentInPage(NotebookVerticalTabSource notebookInfoSource)
+        private void UpdateContentInPage(NotebookVerticalTabSource notebookInfoSource, int selectedTab)
         {
             switch (notebookInfoSource)
             {
                 case NotebookVerticalTabSource.Jobs:
-                    ManageJobObjectsInstantiation();
+                    ManageJobObjectsInstantiation(selectedTab);
                     break;
                 case NotebookVerticalTabSource.Suppliers:
-                    ManageSuppliersInstantiation();
+                    ManageSuppliersInstantiation(selectedTab);
                     break;
                 case NotebookVerticalTabSource.Laws:
                     break;
                 case NotebookVerticalTabSource.CurrentRequirements:
-                    ManageRequestObjectsInstantiation();
+                    var tabSource = (RequestTabSources)selectedTab;
+                    ManageRequestObjectsInstantiation(tabSource);
                     break;
                 case NotebookVerticalTabSource.News:
                     ManageNewsInstantiation();
@@ -136,10 +140,26 @@ namespace UI.TabManagement.NBVerticalTabs
             }
         }
 
-        private void ManageRequestObjectsInstantiation()
+        private void ManageRequestObjectsInstantiation(RequestTabSources selectedTab)
         {
             var reqManager = _playerProfile.GetRequestsModuleManager();
-            var activeRequesters = reqManager.ActiveRequests;
+            Dictionary<DialogueSpeakerId, List<IGameRequest>> activeRequesters;
+
+            switch (selectedTab)
+            {
+                case RequestTabSources.ActiveRequests:
+                    activeRequesters = reqManager.ActiveRequests;
+                    break;
+                case RequestTabSources.CompletedRequests:
+                    activeRequesters = reqManager.CompletedRequests;
+                    break;
+                case RequestTabSources.FailedRequests:
+                    activeRequesters = reqManager.FailedRequests;
+                    break;
+                default:
+                    return;
+            }
+            
             var index = 0;
             foreach (var activeRequester in activeRequesters)
             {
@@ -157,7 +177,12 @@ namespace UI.TabManagement.NBVerticalTabs
             }
         }
 
-        private void ManageJobObjectsInstantiation()
+        private void UpdateACtiveRequests()
+        {
+            
+        }
+
+        private void ManageJobObjectsInstantiation(int selectedTab)
         {
             var availableJobSources = _playerProfile.GetActiveJobsModule().ActiveJobObjects;
             var index = 0;
@@ -175,7 +200,7 @@ namespace UI.TabManagement.NBVerticalTabs
             }
         }
 
-        private void ManageSuppliersInstantiation()
+        private void ManageSuppliersInstantiation(int selectedTab)
         {
             var availableItemSuppliers = _playerProfile.GetActiveItemSuppliersModule().ActiveProviderObjects;
             var index = 0;
@@ -211,15 +236,15 @@ namespace UI.TabManagement.NBVerticalTabs
         }
         #endregion
 
-        public override void UpdateItemsContent(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
         {
             if (_playerProfile == null)
             {
                 _playerProfile = GameDirector.Instance.GetActiveGameProfile;
             }
-            base.UpdateItemsContent(selectedTabIndex);
+            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
             ClearNotebookContent();
-            UpdateContentInPage(_tabGroupSource);
+            UpdateContentInPage(_tabGroupSource, verticalTabIndex);
         }
     }
 }

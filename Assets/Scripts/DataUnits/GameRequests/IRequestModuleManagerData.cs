@@ -12,5 +12,7 @@ namespace DataUnits.GameRequests
         public void ActivateRequestInData(IGameRequest request);
         
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests { get; }
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests { get; }
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests { get; }
     }
 }

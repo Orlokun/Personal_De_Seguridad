@@ -40,9 +40,9 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateItemsContent(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
         {
-            base.UpdateItemsContent(selectedTabIndex);
+            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
             if (gridParentObject.childCount > 0)
             {
                 ClearGrid();

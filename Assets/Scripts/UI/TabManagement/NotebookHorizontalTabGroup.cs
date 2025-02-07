@@ -66,7 +66,7 @@ namespace UI.TabManagement
             }
         }
         
-        [SerializeField] private List<SpecialReqTabElement> specialReqVerticalTabObjects;
+        [SerializeField] private List<GameRequirementTaGroup> specialReqVerticalTabObjects;
         public List<IVerticaTabElement> SpecialReqVerticalTabObjects 
         {
             get
@@ -104,7 +104,7 @@ namespace UI.TabManagement
         protected override void Start()
         {
             base.Start();
-            _verticalTab.SetNewTabState(initialSource, this);
+            _verticalTab.SetNewTabState(initialSource, this, 1);
         }
 
         public override bool ActivateTabInUI()
@@ -121,10 +121,10 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateItemsContent(int selectedTabIndex)
+        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
         {
-            base.UpdateItemsContent(selectedTabIndex);
-            _verticalTab.SetNewTabState((NotebookVerticalTabSource)selectedTabIndex, this);
+            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
+            _verticalTab.SetNewTabState((NotebookVerticalTabSource)selectedTabIndex, this, verticalTabIndex);
         }
     }
 }
