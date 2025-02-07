@@ -126,6 +126,7 @@ namespace UI.TabManagement.NBVerticalTabs
                 case NotebookVerticalTabSource.Laws:
                     break;
                 case NotebookVerticalTabSource.CurrentRequirements:
+                    ManageRequestObjectsInstantiation();
                     break;
                 case NotebookVerticalTabSource.News:
                     ManageNewsInstantiation();
@@ -134,6 +135,28 @@ namespace UI.TabManagement.NBVerticalTabs
                     return;
             }
         }
+
+        private void ManageRequestObjectsInstantiation()
+        {
+            var reqManager = _playerProfile.GetRequestsModuleManager();
+            var activeRequesters = reqManager.ActiveRequests;
+            var index = 0;
+            foreach (var activeRequester in activeRequesters)
+            {
+                foreach (var activeRequest in activeRequester.Value)
+                {
+                    if (index ==10)
+                    {
+                        break;
+                    }
+                    var prefabObject = InstantiatePrefabs(index, RequirementsPrefab);
+                    var requirementObjectController = prefabObject.GetComponent<IRequirementObjectPrefab>();
+                    requirementObjectController.PopulateRequestPrefab(activeRequest);
+                    index++;
+                }
+            }
+        }
+
         private void ManageJobObjectsInstantiation()
         {
             var availableJobSources = _playerProfile.GetActiveJobsModule().ActiveJobObjects;

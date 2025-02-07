@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits;
 using DataUnits.GameCatalogues;
+using DataUnits.JobSources;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using GameDirection.DayLevelSceneManagers;
@@ -343,6 +344,10 @@ namespace GameDirection
             if (_mItemSuppliersData.GetItemSuppliersInData.Any(x => x.SpeakerIndex == dialogueNodeSpeakerId))
             {
                 return _mItemSuppliersData.GetItemSuppliersInData.SingleOrDefault(x => x.SpeakerIndex == dialogueNodeSpeakerId);
+            }
+            if(dialogueNodeSpeakerId == DialogueSpeakerId.Omnicorp)
+            {
+                return ScriptableObject.CreateInstance<OmniCorpCallObject>();
             }
             return null;
         }

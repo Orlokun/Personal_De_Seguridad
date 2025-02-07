@@ -7,6 +7,8 @@ namespace DataUnits.GameRequests
     {
         public DialogueSpeakerId RequesterSpeakerId { get; }
         public int RequestId { get; }
+        public string ReqTitle { get; }
+        public string ReqDescription { get; }
         public bool IsCompleted { get; }
         public void ProcessEvent();
     }
@@ -22,6 +24,8 @@ namespace DataUnits.GameRequests
         }
 
         public DialogueSpeakerId RequesterSpeakerId => _mRequestData.RequesterSpeakerId;
+        public string ReqTitle => _mRequestData.ReqTitle;
+        public string ReqDescription => _mRequestData.ReqDescription;
         public int RequestId => _mRequestData.RequestId;
         public bool IsCompleted => _mRequestData.IsCompleted;
         public void ProcessEvent()

@@ -10,5 +10,7 @@ namespace DataUnits.GameRequests
 
         public bool RequestExistsInData(DialogueSpeakerId requesterSpeakerId, int requestId);
         public void ActivateRequestInData(IGameRequest request);
+        
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests { get; }
     }
 }

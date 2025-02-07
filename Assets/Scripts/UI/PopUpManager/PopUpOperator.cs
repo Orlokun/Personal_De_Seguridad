@@ -19,7 +19,8 @@ namespace UI.PopUpManager
         OTHER_ITEM_INFO_PANEL = 128,
         ITEM_SUPPLIER_INFO_PANEL = 256,
         NEWS_DETAIL_POPUP = 512,
-        FEEDBACK_MASK = 1024
+        FEEDBACK_MASK = 1024,
+        REQUEST_DETAIL_POPUP = 2048
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator
@@ -159,6 +160,10 @@ namespace UI.PopUpManager
                 case BitPopUpId.FEEDBACK_MASK:
                     var maskPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/HighlightUIPanel"), transform);
                     return maskPopUp.GetComponent<TutorialMaskOperator>();
+                case BitPopUpId.REQUEST_DETAIL_POPUP:
+                    var requirementDetailPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/RequirementDetailPopUp"), transform);
+                    return requirementDetailPopUp.GetComponent<RequirementDetailPopUp>();   
+                
                 default:
                     return null;
             }

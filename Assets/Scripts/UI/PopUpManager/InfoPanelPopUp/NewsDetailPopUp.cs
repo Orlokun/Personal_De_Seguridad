@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace UI.PopUpManager.InfoPanelPopUp
 {
+    public interface INewsDetailPopUp
+    {
+        void SetAndDisplayNewsInfo(INewsObject newsObject);
+    }
     public class NewsDetailPopUp : PopUpObject, INewsDetailPopUp
     {
         private INewsObject _mNewsObject;
@@ -30,10 +34,5 @@ namespace UI.PopUpManager.InfoPanelPopUp
             newsSubtitle.text = newsObject.NewsSubHead;
             newsContent.text = newsObject.NewsContent;
         }
-    }
-
-    public interface INewsDetailPopUp
-    {
-        void SetAndDisplayNewsInfo(INewsObject newsObject);
     }
 }

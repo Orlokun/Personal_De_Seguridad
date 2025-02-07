@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DialogueSystem;
 using GamePlayManagement;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
-using UnityEngine;
 using Utils;
 
 namespace DataUnits.GameRequests
@@ -12,6 +10,7 @@ namespace DataUnits.GameRequests
     public interface IRequestsModuleManager : IProfileModule
     {
         public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId);
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests { get; }
     }
     
     public class RequestsModuleManager : IRequestsModuleManager
@@ -21,7 +20,7 @@ namespace DataUnits.GameRequests
         private IJobSourcesModuleData _mJobsSourcesModule;
         private IItemSuppliersModuleData _mItemSuppliersModule;
 
-        private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mActiveRequests = new();
+        public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mRequestModuleData.ActiveRequests;
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mAchievedRequests = new();
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mFailedRequests = new();
 
