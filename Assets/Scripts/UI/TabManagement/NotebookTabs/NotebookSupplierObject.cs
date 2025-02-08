@@ -5,7 +5,7 @@ using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.TabManagement.NBVerticalTabs
+namespace UI.TabManagement.NotebookTabs
 {
     public class NotebookSupplierObject : MonoBehaviour
     {

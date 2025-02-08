@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using GameDirection.NewsManagement;
 using UI.PopUpManager.InfoPanelPopUp;
 using UI.PopUpManager.OfficeRelatedPopUps;
-using UI.TabManagement.NBVerticalTabs;
 using UnityEngine;
 
 namespace UI.PopUpManager

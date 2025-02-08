@@ -4,7 +4,7 @@ using UnityEngine;
 namespace UI.TabManagement.AbstractClasses
 {
     [CreateAssetMenu(menuName = "TabElements/ConfigTabElement")]
-    public class ConfigTabElement : ScriptableObject, IVerticaTabElement
+    public class OmniScrollerTabElement : ScriptableObject, IVerticaTabElement
     {
         [SerializeField] private ConfigSourcesTabs tabType;
         [SerializeField] protected Sprite icon;

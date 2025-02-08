@@ -2,12 +2,10 @@ namespace UI.TabManagement.Interfaces
 {
     public interface ITabGroup
     {
-        public bool IsTabGroupActive { get; }
-        public bool ActivateTabInUI();
+        public void ActivateTabletUI();
         public bool DeactivateGroupInUI();
         public void UpdateDictionaryData();
-        public void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex);
-        
+        public void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex);
         public int ActiveTab { get; }
     }
 }

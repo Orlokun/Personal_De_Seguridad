@@ -4,14 +4,17 @@ using DialogueSystem;
 using GameDirection;
 using GamePlayManagement;
 using UI.TabManagement.AbstractClasses;
+using UI.TabManagement.NotebookTabs.HorizontalTabletTabs;
 using UI.TabManagement.TabEnums;
 using UnityEngine;
 
-namespace UI.TabManagement.NBVerticalTabs
+namespace UI.TabManagement.NotebookTabs
 {
-    public class NotebookVerticalTabGroup : TabGroup, INotebookVerticalTab
+    public class NotebookVerticalTabGroup : MonoBehaviour, INotebookVerticalTab
     {
-        private NotebookVerticalTabSource _tabGroupSource;
+        private NotebookHorizontalTabSource _mCurrentHorizontalSource;
+        private INotebookHorizontalTabGroup _mHorizontalTabGroup;
+        
         private IPlayerGameProfile _playerProfile;
         [SerializeField]private Transform tabElementsParent;
         [SerializeField] private GameObject tabElementPrefab;
@@ -24,53 +27,51 @@ namespace UI.TabManagement.NBVerticalTabs
         [SerializeField] private GameObject LawsPrefab;
         [SerializeField] private GameObject RequirementsPrefab;
         [SerializeField] private GameObject NewsPrefab;
+
+        private List<IVerticaTabElement> _mTabElements = new List<IVerticaTabElement>();
         
-        public void SetNewTabState(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup, int verticalTabIndex)
+        public void SetNewTabState(NotebookHorizontalTabSource newSource, INotebookHorizontalTabGroup parentGroup, int verticalTabIndex)
         {
-            if (_tabGroupSource == newSource)
+            Debug.Log($"Setting new tab state: {newSource}");
+            if (_mCurrentHorizontalSource == newSource)
             {
                 return;
             }
-            ClearTabElements();
-            
+            _mHorizontalTabGroup ??= parentGroup;
+            ClearVerticalTabsData();
+
             //Manage Vertical Tabs that should be available when pressing each element in tab
-            _tabGroupSource = newSource;
-            var verticalTabElements = GetVerticalTabElements(newSource, parentGroup);
-            InstantiateVerticalTabs(verticalTabElements);
-            UpdateDictionaryData();
-            UpdateItemsContent((int)newSource, verticalTabIndex);
-        }
-        public override bool ActivateTabInUI()
-        {
-            MIsTabActive = true;
-            return MIsTabActive;
-        }
-        public override bool DeactivateGroupInUI()
-        {
-            MIsTabActive = false;
-            return MIsTabActive;
+            _mCurrentHorizontalSource = newSource;
+            _mTabElements = GetVerticalTabElements(parentGroup);
+            InstantiateVerticalTabs();
+            UpdateItemsContent(verticalTabIndex);
         }
 
+        public void UpdateTabSelection(int verticalTabIndex)
+        {
+            UpdateItemsContent(verticalTabIndex);
+        }
+
+
         #region Private Utils
-        private List<IVerticaTabElement> GetVerticalTabElements(NotebookVerticalTabSource newSource, INotebookHorizontalTabGroup parentGroup)
+        private List<IVerticaTabElement> GetVerticalTabElements(INotebookHorizontalTabGroup parentGroup)
         {
             var verticalTabElements = new List<IVerticaTabElement>();
-            _tabGroupSource = newSource;
-            switch (_tabGroupSource)
+            switch (_mCurrentHorizontalSource)
             {
-                case NotebookVerticalTabSource.Jobs:
+                case NotebookHorizontalTabSource.Jobs:
                     verticalTabElements = parentGroup.JobVerticalTabObjects;
                     break;
-                case NotebookVerticalTabSource.Suppliers:
+                case NotebookHorizontalTabSource.Suppliers:
                     verticalTabElements = parentGroup.SuppliersVerticalTabObjects;
                     break;
-                case NotebookVerticalTabSource.Laws:
-                    verticalTabElements = parentGroup.LawsTabObjects;
+                case NotebookHorizontalTabSource.Laws:
+                    verticalTabElements = parentGroup.ComplianceTabObjects;
                     break;
-                case NotebookVerticalTabSource.CurrentRequirements:
-                    verticalTabElements = parentGroup.SpecialReqVerticalTabObjects;
+                case NotebookHorizontalTabSource.CurrentRequirements:
+                    verticalTabElements = parentGroup.RequirementsTabObjects;
                     break;
-                case NotebookVerticalTabSource.News:
+                case NotebookHorizontalTabSource.OmniScroll:
                     verticalTabElements = parentGroup.ConfigVerticalTabObjects;
                     break;
                 default:
@@ -78,21 +79,19 @@ namespace UI.TabManagement.NBVerticalTabs
             }
             return verticalTabElements;
         }
-        private void InstantiateVerticalTabs(List<IVerticaTabElement> verticalTabElements)
+        private void InstantiateVerticalTabs()
         {
-            foreach (var tabElement in verticalTabElements)
+            foreach (var tabElement in _mTabElements)
             {
                 var tabGameObject = Instantiate(tabElementPrefab, tabElementsParent);
                 var tabElementController = tabGameObject.GetComponent<NotebookVerticalTabElement>();
                 tabElementController.SetIcon(tabElement.Icon);
                 tabElementController.SetSnippetNameText(tabElement.TabElementName);
-                tabElements.Add(tabElementController);
             }
         }
-        private void ClearTabElements()
+        private void ClearVerticalTabsData()
         {
-            tabElements.Clear();
-            MTabElements.Clear();
+            _mTabElements.Clear();
             foreach (Transform tabElement in tabElementsParent)
             {
                 Destroy(tabElement.gameObject);
@@ -116,23 +115,23 @@ namespace UI.TabManagement.NBVerticalTabs
             return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(prefab, rightPage);
         }
         
-        private void UpdateContentInPage(NotebookVerticalTabSource notebookInfoSource, int selectedTab)
+        private void UpdateContentInPage(NotebookHorizontalTabSource notebookInfoSource, int selectedTab)
         {
             switch (notebookInfoSource)
             {
-                case NotebookVerticalTabSource.Jobs:
+                case NotebookHorizontalTabSource.Jobs:
                     ManageJobObjectsInstantiation(selectedTab);
                     break;
-                case NotebookVerticalTabSource.Suppliers:
+                case NotebookHorizontalTabSource.Suppliers:
                     ManageSuppliersInstantiation(selectedTab);
                     break;
-                case NotebookVerticalTabSource.Laws:
+                case NotebookHorizontalTabSource.Laws:
                     break;
-                case NotebookVerticalTabSource.CurrentRequirements:
+                case NotebookHorizontalTabSource.CurrentRequirements:
                     var tabSource = (RequestTabSources)selectedTab;
                     ManageRequestObjectsInstantiation(tabSource);
                     break;
-                case NotebookVerticalTabSource.News:
+                case NotebookHorizontalTabSource.OmniScroll:
                     ManageNewsInstantiation();
                     break;
                 default:
@@ -236,15 +235,16 @@ namespace UI.TabManagement.NBVerticalTabs
         }
         #endregion
 
-        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
+        private void UpdateItemsContent(int verticalTabIndex)
         {
             if (_playerProfile == null)
             {
                 _playerProfile = GameDirector.Instance.GetActiveGameProfile;
             }
-            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
             ClearNotebookContent();
-            UpdateContentInPage(_tabGroupSource, verticalTabIndex);
+            UpdateContentInPage(_mCurrentHorizontalSource, verticalTabIndex);
         }
+
+        public int ActiveTab { get; }
     }
 }

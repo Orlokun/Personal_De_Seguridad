@@ -1,66 +1,48 @@
+using System;
+using JetBrains.Annotations;
 using TMPro;
 using UI.TabManagement.Interfaces;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using Utils;
 
 namespace UI.TabManagement.AbstractClasses
 {
-    public class TabElement : MonoBehaviour, IPointerClickHandler, ITabElement, IInitializeWithArg1<ITabGroup>
+    public class TabElement : MonoBehaviour, ITabElement, IInitializeWithArg1<ITabGroup>
     {
-        private bool _mInitialized;
-        private ITabGroup _tabGroup;
-        private int _mTabElementIndex;
+        protected bool MInitialized;
+        protected ITabGroup TabGroup;
+        protected int MTabElementIndex;
 
-        private bool _mLockState;
-
-        [SerializeField] private string SnippetName;
+        [CanBeNull] protected string MSnippetName;
         [SerializeField] private TMP_Text snippetNameText;
         private Image _mBackground;
 
         public void SetSnippetNameText(string snippetName)
         {
-            SnippetName = snippetName;
-            snippetNameText.text = SnippetName;
+            MSnippetName = snippetName;
+            snippetNameText.text = MSnippetName;
         }
-        public void OnPointerClick(PointerEventData eventData)
+        
+        public virtual void TabSelected()
         {
-            Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");
-            if (_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab != _mTabElementIndex)
-            {
-                _tabGroup.UpdateItemsContent(_mTabElementIndex, _tabGroup.ActiveTab);
-                return;
-            }
-            
-            if(_tabGroup.IsTabGroupActive && _tabGroup.ActiveTab == _mTabElementIndex)
-            {
-                _tabGroup.DeactivateGroupInUI();
-                return;
-            }
-
-            if (!_tabGroup.IsTabGroupActive)
-            {
-                _tabGroup.ActivateTabInUI();
-                _tabGroup.UpdateItemsContent(_mTabElementIndex, _tabGroup.ActiveTab);
-            }
-            Debug.Log($"[TabElement.OnPointerClick] Tab Group Named {gameObject.name}");
+            throw new NotImplementedException("Tab Selected Must be used by inheritors.");
         }
 
-        public bool IsInitialized => _mInitialized;
-        public void Initialize(ITabGroup injectionClass)
+        public bool IsInitialized => MInitialized;
+        public virtual void Initialize(ITabGroup injectionClass)
         {
-            if (_mInitialized)
+            if (MInitialized)
             {
                 return;
             }
-            _tabGroup = injectionClass;
-            _mInitialized = true;
+            TabGroup = injectionClass;
+            MInitialized = true;
         }
 
         public void SetTabIndex(int index)
         {
-            _mTabElementIndex = index;
+            MTabElementIndex = index;
         }
     }
 }

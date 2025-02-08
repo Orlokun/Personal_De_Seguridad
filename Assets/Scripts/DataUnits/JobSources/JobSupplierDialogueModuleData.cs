@@ -333,9 +333,9 @@ namespace DataUnits.JobSources
                 var hasEventId = eventNameId != "0";
                 
                 //Highlight event
-                var hasHighlightEvent = _mInsistenceDialoguesData.values[i][7] != "0";
+                var hasHighlightEvent = _mSupplierCallDialoguesData.values[i][7] != "0";
                 var emptyString = new string[1] {"0"};
-                var highlightEvent = hasHighlightEvent ? _mInsistenceDialoguesData.values[i][6].Split(',') : emptyString;
+                var highlightEvent = hasHighlightEvent ? _mSupplierCallDialoguesData.values[i][7].Split(',') : emptyString;
                 
                 var linksToString = _mSupplierCallDialoguesData.values[i][6].Split(',');
                 var linksToInts = DialogueProcessor.ProcessLinksStrings(linksToString);

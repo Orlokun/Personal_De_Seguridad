@@ -1,11 +1,11 @@
-namespace UI.TabManagement.NBVerticalTabs
+namespace UI.TabManagement.TabEnums
 {
-    public enum NotebookVerticalTabSource
+    public enum NotebookHorizontalTabSource
     {
         Jobs = 1,
         Suppliers = 2,
         Laws = 4,
         CurrentRequirements = 8,
-        News = 16,
+        OmniScroll = 16
     }
 }

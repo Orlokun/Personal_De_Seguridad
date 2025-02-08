@@ -6,19 +6,21 @@ using Utils;
 
 namespace UI.TabManagement.AbstractClasses
 {
-    public abstract class TabGroup : MonoBehaviour, ITabGroup, ITabUpdate
+    public class TabGroup : MonoBehaviour, ITabGroup, ITabUpdate
     {
         [SerializeField] protected List<TabElement> tabElements;
-
         protected Dictionary<int, ITabElement> MTabElements = new Dictionary<int, ITabElement>();
+        
+        
         protected bool MIsTabActive;
         protected int MActiveTab = 1;
         protected IUIController MuiController;
 
-        public int ActiveTab => MActiveTab;
-        public bool IsTabGroupActive => MIsTabActive;
 
-        public virtual bool ActivateTabInUI()
+        public int ActiveTab => MActiveTab;
+
+
+        public virtual void ActivateTabletUI()
         {
             var e = new Exception("[TabGroup.ActivateGroup] Abstract method must be overriden by inheritor class");
             throw e;
@@ -44,7 +46,6 @@ namespace UI.TabManagement.AbstractClasses
             MuiController = UIController.Instance;
             MuiController.OnResetCanvas += OnResetCanvas;
         }
-
         protected virtual void OnResetCanvas()
         {
             //var isActive = DeactivateGroupInUI();
@@ -71,9 +72,10 @@ namespace UI.TabManagement.AbstractClasses
             }
         }
 
-        public virtual void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
+        public virtual void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex)
         {
-            MActiveTab = selectedTabIndex;
+            var e = new Exception("[TabGroup.UpdateItemsContent] Abstract method must be overriden by inheritor class");
+            throw e;
         }
     }
 }

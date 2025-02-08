@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ArchivedJobsTabElement
   m_EditorClassIdentifier: 
   tabType: 2
-  icon: {fileID: 21300000, guid: f489ac24a58f2014295205c6607363d3, type: 3}
+  icon: {fileID: 21300000, guid: f4bfc8ce9f38b4e04b9f29961ba5bc87, type: 3}
   tabElementName: Archived

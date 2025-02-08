@@ -5,7 +5,7 @@ using UI.PopUpManager.InfoPanelPopUp;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.TabManagement.NBVerticalTabs
+namespace UI.TabManagement.NotebookTabs
 {
     public interface INewsObjectPrefab
     {

@@ -2,27 +2,26 @@ using System.Collections.Generic;
 using GamePlayManagement.BitDescriptions;
 using UI.TabManagement.AbstractClasses;
 using UI.TabManagement.Interfaces;
-using UI.TabManagement.NBVerticalTabs;
+using UI.TabManagement.TabEnums;
 using UnityEngine;
 
-namespace UI.TabManagement
+namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
 {
     public interface INotebookHorizontalTabGroup : ITabGroup
     {
         public List<IVerticaTabElement> JobVerticalTabObjects { get; }
         public List<IVerticaTabElement> SuppliersVerticalTabObjects { get; }
-        public List<IVerticaTabElement> LawsTabObjects { get; }
-        public List<IVerticaTabElement> SpecialReqVerticalTabObjects { get; }
+        public List<IVerticaTabElement> ComplianceTabObjects { get; }
+        public List<IVerticaTabElement> RequirementsTabObjects { get; }
         public List<IVerticaTabElement> ConfigVerticalTabObjects { get; }
-
     }
 
     public class NotebookHorizontalTabGroup : TabGroup, INotebookHorizontalTabGroup
     {
         #region Scriptable List Interface
 
-        private INotebookVerticalTab _verticalTab;
-        [SerializeField] private NotebookVerticalTabSource initialSource;
+        private INotebookVerticalTab _mVerticalTabsGroup;
+        [SerializeField] private NotebookHorizontalTabSource initialSource;
 
         public List<JobSourcesTabElements> jobVerticalTabObjects;
         public List<IVerticaTabElement> JobVerticalTabObjects
@@ -53,7 +52,7 @@ namespace UI.TabManagement
         }
         
         [SerializeField] private List<LawsTabElement> lawsVerticalTabObjects;
-        public List<IVerticaTabElement> LawsTabObjects        
+        public List<IVerticaTabElement> ComplianceTabObjects        
         {
             get
             {
@@ -67,7 +66,7 @@ namespace UI.TabManagement
         }
         
         [SerializeField] private List<GameRequirementTaGroup> specialReqVerticalTabObjects;
-        public List<IVerticaTabElement> SpecialReqVerticalTabObjects 
+        public List<IVerticaTabElement> RequirementsTabObjects 
         {
             get
             {
@@ -80,13 +79,13 @@ namespace UI.TabManagement
             }
         }
         
-        [SerializeField] private List<ConfigTabElement> settingsVerticalTabObjects;
+        [SerializeField] private List<OmniScrollerTabElement> omniScrollerTabObjects;
         public List<IVerticaTabElement> ConfigVerticalTabObjects 
         {
             get
             {
                 var elements = new List<IVerticaTabElement>(); 
-                foreach (var jobTabObject in settingsVerticalTabObjects)
+                foreach (var jobTabObject in omniScrollerTabObjects)
                 {
                     elements.Add(jobTabObject);
                 }
@@ -98,20 +97,18 @@ namespace UI.TabManagement
         protected override void Awake()
         {
             base.Awake();
-            _verticalTab = FindFirstObjectByType<NotebookVerticalTabGroup>();
+            _mVerticalTabsGroup = FindFirstObjectByType<NotebookVerticalTabGroup>();
         }
 
         protected override void Start()
         {
             base.Start();
-            _verticalTab.SetNewTabState(initialSource, this, 1);
+            _mVerticalTabsGroup.SetNewTabState(initialSource, this, 1);
         }
 
-        public override bool ActivateTabInUI()
+        public override void ActivateTabletUI()
         {
-            MIsTabActive = true;
             MuiController.ActivateObject(CanvasBitId.Office,(int)OfficePanelsBitStates.NOTEBOOK);
-            return MIsTabActive;
         }
 
         public override bool DeactivateGroupInUI()
@@ -121,10 +118,10 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
+        public override void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex)
         {
-            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
-            _verticalTab.SetNewTabState((NotebookVerticalTabSource)selectedTabIndex, this, verticalTabIndex);
+            MActiveTab = horizontalTabIndex;
+            _mVerticalTabsGroup.SetNewTabState((NotebookHorizontalTabSource)horizontalTabIndex, this, verticalTabIndex);
         }
     }
 }

@@ -661,6 +661,7 @@ GameObject:
   - component: {fileID: 110563086949656718}
   - component: {fileID: 110563086949656719}
   - component: {fileID: 110563086949656716}
+  - component: {fileID: 7015460996058302961}
   m_Layer: 5
   m_Name: ItemsCategoryTabMenu
   m_TagString: Untagged
@@ -756,6 +757,19 @@ MonoBehaviour:
   weaponInGridPrefab: {fileID: 1696657777801829138, guid: ddfc7ed5155dfeb47be7465bbc1bdd7e, type: 3}
   trapInGridPrefab: {fileID: 1696657777801829138, guid: ddfc7ed5155dfeb47be7465bbc1bdd7e, type: 3}
   otherInGridPrefab: {fileID: 1696657777801829138, guid: ddfc7ed5155dfeb47be7465bbc1bdd7e, type: 3}
+--- !u!114 &7015460996058302961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 110563086949656714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43edce6aca1440c4089913f387bf158b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mHighlightObjectID: 5
 --- !u!1 &110563087054867371
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,7 +935,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0faea2a84a2a9c6f30f7a00a7a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SnippetName: 
   snippetNameText: {fileID: 0}
 --- !u!1 &110563087086402262
 GameObject:
@@ -1440,7 +1453,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27.5
+  m_fontSize: 22
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1709,7 +1722,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0faea2a84a2a9c6f30f7a00a7a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SnippetName: 
   snippetNameText: {fileID: 0}
 --- !u!1 &110563087705557240
 GameObject:
@@ -1977,7 +1989,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0faea2a84a2a9c6f30f7a00a7a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SnippetName: 
   snippetNameText: {fileID: 0}
 --- !u!1 &110563087990560132
 GameObject:
@@ -2068,7 +2079,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0faea2a84a2a9c6f30f7a00a7a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SnippetName: 
   snippetNameText: {fileID: 0}
 --- !u!1 &110563088196400038
 GameObject:
@@ -2159,7 +2169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4ca0faea2a84a2a9c6f30f7a00a7a89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SnippetName: 
   snippetNameText: {fileID: 0}
 --- !u!1 &6208809800532235389
 GameObject:

@@ -26,11 +26,9 @@ namespace UI.TabManagement
         private IItemSuppliersModule _suppliersModule;
         private List<IItemObject> _activeItems = new List<IItemObject>();
 
-        public override bool ActivateTabInUI()
+        public void ActivateTabObjectsInUI()
         {
-            MIsTabActive = true;
             MuiController.ActivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
-            return MIsTabActive;
         }
 
         public override bool DeactivateGroupInUI()
@@ -40,17 +38,17 @@ namespace UI.TabManagement
             return MIsTabActive;
         }
 
-        public override void UpdateItemsContent(int selectedTabIndex, int verticalTabIndex)
+        public override void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex)
         {
-            base.UpdateItemsContent(selectedTabIndex, verticalTabIndex);
+            base.UpdateItemsContent(horizontalTabIndex, verticalTabIndex);
             if (gridParentObject.childCount > 0)
             {
                 ClearGrid();
             }
-            _activeItems = GetItemsOfType((BitItemType) selectedTabIndex);
+            _activeItems = GetItemsOfType((BitItemType) horizontalTabIndex);
             foreach (var activeItem in _activeItems)
             {
-                var itemTypePrefab = GetItemPrefabType((BitItemType) selectedTabIndex);
+                var itemTypePrefab = GetItemPrefabType((BitItemType) horizontalTabIndex);
                 var activeItemObject = Instantiate(itemTypePrefab, gridParentObject);
                 
                 //Update Object aspect in UI 

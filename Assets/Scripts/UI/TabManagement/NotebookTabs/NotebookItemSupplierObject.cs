@@ -1,35 +1,35 @@
 using DataUnits.GameCatalogues;
+using DataUnits.ItemSources;
 using DataUnits.JobSources;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UI.PopUpManager;
 using UI.PopUpManager.InfoPanelPopUp;
 using UnityEngine;
 
-namespace UI.TabManagement.NBVerticalTabs
+namespace UI.TabManagement.NotebookTabs
 {
-    internal class NotebookJobSupplierObject : NotebookSupplierObject
+    public class NotebookItemSupplierObject : NotebookSupplierObject
     {
-        private IJobSupplierObject _jobSupplier;
-        private JobSupplierBitId _supplierId;
+        private IItemSupplierDataObject _itemSupplier;
+        private BitItemSupplier _supplierId;
 
         public override void SetNotebookObjectValues(ISupplierBaseObject supplierData)
         {
             base.SetNotebookObjectValues(supplierData);
-            _jobSupplier = (IJobSupplierObject)supplierData;
-            _supplierId = _jobSupplier.JobSupplierData.JobSupplierBitId;
+            _itemSupplier = (IItemSupplierDataObject)supplierData;
+            _supplierId = _itemSupplier.ItemSupplierId;
         }
-
         public override void OpenInfoPopUp()
         {
-            var popUp = PopUpOperator.ActivatePopUp(BitPopUpId.JOB_SUPPLIER_INFO_POPUP);
+            var popUp = PopUpOperator.ActivatePopUp(BitPopUpId.ITEM_SUPPLIER_INFO_PANEL);
             var infoPopUp = (ISupplierInfoPanel) popUp;
-            infoPopUp.SetAndDisplayInfoPanelData(_jobSupplier);
+            infoPopUp.SetAndDisplayInfoPanelData(_itemSupplier);
         }
 
         protected override void CallSupplier()
         {
             base.CallSupplier();
-            var supplierData = (ISupplierBaseObject) BaseJobsCatalogue.Instance.GetJobSupplierObject(_supplierId);
+            var supplierData = (ISupplierBaseObject) BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(_supplierId);
             PhoneCallOperator.Instance.GoToCall(supplierData);
             Debug.Log($"Not Implemented. Supplier is: {_supplierId}");
         }
