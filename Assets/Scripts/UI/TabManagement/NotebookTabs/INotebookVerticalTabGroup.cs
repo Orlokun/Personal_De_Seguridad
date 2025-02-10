@@ -3,9 +3,10 @@ using UI.TabManagement.TabEnums;
 
 namespace UI.TabManagement.NotebookTabs
 {
-    public interface INotebookVerticalTab
+    public interface INotebookVerticalTabGroup
     {
         public void SetNewTabState(NotebookHorizontalTabSource newSource, INotebookHorizontalTabGroup horizontalTab, int verticalTabIndex);
         public void UpdateTabSelection(int verticalTabIndex);
+        public void UpdateDictionaryData();
     }
 }

@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace UI.TabManagement.NotebookTabs
 {
-    public class NotebookVerticalTabGroup : MonoBehaviour, INotebookVerticalTab
+    public class NotebookVerticalTabGroup : TabGroup, INotebookVerticalTabGroup
     {
         private NotebookHorizontalTabSource _mCurrentHorizontalSource;
         private INotebookHorizontalTabGroup _mHorizontalTabGroup;
@@ -30,6 +30,11 @@ namespace UI.TabManagement.NotebookTabs
 
         private List<IVerticaTabElement> _mTabElements = new List<IVerticaTabElement>();
         
+        protected override void Awake()
+        {
+            base.Awake();
+            _mHorizontalTabGroup = FindFirstObjectByType<NotebookHorizontalTabGroup>(FindObjectsInactive.Include);
+        }
         public void SetNewTabState(NotebookHorizontalTabSource newSource, INotebookHorizontalTabGroup parentGroup, int verticalTabIndex)
         {
             Debug.Log($"Setting new tab state: {newSource}");
@@ -43,12 +48,14 @@ namespace UI.TabManagement.NotebookTabs
             //Manage Vertical Tabs that should be available when pressing each element in tab
             _mCurrentHorizontalSource = newSource;
             _mTabElements = GetVerticalTabElements(parentGroup);
+            tabElements.Clear();
             InstantiateVerticalTabs();
             UpdateItemsContent(verticalTabIndex);
         }
 
         public void UpdateTabSelection(int verticalTabIndex)
         {
+            MActiveTab = verticalTabIndex;
             UpdateItemsContent(verticalTabIndex);
         }
 
@@ -81,13 +88,16 @@ namespace UI.TabManagement.NotebookTabs
         }
         private void InstantiateVerticalTabs()
         {
+            var verticalIndex = 1;
             foreach (var tabElement in _mTabElements)
             {
                 var tabGameObject = Instantiate(tabElementPrefab, tabElementsParent);
                 var tabElementController = tabGameObject.GetComponent<NotebookVerticalTabElement>();
                 tabElementController.SetIcon(tabElement.Icon);
                 tabElementController.SetSnippetNameText(tabElement.TabElementName);
+                tabElements.Add((TabElement)tabElementController);
             }
+            UpdateDictionaryData();
         }
         private void ClearVerticalTabsData()
         {

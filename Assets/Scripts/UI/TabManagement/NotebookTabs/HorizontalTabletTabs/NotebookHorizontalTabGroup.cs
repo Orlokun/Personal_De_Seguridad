@@ -20,7 +20,7 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
     {
         #region Scriptable List Interface
 
-        private INotebookVerticalTab _mVerticalTabsGroup;
+        private INotebookVerticalTabGroup _mVerticalTabsGroupGroup;
         [SerializeField] private NotebookHorizontalTabSource initialSource;
 
         public List<JobSourcesTabElements> jobVerticalTabObjects;
@@ -65,7 +65,7 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
             }
         }
         
-        [SerializeField] private List<GameRequirementTaGroup> specialReqVerticalTabObjects;
+        [SerializeField] private List<GameRequirementsTabElement> specialReqVerticalTabObjects;
         public List<IVerticaTabElement> RequirementsTabObjects 
         {
             get
@@ -97,13 +97,13 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
         protected override void Awake()
         {
             base.Awake();
-            _mVerticalTabsGroup = FindFirstObjectByType<NotebookVerticalTabGroup>();
+            _mVerticalTabsGroupGroup = FindFirstObjectByType<NotebookVerticalTabGroup>();
         }
 
         protected override void Start()
         {
             base.Start();
-            _mVerticalTabsGroup.SetNewTabState(initialSource, this, 1);
+            _mVerticalTabsGroupGroup.SetNewTabState(initialSource, this, 1);
         }
 
         public override void ActivateTabletUI()
@@ -121,7 +121,7 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
         public override void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex)
         {
             MActiveTab = horizontalTabIndex;
-            _mVerticalTabsGroup.SetNewTabState((NotebookHorizontalTabSource)horizontalTabIndex, this, verticalTabIndex);
+            _mVerticalTabsGroupGroup.SetNewTabState((NotebookHorizontalTabSource)horizontalTabIndex, this, verticalTabIndex);
         }
     }
 }

@@ -11,5 +11,14 @@ namespace UI.TabManagement.AbstractClasses
         [SerializeField] protected string tabElementName;
         public Sprite Icon => icon;
         public string TabElementName => tabElementName;
+        public void SetIcon(Sprite tabElementIcon)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetSnippetNameText(string tabElementTabElementName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

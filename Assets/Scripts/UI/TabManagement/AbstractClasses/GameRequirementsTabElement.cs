@@ -1,13 +1,12 @@
-
 using UI.TabManagement.TabEnums;
 using UnityEngine;
 
 namespace UI.TabManagement.AbstractClasses
 {
-    [CreateAssetMenu(menuName = "TabElements/SuppliersTabElement")]
-    public class SuppliersTabElement : ScriptableObject, IVerticaTabElement
+    [CreateAssetMenu(menuName = "TabElements/GameRequirementTabElement")]
+    public class GameRequirementsTabElement : ScriptableObject, IVerticaTabElement
     {
-        [SerializeField] private SupplierSourcesTabs tabType;
+        [SerializeField] private RequestTabSources type;
         [SerializeField] protected Sprite icon;
         [SerializeField] protected string tabElementName;
         public Sprite Icon => icon;

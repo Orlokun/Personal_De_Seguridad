@@ -4,7 +4,6 @@ namespace UI.TabManagement.Interfaces
     {
         public void ActivateTabletUI();
         public bool DeactivateGroupInUI();
-        public void UpdateDictionaryData();
         public void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex);
         public int ActiveTab { get; }
     }

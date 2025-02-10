@@ -13,11 +13,22 @@ namespace UI.TabManagement.AbstractClasses
 
         public Sprite Icon => icon;
         public string TabElementName => tabElementName;
+        public void SetIcon(Sprite tabIcon)
+        {
+            
+        }
+
+        public void SetSnippetNameText(string tabElementTabElementName)
+        {
+            
+        }
     }
 
     public interface IVerticaTabElement
     {
         public Sprite Icon { get; }
         public String TabElementName { get; }
+        void SetIcon(Sprite tabElementIcon);
+        void SetSnippetNameText(string tabElementTabElementName);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using InputManagement;
 using UI.TabManagement.AbstractClasses;
 using UI.TabManagement.Interfaces;
@@ -19,6 +20,12 @@ namespace UI.TabManagement.NotebookTabs
             _mTabIcon??= GetComponent<Image>();
             _mTabIcon.sprite = tabIcon;
         }
+
+        private void Awake()
+        {
+            mTabButton.onClick.AddListener(TabSelected);
+        }
+
         public void ToggleSnippet(bool isActive)
         {
         }
@@ -35,19 +42,11 @@ namespace UI.TabManagement.NotebookTabs
             Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");
             if (TabGroup.ActiveTab != MTabElementIndex)
             {
-                var mTabGroup = (INotebookVerticalTab)TabGroup;
+                var mTabGroup = (INotebookVerticalTabGroup)TabGroup;
                 mTabGroup.UpdateTabSelection(MTabElementIndex);
             }
         }
-
-        public override void Initialize(ITabGroup injectionClass)
-        {
-            base.Initialize(injectionClass);
-            mTabButton.onClick.AddListener(TabSelected);
-        }
-
     }
-
 }
 
 
