@@ -11,7 +11,7 @@ namespace UI.TabManagement.AbstractClasses
     public class TabElement : MonoBehaviour, ITabElement, IInitializeWithArg1<ITabGroup>
     {
         protected bool MInitialized;
-        protected ITabGroup TabGroup;
+        protected ITabGroup MTabGroup;
         protected int MTabElementIndex;
 
         [CanBeNull] protected string MSnippetName;
@@ -36,7 +36,7 @@ namespace UI.TabManagement.AbstractClasses
             {
                 return;
             }
-            TabGroup = injectionClass;
+            MTabGroup = injectionClass;
             MInitialized = true;
         }
 

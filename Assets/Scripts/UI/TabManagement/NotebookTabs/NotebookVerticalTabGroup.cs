@@ -13,7 +13,7 @@ namespace UI.TabManagement.NotebookTabs
     public class NotebookVerticalTabGroup : TabGroup, INotebookVerticalTabGroup
     {
         private NotebookHorizontalTabSource _mCurrentHorizontalSource;
-        private INotebookHorizontalTabGroup _mHorizontalTabGroup;
+        private INotebookHorizontalTabletTabGroup _mHorizontalTabletTabGroup;
         
         private IPlayerGameProfile _playerProfile;
         [SerializeField]private Transform tabElementsParent;
@@ -33,16 +33,16 @@ namespace UI.TabManagement.NotebookTabs
         protected override void Awake()
         {
             base.Awake();
-            _mHorizontalTabGroup = FindFirstObjectByType<NotebookHorizontalTabGroup>(FindObjectsInactive.Include);
+            _mHorizontalTabletTabGroup = FindFirstObjectByType<NotebookHorizontalTabGroup>(FindObjectsInactive.Include);
         }
-        public void SetNewTabState(NotebookHorizontalTabSource newSource, INotebookHorizontalTabGroup parentGroup, int verticalTabIndex)
+        public void SetNewTabState(NotebookHorizontalTabSource newSource, INotebookHorizontalTabletTabGroup parentGroup, int verticalTabIndex)
         {
             Debug.Log($"Setting new tab state: {newSource}");
             if (_mCurrentHorizontalSource == newSource)
             {
                 return;
             }
-            _mHorizontalTabGroup ??= parentGroup;
+            _mHorizontalTabletTabGroup ??= parentGroup;
             ClearVerticalTabsData();
 
             //Manage Vertical Tabs that should be available when pressing each element in tab
@@ -61,7 +61,7 @@ namespace UI.TabManagement.NotebookTabs
 
 
         #region Private Utils
-        private List<IVerticaTabElement> GetVerticalTabElements(INotebookHorizontalTabGroup parentGroup)
+        private List<IVerticaTabElement> GetVerticalTabElements(INotebookHorizontalTabletTabGroup parentGroup)
         {
             var verticalTabElements = new List<IVerticaTabElement>();
             switch (_mCurrentHorizontalSource)

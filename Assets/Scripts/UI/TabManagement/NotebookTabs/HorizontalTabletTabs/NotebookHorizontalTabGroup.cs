@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
 {
-    public interface INotebookHorizontalTabGroup : ITabGroup
+    public interface INotebookHorizontalTabletTabGroup : ITabletTabGroup
     {
         public List<IVerticaTabElement> JobVerticalTabObjects { get; }
         public List<IVerticaTabElement> SuppliersVerticalTabObjects { get; }
@@ -16,7 +16,7 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
         public List<IVerticaTabElement> ConfigVerticalTabObjects { get; }
     }
 
-    public class NotebookHorizontalTabGroup : TabGroup, INotebookHorizontalTabGroup
+    public class NotebookHorizontalTabGroup : TabGroup, INotebookHorizontalTabletTabGroup
     {
         #region Scriptable List Interface
 
@@ -111,7 +111,7 @@ namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
             MuiController.ActivateObject(CanvasBitId.Office,(int)OfficePanelsBitStates.NOTEBOOK);
         }
 
-        public override bool DeactivateGroupInUI()
+        public override bool DeactivateItemsDetailBar()
         {
             MIsTabActive = false;
             MuiController.DeactivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);

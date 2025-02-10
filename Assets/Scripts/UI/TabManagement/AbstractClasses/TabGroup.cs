@@ -6,7 +6,7 @@ using Utils;
 
 namespace UI.TabManagement.AbstractClasses
 {
-    public class TabGroup : MonoBehaviour, ITabGroup, ITabUpdate
+    public abstract class TabGroup : MonoBehaviour, ITabGroup, ITabUpdate
     {
         [SerializeField] protected List<TabElement> tabElements;
         protected Dictionary<int, ITabElement> MTabElements = new Dictionary<int, ITabElement>();
@@ -26,7 +26,7 @@ namespace UI.TabManagement.AbstractClasses
             throw e;
         }
 
-        public virtual bool DeactivateGroupInUI()
+        public virtual bool DeactivateItemsDetailBar()
         {
             var e = new Exception("[TabGroup.DeactivateGroup] Abstract method must be overriden by inheritor class");
             throw e;

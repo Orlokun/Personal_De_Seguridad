@@ -4,11 +4,12 @@ using GameDirection;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UI.TabManagement.AbstractClasses;
+using UI.TabManagement.Interfaces;
 using UI.TabManagement.ItemTypeTab;
 using UnityEngine;
 namespace UI.TabManagement
 {
-    public class ItemsTabGroup : TabGroup
+    public class ItemsTabGroup : TabGroup, IItemsTabGroup
     {
         [SerializeField] private BitItemType startType;
         [SerializeField] private Transform gridParentObject;
@@ -26,29 +27,31 @@ namespace UI.TabManagement
         private IItemSuppliersModule _suppliersModule;
         private List<IItemObject> _activeItems = new List<IItemObject>();
 
-        public void ActivateTabObjectsInUI()
+        public bool IsBarActive => MuiController.IsObjectActive(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
+        public void ActivateItemsBarInUI()
         {
             MuiController.ActivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
         }
 
-        public override bool DeactivateGroupInUI()
+        public override bool DeactivateItemsDetailBar()
         {
             MIsTabActive = false;
             MuiController.DeactivateObject(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
             return MIsTabActive;
         }
+        
 
-        public override void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex)
+        public void UpdateItemsContent(int verticalTabIndex)
         {
-            base.UpdateItemsContent(horizontalTabIndex, verticalTabIndex);
+            MActiveTab = verticalTabIndex;
             if (gridParentObject.childCount > 0)
             {
                 ClearGrid();
             }
-            _activeItems = GetItemsOfType((BitItemType) horizontalTabIndex);
+            _activeItems = GetItemsOfType((BitItemType) verticalTabIndex);
             foreach (var activeItem in _activeItems)
             {
-                var itemTypePrefab = GetItemPrefabType((BitItemType) horizontalTabIndex);
+                var itemTypePrefab = GetItemPrefabType((BitItemType) verticalTabIndex);
                 var activeItemObject = Instantiate(itemTypePrefab, gridParentObject);
                 
                 //Update Object aspect in UI 
@@ -89,5 +92,12 @@ namespace UI.TabManagement
                 Destroy(itemObject.gameObject);
             }
         }
+    }
+
+    public interface IItemsTabGroup : ITabGroup
+    {
+        public void ActivateItemsBarInUI();
+        public void UpdateItemsContent(int verticalTabIndex);
+        public bool IsBarActive { get; }
     }
 }

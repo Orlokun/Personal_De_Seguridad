@@ -47,9 +47,9 @@ namespace UI.TabManagement.NotebookTabs
         public override void TabSelected()
         {
             Debug.Log($"POINTER CLICKED OBJECT: {gameObject.name}");
-            if (TabGroup.ActiveTab != MTabElementIndex)
+            if (MTabGroup.ActiveTab != MTabElementIndex)
             {
-                var mTabGroup = (INotebookVerticalTabGroup)TabGroup;
+                var mTabGroup = (INotebookVerticalTabGroup)base.MTabGroup;
                 mTabGroup.UpdateTabSelection(MTabElementIndex);
             }
         }

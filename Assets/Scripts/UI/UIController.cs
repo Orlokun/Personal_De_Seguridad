@@ -39,6 +39,7 @@ namespace UI
         void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
         void ItemUnlockedFeedback(BitItemSupplier itemSupplier);
         void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera);
+        bool IsObjectActive(CanvasBitId canvasBitId, int panel);
     }
 
     [RequireComponent(typeof(DialogueOperator))]
@@ -155,6 +156,15 @@ namespace UI
                     UpdateLevelUIElements();
                     break;
             }
+        }
+
+        public bool IsObjectActive(CanvasBitId canvasBitId, int panel)
+        {
+            if (!_mActiveCanvasDict.ContainsKey((int)canvasBitId))
+            {
+                return false;
+            }
+            return _mActiveCanvasDict[(int)canvasBitId].IsElementActive(panel);
         }
 
         private void UpdateLevelUIElements()

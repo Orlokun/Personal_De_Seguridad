@@ -1,10 +1,15 @@
 namespace UI.TabManagement.Interfaces
 {
-    public interface ITabGroup
+    public interface ITabletTabGroup : ITabGroup
     {
         public void ActivateTabletUI();
-        public bool DeactivateGroupInUI();
         public void UpdateItemsContent(int horizontalTabIndex, int verticalTabIndex);
+    }
+
+    public interface ITabGroup
+    {
+        public bool DeactivateItemsDetailBar();
         public int ActiveTab { get; }
+
     }
 }
