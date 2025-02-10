@@ -94,6 +94,7 @@ namespace UI.TabManagement.NotebookTabs
                 var tabGameObject = Instantiate(tabElementPrefab, tabElementsParent);
                 var tabElementController = tabGameObject.GetComponent<NotebookVerticalTabElement>();
                 tabElementController.SetIcon(tabElement.Icon);
+                tabElementController.SetName(tabElement.TabElementName);
                 tabElementController.SetSnippetNameText(tabElement.TabElementName);
                 tabElements.Add((TabElement)tabElementController);
             }
