@@ -313,11 +313,13 @@ namespace GameDirection
             GetActiveGameProfile.GetActiveJobsModule().SetNewEmployer(newJobSupplier);
             GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);        
             _mUIController.HiredInJobFoundFeedbackEvent(newJobSupplier);
+            GetActiveGameProfile.UpdateProfileData();
         }
 
         public void ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier)
         {
             GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(itemsupplier);
+            GetActiveGameProfile.UpdateProfileData();
         }
 
         public void LaunchTutorial()
