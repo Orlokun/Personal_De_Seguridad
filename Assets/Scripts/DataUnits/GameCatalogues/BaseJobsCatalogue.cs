@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
+using DataUnits.GameCatalogues.JsonModels;
 
 namespace DataUnits.GameCatalogues
 {
@@ -92,67 +93,28 @@ namespace DataUnits.GameCatalogues
 
         private void LoadJobSuppliersFromJson(string sourceJson)
         {
-            _jobsData = JsonConvert.DeserializeObject<JobsCatalogueFromData>(sourceJson);
+            var jobsData = JsonConvert.DeserializeObject<JobsCatalogueFromData>(sourceJson);
             _mIjobSuppliersInData = new List<IJobSupplierObject>();
-            for (var i = 1; i < _jobsData.values.Count;i++)
+
+            foreach (var jobData in jobsData.Values)
             {
-                    
-                int jobId;
-                var gotId = int.TryParse(_jobsData.values[i][0], out jobId);
-                var jobSupplier = CreateJobSupplierObject((JobSupplierBitId) jobId);
-                jobSupplier.LocalInitialize((JobSupplierBitId) jobId);
+                var jobSupplier = CreateJobSupplierObject((JobSupplierBitId)jobData.JobSupplierBitId);
+                jobSupplier.LocalInitialize((JobSupplierBitId)jobData.JobSupplierBitId);
 
-                jobSupplier.JobSupplierData.JobSupplierBitId = (JobSupplierBitId) jobId;
-                    
-                jobSupplier.JobSupplierData.StoreType = _jobsData.values[i][1];
-                jobSupplier.StoreName = _jobsData.values[i][2];
-                jobSupplier.StoreOwnerName = _jobsData.values[i][3];
-                    
-                int unlockPoints;
-                var gotUp = int.TryParse(_jobsData.values[i][4], out unlockPoints);
-                if (!gotUp)
-                {
-                    Debug.LogWarning("GetJobsCatalogueData - Unlock Points must be available!");
-                }
-                jobSupplier.JobSupplierData.StoreUnlockPoints = unlockPoints;
-                jobSupplier.JobSupplierData.StoreDescription = _jobsData.values[i][5];
-                   
-                var gotPhone = int.TryParse(_jobsData.values[i][6], out var phoneNumber);
-                jobSupplier.StorePhoneNumber = phoneNumber;
-                
-                var gotSpeakerId = int.TryParse(_jobsData.values[i][7], out var speakerIndex);
-                jobSupplier.SpeakerIndex = (DialogueSpeakerId)speakerIndex;
-                
-                //Minimum and maximum clients in store
-                var gotClientsMin = int.TryParse(_jobsData.values[i][8], out var clientsMin);
-                var gotClientsMax = int.TryParse(_jobsData.values[i][9], out var clientsMax);
-                var clientRange = new int[2];
-                clientRange[0] = clientsMin;
-                clientRange[1] = clientsMax;
-                jobSupplier.JobSupplierData.StoreMinMaxClients = clientRange;
-                
-                var gotSanity = int.TryParse(_jobsData.values[i][10], out var sanity);
-                var gotKindness = int.TryParse(_jobsData.values[i][11], out var kindness);
-                var gotViolence = int.TryParse(_jobsData.values[i][12], out var violence);
-                var gotIntelligence = int.TryParse(_jobsData.values[i][13], out var intelligence);
-                var gotMoney = int.TryParse(_jobsData.values[i][14], out var money);
-                
-                if (!gotSanity || !gotKindness || !gotViolence || !gotIntelligence || !gotMoney)
-                {
-                    Debug.LogError("Job Supplier Stats must be available!");
-                }
-                else
-                {
-                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, money);
-                }
-                var spriteName = _jobsData.values[i][15];
-                jobSupplier.JobSupplierData.SpriteName = spriteName;
-                
-                var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
-                jobSupplier.JobSupplierData.StoreOwnerAge = ownerAge;
+                jobSupplier.JobSupplierData.JobSupplierBitId = (JobSupplierBitId)jobData.JobSupplierBitId;
+                jobSupplier.JobSupplierData.StoreType = jobData.StoreType;
+                jobSupplier.StoreName = jobData.StoreName;
+                jobSupplier.StoreOwnerName = jobData.StoreOwnerName;
+                jobSupplier.JobSupplierData.StoreUnlockPoints = jobData.StoreUnlockPoints;
+                jobSupplier.JobSupplierData.StoreDescription = jobData.StoreDescription;
+                jobSupplier.StorePhoneNumber = jobData.StorePhoneNumber;
+                jobSupplier.SpeakerIndex = (DialogueSpeakerId)jobData.SpeakerIndex;
+                jobSupplier.JobSupplierData.StoreMinMaxClients = jobData.StoreMinMaxClients;
+                jobSupplier.SetStats(jobData.Sanity, jobData.Kindness, jobData.Violence, jobData.Intelligence, jobData.Money);
+                jobSupplier.JobSupplierData.SpriteName = jobData.SpriteName;
+                jobSupplier.JobSupplierData.StoreOwnerAge = jobData.StoreOwnerAge;
+                jobSupplier.JobSupplierData.Budget = jobData.Budget;
 
-                var initialBudget = int.TryParse(_jobsData.values[i][17], out var initBudget);
-                jobSupplier.JobSupplierData.Budget = initBudget;
                 _mIjobSuppliersInData.Add(jobSupplier);
             }
         }
