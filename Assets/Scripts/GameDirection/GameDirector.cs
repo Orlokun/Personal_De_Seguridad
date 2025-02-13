@@ -311,7 +311,8 @@ namespace GameDirection
         public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier)
         {
             GetActiveGameProfile.GetActiveJobsModule().SetNewEmployer(newJobSupplier);
-            GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);        
+            GetActiveGameProfile.GetProfileCalendar().GetNextWorkDayObject().SetJobSupplier(newJobSupplier);
+            GetActiveGameProfile.GetRequestsModuleManager().CheckHireChallenges(newJobSupplier);
             _mUIController.HiredInJobFoundFeedbackEvent(newJobSupplier);
             GetActiveGameProfile.UpdateProfileData();
         }

@@ -30,6 +30,9 @@ namespace DataUnits.ItemScriptableObjects
             _mSpeed = mSpeed;
             _mPersuasiveness = mPersuasiveness;
             _mFoVRadius = mFoVRadius;
+            _mItemOrigin = itemOrigin;
+            _mItemTypes = itemTypes;
+            _mItemBaseQuality = itemBaseQuality;
         }
 
         public int Id => _bitId;
@@ -43,6 +46,10 @@ namespace DataUnits.ItemScriptableObjects
 
         public int Speed => _mSpeed;
         public int FoVRadius => _mFoVRadius;
+        public ItemOrigin ItemOrigin => _mItemOrigin;
+        public int ItemTypes => _mItemTypes;
+        public ItemBaseQuality ItemBaseQuality => _mItemBaseQuality;
+        
 
         public List<int> GetStats()
         {

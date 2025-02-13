@@ -15,6 +15,7 @@ namespace DataUnits.GameRequests
         public RequirementLogicEvaluator ReqLogic { get; }
         public RequirementConsideredParameter ReqParameterType  { get; }
         bool IsCompleted { get; }
+        void CompleteChallenge();
     }
     public class GameRequestData : IGameRequestData
     {
@@ -22,6 +23,7 @@ namespace DataUnits.GameRequests
         private int _mRequestId;
         private string _mReqTitle;
         private string _mReqDescription;
+        private int _mReqQuantity;
         
         private RequirementActionType _mChallengeType;
         private RequirementObjectType _mChallengeObjectType;
@@ -32,7 +34,7 @@ namespace DataUnits.GameRequests
 
         public GameRequestData(int mRequesterSpeakerId, int mRequestId, string mReqTitle, string mReqDescription,
             RequirementActionType mChallengeType, RequirementObjectType mChallengeObjectType, RequirementLogicEvaluator mReqLogic,
-            RequirementConsideredParameter mReqParameterType, string[] mReqParameterValue, int quantity)
+            RequirementConsideredParameter mReqParameterType, int quantity)
         {
             _mRequesterSpeakerId = (DialogueSpeakerId)mRequesterSpeakerId;
             _mRequestId = mRequestId;
@@ -42,7 +44,7 @@ namespace DataUnits.GameRequests
             _mChallengeObjectType = mChallengeObjectType;
             _mReqLogic = mReqLogic;
             _mReqParameterType = mReqParameterType;
-            _mReqParameterValue = mReqParameterValue;
+            _mReqQuantity = quantity;
         }
 
         public DialogueSpeakerId RequesterSpeakerId => _mRequesterSpeakerId;
@@ -55,5 +57,9 @@ namespace DataUnits.GameRequests
         public RequirementLogicEvaluator ReqLogic => _mReqLogic;
         public RequirementConsideredParameter ReqParameterType => _mReqParameterType;
         public bool IsCompleted => _mIsCompleted;
+        public void CompleteChallenge()
+        {
+            _mIsCompleted = true;
+        }
     }
 }

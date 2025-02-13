@@ -111,6 +111,7 @@ namespace DialogueSystem
             if (!getJobSupplierId)
             {
                 Debug.LogError("[LaunchPlayerHiredEvent] Event must have the job supplier id");
+                return;
             }
             var jobSupplierBitId = (JobSupplierBitId) supplierId;
             OnHirePlayer?.Invoke(jobSupplierBitId);

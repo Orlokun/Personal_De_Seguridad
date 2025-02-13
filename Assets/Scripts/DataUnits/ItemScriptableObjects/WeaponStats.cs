@@ -10,6 +10,9 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mRange;
         private readonly int _mPersuasiveness;
         private readonly int _mPrecision;
+        private readonly int _mItemTypes;
+        private readonly ItemOrigin _mItemOrigin;
+        private readonly ItemBaseQuality _mItemBaseQuality;
         
         public List<int> GetStats()
         {
@@ -23,14 +26,17 @@ namespace DataUnits.ItemScriptableObjects
                 _mPrecision,
             };
         }
-        public WeaponStats(int bitId, int weaponQuality ,int damage, int mRange, int persuasiveness, int precision)
+        public WeaponStats(int bitId, int weaponQuality ,int damage, int mRange, int persuasiveness, int precision, ItemOrigin itemOrigin, int itemTypes, ItemBaseQuality itemBaseQuality)
         {
             _bitId = bitId;
             _mWeaponQuality = weaponQuality;
             _mDamage = damage;
             _mRange = mRange;
             _mPersuasiveness = persuasiveness;
-            _mPrecision = _mPrecision;
+            _mPrecision = precision;
+            _mItemOrigin = itemOrigin;
+            _mItemTypes = itemTypes;
+            _mItemBaseQuality = itemBaseQuality;
         }
 
         public int Id => _bitId;
@@ -39,5 +45,8 @@ namespace DataUnits.ItemScriptableObjects
         public int Range => _mRange;
         public int Persuasiveness => _mPersuasiveness;
         public int Precision => _mPrecision;
+        public ItemOrigin ItemOrigin => _mItemOrigin;
+        public int ItemTypes => _mItemTypes;
+        public ItemBaseQuality ItemBaseQuality => _mItemBaseQuality;
     }
 }

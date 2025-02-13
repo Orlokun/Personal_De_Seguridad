@@ -384,14 +384,48 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a persuasiveness");
                 }
+                
+                //Step 7: FoV Range
                 var gotFoVRange = int.TryParse(_mCameraStatsFromDataString.values[i][7], out var fovRadius);
                 if (!gotFoVRange)
                 {
                     Debug.LogWarning("[LoadCameraItemsDataFromJson] Camera Stats must have a fovRadius");
                 }
                 
+                //Step 8: START COMMON SPECS
+                var origin = _mCameraStatsFromDataString.values[i][8];
+                var itemType = _mCameraStatsFromDataString.values[i][9];
+                var quality = _mCameraStatsFromDataString.values[i][10];
+                
+                //Step 8.1: Check Origin
+                var isOriginValid = Enum.TryParse<ItemOrigin>(origin, out var originValue);
+                if (!isOriginValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have origin set");
+                    return;
+                }
+                
+                //Step 8.2: Check ItemType
+                var itemTypes = itemType.Split(',');
+                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                {
+                    Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
+                    return;
+                }
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+
+                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                
+                //Step 8.3: Check Item Quality
+                var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
+                if (!isItemQualityValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have item quality set");
+                    return;
+                }
+
                 ICameraStats itemDataObject =
-                    new CameraStats(itemId,range, peopleInSight, clarity, persuasiveness, fovRadius);
+                    new CameraStats(itemId,range, peopleInSight, clarity, persuasiveness, fovRadius, originValue, itemTypesFinal, itemQualityValue);
                 _mCamerasSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotCamerasData = true;
@@ -463,8 +497,39 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadWeaponDataFromJson] Weapon Precision must be available");
                 }
+                
+                //Step 8: START COMMON SPECS
+                var origin = _mWeaponStatsFromDataString.values[i][8];
+                var itemType = _mWeaponStatsFromDataString.values[i][9];
+                var quality = _mWeaponStatsFromDataString.values[i][10];
+                
+                //Step 8.1: Check Origin
+                var isOriginValid = Enum.TryParse<ItemOrigin>(origin, out var originValue);
+                if (!isOriginValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have origin set");
+                    return;
+                }
+                
+                //Step 8.2: Check ItemType
+                var itemTypes = itemType.Split(',');
+                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                {
+                    Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
+                    return;
+                }
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                
+                //Step 8.3: Check Item Quality
+                var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
+                if (!isItemQualityValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have item quality set");
+                    return;
+                }
                 IWeaponStats itemDataObject =
-                    new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness, precision);
+                    new WeaponStats(itemId,weaponQuality, damage, range, persuasiveness, precision, originValue, itemTypesFinal, itemQualityValue);
                 _mWeaponsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotWeaponsData = true;
@@ -531,9 +596,38 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadTrapDataFromJson] Weapon Persuasiveness must be available");
                 }
+                //Step 8: START COMMON SPECS
+                var origin = _mTrapStatsFromDataString.values[i][7];
+                var itemType = _mTrapStatsFromDataString.values[i][8];
+                var quality = _mTrapStatsFromDataString.values[i][9];
                 
+                //Step 8.1: Check Origin
+                var isOriginValid = Enum.TryParse<ItemOrigin>(origin, out var originValue);
+                if (!isOriginValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have origin set");
+                    return;
+                }
+                
+                //Step 8.2: Check ItemType
+                var itemTypes = itemType.Split(',');
+                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                {
+                    Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
+                    return;
+                }
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                
+                //Step 8.3: Check Item Quality
+                var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
+                if (!isItemQualityValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have item quality set");
+                    return;
+                }
                 ITrapStats itemDataObject =
-                    new TrapStats(itemId,effectiveness, damage, range, persuasiveness);
+                    new TrapStats(itemId,effectiveness, damage, range, persuasiveness,  originValue, itemTypesFinal, itemQualityValue);
                 _mTrapsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotTrapsData = true;
@@ -600,9 +694,38 @@ namespace DataUnits.GameCatalogues
                 {
                     Debug.LogWarning("[LoadOtherItemsFromJson] Weapon Persuasiveness must be available");
                 }
+                //Step 8: START COMMON SPECS
+                var origin = _mOtherItemsStatsFromDataString.values[i][7];
+                var itemType = _mOtherItemsStatsFromDataString.values[i][8];
+                var quality = _mOtherItemsStatsFromDataString.values[i][9];
                 
+                //Step 8.1: Check Origin
+                var isOriginValid = Enum.TryParse<ItemOrigin>(origin, out var originValue);
+                if (!isOriginValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have origin set");
+                    return;
+                }
+                
+                //Step 8.2: Check ItemType
+                var itemTypes = itemType.Split(',');
+                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                {
+                    Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
+                    return;
+                }
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                
+                //Step 8.3: Check Item Quality
+                var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
+                if (!isItemQualityValid)
+                {
+                    Debug.LogWarning("[LoadGuardDataFromJson] Guard must have item quality set");
+                    return;
+                }
                 IOtherItemsStats otherItemsDataObject =
-                    new OtherItemsStats(itemId,effectiveness, damage, range, persuasiveness);
+                    new OtherItemsStats(itemId,effectiveness, damage, range, persuasiveness,  originValue, itemTypesFinal, itemQualityValue);
                 _mOthersSpecialData[supplierBitId].Add(otherItemsDataObject);
             }
             _mGotOtherItemsData = true;

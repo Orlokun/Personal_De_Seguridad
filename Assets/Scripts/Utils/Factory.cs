@@ -63,7 +63,7 @@ namespace Utils
             string prefabName, string productBrand, string productSpriteName,string productDescription)
         {
             return new StoreProductObjectData(id, name, type, quantity, price, hideChances, tempting, punishment,
-                 prefabName, productBrand, productSpriteName, productDescription);
+                prefabName, productBrand, productSpriteName, productDescription);
         }
         public static BaseCustomerTypeData CreateBaseCustomerTypeData()
         {
@@ -193,13 +193,56 @@ namespace Utils
             return new MetaGameDirector();
         }
 
-        public static IGameRequest CreateGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription,
-            RequirementActionType requestType, RequirementObjectType requiredObjectType,
-            RequirementLogicEvaluator requirementLogicEvaluator, RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+        #region Game Requests
+        public static IGameRequest CreateGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription, RequirementActionType requestType, 
+            RequirementObjectType requiredObjectType, RequirementLogicEvaluator requirementLogicEvaluator, 
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
         {
-            return new GameRequest(speakerId, reqId, reqTitle,reqDescription, requestType,requiredObjectType,requirementLogicEvaluator,
-                requestParameterType, requestParameterValue, quantity);
+            switch (requestType)
+            {
+                case RequirementActionType.Hire:
+                    return CreateHireGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, requestParameterValue, quantity);
+                case RequirementActionType.Use:
+                    return CreateUseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, requestParameterValue, quantity);
+                case RequirementActionType.NotUse:
+                    return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity);
+                case RequirementActionType.Trap:
+                    return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity);
+                default:
+                    return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity);
+            }
         }
+            
+        private static IHireGameRequest CreateHireGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription,
+            RequirementActionType requestType, RequirementObjectType requiredObjectType, RequirementLogicEvaluator requirementLogicEvaluator, 
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+        {
+            int intSupplierId = int.Parse(requestParameterValue[0]);
+            JobSupplierBitId jobSupplierBitId = (JobSupplierBitId)intSupplierId;
+            return new HireGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                requestParameterType, jobSupplierBitId, quantity);
+        }
+
+        private static IUseGameRequest CreateUseGameRequest(int speakerId, int reqId, string reqTitle,
+            string reqDescription,
+            RequirementActionType requestType, RequirementObjectType requiredObjectType,
+            RequirementLogicEvaluator requirementLogicEvaluator,
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+        {
+            var itemSupplier = int.Parse(requestParameterValue[0]);
+            var itemId = int.Parse(requestParameterValue[1]);
+            var itemSupplierId = (BitItemSupplier)itemSupplier;
+            return new UseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                requestParameterType, itemSupplierId, itemId, quantity);
+        }
+        
+        
+        #endregion
 
         public static IBaseTutorialDialogueData CreateTutorialDialogueData()
         {

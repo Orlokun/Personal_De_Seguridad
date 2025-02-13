@@ -28,6 +28,26 @@ namespace DataUnits.GameRequests
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mCompletedRequests = new();
         private Dictionary<DialogueSpeakerId, List<IGameRequest>> _mFailedRequests = new();
 
+        public void AddCompletedRequestInData(DialogueSpeakerId requester, IGameRequest request)
+        {
+            if(CompletedRequests == null)
+            {
+                _mCompletedRequests = new Dictionary<DialogueSpeakerId, List<IGameRequest>>();
+            }
+            if (!_mCompletedRequests.TryGetValue(requester, out var completedRequest))
+            {
+                _mCompletedRequests.Add(requester, new List<IGameRequest>());
+                _mCompletedRequests[requester].Add(request);
+                return;
+            }
+            if(completedRequest.Any(x=>x.RequestId == request.RequestId))
+            {
+                Debug.LogWarning($"Request for {requester} with Id {request.RequestId} is already completed.");
+                return;
+            }
+            _mCompletedRequests[requester].Add(request);
+        }
+
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mActiveRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mCompletedRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mFailedRequests;

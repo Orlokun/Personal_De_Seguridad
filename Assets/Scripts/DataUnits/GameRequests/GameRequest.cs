@@ -3,34 +3,26 @@ using GamePlayManagement.BitDescriptions.RequestParameters;
 
 namespace DataUnits.GameRequests
 {
-    public interface IGameRequest
-    {
-        public DialogueSpeakerId RequesterSpeakerId { get; }
-        public int RequestId { get; }
-        public string ReqTitle { get; }
-        public string ReqDescription { get; }
-        public bool IsCompleted { get; }
-        public void ProcessEvent();
-    }
-
     public class GameRequest : IGameRequest
     {
-        private IGameRequestData _mRequestData;
+        protected readonly IGameRequestData MRequestData;
         public GameRequest(int requesterSpeakId, int reqId, string reqTitle, string reqDescription, 
             RequirementActionType mChallengeType, RequirementObjectType objectTypeRequired ,RequirementLogicEvaluator mReqLogic, 
-            RequirementConsideredParameter mReqParameterType, string[] mReqParameterValues, int quantity)
+            RequirementConsideredParameter mReqParameterType, int quantity)
         {
-            _mRequestData = new GameRequestData(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, mReqParameterValues, quantity);
+            MRequestData = new GameRequestData(requesterSpeakId, reqId, reqTitle, reqDescription, 
+                mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, quantity);
         }
 
-        public DialogueSpeakerId RequesterSpeakerId => _mRequestData.RequesterSpeakerId;
-        public string ReqTitle => _mRequestData.ReqTitle;
-        public string ReqDescription => _mRequestData.ReqDescription;
-        public int RequestId => _mRequestData.RequestId;
-        public bool IsCompleted => _mRequestData.IsCompleted;
-        public void ProcessEvent()
+        public DialogueSpeakerId RequesterSpeakerId => MRequestData.RequesterSpeakerId;
+        public string ReqTitle => MRequestData.ReqTitle;
+        public string ReqDescription => MRequestData.ReqDescription;
+        public int RequestId => MRequestData.RequestId;
+        public bool IsCompleted => MRequestData.IsCompleted;
+        public void MarkAsCompleted()
         {
-            //Not implemented yet
+            MRequestData.CompleteChallenge();
         }
+        public RequirementActionType ChallengeActionType => MRequestData.ChallengeType;
     }
 }
