@@ -10,7 +10,8 @@ using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
-using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using InputManagement.MouseInput;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -68,8 +69,8 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region CustomerTrackingData
-        private Dictionary<Guid, IBaseCustomer> _mTrackedCustomers;
-        private IBaseCustomer _currentCustomerTarget;
+        private Dictionary<Guid, BaseCustomer> _mTrackedCustomers;
+        private BaseCustomer _currentCustomerTarget;
         #endregion
 
         #region LevelInspectionData
@@ -114,7 +115,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         public IShopInspectionPosition CurrentInspectionPosition =>
             _mInspectionSystemModule.GetCurrentPosition;
 
-        protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
             var guardSpeed = (float)Stats.Speed / 10;
             switch (currentStatus)
@@ -193,16 +194,19 @@ namespace GamePlayManagement.ItemManagement.Guards
                 return;
             }
             Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} is lazy, don't feel like working");
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
-            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
+            ChangeMovementState<IdleMovementState>();
+            ChangeAttitudeState<IdleAttitudeState>();
         }
-        protected override void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus newGuardStatus)
+
+        //Used to have Guards special Actions. Not any more?
+        public override void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus newGuardStatus)
         {
             _mGuardStatusModule.SetGuardAttitudeStatus(newGuardStatus);
         }
-        private void StartInspecting()
+
+        public void StartInspecting()
         {
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            ChangeMovementState<WalkingState>();
             _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
         }
 
@@ -212,7 +216,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             var seenObjects = _fieldOfViewModule.Fov3D.SeenTargetObjects;
             foreach (var seenObject in seenObjects)
             {
-                var isCustomer = seenObject.TryGetComponent<IBaseCustomer>(out var customerStatus);
+                var isCustomer = seenObject.TryGetComponent<BaseCustomer>(out var customerStatus);
                 if (!isCustomer)
                 {
                     continue;
@@ -226,8 +230,8 @@ namespace GamePlayManagement.ItemManagement.Guards
             var removedCustomers = new List<Guid>();
             foreach (var trackedCustomer in _mTrackedCustomers)
             {
-                var customersSeen = seenObjects.Where(x=> x.TryGetComponent<IBaseCustomer>(out _));
-                if (customersSeen.All(x => x.GetComponent<IBaseCustomer>().CustomerId != trackedCustomer.Key))
+                var customersSeen = seenObjects.Where(x=> x.TryGetComponent<BaseCustomer>(out _));
+                if (customersSeen.All(x => x.GetComponent<BaseCustomer>().CustomerId != trackedCustomer.Key))
                 {
                     continue;
                 }
@@ -337,13 +341,13 @@ namespace GamePlayManagement.ItemManagement.Guards
         private async void ReachManuallyInspectedZone()
         {
             SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+            ChangeMovementState<IdleMovementState>();
 
             await Task.Delay(500);
             BaseAnimator.ChangeAnimationState(SearchAround);
             await Task.Delay(4000);
             
-            BaseAnimator.ChangeAnimationState(Idle);
+            BaseAnimator.ChangeAnimationState("Idle");
         }
         
         public void SetGuardDestination(Vector3 targetPosition)
@@ -381,13 +385,13 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             var nextPosition = PositionsManager.GetNextPosition(CurrentInspectionPosition.Id);
             SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
+            ChangeMovementState<IdleMovementState>();
             await Task.Delay(500);
             BaseAnimator.ChangeAnimationState(SearchAround);
             await Task.Delay(4000);
             _mInspectionSystemModule.SetNewCurrentPosition(nextPosition);
             SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            ChangeMovementState<WalkingState>();
         }
         
         private void AttemptDetention ()
@@ -404,11 +408,6 @@ namespace GamePlayManagement.ItemManagement.Guards
             throw new NotImplementedException();
         }
 
-        protected override void ConfirmAttitudeStatusData()
-        {
-            base.ConfirmAttitudeStatusData();
-        }
-
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
             if (!_mIsClicked)
@@ -421,7 +420,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                 HitPointDebugData(hitInfo);
                 var inspectionPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
                 CurrentManualInspectionPosition = inspectionPosition;
-                SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+                ChangeMovementState<WalkingState>();
                 SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.ManualInspecting);
 
             }

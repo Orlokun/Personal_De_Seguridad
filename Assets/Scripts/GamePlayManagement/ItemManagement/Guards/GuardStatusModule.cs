@@ -1,3 +1,4 @@
+using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 
 namespace GamePlayManagement.ItemManagement.Guards

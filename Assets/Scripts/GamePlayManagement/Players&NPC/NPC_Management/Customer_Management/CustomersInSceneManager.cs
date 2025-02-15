@@ -50,7 +50,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private bool _mIsSpawning = false;
         private Coroutine _customersCoroutine;
 
-        private Dictionary<Guid, IBaseCustomer> _mCustomersInScene = new Dictionary<Guid, IBaseCustomer>();
+        private Dictionary<Guid, BaseCustomer> _mCustomersInScene = new Dictionary<Guid, BaseCustomer>();
         #endregion
 
 
@@ -82,7 +82,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             ClearClientFromScene(customerLeaving);
         }
 
-        private void ClientCreatedEvent(IBaseCustomer customerData)
+        private void ClientCreatedEvent(BaseCustomer customerData)
         {
             TrackCustomer(customerData);
             foreach (var observer in observers)
@@ -267,7 +267,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 yield return new WaitForSeconds(randomRange);
             }
         }
-        private void TrackCustomer(IBaseCustomer customer)
+        private void TrackCustomer(BaseCustomer customer)
         {
             if (_mCustomersInScene.ContainsKey(customer.CustomerId))
             {
@@ -299,7 +299,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             var customerPath = BaseCustomersPath + randomCustomer;
             var randomCustomerData = Factory.CreateBaseCustomerTypeData();
             var client = (GameObject)Instantiate(Resources.Load(customerPath), randomPositionData.StartPosition, new Quaternion(0,0,0,0));
-            var customerDataObj = client.GetComponent<IBaseCustomer>();
+            var customerDataObj = client.GetComponent<BaseCustomer>();
             customerDataObj.SetCustomerId(Guid.NewGuid());
             customerDataObj.SetInitialMovementData(randomPositionData);
             customerDataObj.SetCustomerTypeData(randomCustomerData);

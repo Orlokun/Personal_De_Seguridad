@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using GameDirection.GeneralLevelManager.ShopPositions.WaitingPositions;
-using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 using Random = UnityEngine.Random;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
@@ -20,22 +20,15 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private const string ProductPrefabPath = "LevelManagementPrefabs/ProductPrefabs/";
         #endregion
 
-        #region ProceduralAnimConstraints
-        [SerializeField] protected MultiAimConstraint mHeadAimConstraint;
-        [SerializeField] protected TwoBoneIKConstraint mGrabObjectConstraint;
-        [SerializeField] protected TwoBoneIKConstraint mInspectObjectConstraint;
-        [SerializeField] protected Transform rightHand;
-        
         private bool _productInHand;
+        public bool HasProductInHand => _productInHand;
 
-        private Tuple<Transform, IStoreProductObjectData> _tempStoreProductOfInterest;
-        private Transform _tempTargetOfInterest;
         private GameObject _tempProductCopy;
-        private IStoreEntrancePosition _entranceData;
         
-        #endregion
 
-        #region Characteristics and Theft
+        
+
+        #region Customer Data, Stats, Current Stolen Elements and Ethics
         private ICustomerTypeData _mCustomerTypeData;
         public ICustomerTypeData CustomerTypeData => _mCustomerTypeData;
         private ICustomerPurchaseStealData _mCustomerVisitData;
@@ -50,7 +43,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         public void SetInitialMovementData(IStoreEntrancePosition entranceData)
         {
-            _entranceData = entranceData;
+            MEntranceData = entranceData;
             MInitialPosition = entranceData.StartPosition;
         }
 
@@ -63,18 +56,21 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private Vector3 _mPayingPosition;
         private int _mNumberOfProductsLookingFor;
         private List<Guid> _mShelvesOfInterest;
+        public Vector3 PayingPosition => _mPayingPosition;
 
         private bool _mAnyPoiAvailable;
         #endregion
 
         #region CurrentCustomerStatus
-        private BaseCustomerAttitudeStatus _mCustomerAttitudeStatus = 0;
+        private BaseCharacterAttitudeStatus _mCharacterAttitudeStatus = 0;
         private bool _mIsCustomerStealing;
         public bool IsCustomerStealing => _mIsCustomerStealing;
 
         private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
+        public Dictionary<Guid, bool> PoisPurchaseStatus=> _mPoisPurchaseStatus;
 
         private Guid _currentPoiId;
+        public Guid CurrentPoiId => _currentPoiId;
         private ISingleWaitingSpot _currentWaitingSpot;
         #endregion
 
@@ -93,8 +89,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             base.Start();
             _mPayingPosition = PositionsManager.PayingPosition();
             PopulateShelvesOfInterestData();
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Entering);
-            StartWalking();
+            ChangeMovementState<IdleMovementState>();
+            ChangeAttitudeState<AccessingBuildingState>();
 
             Debug.Log($"[Awake] Initial Position: {MInitialPosition}. ");
         }
@@ -111,10 +107,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
         private void Update()
         {
-            ManageAttitudeStatus();
-            ManageMovementStatus();
+            _mMovementStateMachine.Update();
+            _mAttitudeStateMachine.Update();
         }
-        protected override float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
             var guardSpeed = (float)_mCustomerTypeData.Speed / 10;
             switch (currentStatus)
@@ -130,40 +126,18 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             }
         }
         #region UpdateManageAttitude
-        private void ManageAttitudeStatus()
-        {
-            switch (_mCustomerAttitudeStatus)
-            {
-                case BaseCustomerAttitudeStatus.Entering:
-                    break;
-                case BaseCustomerAttitudeStatus.Paying:
-                    GoToPay();
-                    break;
-                case BaseCustomerAttitudeStatus.Shopping:
-                    break;
-                case BaseCustomerAttitudeStatus.EvaluatingProduct:
-                    break;
-                case BaseCustomerAttitudeStatus.Fighting:
-                    break;
-                case BaseCustomerAttitudeStatus.Leaving:
-                    if (_mCustomerVisitData.StolenProductsValue > 0)
-                    {
-                        CheckRunningAwayChances();
-                    }
-                    break;
-            }
-        }
+
 
         private void CheckRunningAwayChances()
         {
             //TODO: Elaborate logic for this. For now they simply run. 
             if (Vector3.Distance(GetNavMeshAgent.destination, transform.position) < 3f)
             {
-                SetCharacterMovementStatus(BaseCharacterMovementStatus.Running);
+                ChangeMovementState<RunningState>();
             }
         }
         
-        private void ReleaseCurrentPoI()
+        public void ReleaseCurrentPoI()
         {
             var poi = PositionsManager.GetPoiData(_currentPoiId);
             if (!poi.IsOccupied || poi.OccupierId != MCharacterId)
@@ -172,12 +146,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             }
             PositionsManager.ReleasePoi(MCharacterId, _currentPoiId);
         }
-        private void GoToNextProduct()
+        public void GoToNextProduct()
         {
             if(_mPoisPurchaseStatus.All(x => x.Value))
             {
                 Debug.Log("[GoToNextPoint] Going to Pay");
-                SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Paying);
+                ChangeAttitudeState<PayingState>();
                 ReleaseCurrentPoI();
                 return;
             }
@@ -244,31 +218,6 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         #region ReachDestinationEvent
         // ReSharper disable Unity.PerformanceAnalysis
-        protected override void ReachWalkingDestination()
-        {
-            switch (_mCustomerAttitudeStatus)
-            {
-                case BaseCustomerAttitudeStatus.Shopping:
-                    ReachProductDestination();
-                    break;
-                case BaseCustomerAttitudeStatus.Paying:
-                    Random.InitState(DateTime.Now.Millisecond);
-                    PayAndLeave(Random.Range(5000,11000));
-                    break;
-                case BaseCustomerAttitudeStatus.Entering:
-                    EvaluateStartShopping();
-                    break;
-                case BaseCustomerAttitudeStatus.Leaving:
-                    CustomersInSceneManager.Instance.ClientReachedDestination(this);
-                    Destroy(gameObject);
-                    break;
-                case BaseCustomerAttitudeStatus.Fighting:
-                    break;
-                case BaseCustomerAttitudeStatus.HangingAround:
-                    StartCoroutine(StartHangingAround());
-                    break;
-            }
-        }
 
         private IEnumerator StartHangingAround()
         {
@@ -276,17 +225,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             yield return new WaitForSeconds(0);
         }
         
-        private void ReachProductDestination()
+        public void EvaluateStartShopping()
         {
-            EvaluateProduct();
-        }
-
-        private void EvaluateStartShopping()
-        {
-            if ((_mCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Shopping) != 0)
-            {
-                return;
-            }
             var pois = PositionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
             _mAnyPoiAvailable =  pois.Any(x=> x.IsOccupied == false);
             if (!_mAnyPoiAvailable)
@@ -297,7 +237,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             }
             StartShopping();
         }
-
+        private void StartShopping()
+        {
+            _mAttitudeStateMachine.ChangeState<ShoppingState>();
+            _mMovementStateMachine.ChangeState<WalkingState>();
+            GoToNextProduct();
+        }
         private void StartFreeClientInteraction()
         {
             Debug.Log("[StartFreeClientInteraction] Start Looking for chill place");
@@ -306,7 +251,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             {
                 Debug.LogWarning("[StartFreeClientInteraction] No Empty waiting spot available. Making excuse and retiring back home");
                 MakeExcuse();
-                Leave();
+                return;
             }
             WalkToWaitSpot(occupiedWaitingSpot.Result.Item1);
         }
@@ -314,8 +259,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private void WalkToWaitSpot(ISingleWaitingSpot targetWaitSpot)
         {
             _currentWaitingSpot = targetWaitSpot;
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.HangingAround);
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
+            //ChangeCharacterAttitudeState(BaseCharacterAttitudeStatus.WonderingAround);
+            //SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
         }
 
         private void MakeExcuse()
@@ -323,228 +268,34 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             
         }
 
-        private void StartShopping()
-        {
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
-            GoToNextProduct();
-        }
+
         #region ProductStealEvaluation
         private void EvaluateProduct()
         {
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.EvaluatingProduct);
-            var wouldStealProduct = EvaluateProductStealingChances();
-            StartProductExamination(wouldStealProduct);
+            ChangeAttitudeState<EvaluatingProductState>();
         }
-        private bool EvaluateProductStealingChances()
-        {
-            var hasStealAbility = _tempStoreProductOfInterest.Item2.HideChances <= _mCustomerTypeData.StealAbility ? 1 : 0;
-            var isTempting = _tempStoreProductOfInterest.Item2.Tempting >= _mCustomerTypeData.Corruptibility ? 1 : 0;
-            var isDetermined = _tempStoreProductOfInterest.Item2.Punishment <= _mCustomerTypeData.Fearful ? 1 : 0;
 
-            return hasStealAbility + isTempting + isDetermined >= 2;
-        }
-        
-        private async void StartProductExamination(bool wouldStealProduct)
+
+        public void InstantiateProductInHand()
         {
-            Random.InitState(DateTime.Now.Millisecond);
-            //Wait To play Grab Animation
-            await Task.Delay(Random.Range(1500, 2000));
-            mGrabObjectConstraint.data.target = _tempTargetOfInterest.transform;
-            StartCoroutine(SetGrabObjectConstraint(0,1,1));
-            //Wait to instantiate when object is grabbed and look at it
-            await Task.Delay(1000);
-            InstantiateProductInHand();
-            StartInspectObjectAnim();
-            await Task.Delay(1000);
-            //BaseAnimator.ChangeAnimationState(EvaluateProductObject);
-            if (!wouldStealProduct)
-            {
-                AddProductAndKeepShopping();
-            }
-            else
-            {
-                StartStealingProductAttempt();
-            }
-        }
-        private void InstantiateProductInHand()
-        {
-            var path = ProductPrefabPath + _tempStoreProductOfInterest.Item2.PrefabName;
+            var path = ProductPrefabPath + MTempStoreProductOfInterest.Item2.PrefabName;
             _tempProductCopy = (GameObject)Instantiate(Resources.Load(path),rightHand, false);
             _productInHand = true;
             _tempProductCopy.transform.localScale *= .4f;
             _tempProductCopy.transform.localPosition = new Vector3(0,0,0);
-            _tempTargetOfInterest = _tempProductCopy.transform;
+            MTempTargetOfInterest = _tempProductCopy.transform;
         }
-        private void StartInspectObjectAnim()
+        #endregion
+
+        #endregion
+
+        public override void ClearProductOfInterest()
         {
-            StartCoroutine(SetGrabObjectConstraint(1, 0, 1));
-            StartCoroutine(SetLookObjectWeight(0,1,1));
-            StartCoroutine(UpdateInspectObjectRigWeight(0, 1, 1));
-        }
-        private IEnumerator SetLookObjectWeight(float start, float end,float time)
-        {
-            float elapsedTime = 0;
-            while (elapsedTime < time)
-            {
-                mHeadAimConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-        }
-        private IEnumerator UpdateInspectObjectRigWeight(float start, float end,float time)
-        {
-            float elapsedTime = 0;
-            while (elapsedTime < time)
-            {
-                mInspectObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-        }
-        private IEnumerator SetGrabObjectConstraint(float start, float end,float time)
-        {
-            float elapsedTime = 0;
-            while (elapsedTime < time)
-            {
-                mGrabObjectConstraint.weight = Mathf.Lerp(start, end, (elapsedTime / time));
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-        }
-        
-        
-        private async void AddProductAndKeepShopping()
-        {
-            Debug.Log("[AddProductAndKeepShopping] WOULD NOT STEAL PRODUCT");
-            await Task.Delay(Random.Range(4500, 10000));
-            StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mCustomerVisitData.PurchaseProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
-            ClearProductInterest();
-            _mPoisPurchaseStatus[_currentPoiId] = true;
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
-            ReleaseCurrentPoI();
-            GoToNextProduct();
-        }
-        
-        private async void StartStealingProductAttempt()
-        {
-            Debug.Log($"[StartProductExamination] {gameObject.name} WOULD STEAL PRODUCT. Start Process");
-            await Task.Delay(Random.Range(1000, 1500));
-            
-            StartCoroutine(SetLookObjectWeight(1,0,1.5f));
-            BaseAnimator.ChangeAnimationState(SearchAround);
-            await Task.Delay(8000);
-            StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
-            _mCustomerVisitData.StealProduct(Guid.NewGuid(), _tempStoreProductOfInterest.Item2);
-            //Debug.Log($"{gameObject.name} stole a {_tempStoreProductOfInterest.Item2.ProductName}!");
-            ClearProductInterest();
-            _mPoisPurchaseStatus[_currentPoiId] = true;
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Shopping);
-            ReleaseCurrentPoI();
-            GoToNextProduct();
-        }
-        private void ClearProductInterest()
-        {
-            Destroy(_tempProductCopy);
-            _tempTargetOfInterest = null;
+            Destroy(MTempTargetOfInterest.gameObject);
+            base.ClearProductOfInterest();
+            MTempTargetOfInterest = null;
             _productInHand = false;
             _tempProductCopy = null;
         }
-        #endregion
-
-        #endregion
-
-        #region UpdateMovementStatus
-        private void ManageMovementStatus()
-        {
-            switch (MCharacterMovementStatus)
-            {
-                case BaseCharacterMovementStatus.Idle:
-                    break;
-                case BaseCharacterMovementStatus.Walking:
-                    EvaluateWalkingDestination();
-                    break;
-                case BaseCharacterMovementStatus.EvaluatingProduct:
-                    if (_productInHand)
-                    {
-                        break;
-                    }
-                    RotateTowardsYOnly(transform,_tempTargetOfInterest);
-                    break;
-                case BaseCharacterMovementStatus.Running:
-                    EvaluateWalkingDestination();
-                    break;
-            }
-        }
-        
-        #endregion
-        
-        #region Paying
-        private void GoToPay()
-        {
-            if ((_mCustomerAttitudeStatus & BaseCustomerAttitudeStatus.Paying) != 0)
-            {
-                return;   
-            }
-            GetNavMeshAgent.destination = _mPayingPosition;
-        }
-        private async void PayAndLeave(int timePaying)
-        {
-            Pay();
-            //Time to do something
-            await Task.Delay(timePaying);
-            Leave();
-        }
-
-        private void Pay()
-        {
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Idle);
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Paying);
-            GetNavMeshAgent.isStopped = true;
-        }
-
-        private void Leave()
-        {
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
-            SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus.Leaving);
-        }
-        
-        #endregion
-
-        #region Utils
-        protected override void SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus newCustomerAttitude)
-        {
-            _mCustomerAttitudeStatus = 0;
-            _mCustomerAttitudeStatus |= newCustomerAttitude;
-            switch (newCustomerAttitude)
-            {
-                case BaseCustomerAttitudeStatus.EvaluatingProduct:
-                    var pointOfInterest = PositionsManager.GetPoiData(_currentPoiId);
-                    _tempStoreProductOfInterest = pointOfInterest.ChooseRandomProduct();
-                    _tempTargetOfInterest = _tempStoreProductOfInterest.Item1;
-                    break;
-                
-                case BaseCustomerAttitudeStatus.Paying:
-                    _tempStoreProductOfInterest = null;
-                    SetMovementDestination(_mPayingPosition);
-                    break;
-                
-                case BaseCustomerAttitudeStatus.Leaving:
-                    SetMovementDestination(MInitialPosition);
-                    break;
-                
-                case BaseCustomerAttitudeStatus.Entering:
-                    SetMovementDestination(_entranceData.EntrancePosition);
-                    break;
-                case BaseCustomerAttitudeStatus.HangingAround:
-                    SetMovementDestination(_currentWaitingSpot.Position);
-                    break;
-            }
-        }
-        #endregion
     }
 }

@@ -2,21 +2,19 @@ using System;
 using DataUnits.ItemScriptableObjects;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemManagement.Guards;
+using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.Animations;
 using GamePlayManagement.Players_NPC.Animations.Interfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 
 namespace GamePlayManagement.Players_NPC
 {
-    public interface IBaseCharacterInScene
-    {
-        public Guid CharacterId { get; }
-        public NavMeshAgent GetNavMeshAgent { get; }
-        public void ToggleNavMesh(bool isActive);
-    }
-    
     /// <summary>
     /// THIS CLASS MUST BE TURNED INTO A PROPER STATE MACHINE
     /// </summary>
@@ -25,66 +23,108 @@ namespace GamePlayManagement.Players_NPC
     [RequireComponent(typeof(BaseAnimatedAgent))]
     public abstract class BaseCharacterInScene : MonoBehaviour, IBaseCharacterInScene
     {
+        //Many of these should eventually be managed through code: speeds, etc.
         #region Constants
-        
         protected const float BaseWalkSpeed = 3.5f;
         protected const float BaseRunSpeed = 15f;
         protected const int BaseAwakeTime = 5000;
         
-        protected const string Idle = "Idle";
-        protected const string Walk = "Walk";
-        protected const string Run = "Run";        
-        protected const string SearchAround = "SearchAround";
-        
-
+        public const string SearchAround = "SearchAround";
         #endregion
 
+        #region Protected Data, components and references
+        
+        protected IStoreEntrancePosition MEntranceData;
+        public IStoreEntrancePosition EntranceData => MEntranceData;
+        
+        protected Guid MCharacterId;
+        protected IItemTypeStats MyStats;
+        protected BaseCharacterMovementStatus MCharacterMovementStatus = BaseCharacterMovementStatus.Idle;
+        protected IBaseAnimatedAgent MBaseAnimator;
+        public IBaseAnimatedAgent BaseAnimator => MBaseAnimator;
+        protected NavMeshAgent MyNavMeshAgent;
+        protected Vector3 MInitialPosition;
+        public Vector3 InitialPosition => MInitialPosition;
+        public IShopPositionsManager PositionsManager;
+        #endregion
+
+        #region StateMachine
+        protected StateMachine<IMovementState> _mMovementStateMachine;
+        protected StateMachine<IAttitudeState> _mAttitudeStateMachine;
+        #endregion
+
+        #region ProceduralAnimConstraints 
+        [SerializeField] protected MultiAimConstraint mHeadAimConstraint;
+        [SerializeField] protected TwoBoneIKConstraint mGrabObjectConstraint;
+        [SerializeField] protected TwoBoneIKConstraint mInspectObjectConstraint;
+        [SerializeField] protected Transform rightHand;
+        
+        public TwoBoneIKConstraint InspectObjectConstraint => mInspectObjectConstraint;
+        public MultiAimConstraint HeadAimConstraint => mHeadAimConstraint;
+        public TwoBoneIKConstraint GrabObjectConstraint => mGrabObjectConstraint;
+        public Transform TempObjectTargetOfInterest => MTempTargetOfInterest;
+        public Tuple<Transform, IStoreProductObjectData> TempStoreProductOfInterest => MTempStoreProductOfInterest;
+        #endregion
+
+        
+        #region Product of Interest
+        protected Tuple<Transform, IStoreProductObjectData> MTempStoreProductOfInterest;
+
+        public virtual void ClearProductOfInterest()
+        {
+            MTempStoreProductOfInterest = null;
+        }
+        
+        public void SetTempProductOfInterest(Tuple<Transform, IStoreProductObjectData> productOfInterest)
+        {
+            MTempStoreProductOfInterest = productOfInterest;
+            MTempTargetOfInterest = MTempStoreProductOfInterest.Item1;
+        }
+        
+        #endregion
+        
+        #region Object of Interest
+        protected Transform MTempTargetOfInterest;
+        #endregion
+        
         public Guid CharacterId => MCharacterId;
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;
         public void ToggleNavMesh(bool isActive)
         {
-            //ObstacleComponent.enabled = !isActive;
-            if (MyNavMeshAgent.enabled)
-            {
-                MyNavMeshAgent.isStopped = !isActive;
-                MyNavMeshAgent.enabled = isActive;
-            }
-            else
-            {
-                MyNavMeshAgent.enabled = isActive;
-                MyNavMeshAgent.isStopped = !isActive;
-            }
+            EnsureNavMeshAgentOnNavMesh();
+            MyNavMeshAgent.isStopped = !isActive;
+            MyNavMeshAgent.enabled = isActive;
         }
 
-        protected Guid MCharacterId;
-        
-        protected IItemTypeStats MyStats;
-        protected BaseCharacterMovementStatus MCharacterMovementStatus = 0;
-        
-        protected IBaseAnimatedAgent BaseAnimator;
-        protected NavMeshAgent MyNavMeshAgent;
-        protected Vector3 MInitialPosition;
-        protected IShopPositionsManager PositionsManager;
+        public void ChangeMovementState<T>() where T : IMovementState
+        {
+            _mMovementStateMachine.ChangeState<T>();
+        }
+        public void ChangeAttitudeState<T>() where T : IAttitudeState
+        {
+            _mAttitudeStateMachine.ChangeState<T>();
+        }
         //protected NavMeshObstacle ObstacleComponent;
 
         protected float MRotationSpeed = 12;
         [SerializeField] protected Transform headTransform;     
 
         #region Events
-        private delegate void ReachDestination();
-        private event ReachDestination WalkingDestinationReached;
+        public delegate void ReachDestination();
+        public event ReachDestination WalkingDestinationReached;
 
         #endregion
         protected virtual void Awake()
         {
             CheckId();
+            InitiateStateMachines();
             PositionsManager = FindFirstObjectByType<ShopPositionsManager>();    
-            BaseAnimator = GetComponent<BaseAnimatedAgent>();
+            MBaseAnimator = GetComponent<BaseAnimatedAgent>();
             MyNavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
+            EnsureNavMeshAgentOnNavMesh();
             //ObstacleComponent = GetComponent<NavMeshObstacle>();
             //ObstacleComponent.enabled = false;
-            WalkingDestinationReached += ReachWalkingDestination;
         }
 
         private void CheckId()
@@ -94,12 +134,63 @@ namespace GamePlayManagement.Players_NPC
                 MCharacterId = Guid.NewGuid();
             }
         }
+        public void EnsureNavMeshAgentOnNavMesh()
+        {
+            if (!MyNavMeshAgent.isOnNavMesh)
+            {
+                Vector3 nearestNavMeshPosition;
+                if (FindNearestNavMeshPosition(transform.position, out nearestNavMeshPosition))
+                {
+                    MyNavMeshAgent.Warp(nearestNavMeshPosition);
+                }
+                else
+                {
+                    Debug.LogWarning("No valid NavMesh position found nearby.");
+                }
+            }
+        }
+
+        private bool FindNearestNavMeshPosition(Vector3 position, out Vector3 nearestNavMeshPosition, float maxDistance = 1.0f)
+        {
+            NavMeshHit hit;
+            if (NavMesh.SamplePosition(position, out hit, maxDistance, NavMesh.AllAreas))
+            {
+                nearestNavMeshPosition = hit.position;
+                return true;
+            }
+
+            nearestNavMeshPosition = Vector3.zero;
+            return false;
+        }
+        
+        private void InitiateStateMachines()
+        {
+            _mMovementStateMachine = new StateMachine<IMovementState>();
+            _mMovementStateMachine.AddState(new IdleMovementState(this));
+            _mMovementStateMachine.AddState(new WalkingState(this));
+            _mMovementStateMachine.AddState(new RunningState(this));
+            
+            _mAttitudeStateMachine = new StateMachine<IAttitudeState>();
+            _mAttitudeStateMachine.AddState(new IdleAttitudeState(this));
+            _mAttitudeStateMachine.AddState(new AccessingBuildingState(this));
+            _mAttitudeStateMachine.AddState(new TalkingState(this));
+            _mAttitudeStateMachine.AddState(new ShoppingState(this));
+            _mAttitudeStateMachine.AddState(new StealingState(this));
+            _mAttitudeStateMachine.AddState(new EvaluatingProductState(this));
+            _mAttitudeStateMachine.AddState(new ScreamingState(this));
+            _mAttitudeStateMachine.AddState(new FightingState(this));
+            _mAttitudeStateMachine.AddState(new PayingState(this));
+            _mAttitudeStateMachine.AddState(new ScaredCrouchState(this));
+            _mAttitudeStateMachine.AddState(new ScaredRunningState(this));
+            _mAttitudeStateMachine.AddState(new LeavingBuildingState(this));
+        }
+        
         protected virtual void Start()
         {
         }
-        protected virtual void RotateTowardsYOnly(Transform rotatingObject, Transform facingTowards)
+        public void RotateTowardsYOnly(Transform facingTowards)
         {
-            Vector3 targetDirection = facingTowards.position - rotatingObject.position;
+            Vector3 targetDirection = facingTowards.position - transform.position;
             targetDirection.y = 0; // Ignore height difference
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             // Smoothly rotate towards the target
@@ -110,86 +201,60 @@ namespace GamePlayManagement.Players_NPC
         {
             
         }
-        
-        protected void StartWalking()
+
+        protected void NavAgentUpdateStatusStats()
         {
-            SetCharacterMovementStatus(BaseCharacterMovementStatus.Walking);
-            BaseAnimator.ChangeAnimationState(Walk);
+            MyNavMeshAgent.speed = GetStatusSpeed();
         }
-        protected void NavAgentUpdateStatusStats(BaseCharacterMovementStatus currentStatus)
-        {
-            MyNavMeshAgent.speed = GetStatusSpeed(currentStatus);
-        }
-        protected virtual float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        protected virtual float GetStatusSpeed()
         {
             return 1;
         }
 
-        protected void SetMovementDestination(Vector3 targetPosition)
+
+
+        public virtual void ChangeCharacterAttitudeState(BaseCharacterAttitudeStatus characterAttitudeStatus)
         {
-            MyNavMeshAgent.enabled = true;
-            MyNavMeshAgent.isStopped = false;
-            MyNavMeshAgent.SetDestination(targetPosition);
+            
+        }
+        public virtual void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus guardAttitudeStatus)
+        {
+            
         }
 
-        protected virtual void SetCharacterAttitudeStatus(BaseCustomerAttitudeStatus customerAttitudeStatus)
-        {
-            
-        }
-        protected virtual void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus guardAttitudeStatus)
-        {
-            
-        }
-        protected void SetCharacterMovementStatus(BaseCharacterMovementStatus newMovementStatus)
-        {
-            MCharacterMovementStatus = 0;
-            MCharacterMovementStatus |= newMovementStatus;
-            //set
-            switch (newMovementStatus)
-            {
-                case  BaseCharacterMovementStatus.Walking:
-                    NavAgentUpdateStatusStats(BaseCharacterMovementStatus.Walking);
-                    BaseAnimator.ChangeAnimationState(Walk);
-                    break;
-                case  BaseCharacterMovementStatus.Idle:
-                    //ToggleNavMesh(false);
-                    BaseAnimator.ChangeAnimationState(Idle);
-                    break;
-                case  BaseCharacterMovementStatus.Running:
-                    NavAgentUpdateStatusStats(BaseCharacterMovementStatus.Running);
-                    //ToggleNavMesh(true);
-                    BaseAnimator.ChangeAnimationState(Run);
-                    break;
-            }
-        }
+        public BaseCharacterMovementStatus CharacterMovementStatus { get; }
 
         protected virtual void ProcessInViewTargets()
         {
             //Must be implemented by inheritor if used     
         }
-        protected void EvaluateWalkingDestination()
+        public void SetMovementDestination(Vector3 targetPosition)
+        {
+            ToggleNavMesh(true);
+            MyNavMeshAgent.SetDestination(targetPosition);
+        }
+        public void EvaluateWalkingDestination()
         {
             if (MyNavMeshAgent.destination.Equals(default(Vector3)))
             {
                 Debug.LogWarning("Destination to walk to must be already set");
                 return;
             }
-            ConfirmAttitudeStatusData();
-            if (MyNavMeshAgent.remainingDistance < 1f && !MyNavMeshAgent.isStopped)
-            {
-                MyNavMeshAgent.isStopped = true;
-                OnWalkingDestinationReached();
-            }
-        }
 
-        protected virtual void ConfirmAttitudeStatusData()
-        {
+            if (MyNavMeshAgent.isStopped) { return; }
+            if (MyNavMeshAgent.remainingDistance > 1f) return;
             
+            MyNavMeshAgent.isStopped = true;
+            OnWalkingDestinationReached();
         }
-
         protected virtual void OnWalkingDestinationReached()
         {
             WalkingDestinationReached?.Invoke();
+        }
+
+        public void DestroyCharacter()
+        {
+            Destroy(gameObject);
         }
     }
 }
