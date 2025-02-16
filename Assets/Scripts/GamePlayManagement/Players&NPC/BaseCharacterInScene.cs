@@ -91,9 +91,16 @@ namespace GamePlayManagement.Players_NPC
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;
         public void ToggleNavMesh(bool isActive)
         {
-            EnsureNavMeshAgentOnNavMesh();
-            MyNavMeshAgent.isStopped = !isActive;
-            MyNavMeshAgent.enabled = isActive;
+            if (MyNavMeshAgent.enabled)
+            {
+                MyNavMeshAgent.isStopped = !isActive;
+                MyNavMeshAgent.enabled = isActive;
+            }
+            else
+            {
+                MyNavMeshAgent.enabled = isActive;
+                MyNavMeshAgent.isStopped = !isActive;
+            }
         }
 
         public void ChangeMovementState<T>() where T : IMovementState
@@ -238,6 +245,10 @@ namespace GamePlayManagement.Players_NPC
             if (MyNavMeshAgent.destination.Equals(default(Vector3)))
             {
                 Debug.LogWarning("Destination to walk to must be already set");
+                return;
+            }
+            if (!MyNavMeshAgent.enabled)
+            {
                 return;
             }
 

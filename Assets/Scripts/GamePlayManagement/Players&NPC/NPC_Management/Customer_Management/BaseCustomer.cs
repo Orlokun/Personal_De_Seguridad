@@ -291,7 +291,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         public override void ClearProductOfInterest()
         {
-            Destroy(MTempTargetOfInterest.gameObject);
+            if (_tempProductCopy is not null)
+            {
+                Destroy(MTempTargetOfInterest.gameObject);
+            }
             base.ClearProductOfInterest();
             MTempTargetOfInterest = null;
             _productInHand = false;
