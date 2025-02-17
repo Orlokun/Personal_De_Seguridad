@@ -91,14 +91,26 @@ namespace GamePlayManagement.Players_NPC
         public NavMeshAgent GetNavMeshAgent => MyNavMeshAgent;
         public void ToggleNavMesh(bool isActive)
         {
-            if (MyNavMeshAgent.enabled)
+            if (MyNavMeshAgent.enabled && isActive)
             {
-                MyNavMeshAgent.isStopped = !isActive;
-                MyNavMeshAgent.enabled = isActive;
+                //Just make sure Nav Agent is not Stopped
+                MyNavMeshAgent.isStopped = false;
+                return;
             }
-            else
+            if(MyNavMeshAgent.enabled && !isActive)
+            {
+                MyNavMeshAgent.isStopped = true;
+                MyNavMeshAgent.enabled = false;
+                return;
+            }
+
+            if (MyNavMeshAgent.enabled == false)
             {
                 MyNavMeshAgent.enabled = isActive;
+                if (MyNavMeshAgent.enabled == false)
+                {
+                    return;
+                }
                 MyNavMeshAgent.isStopped = !isActive;
             }
         }

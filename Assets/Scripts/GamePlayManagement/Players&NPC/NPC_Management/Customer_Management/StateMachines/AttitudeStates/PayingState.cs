@@ -40,7 +40,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
         private void Pay()
         {
             _mCharacter.ChangeMovementState<IdleMovementState>();
-            _mCharacter.GetNavMeshAgent.isStopped = true;
+            _mCharacter.ToggleNavMesh(false);
         }
 
         private void Leave()

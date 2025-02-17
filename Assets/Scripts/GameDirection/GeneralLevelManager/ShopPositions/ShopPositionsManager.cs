@@ -160,7 +160,7 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
         {
             if (!MIsInitialized)
             {
-                Debug.LogError("[GetUnoccupiedPositions] Not initialized");
+                Debug.LogError("[GetFirstPoiOfInterestIds] Shop Position Manager must be initialized");
                 return null;
             }
 
