@@ -15,7 +15,7 @@ namespace GameDirection.TimeOfDayManagement
         public int PlayerKnownEndings { get; }
         public int PlayerLastEnding { get; }
         public int PlayerOmniCredits { get; }
-        public int PlayerXp { get; }
+        public int MPlayerLvl { get; }
         public int PlayerHealth { get; }
         public int PlayerStress { get; }
         public int GameDifficulty { get; }

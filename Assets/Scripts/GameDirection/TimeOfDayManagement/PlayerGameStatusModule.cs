@@ -10,7 +10,7 @@ namespace GameDirection.TimeOfDayManagement
     {
         private int _totalOmniCredits;
         [Range(-100,100)]
-        private int _playerXp;
+        private int _mPlayerLvl;
         [Range(-100,100)]
         private int _health;
         private int _stress;
@@ -24,7 +24,7 @@ namespace GameDirection.TimeOfDayManagement
         {
             _mPlayerProfile = currentPlayerProfile;
             _totalOmniCredits = 20000;
-            _playerXp = 10;
+            _mPlayerLvl = 1;
             _health = 20;
             _mGameDifficulty = 1;
         }
@@ -42,10 +42,11 @@ namespace GameDirection.TimeOfDayManagement
             ResetBaseData();
         }
 
+        //Must change depending oon meta game directions
         public void ResetBaseData()
         {
             _totalOmniCredits = 20000;
-            _playerXp = 10;
+            _mPlayerLvl = 1;
             _health = 20;
             _mGameDifficulty = 1;
         }
@@ -59,7 +60,7 @@ namespace GameDirection.TimeOfDayManagement
             set => _totalOmniCredits = value;
         }
 
-        public int PlayerXp => _playerXp;
+        public int MPlayerLvl => _mPlayerLvl;
         public int PlayerHealth => _health;
         public int PlayerStress => _stress;
         public int GameDifficulty => _mGameDifficulty;

@@ -126,7 +126,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= _gameStatusModule.PlayerXp)
+                    if (suppliersItem.UnlockPoints <= _gameStatusModule.MPlayerLvl)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
