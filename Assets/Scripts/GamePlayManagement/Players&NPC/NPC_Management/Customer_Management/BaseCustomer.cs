@@ -25,6 +25,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private GameObject _tempProductCopy;
         
+        private ICustomerInstanceData _mCustomerInstanceData;
+        private ICustomersInSceneManager _mCustomersManager;
 
         
 
@@ -36,21 +38,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         public Guid CustomerId => MCharacterId;
-        public void SetCustomerId(Guid newId)
-        {
-            MCharacterId = newId;
-        }
 
-        public void SetInitialMovementData(IStoreEntrancePosition entranceData)
-        {
-            MEntranceData = entranceData;
-            MInitialPosition = entranceData.StartPosition;
-        }
-
-        public void SetCustomerTypeData(ICustomerTypeData customerTypeData)
-        {
-            _mCustomerTypeData = customerTypeData;
-        }
 
         #region LevelData
         private Vector3 _mPayingPosition;
@@ -65,6 +53,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private BaseCharacterAttitudeStatus _mCharacterAttitudeStatus = 0;
         private bool _mIsCustomerStealing;
         public bool IsCustomerStealing => _mIsCustomerStealing;
+        public GameObject CustomerGameObject => gameObject;
 
         private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
         public Dictionary<Guid, bool> PoisPurchaseStatus=> _mPoisPurchaseStatus;
@@ -299,6 +288,28 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MTempTargetOfInterest = null;
             _productInHand = false;
             _tempProductCopy = null;
+        }
+
+        private bool _mInitialized;
+        public bool IsInitialized => _mInitialized;
+        
+        public void Initialize(ICustomerInstanceData injectionClass)
+        {
+            if (_mInitialized)
+            {
+                return;
+            }
+            _mCustomersManager = injectionClass.CustomerManager;
+            MCharacterId = injectionClass.CustomerId;
+            MEntranceData = injectionClass.EntrancePositions;
+            MInitialPosition = MEntranceData.StartPosition;
+            _mCustomerTypeData = injectionClass.CustomerTypeData;
+            _mInitialized = true;
+        }
+
+        public void ClearCustomer()
+        {
+            _mCustomersManager.ClientReachedDestination(this);
         }
     }
 }

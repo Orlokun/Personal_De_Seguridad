@@ -31,7 +31,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
         public void WalkingDestinationReached()
         {
             _mCharacter.WalkingDestinationReached -= WalkingDestinationReached;
-            _mCharacter.DestroyCharacter();
+            var customer = _mCharacter as BaseCustomer;
+            customer.ClearCustomer();
         }
     }
 }

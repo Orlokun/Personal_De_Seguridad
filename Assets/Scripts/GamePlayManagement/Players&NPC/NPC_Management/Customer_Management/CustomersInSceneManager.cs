@@ -99,6 +99,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             }
             _mCustomersInScene.Remove(removedCustomer.CustomerId);
             ClientRemovedEvent(removedCustomer.GetCustomerStoreVisitData);
+            Destroy(removedCustomer.CustomerGameObject); 
         }
         private void ClientRemovedEvent(ICustomerPurchaseStealData customerData)
         {
@@ -300,9 +301,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             var randomCustomerData = Factory.CreateBaseCustomerTypeData();
             var client = (GameObject)Instantiate(Resources.Load(customerPath), randomPositionData.StartPosition, new Quaternion(0,0,0,0));
             var customerDataObj = client.GetComponent<BaseCustomer>();
-            customerDataObj.SetCustomerId(Guid.NewGuid());
-            customerDataObj.SetInitialMovementData(randomPositionData);
-            customerDataObj.SetCustomerTypeData(randomCustomerData);
+            var customerInstanceData = Factory.CreateCustomerInstanceData(this, Guid.NewGuid(), randomPositionData, randomCustomerData);
+            customerDataObj.Initialize(customerInstanceData);
             ClientCreatedEvent(customerDataObj);
             client.transform.Rotate(0,80,0);
             return client;
@@ -314,5 +314,29 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             agent.speed = agentSpeed;
             agent.avoidancePriority = 50;
         }
+    }
+    public class CustomerInstanceData : ICustomerInstanceData
+    {
+        private ICustomersInSceneManager _mCustomerManager;
+        public CustomerInstanceData(ICustomersInSceneManager mCustomerManager, Guid customerId, IStoreEntrancePosition entrancePositions, ICustomerTypeData customerTypeData)
+        {
+            CustomerId = customerId;
+            EntrancePositions = entrancePositions;
+            CustomerTypeData = customerTypeData;
+            _mCustomerManager = mCustomerManager;
+        }
+
+        public Guid CustomerId { get; set; }
+        public IStoreEntrancePosition  EntrancePositions { get; set; }
+        public ICustomerTypeData CustomerTypeData { get; set; }
+        public ICustomersInSceneManager CustomerManager => _mCustomerManager;
+    }
+
+    public interface ICustomerInstanceData
+    {
+        public ICustomersInSceneManager CustomerManager { get; }
+        public Guid CustomerId { get; }
+        public IStoreEntrancePosition  EntrancePositions { get; }
+        public ICustomerTypeData CustomerTypeData { get; }
     }
 }

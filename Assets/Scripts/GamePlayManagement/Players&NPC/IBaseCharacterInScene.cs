@@ -4,16 +4,11 @@ using UnityEngine.AI;
 
 namespace GamePlayManagement.Players_NPC
 {
-    public interface IBaseCharacterInScene : ICharacterNavMesh, IBaseCharacterMovementStatus
+    public interface IBaseCharacterInScene : ICharacterNavMesh
     {
         public Guid CharacterId { get; }
     }
         
-    public interface IBaseCharacterMovementStatus
-    {
-        public BaseCharacterMovementStatus CharacterMovementStatus { get; }
-    }
-
     public interface ICharacterNavMesh
     {
         public NavMeshAgent GetNavMeshAgent { get; }

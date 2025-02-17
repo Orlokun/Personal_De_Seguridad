@@ -25,6 +25,7 @@ using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Utils
 {
@@ -68,6 +69,10 @@ namespace Utils
         public static BaseCustomerTypeData CreateBaseCustomerTypeData()
         {
             return new BaseCustomerTypeData();
+        }
+        public static ICustomerInstanceData CreateCustomerInstanceData(ICustomersInSceneManager sceneManager, Guid newId, IStoreEntrancePosition randomPositionData, ICustomerTypeData customerType)
+        {
+            return new CustomerInstanceData(sceneManager, newId, randomPositionData, customerType);
         }
         public static IModularDialogueDataController CreateModularDialoguesDataController()
         {
