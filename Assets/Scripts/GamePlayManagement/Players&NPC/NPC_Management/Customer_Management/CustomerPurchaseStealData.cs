@@ -36,5 +36,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             ClearAllStolenProducts();
             ClearAllPurchasedProducts();
         }
+
+        public int GetStolenProductsCount => _mStolenProducts.Count;
+        public int GetPurchasedProductsCount => _mPurchasedProducts.Count;
     }
 }

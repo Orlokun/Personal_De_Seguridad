@@ -10,5 +10,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Cust
         public void StealProduct(Guid id, IStoreProductObjectData stolenProduct);
         public void PurchaseProduct(Guid id, IStoreProductObjectData purchasedProduct);
         public void ClearAllProducts();
+        public int GetStolenProductsCount { get; }
+        public int GetPurchasedProductsCount { get; }
     }
 }

@@ -21,7 +21,6 @@ namespace GameDirection.TimeOfDayManagement
         public int ClientsDetained{get;}
         public int ProductsPurchased{get;}
         public int ProductsStolen{get;}
-        public int TimesStolen{get;}
         public int ValueStolen{get;}
         public int ValuePurchased { get; }
         public int OmniCreditsEarned { get; }

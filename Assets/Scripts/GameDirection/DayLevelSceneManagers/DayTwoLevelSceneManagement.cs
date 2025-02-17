@@ -9,9 +9,9 @@ namespace GameDirection.DayLevelSceneManagers
         public override IEnumerator StartDayManagement()
         {
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
+            MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
-            
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);

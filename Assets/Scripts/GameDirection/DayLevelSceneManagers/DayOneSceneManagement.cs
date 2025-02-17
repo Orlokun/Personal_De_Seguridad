@@ -84,7 +84,8 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
-            
+            MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
+
             
             //TODO: Remove TEST ADDITION
             //MGameDirector.GetDialogueOperator.GetDialogueEventsOperator.LaunchHireEvent(JobSupplierBitId.COPY_OF_EDEN); 
@@ -124,7 +125,6 @@ namespace GameDirection.DayLevelSceneManagers
             //End Remove
             */
             
-            MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             MGameDirector.GetLevelManager.UnloadScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(false);

@@ -85,14 +85,14 @@ namespace UI.EndOfDay
         #endregion
 
         #region Singleton
-        private bool _isInitialized;
-        public bool IsInitialized => _isInitialized;
+        private bool _mInitialized;
+        public bool MInitialized => _mInitialized;
         private static IEndOfDayPanelController _mInstance;
         public static IEndOfDayPanelController Instance => _mInstance;
         #endregion
         public void Initialize(IRentValuesCatalogue injectionClass1, IPlayerGameProfile injectionClass2, IFoodValuesCatalogue injectionClass3, ITransportValuesCatalogue injectionClass4)
         {
-            if (_isInitialized)
+            if (_mInitialized)
             {
                 return;
             }
@@ -106,7 +106,7 @@ namespace UI.EndOfDay
             OnRentValueChanged();
             OnFoodValueChanged();
             OnTransportValueChange();
-            _isInitialized = true;
+            _mInitialized = true;
         }
 
         private void UpdateDropdownValues()
@@ -141,8 +141,10 @@ namespace UI.EndOfDay
             }
             _mInstance = this;
             ClearDisplayedValues();
+            mContinueButton.onClick.RemoveAllListeners();
             mContinueButton.onClick.AddListener(GoToSecondPanel);
             mReturnButton.onClick.AddListener(ReturnToFirstPanel);
+            _mInitialized = false;
         }
     
         private void ReturnToFirstPanel()
@@ -162,14 +164,15 @@ namespace UI.EndOfDay
         }
         private void ConfirmAndFinishEndOfDay()
         {
-        
             GameDirector.Instance.GetGeneralBackgroundFader.GeneralCurtainAppear();
             GameDirector.Instance.BeginNewDayProcess();
+            SetInitialParameters();
             //Calculate decisions
             //Save decisions to day
             //Advance to Next Day in data
             //Load new level and New Day
         }
+
 
         #region RentValueChange
         public void OnRentValueChanged()

@@ -7,7 +7,7 @@ namespace UI.EndOfDay
 {
     public interface IEndOfDayPanelController : IInitializeWithArg4<IRentValuesCatalogue, IPlayerGameProfile, IFoodValuesCatalogue, ITransportValuesCatalogue>
     {
-        bool IsInitialized { get; }
+        bool MInitialized { get; }
         void SetDayForDisplay(IWorkDayObject dayToDisplay);
     }
 }

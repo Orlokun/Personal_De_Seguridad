@@ -161,7 +161,6 @@ namespace CameraManagement
         private bool inputEnabled = true;
         private void OnGameStateChange(InputGameState newGameState)
         {
-            
             inputEnabled = newGameState == InputGameState.InGame;
         }
 

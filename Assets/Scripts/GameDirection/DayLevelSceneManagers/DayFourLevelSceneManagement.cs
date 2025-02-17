@@ -13,6 +13,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_01);
+            MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
 
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();

@@ -360,7 +360,6 @@ namespace GameDirection
         private void ManageUIProcessEndOfDay()
         {
             Debug.Log("[ManageUIProcessEndOfDay] Start");
-            ChangeHighLvlGameState(HighLevelGameStates.EndOfDay);
             _mIGeneralGameInputManager.SetGamePlayState(InputGameState.OnlyOffice);
             _mSoundDirector.StopRadio();            
             _mGeneralFader.GeneralCurtainAppear();
@@ -382,7 +381,7 @@ namespace GameDirection
 
         private async void FadeInEndOfScene()
         {
-            await Task.Delay(8000);
+            await Task.Delay(4000);
             _mGeneralFader.GeneralCurtainDisappear();
         }
         #endregion

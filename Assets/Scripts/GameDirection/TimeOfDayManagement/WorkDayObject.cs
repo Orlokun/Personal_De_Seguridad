@@ -12,8 +12,8 @@ namespace GameDirection.TimeOfDayManagement
         protected int MClientsCompleted;
         protected int MClientsDetained;
         protected int MValuePurchased;
+        protected int MProductsPurchased;
         protected int MProductsStolen;
-        protected int MTimesStolen;
         protected int MValueStolen;
         protected int MOmniCreditsEarnedEarned;
     }
@@ -29,9 +29,8 @@ namespace GameDirection.TimeOfDayManagement
         public int ThiefClients => MThiefClients;
         public int ClientsCompleted => MClientsCompleted;
         public int ClientsDetained => MClientsDetained;
-        public int ProductsPurchased => MValuePurchased;
+        public int ProductsPurchased => MProductsPurchased;
         public int ProductsStolen => MProductsStolen;
-        public int TimesStolen => MTimesStolen;
         public int ValuePurchased => MValuePurchased;
         public int ValueStolen => MValueStolen;
         public int OmniCreditsEarned => MOmniCreditsEarnedEarned;
@@ -54,7 +53,7 @@ namespace GameDirection.TimeOfDayManagement
             }
             //Manage stress eventually
         }
-        private void RemoveActiveClient()
+        private void SustractActiveClient()
         {
             _activeClients--;
             //Manage stress eventually
@@ -65,13 +64,9 @@ namespace GameDirection.TimeOfDayManagement
             MValuePurchased += valuePurchased;
         }
         
-        private void AddSteal(int valueStolen)
+        private void AddStealAmount(int valueStolen)
         {
             MValueStolen += valueStolen;
-            if (valueStolen > 0)
-            {
-                MTimesStolen++;
-            }
         }
         public void AddDetentions()
         {
@@ -87,12 +82,30 @@ namespace GameDirection.TimeOfDayManagement
         {
             AddActiveClient();
         }
-
+        private void CompleteClient()
+        {
+            MClientsCompleted++;
+        }
         public void UpdateCustomerRemoved(ICustomerPurchaseStealData customerData)
         {
-            RemoveActiveClient();
-            AddSteal(customerData.StolenProductsValue);
+            if (customerData.StolenProductsValue > 0)
+            {
+                AddThiefClientsCount();
+                //Process Theft Completed Event
+            }
+            SustractActiveClient();
+            MProductsStolen += customerData.GetStolenProductsCount;
+            MValuePurchased += customerData.GetPurchasedProductsCount;
+
             AddPurchase(customerData.PurchasedProductsValue);
+            AddStealAmount(customerData.StolenProductsValue);
+
+            CompleteClient();
+        }
+
+        private void AddThiefClientsCount()
+        {
+            MThiefClients++;
         }
     }
 }
