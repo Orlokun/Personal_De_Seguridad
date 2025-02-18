@@ -21,6 +21,8 @@ namespace UI
         [SerializeField] private TMP_Text earnings;
         [SerializeField] private TMP_Text losses;
         [SerializeField] private TMP_Text personalBudget;
+        [SerializeField] private TMP_Text playerStatus;
+        [SerializeField] private TMP_Text stress;
         [SerializeField] private TMP_Text health;
 
         [SerializeField] private GameObject horizontalInfoPanel;
@@ -95,7 +97,9 @@ namespace UI
         }
         private void UpdateProfileData()
         {
+            playerStatus.text = _mPlayerProfile.GetStatusModule().MPlayerStatus.ToString();
             personalBudget.text = _mPlayerProfile.GetStatusModule().PlayerOmniCredits.ToString();
+            stress.text = _mPlayerProfile.GetStatusModule().PlayerStress.ToString();
             health.text = _mPlayerProfile.GetStatusModule().PlayerHealth.ToString();
         }
         public void UpdateCustomerAdded(IBaseCustomer newCustomerCount)

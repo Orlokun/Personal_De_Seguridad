@@ -63,7 +63,7 @@ namespace GameDirection.TimeOfDayManagement
             set => _totalOmniCredits = value;
         }
 
-        public int MPlayerLvl => _mPlayerLvl;
+        public int MPlayerStatus => _mPlayerLvl;
         public int PlayerHealth => _health;
         public int PlayerStress => _stress;
         public int GameDifficulty => _mGameDifficulty;
