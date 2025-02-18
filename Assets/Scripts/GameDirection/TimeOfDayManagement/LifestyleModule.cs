@@ -61,7 +61,7 @@ namespace GameDirection.TimeOfDayManagement
         {
             _mUnlockedFoodList = new List<IFoodDataObject>();
             _mUnlockedFoodList = _foodValuesCatalogue.GetAllFoodDataObjects.FindAll(x =>
-                                x.GetUnlockLevel <= _activePlayer.GetStatusModule().PlayerOmniCredits);
+                                x.GetUnlockLevel <= _activePlayer.GetStatusModule().MPlayerLvl);
         }
         #endregion
 
@@ -85,6 +85,12 @@ namespace GameDirection.TimeOfDayManagement
         {
             _activePlayer = currentPlayerProfile;
             _currentRentType = RentTypesId.MOM_DAD;
+            UpdateFoodUnlockedList();
+            UpdateTransportUnlockedList();
+        }
+
+        public void PlayerLostResetData()
+        {
             UpdateFoodUnlockedList();
             UpdateTransportUnlockedList();
         }

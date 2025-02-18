@@ -73,7 +73,6 @@ namespace InputManagement.MouseInput
             if (Camera.main == null)
             {
                 Debug.LogWarning("[MouseInputManager.ConfirmMainCamera] A Camera must be available in scene for mouse to work");
-                return;
             }
             _mainCamera = Camera.main;
         }

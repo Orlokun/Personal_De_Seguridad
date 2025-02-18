@@ -94,6 +94,14 @@ namespace DataUnits.GameRequests
             var url = DataSheetUrls.BaseGameRequests;
             _mRequestModuleData.LoadRequestsData(url);
         }
+
+        public void PlayerLostResetData()
+        {
+            ActiveRequests.Clear();
+            CompletedRequests.Clear();
+            FailedRequests.Clear();
+        }
+
         #endregion
 
         public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId)

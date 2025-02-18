@@ -20,7 +20,6 @@ namespace GamePlayManagement
         public void UpdateDataEndOfDay();
         public IWorkDayObject GetCurrentWorkday();
         void PlayerLost(EndingTypes organSale);
-        void ResetData();
     }
 
     public interface IGameBasedPlayerData

@@ -28,7 +28,12 @@ namespace GameDirection.TimeOfDayManagement
             _health = 20;
             _mGameDifficulty = 1;
         }
-        
+
+        public void PlayerLostResetData()
+        {
+            ResetBaseData();
+        }
+
         public void PlayerLostGame(EndingTypes endingType)
         {
             var ending = (int)endingType;
@@ -38,12 +43,10 @@ namespace GameDirection.TimeOfDayManagement
                 return;
             }
             _mAllPlayedEndings += ending;
-            _mPlayerProfile.ResetData();
-            ResetBaseData();
         }
 
         //Must change depending oon meta game directions
-        public void ResetBaseData()
+        private void ResetBaseData()
         {
             _totalOmniCredits = 20000;
             _mPlayerLvl = 1;

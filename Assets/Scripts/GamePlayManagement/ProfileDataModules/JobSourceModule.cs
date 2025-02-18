@@ -9,9 +9,10 @@ namespace GamePlayManagement.ProfileDataModules
     public class JobSourceModule : IJobsSourcesModule
     {
         private IPlayerGameProfile _activePlayer;
-        private int _unlockedJobJobSuppliers = 0;
+        private int _mUnlockedJobSuppliers = 0;
         private int _archivedJobs = 0;
         private Dictionary<JobSupplierBitId, IJobSupplierObject> _mActiveJobSuppliers = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
+        private Dictionary<JobSupplierBitId, IJobSupplierObject> _mArchivedJobs = new Dictionary<JobSupplierBitId, IJobSupplierObject>();
         
         private int _mTotalDaysEmployed;
         private int _mDaysEmployedStreak;
@@ -19,8 +20,9 @@ namespace GamePlayManagement.ProfileDataModules
         private int _mDaysUnemployedStreak;
         private int _mStreakWithEmployer;
         
-        public int UnlockedJobSuppliers => _unlockedJobJobSuppliers;
+        public int MUnlockedJobSuppliers => _mUnlockedJobSuppliers;
         public Dictionary<JobSupplierBitId, IJobSupplierObject> ActiveJobObjects => _mActiveJobSuppliers;
+        public Dictionary<JobSupplierBitId, IJobSupplierObject> ArchivedJobs => _mArchivedJobs;
         private JobSupplierBitId _mCurrentActiveEmployer;
         public JobSupplierBitId CurrentEmployer => _mCurrentActiveEmployer;
         
@@ -55,7 +57,7 @@ namespace GamePlayManagement.ProfileDataModules
         {
             _mCurrentActiveEmployer = 0;
         }
-        public void StartFinishDay()
+        public void ProcessEndOfDay()
         {
             if (_mCurrentActiveEmployer == 0)
             {
@@ -71,24 +73,35 @@ namespace GamePlayManagement.ProfileDataModules
                 _mDaysUnemployedStreak = 0;
             }
         }
+        public void PlayerLostResetData()
+        {
+            _mStreakWithEmployer = 0;
+            _mDaysEmployedStreak = 0;
+            _mTotalDaysEmployed = 0;
+            _mDaysUnemployedStreak = 0;
+            foreach (var activeJobSupplier in _mActiveJobSuppliers)
+            {
+                activeJobSupplier.Value.PlayerLostResetData();
+            }
+        }
         public int TotalDaysEmployed => _mTotalDaysEmployed;
         public int DaysEmployedStreak => _mDaysEmployedStreak;
         public int TotalDaysUnemployed => _mTotalDaysUnemployed;
         public int DaysUnemployedStreak => _mDaysUnemployedStreak;
         public int StreakWithEmployer => _mStreakWithEmployer;
 
-        public bool IsModuleActive => _unlockedJobJobSuppliers > 0;
+        public bool IsModuleActive => _mUnlockedJobSuppliers > 0;
 
 
         private IBaseJobsCatalogue _jobsCatalogue;
 
         public void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier)
         {
-            if ((_unlockedJobJobSuppliers & (int) gainedJobSupplier) != 0)
+            if ((_mUnlockedJobSuppliers & (int) gainedJobSupplier) != 0)
             {
                 return;
             }
-            _unlockedJobJobSuppliers |= (int) gainedJobSupplier;
+            _mUnlockedJobSuppliers |= (int) gainedJobSupplier;
 
             if (_mActiveJobSuppliers.ContainsKey(gainedJobSupplier))
             {
@@ -108,11 +121,11 @@ namespace GamePlayManagement.ProfileDataModules
         public void ArchiveJob(JobSupplierBitId lostJobSupplier)
         {
             //Remove Job from active ones
-            if ((_unlockedJobJobSuppliers & (int) lostJobSupplier) == 0)
+            if ((_mUnlockedJobSuppliers & (int) lostJobSupplier) == 0)
             {
                 return;
             }
-            _unlockedJobJobSuppliers &= (int)~lostJobSupplier;
+            _mUnlockedJobSuppliers &= (int)~lostJobSupplier;
             
             //Add to archived jobs
             if ((_archivedJobs & (int) lostJobSupplier) != 0)
@@ -126,6 +139,8 @@ namespace GamePlayManagement.ProfileDataModules
         {
             _activePlayer = currentPlayerProfile;
         }
+
+
         #endregion
     }
 }

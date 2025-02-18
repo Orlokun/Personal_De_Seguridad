@@ -146,5 +146,9 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         {
             _activePlayer = currentPlayerProfile;
         }
+
+        public void PlayerLostResetData()
+        {
+        }
     }
 }

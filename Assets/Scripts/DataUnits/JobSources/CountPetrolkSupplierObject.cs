@@ -68,6 +68,11 @@ namespace DataUnits.JobSources
         {
             Debug.Log("CountPetrolkSupplierObject: ActivateChallenge");
         }
+
+        public override void PlayerLostResetData()
+        {
+            base.PlayerLostResetData();
+            _mDialogueState = CountPetrolkDialogueStates.WaitingForHire;
+        }
     }
-    
 }

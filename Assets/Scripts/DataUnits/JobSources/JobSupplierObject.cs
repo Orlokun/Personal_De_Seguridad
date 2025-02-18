@@ -52,6 +52,11 @@ namespace DataUnits.JobSources
         public string StoreType{ get; set; }
         public string StoreName{ get; set; }
         public string StoreOwnerName{ get; set; }
+        public virtual void PlayerLostResetData()
+        {
+            _mDaysAsEmployer = 0;
+        }
+
         public int Budget { get; set; }
         public int StoreUnlockPoints{ get; set; }
         public string StoreDescription{ get; set; }
@@ -159,7 +164,7 @@ namespace DataUnits.JobSources
         //TODO: Implement the call system with a class/interface argument for more better management 
         public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {
-            if (!BitOperator.IsActive(playerProfile.GetActiveJobsModule().UnlockedJobSuppliers, (int)JobSupplierBitId))
+            if (!BitOperator.IsActive(playerProfile.GetActiveJobsModule().MUnlockedJobSuppliers, (int)JobSupplierBitId))
             {
                 RandomDeflection();
             }

@@ -1,4 +1,5 @@
 using System.Collections;
+using GameDirection.TimeOfDayManagement;
 using InputManagement;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetSoundDirector.PlayAmbientSound();
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_02);
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(true);

@@ -114,8 +114,9 @@ namespace GameDirection.DayLevelSceneManagers
         protected override IEnumerator StartModularDialoguePreparations()
         {
             yield return new WaitForSeconds(1f);
-            MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.OfficeLvl);
-            
+            MGameDirector.GetLevelManager.ActivateScene(LevelIndexId.OfficeLvl);
+            MGameDirector.GetLevelManager.DeactivateScene(LevelIndexId.InitScene);
+
             /*
             //TODO: Remove EDEN LVL Load. TEST ADDITION
             MGameDirector.GetLevelManager.LoadAdditiveLevel(LevelIndexId.EdenLvl);
@@ -125,7 +126,6 @@ namespace GameDirection.DayLevelSceneManagers
             //End Remove
             */
             
-            MGameDirector.GetLevelManager.UnloadScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
             MGameDirector.GetUIController.ToggleBackground(false);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();

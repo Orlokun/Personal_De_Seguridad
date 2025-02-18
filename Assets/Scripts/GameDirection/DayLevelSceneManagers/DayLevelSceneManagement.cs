@@ -145,13 +145,12 @@ namespace GameDirection.DayLevelSceneManagers
 
         protected virtual void ManageLoadJobSupplierLevel(JobSupplierBitId supplierId)
         {
-            MGameDirector.GetLevelManager.ClearNotOfficeScenes();
             if (supplierId == 0)
             {
                 return;
             }
             var sceneToLoad = TurnJobSupplierIntoScene(supplierId);
-            MGameDirector.GetLevelManager.LoadAdditiveLevel(sceneToLoad);
+            MGameDirector.GetLevelManager.ActivateScene(sceneToLoad);
         }
 
         private LevelIndexId TurnJobSupplierIntoScene(JobSupplierBitId supplierId)

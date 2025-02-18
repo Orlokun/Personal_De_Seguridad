@@ -125,7 +125,7 @@ namespace GameDirection
         }
         private void LoadUIScene()
         {
-            _mLevelManager.LoadAdditiveLevel(LevelIndexId.UILvl);
+            _mLevelManager.ActivateScene(LevelIndexId.UILvl);
         }
         /// <summary>
         /// Start Function of the Game director is when all objects get Centralized
@@ -263,11 +263,11 @@ namespace GameDirection
         
         public async void PlayerLost(EndingTypes organSale)
         {
+            _mGeneralFader.GeneralCurtainAppear();
+            _mSoundDirector.StopRadio();            
             await Task.Delay(2500);
             _mActiveGameProfile.PlayerLost(organSale);
             _mUIController.DeactivateAllObjects();
-            _mSoundDirector.StopRadio();            
-            _mGeneralFader.GeneralCurtainAppear();
             ChangeHighLvlGameState(HighLevelGameStates.MainMenu);
             _mIGeneralGameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mLevelManager.ReturnToMainScreen();

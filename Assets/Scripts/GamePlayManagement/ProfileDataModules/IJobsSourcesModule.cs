@@ -8,13 +8,14 @@ namespace GamePlayManagement.ProfileDataModules
     {
         void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier);
         public void SetNewEmployer(JobSupplierBitId newEmployer);
-        public void StartFinishDay();
+        public void ProcessEndOfDay();
     }
 
     public interface IJobSourcesModuleData
     {
-        public int UnlockedJobSuppliers { get; }
+        public int MUnlockedJobSuppliers { get; }
         Dictionary<JobSupplierBitId, IJobSupplierObject> ActiveJobObjects { get; }
+        public Dictionary<JobSupplierBitId, IJobSupplierObject> ArchivedJobs { get; }
         public JobSupplierBitId CurrentEmployer { get; }
         public int TotalDaysEmployed { get; }
         public int DaysEmployedStreak { get; }

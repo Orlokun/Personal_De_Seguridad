@@ -41,7 +41,15 @@ namespace GamePlayManagement
             _mRequestModuleManager.SetProfile(this);
             
         }
-        
+        private void PlayerLostResetData()
+        {
+            _itemSuppliersModule.PlayerLostResetData();
+            _jobsSourcesModule.PlayerLostResetData();
+            _calendarModule.PlayerLostResetData();
+            _lifeStyleModule.PlayerLostResetData();
+            _gameStatusModule.PlayerLostResetData();
+            _mRequestModuleManager.PlayerLostResetData();
+        }
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
@@ -101,7 +109,7 @@ namespace GamePlayManagement
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
             foreach (var jobSupplierObject in jobSuppliersInData)
             {
-                if (BitOperator.IsActive(GetActiveJobsModule().UnlockedJobSuppliers, (int)jobSupplierObject.JobSupplierData.JobSupplierBitId))
+                if (BitOperator.IsActive(GetActiveJobsModule().MUnlockedJobSuppliers, (int)jobSupplierObject.JobSupplierData.JobSupplierBitId))
                 {
                     GetActiveJobsModule().UnlockJobSupplier(jobSupplierObject.JobSupplierData.JobSupplierBitId);
                 }
@@ -143,7 +151,7 @@ namespace GamePlayManagement
         }
         public void UpdateDataEndOfDay()
         {
-            _jobsSourcesModule.StartFinishDay();
+            _jobsSourcesModule.ProcessEndOfDay();
         }
 
         public IWorkDayObject GetCurrentWorkday()
@@ -154,11 +162,7 @@ namespace GamePlayManagement
         public void PlayerLost(EndingTypes organSale)
         {
             _gameStatusModule.PlayerLostGame(organSale);
-        }
-
-        public void ResetData()
-        {
-            
+            PlayerLostResetData();
         }
     }
 }

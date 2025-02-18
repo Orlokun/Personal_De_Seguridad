@@ -35,6 +35,7 @@ namespace DataUnits.ItemSources
         public int StorePhoneNumber { get; set; }
         public string StoreName { get; set; }
         public string StoreOwnerName { get; set; }
+
         public string StoreDescription { get; set; }
         public BitItemSupplier ItemSupplierId { get; set; }
         public int ItemTypesAvailable { get; set; }
@@ -69,6 +70,10 @@ namespace DataUnits.ItemSources
         {
             GetImportantAndInsistenceDialogues();
         }
+        public void PlayerLostResetData()
+        {
+            
+        }
 
         public void InitializeStore(IItemSupplierShop shop)
         {
@@ -97,6 +102,9 @@ namespace DataUnits.ItemSources
             }
         }
 
+        /// <summary>
+        /// TODO: Implement Item Suppliers Dialogue Choose Logic
+        /// </summary>
         private async void GetCurrentUnlockedCall()
         {
             Debug.LogWarning("[GetCurrentCallAnswer] UNLOCKED STORE CALL");

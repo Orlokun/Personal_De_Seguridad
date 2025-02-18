@@ -38,8 +38,9 @@ namespace CameraManagement
         private Transform _officeCamerasParent;
         
         [SerializeField] private Transform dialogueCamerasParent;
+        [SerializeField] private Camera _mMainCamera;
 
-
+        
         private Dictionary<int, GameObject> _mOfficeCameras;
         private Dictionary<int, GameObject> _mLevelCameras;
         //Currently active Cameras
@@ -223,6 +224,7 @@ namespace CameraManagement
                 Destroy(this);
             }
             DontDestroyOnLoad(this);
+            DontDestroyOnLoad(_mMainCamera);
             instance = this;
             _mCurrentCameraState = GameCameraState.MainMenu;
             _mCurrentCameraIndex = 0;

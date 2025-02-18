@@ -89,5 +89,13 @@ namespace GameDirection.TimeOfDayManagement
         {
             _activePlayer = currentPlayerProfile;
         }
+
+        public void PlayerLostResetData()
+        {
+            _currentDayId = DayBitId.Day_01;
+            _currentTimeOfDay = PartOfDay.EarlyMorning;
+            PopulateNewWorkdays();
+            _currentDayObject = _AllWorkDays[_currentDayId];
+        }
     }
 }
