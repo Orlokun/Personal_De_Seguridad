@@ -8,7 +8,6 @@ namespace GamePlayManagement.LevelManagement
     {
         public void ActivateScene(LevelIndexId lvl);
         public void DeactivateScene(LevelIndexId lvl);
-        public void ClearNotOfficeScenes();
         public void ReturnToMainScreen();
     }
 
@@ -107,17 +106,6 @@ namespace GamePlayManagement.LevelManagement
             }
         }
 
-        public void ClearNotOfficeScenes()
-        {
-            for (int i = 0; i < SceneManager.sceneCount; i++)
-            {
-                var scene = SceneManager.GetSceneByBuildIndex(i);
-                if (scene.isLoaded && scene.name != "OfficeScene" && scene.name != "UI_Scene")
-                {
-                    SceneManager.UnloadSceneAsync(i);
-                }
-            }
-        }
         public void ReturnToMainScreen()
         {
             for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)

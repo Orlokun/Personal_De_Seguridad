@@ -56,6 +56,9 @@ namespace UI
         {
             if (_mPlayerProfile.GetActiveJobsModule().CurrentEmployer == 0)
             {
+                budget.text = "0";
+                earnings.text = "0";
+                losses.text = "0";
                 return;
             }
             var employerData = _mPlayerProfile.GetActiveJobsModule().CurrentEmployerData();

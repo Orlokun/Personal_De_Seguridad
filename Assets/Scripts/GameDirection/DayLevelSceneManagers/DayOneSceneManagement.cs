@@ -139,7 +139,6 @@ namespace GameDirection.DayLevelSceneManagers
             //MGameDirector.GetCustomerInstantiationManager.LoadCustomerLevelStartTransforms();
             yield return new WaitForSeconds(2.5f);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.OfficeMidScene);
-            MGameDirector.GetUIController.InitializeBaseInfoCanvas(MGameDirector.GetActiveGameProfile);
             MGameDirector.GetDialogueOperator.StartNewDialogue(DayBaseDialogues[DialogueIndex]);
             //OnFinishCurrentDialogueEvent();
         }

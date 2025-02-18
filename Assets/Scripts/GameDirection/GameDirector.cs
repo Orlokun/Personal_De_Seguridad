@@ -235,7 +235,8 @@ namespace GameDirection
             _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
             //_mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
             _mActiveGameProfile.UpdateProfileData();
-            //GetUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
+            _mUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
+            _mUIController.UpdateInfoUI();
             OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
         }
         
@@ -271,6 +272,7 @@ namespace GameDirection
             ChangeHighLvlGameState(HighLevelGameStates.MainMenu);
             _mIGeneralGameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mLevelManager.ReturnToMainScreen();
+            _mUIController.UpdateInfoUI();
             _mUIController.StartMainMenuUI();
             await WaitAndOpenCurtain();
         }
