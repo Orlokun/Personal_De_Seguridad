@@ -17,7 +17,7 @@ namespace DataUnits.JobSources
         
         //Stats related
         //TODO: This stats should be in data
-        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money);
+        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money, string spriteName);
         public int Sanity { get; }
         public int Kindness { get; }
         public int Violence { get; }

@@ -66,7 +66,11 @@ namespace DataUnits.ItemSources
         public int Quality => _mQuality;
         public int Kindness => _mKindness;
         public int OmniCredits => _mOmniCredits;
-        public string SpriteName => _mSpriteName;
+        public string SpriteName
+        {
+            get => _mSpriteName;
+        }
+
         public void StartUnlockedData()
         {
             GetImportantAndInsistenceDialogues();

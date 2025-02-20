@@ -139,6 +139,7 @@ namespace DataUnits.GameCatalogues
                 var gotViolence = int.TryParse(_jobsData.values[i][12], out var violence);
                 var gotIntelligence = int.TryParse(_jobsData.values[i][13], out var intelligence);
                 var gotMoney = int.TryParse(_jobsData.values[i][14], out var money);
+                var spriteName = _jobsData.values[i][15];
                 
                 if (!gotSanity || !gotKindness || !gotViolence || !gotIntelligence || !gotMoney)
                 {
@@ -146,10 +147,9 @@ namespace DataUnits.GameCatalogues
                 }
                 else
                 {
-                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, money);
+                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, money, spriteName);
                 }
-                var spriteName = _jobsData.values[i][15];
-                jobSupplier.JobSupplierData.SpriteName = spriteName;
+
                 
                 var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
                 jobSupplier.JobSupplierData.StoreOwnerAge = ownerAge;

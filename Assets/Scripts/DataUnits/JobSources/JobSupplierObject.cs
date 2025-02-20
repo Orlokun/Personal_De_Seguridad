@@ -66,7 +66,7 @@ namespace DataUnits.JobSources
         public int StorePhoneNumber{ get; set; }
         public int StoreOwnerAge{ get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
-        public string SpriteName { get; set; }
+        public string SpriteName => _mSupplierData.SpriteName;
 
         public int Sanity => _mSanity;
         public int Kindness => _mKindness;
@@ -110,13 +110,14 @@ namespace DataUnits.JobSources
         private int _mMoney;
 
         ///Store Stats
-        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money)
+        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money, string spriteName)
         {
             _mSanity = sanity;
             _mKindness = kindness;
             _mViolence = violence;
             _mIntelligence = intelligence;
             _mMoney = money;
+            _mSupplierData.SpriteName = spriteName;
         }
         #endregion
 
