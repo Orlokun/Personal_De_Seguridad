@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.RequestParameters;
-using NUnit.Framework;
 
 namespace DataUnits.GameRequests
 {
@@ -27,17 +26,9 @@ namespace DataUnits.GameRequests
     
     public interface IPenaltyData
     {
-        public PenaltyTypes RewardType { get; }
+        public RewardTypes RewardType { get; }
         public int RewardValue { get; }
     }
-
-    public enum PenaltyTypes
-    {
-        OmniCredits,
-        Seniority,
-        Trust
-    }
-
 
     public enum RewardTypes
     {
@@ -97,7 +88,21 @@ namespace DataUnits.GameRequests
 
         private void ProcessPenalties(string[] penalties)
         {
-            throw new System.NotImplementedException();
+            for (int i = 0; i < penalties.Length; i++)
+            {
+                var isRewardType = Enum.TryParse(penalties[0], out RewardTypes rewardType);
+                if (!isRewardType)
+                {
+                    continue;
+                }
+                //TODO: use different parameters for rewards. Some need more info. Review.
+                var reward = CreatePenalties(rewardType, penalties);
+            }        
+        }
+
+        private object CreatePenalties(RewardTypes rewardType, string[] penalties)
+        {
+            throw new NotImplementedException();
         }
 
         private void ProcessRewards(string[] rewards)
