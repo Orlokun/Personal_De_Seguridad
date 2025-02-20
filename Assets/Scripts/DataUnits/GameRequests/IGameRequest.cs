@@ -1,4 +1,5 @@
-﻿using DialogueSystem;
+﻿using System.Collections.Generic;
+using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 
@@ -13,5 +14,7 @@ namespace DataUnits.GameRequests
         public bool IsCompleted { get; }
         public void MarkAsCompleted();
         public RequirementActionType ChallengeActionType { get; }
+        public Dictionary<RewardTypes,IRewardData> Rewards { get; }
+        public Dictionary<RewardTypes,IRewardData> Penalties { get; }
     }
 }

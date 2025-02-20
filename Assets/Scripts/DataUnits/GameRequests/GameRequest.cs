@@ -1,4 +1,5 @@
-﻿using DialogueSystem;
+﻿using System.Collections.Generic;
+using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 
@@ -25,5 +26,7 @@ namespace DataUnits.GameRequests
             MRequestData.CompleteChallenge();
         }
         public RequirementActionType ChallengeActionType => MRequestData.ChallengeType;
+        public Dictionary<RewardTypes, IRewardData> Rewards => MRequestData.Rewards;
+        public Dictionary<RewardTypes, IRewardData> Penalties => MRequestData.Penalties;
     }
 }

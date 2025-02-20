@@ -1,5 +1,4 @@
 ﻿using System;
-using DialogueSystem;
 using DialogueSystem.Units;
 using GamePlayManagement;
 using UnityEngine;
@@ -21,5 +20,6 @@ namespace DataUnits.JobSources
         }
 
         public int StoreHighestUnlockedDialogue => 0;
+        public string SpriteName { get; set; }
     }
 }

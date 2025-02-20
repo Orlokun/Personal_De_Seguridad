@@ -46,7 +46,7 @@ namespace DataUnits.ItemSources
 
 
         public int StoreHighestUnlockedDialogue { get; }
-        
+
         public int StoreHighestLockedDialogue { get; }
         
         private Dictionary<int, IDialogueObject> _mImportantDialoguesDict = new Dictionary<int, IDialogueObject>();
@@ -365,7 +365,6 @@ namespace DataUnits.ItemSources
         public int Quality { get; }
         public int Kindness { get; }
         public int OmniCredits { get; }
-        public string SpriteName { get; }
         public void StartUnlockedData();
         public void InitializeStore(IItemSupplierShop shop);
     }

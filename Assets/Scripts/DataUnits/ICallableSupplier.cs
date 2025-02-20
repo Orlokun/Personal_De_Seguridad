@@ -10,6 +10,7 @@ namespace DataUnits
         public DialogueSpeakerId SpeakerIndex { get; set; }
         public void ReceivePlayerCall(IPlayerGameProfile playerData);
         public int StoreHighestUnlockedDialogue { get;}
+        public string SpriteName { get; }
 
     }
 }
