@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DialogueSystem;
+using DialogueSystem.Units;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;

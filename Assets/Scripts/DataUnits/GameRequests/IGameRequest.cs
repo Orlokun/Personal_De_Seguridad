@@ -1,4 +1,5 @@
 ﻿using DialogueSystem;
+using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 
 namespace DataUnits.GameRequests

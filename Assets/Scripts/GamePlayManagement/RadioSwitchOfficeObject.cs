@@ -1,4 +1,5 @@
 ﻿using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameDirection;
 using InputManagement.MouseInput;
 using UnityEngine;

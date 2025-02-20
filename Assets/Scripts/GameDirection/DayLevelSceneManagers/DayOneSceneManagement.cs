@@ -1,5 +1,6 @@
 using System.Collections;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;

@@ -7,6 +7,7 @@ using DataUnits.GameCatalogues;
 using DataUnits.JobSources;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;

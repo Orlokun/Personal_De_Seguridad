@@ -17,10 +17,12 @@ namespace DataUnits.GameRequests
         public int ItemId => _mItemBitId;
         
         
-        public UseGameRequest(int requesterSpeakId, int reqId, string reqTitle, 
-            string reqDescription, RequirementActionType mChallengeType, RequirementObjectType objectTypeRequired, 
-            RequirementLogicEvaluator mReqLogic, RequirementConsideredParameter mReqParameterType, BitItemSupplier itemOwner, int itemBitId, int quantity) 
-            : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, quantity)
+        public UseGameRequest(int requesterSpeakId, int reqId, string reqTitle, string reqDescription, 
+            RequirementActionType mChallengeType, RequirementObjectType objectTypeRequired, RequirementLogicEvaluator mReqLogic,
+            RequirementConsideredParameter mReqParameterType, BitItemSupplier itemOwner, int itemBitId, 
+            int quantity, string[] rewards, string[] penalties) 
+            : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, 
+                mReqParameterType, quantity, rewards, penalties)
         {
             _mItemOwner = itemOwner;
             _mItemBitId = itemBitId;

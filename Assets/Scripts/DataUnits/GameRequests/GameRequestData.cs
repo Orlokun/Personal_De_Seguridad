@@ -1,8 +1,51 @@
-﻿using DialogueSystem;
+﻿using System;
+using System.Collections.Generic;
+using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.RequestParameters;
+using NUnit.Framework;
 
 namespace DataUnits.GameRequests
 {
+    public struct RewardData : IRewardData
+    {
+        private RewardTypes _mRewardType;
+        private int _mRewardValue;
+        public RewardTypes RewardType => _mRewardType;
+        public int RewardValue => _mRewardValue;
+        public RewardData(RewardTypes rewardType, int rewardValue)
+        {
+            _mRewardType = rewardType;
+            _mRewardValue = rewardValue;
+        }
+    }
+
+    public interface IRewardData
+    {
+        public RewardTypes RewardType { get; }
+        public int RewardValue { get; }
+    }
+    
+    public interface IPenaltyData
+    {
+        public PenaltyTypes RewardType { get; }
+        public int RewardValue { get; }
+    }
+
+    public enum PenaltyTypes
+    {
+        OmniCredits,
+        Seniority,
+        Trust
+    }
+
+
+    public enum RewardTypes
+    {
+        OmniCredits,
+        Seniority,
+        Trust
+    }
+    
     public interface IGameRequestData
     {
         public DialogueSpeakerId RequesterSpeakerId{ get; }
@@ -31,10 +74,13 @@ namespace DataUnits.GameRequests
         private RequirementConsideredParameter _mReqParameterType;
         private string[] _mReqParameterValue;
         private bool _mIsCompleted;
+        
+        private List<IRewardData> _mRewards;
+        private List<IRewardData> _mPenalties;
 
         public GameRequestData(int mRequesterSpeakerId, int mRequestId, string mReqTitle, string mReqDescription,
             RequirementActionType mChallengeType, RequirementObjectType mChallengeObjectType, RequirementLogicEvaluator mReqLogic,
-            RequirementConsideredParameter mReqParameterType, int quantity)
+            RequirementConsideredParameter mReqParameterType, int quantity, string[] rewards, string[] penalties)
         {
             _mRequesterSpeakerId = (DialogueSpeakerId)mRequesterSpeakerId;
             _mRequestId = mRequestId;
@@ -45,6 +91,33 @@ namespace DataUnits.GameRequests
             _mReqLogic = mReqLogic;
             _mReqParameterType = mReqParameterType;
             _mReqQuantity = quantity;
+            ProcessRewards(rewards);
+            ProcessPenalties(penalties);
+        }
+
+        private void ProcessPenalties(string[] penalties)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void ProcessRewards(string[] rewards)
+        {
+            for (int i = 0; i < rewards.Length; i++)
+            {
+                var isRewardType = Enum.TryParse(rewards[0], out RewardTypes rewardType);
+                if (!isRewardType)
+                {
+                    continue;
+                }
+                //TODO: use different parameters for rewards. Some need more info. Review.
+                var reward = CreateRewards(rewardType, int.Parse(rewards[1]));
+            }
+        }
+        
+        //TODO: use different parameters for rewards. Some need more info. Review.
+        private IRewardData CreateRewards(RewardTypes rewType, int rewValue)
+        {
+            return new RewardData(rewType, rewValue);
         }
 
         public DialogueSpeakerId RequesterSpeakerId => _mRequesterSpeakerId;

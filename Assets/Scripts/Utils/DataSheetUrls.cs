@@ -1,5 +1,6 @@
 using DataUnits.JobSources;
 using DialogueSystem;
+using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;

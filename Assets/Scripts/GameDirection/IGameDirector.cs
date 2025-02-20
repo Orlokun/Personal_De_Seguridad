@@ -5,6 +5,7 @@ using DataUnits.GameCatalogues;
 using DataUnits.GameRequests;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;

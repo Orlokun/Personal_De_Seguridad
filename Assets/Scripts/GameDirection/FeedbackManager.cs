@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DataUnits;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using Newtonsoft.Json;
 using TMPro;
 using UI.PopUpManager.OfficeRelatedPopUps;

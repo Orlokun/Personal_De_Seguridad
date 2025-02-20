@@ -7,10 +7,12 @@ namespace DataUnits.GameRequests
     {
         private JobSupplierBitId _mSupplierRequired;
         public JobSupplierBitId JobHireObjective => _mSupplierRequired;
-        public HireGameRequest(int requesterSpeakId, int reqId, string reqTitle, 
-            string reqDescription, RequirementActionType mChallengeType, RequirementObjectType objectTypeRequired, 
-            RequirementLogicEvaluator mReqLogic, RequirementConsideredParameter mReqParameterType, JobSupplierBitId mSupplierRequired, int quantity) 
-            : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, quantity)
+        public HireGameRequest(
+            int requesterSpeakId, int reqId, string reqTitle, string reqDescription, RequirementActionType mChallengeType,
+            RequirementObjectType objectTypeRequired, RequirementLogicEvaluator mReqLogic, RequirementConsideredParameter mReqParameterType, 
+            JobSupplierBitId mSupplierRequired, int quantity, string[] rewards, string[] penalties) 
+            : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, 
+                mReqParameterType, quantity, rewards, penalties)
         {
             _mSupplierRequired = mSupplierRequired;
         }

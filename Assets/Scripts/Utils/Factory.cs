@@ -201,49 +201,49 @@ namespace Utils
         #region Game Requests
         public static IGameRequest CreateGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription, RequirementActionType requestType, 
             RequirementObjectType requiredObjectType, RequirementLogicEvaluator requirementLogicEvaluator, 
-            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity, string[] rewards, string[] punishment)
         {
             switch (requestType)
             {
                 case RequirementActionType.Hire:
                     return CreateHireGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, requestParameterValue, quantity);
+                        requestParameterType, requestParameterValue, quantity, rewards, punishment);
                 case RequirementActionType.Use:
                     return CreateUseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, requestParameterValue, quantity);
+                        requestParameterType, requestParameterValue, quantity, rewards, punishment);
                 case RequirementActionType.NotUse:
                     return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, quantity);
+                        requestParameterType, quantity, rewards, punishment);
                 case RequirementActionType.Trap:
                     return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, quantity);
+                        requestParameterType, quantity, rewards, punishment);
                 default:
                     return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, quantity);
+                        requestParameterType, quantity, rewards, punishment);
             }
         }
             
         private static IHireGameRequest CreateHireGameRequest(int speakerId, int reqId, string reqTitle, string reqDescription,
             RequirementActionType requestType, RequirementObjectType requiredObjectType, RequirementLogicEvaluator requirementLogicEvaluator, 
-            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity, string[] rewards, string[] punishment)
         {
             int intSupplierId = int.Parse(requestParameterValue[0]);
             JobSupplierBitId jobSupplierBitId = (JobSupplierBitId)intSupplierId;
             return new HireGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                requestParameterType, jobSupplierBitId, quantity);
+                requestParameterType, jobSupplierBitId, quantity, rewards, punishment);
         }
 
         private static IUseGameRequest CreateUseGameRequest(int speakerId, int reqId, string reqTitle,
             string reqDescription,
             RequirementActionType requestType, RequirementObjectType requiredObjectType,
             RequirementLogicEvaluator requirementLogicEvaluator,
-            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity)
+            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity, string[] rewards, string[] punishment)
         {
             var itemSupplier = int.Parse(requestParameterValue[0]);
             var itemId = int.Parse(requestParameterValue[1]);
             var itemSupplierId = (BitItemSupplier)itemSupplier;
             return new UseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                requestParameterType, itemSupplierId, itemId, quantity);
+                requestParameterType, itemSupplierId, itemId, quantity, rewards, punishment);
         }
         
         

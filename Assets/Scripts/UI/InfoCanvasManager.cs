@@ -9,9 +9,6 @@ namespace UI
 {
     public interface IInfoCanvasManager : IInitializeWithArg1<IPlayerGameProfile>
     {
-        public void UpdateBudget(int newIncome);
-        public void UpdateEarnings(int newEarnings);
-        public void UpdateLosses(int newLosses);
         public void UpdateInfo();
     }
     public class InfoCanvasManager : MonoBehaviour, IInfoCanvasManager, ICustomerManagementObserver
@@ -46,7 +43,7 @@ namespace UI
             {
                 return;
             }
-            var customerManager = (ICustomersInSceneManager)FindObjectOfType <CustomersInSceneManager>();
+            var customerManager = (ICustomersInSceneManager)FindFirstObjectByType<CustomersInSceneManager>();
             customerManager.RegisterObserver(this);
             
             _mPlayerProfile = injectionClass;
@@ -75,20 +72,6 @@ namespace UI
             activeCustomers.text = newActiveCustomers.ToString();
         }
         
-        public void UpdateBudget(int newIncome)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UpdateEarnings(int newEarnings)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void UpdateLosses(int newLosses)
-        {
-            throw new System.NotImplementedException();
-        }
 
         public void UpdateInfo()
         {

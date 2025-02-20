@@ -1,6 +1,7 @@
 using DataUnits.GameCatalogues;
 using DataUnits.ItemSources;
 using DataUnits.JobSources;
+using DialogueSystem.Phone;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UI.PopUpManager;
 using UI.PopUpManager.InfoPanelPopUp;

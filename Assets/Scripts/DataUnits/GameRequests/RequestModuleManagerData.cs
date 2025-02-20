@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
-using DialogueSystem;
+using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using Newtonsoft.Json;
@@ -129,8 +129,11 @@ namespace DataUnits.GameRequests
                 var requirementValues = _mRequestsCatalogue.values[i][8].Split(',');
                 var hasQuantity = int.TryParse(_mRequestsCatalogue.values[i][9], out var quantity);
                 
+                var rewardValues = _mRequestsCatalogue.values[i][10].Split('|');
+                var punishmentValues = _mRequestsCatalogue.values[i][11].Split('|');
+                
                 var finalRequest = Factory.CreateGameRequest(speakerId, requestId, requestTitle, requestDescription, requestType, 
-                    requestObject, requestLogic, requestParameter, requirementValues, quantity);
+                    requestObject, requestLogic, requestParameter, requirementValues, quantity, rewardValues, punishmentValues);
                 _mBaseRequestsData[(DialogueSpeakerId)speakerId].Add(finalRequest);
             }
             Debug.Log($"[LoadRentDataFromJson]Finished parsing process for LoadRequestsCatalogue. Number of Requests is {requestCount}");

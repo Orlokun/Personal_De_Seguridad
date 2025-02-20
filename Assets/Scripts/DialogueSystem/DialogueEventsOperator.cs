@@ -1,5 +1,6 @@
 using System;
 using DialogueSystem.Interfaces;
+using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;

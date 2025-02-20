@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DialogueSystem;
+using DialogueSystem.Units;
 using GamePlayManagement.Players_NPC;
 using Utils;
 

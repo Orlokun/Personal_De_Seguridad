@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DataUnits.GameRequests;
 using DialogueSystem;
+using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement;
 using UI.TabManagement.AbstractClasses;

@@ -1,3 +1,5 @@
+using DialogueSystem.Units;
+
 namespace DialogueSystem.Interfaces
 {
     public interface IGeneralFeedbackObject

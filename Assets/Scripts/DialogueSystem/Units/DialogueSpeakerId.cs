@@ -1,4 +1,4 @@
-namespace DialogueSystem
+namespace DialogueSystem.Units
 {
     public enum DialogueSpeakerId
     {
