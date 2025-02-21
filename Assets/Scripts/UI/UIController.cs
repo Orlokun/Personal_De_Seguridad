@@ -15,11 +15,12 @@ namespace UI
 {
     public enum CanvasBitId
     {
-        BaseCanvas = 1,
-        GamePlayCanvas = 2,
-        Office = 4,
-        MainMenu = 8,
-        EndOfDay = 16
+        None = 0,
+        BaseCanvas = 1<<0,
+        GamePlayCanvas = 1<<1,
+        Office = 1<< 2,
+        MainMenu = 1 <<3,
+        EndOfDay = 1<<4
     }
 
     public interface IUIController

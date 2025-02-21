@@ -1,5 +1,6 @@
 using System;
 using DataUnits.GameRequests;
+using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.ProfileDataModules;
@@ -20,6 +21,7 @@ namespace GamePlayManagement
         public void UpdateDataEndOfDay();
         public IWorkDayObject GetCurrentWorkday();
         void PlayerLost(EndingTypes organSale);
+        void AddFondnessToActiveSupplier(ITrustRewardData trustRewardData);
     }
 
     public interface IGameBasedPlayerData

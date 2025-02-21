@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 5435912599039626856}
   - component: {fileID: 1135214016879516959}
   - component: {fileID: 3823524611028949064}
-  - component: {fileID: 1350648242585952004}
+  - component: {fileID: 8843145840682685783}
   m_Layer: 5
   m_Name: NBVTab_Button
   m_TagString: Untagged
@@ -389,7 +389,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 9.674988, y: -15.730011}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -1099, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5435912599039626862
 CanvasRenderer:
@@ -503,12 +503,12 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 64
+  m_PreferredWidth: -1
   m_PreferredHeight: 64
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &1350648242585952004
+--- !u!114 &8843145840682685783
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -520,5 +520,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 2
+  m_HorizontalFit: 0
   m_VerticalFit: 2

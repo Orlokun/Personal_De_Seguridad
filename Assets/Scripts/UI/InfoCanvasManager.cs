@@ -80,7 +80,7 @@ namespace UI
         }
         private void UpdateProfileData()
         {
-            playerStatus.text = _mPlayerProfile.GetStatusModule().MPlayerStatus.ToString();
+            playerStatus.text = _mPlayerProfile.GetStatusModule().MPlayerSeniority.ToString();
             personalBudget.text = _mPlayerProfile.GetStatusModule().PlayerOmniCredits.ToString();
             stress.text = _mPlayerProfile.GetStatusModule().PlayerStress.ToString();
             health.text = _mPlayerProfile.GetStatusModule().PlayerHealth.ToString();

@@ -1,4 +1,5 @@
-﻿using GamePlayManagement.BitDescriptions.RequestParameters;
+﻿using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace DataUnits.GameRequests
@@ -20,9 +21,9 @@ namespace DataUnits.GameRequests
         public UseGameRequest(int requesterSpeakId, int reqId, string reqTitle, string reqDescription, 
             RequirementActionType mChallengeType, RequirementObjectType objectTypeRequired, RequirementLogicEvaluator mReqLogic,
             RequirementConsideredParameter mReqParameterType, BitItemSupplier itemOwner, int itemBitId, 
-            int quantity, string[] rewards, string[] penalties) 
+            int quantity, string[] rewards, string[] penalties, DayBitId targetDayId, PartOfDay targetPartOfDay) 
             : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, 
-                mReqParameterType, quantity, rewards, penalties)
+                mReqParameterType, quantity, rewards, penalties, targetDayId, targetPartOfDay)
         {
             _mItemOwner = itemOwner;
             _mItemBitId = itemBitId;

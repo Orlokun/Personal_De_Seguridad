@@ -61,7 +61,7 @@ namespace GameDirection.TimeOfDayManagement
         {
             _mUnlockedFoodList = new List<IFoodDataObject>();
             _mUnlockedFoodList = _foodValuesCatalogue.GetAllFoodDataObjects.FindAll(x =>
-                                x.GetUnlockLevel <= _activePlayer.GetStatusModule().MPlayerStatus);
+                                x.GetUnlockLevel <= _activePlayer.GetStatusModule().MPlayerSeniority);
         }
         #endregion
 

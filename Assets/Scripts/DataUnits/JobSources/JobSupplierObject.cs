@@ -8,7 +8,6 @@ using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.Players_NPC;
 using UnityEngine;
 using Utils;
 using Random = UnityEngine.Random;
@@ -27,11 +26,11 @@ namespace DataUnits.JobSources
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject
     {
-        protected IJobSupplierChallengesModule _challengesModule;
         protected IJobSupplierDialogueModule _dialogueModule;
         protected IJobSupplierProductsModule _productsModuleModule;
         protected IJobSupplierObjectData _mSupplierData;
-        protected IRequestModule _mRequestsModule;
+        
+        protected int MFondness = 0;
 
         
         #region Constructor & API
@@ -41,9 +40,13 @@ namespace DataUnits.JobSources
             _mSupplierData.JobSupplierBitId = id;
             _dialogueModule = new JobSupplierDialogueModule(this);
             _productsModuleModule = new JobSupplierProductsModule(this);
-            _mRequestsModule = new RequestModule(speakerId);
         }
 
+        public void AddFondness(int amount)
+        {
+            MFondness += amount;
+        }
+        
         public virtual void PlayerHired()
         {
             Debug.LogWarning("[JobSupplierObject.PlayerHired] Should not use virtual method. Use override method instead.");
@@ -82,7 +85,6 @@ namespace DataUnits.JobSources
         }
 
         public IJobSupplierProductsModule JobProductsModule => _productsModuleModule;
-        public IRequestModule JobRequestsModule => _mRequestsModule;
 
         public void LoadDeflectionDialoguesData()
         {
@@ -124,9 +126,7 @@ namespace DataUnits.JobSources
         #region Members
         public int StoreHighestUnlockedDialogue => _mStoreHighestUnlockedDialogue;
         private int _mStoreHighestUnlockedDialogue;
-
         public string SpeakerName => StoreOwnerName;
-        public string SpeakerImageString { get; }
         
         #endregion
 
@@ -212,10 +212,10 @@ namespace DataUnits.JobSources
         {
             throw new NotImplementedException();
         }
-    }
 
-    public interface IJobSupplierChallengesModule
-    {
-        
+        public void ReceiveFondness(int amount)
+        {
+            MFondness += amount;
+        }
     }
 }

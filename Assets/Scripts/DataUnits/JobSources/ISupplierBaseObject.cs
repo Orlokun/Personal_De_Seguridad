@@ -1,6 +1,6 @@
 namespace DataUnits.JobSources
 {
-    public interface ISupplierBaseObject
+    public interface ISupplierBaseObject : IFondnessCharacter
     {
         public int StorePhoneNumber { get; set; }
         public string StoreName { get; set; }

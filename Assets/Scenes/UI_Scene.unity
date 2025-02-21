@@ -628,6 +628,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 304058848, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 304058848, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 304058848, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 304058848, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1289329552, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -723,11 +739,51 @@ PrefabInstance:
     - target: {fileID: 2047007395, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173708743079473577, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2173708743079473577, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2625520810634306986, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: _audioSource
       value: 
       objectReference: {fileID: 742323962490797165}
+    - target: {fileID: 5260074949110247060, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_ChildControlHeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949110247061, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5260074949132368562, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -812,6 +868,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: OfficeCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5260074949935078251, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5260074949935078251, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5260074949935078259, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: 'officeFadeInElements.Array.data[0]'
       value: 
@@ -831,6 +895,18 @@ PrefabInstance:
     - target: {fileID: 5260074949935078259, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
       propertyPath: 'officeFadeInElements.Array.data[4]'
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7416446414112062137, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.425
+      objectReference: {fileID: 0}
+    - target: {fileID: 7416446414112062137, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7416446414112062137, guid: f17dec9aa7fdeb142b9251d829483d0b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

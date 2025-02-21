@@ -10,7 +10,7 @@ namespace GameDirection.TimeOfDayManagement
     {
         private int _totalOmniCredits;
         [Range(-100,100)]
-        private int _mPlayerLvl;
+        private int _mPlayerSeniority;
         [Range(-100,100)]
         private int _health;
         private int _stress;
@@ -23,8 +23,8 @@ namespace GameDirection.TimeOfDayManagement
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)
         {
             _mPlayerProfile = currentPlayerProfile;
-            _totalOmniCredits = 20000;
-            _mPlayerLvl = 1;
+            _totalOmniCredits = 35;
+            _mPlayerSeniority = 1;
             _health = 20;
             _mGameDifficulty = 1;
         }
@@ -49,7 +49,7 @@ namespace GameDirection.TimeOfDayManagement
         private void ResetBaseData()
         {
             _totalOmniCredits = 20000;
-            _mPlayerLvl = 1;
+            _mPlayerSeniority = 1;
             _health = 20;
             _mGameDifficulty = 1;
         }
@@ -63,7 +63,7 @@ namespace GameDirection.TimeOfDayManagement
             set => _totalOmniCredits = value;
         }
 
-        public int MPlayerStatus => _mPlayerLvl;
+        public int MPlayerSeniority => _mPlayerSeniority;
         public int PlayerHealth => _health;
         public int PlayerStress => _stress;
         public int GameDifficulty => _mGameDifficulty;
@@ -73,6 +73,16 @@ namespace GameDirection.TimeOfDayManagement
             var health = cigarCost.Item2;
             _totalOmniCredits -= price;
             _health -= health;
+        }
+
+        public void ReceiveOmniCredits(int amount)
+        {
+            _totalOmniCredits += amount;
+        }
+
+        public void ReceiveSeniority(int amount)
+        {
+            _mPlayerSeniority += amount;
         }
     }
 }

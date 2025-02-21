@@ -355,6 +355,13 @@ namespace DataUnits.ItemSources
         }
 
         #endregion
+
+        public void ReceiveFondness(int amount)
+        {
+            _mFondness += amount;
+        }
+
+        private int _mFondness = 0;
     }
 
     public interface IItemSupplierDataObject : ISupplierBaseObject, ICallableSupplier

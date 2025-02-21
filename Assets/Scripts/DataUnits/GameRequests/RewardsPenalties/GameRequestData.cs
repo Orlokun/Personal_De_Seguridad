@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using DialogueSystem.Units;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using UnityEngine;
 
 namespace DataUnits.GameRequests.RewardsPenalties
 {
+    public enum RequestStatus
+    {
+        Inactive = 0,
+        Active,
+        Completed,
+        Failed
+    }
     public class GameRequestData : IGameRequestData
     {
         private DialogueSpeakerId _mRequesterSpeakerId;
@@ -19,15 +27,17 @@ namespace DataUnits.GameRequests.RewardsPenalties
         private RequirementLogicEvaluator _mReqLogic;
         private RequirementConsideredParameter _mReqParameterType;
         private string[] _mReqParameterValue;
-        private bool _mIsCompleted;
+        private RequestStatus _mStatus;
         
         private Dictionary<RewardTypes,IRewardData> _mRewards = new Dictionary<RewardTypes,IRewardData>();
         private Dictionary<RewardTypes,IRewardData>_mPenalties =  new Dictionary<RewardTypes,IRewardData>();
+        private Tuple<DayBitId, PartOfDay> _mTargetTime;
+        public Tuple<DayBitId, PartOfDay> TargetTime => _mTargetTime;
 
         #region Constructor and Initialization
         public GameRequestData(int mRequesterSpeakerId, int mRequestId, string mReqTitle, string mReqDescription,
             RequirementActionType mChallengeType, RequirementObjectType mChallengeObjectType, RequirementLogicEvaluator mReqLogic,
-            RequirementConsideredParameter mReqParameterType, int quantity, string[] rewards, string[] penalties)
+            RequirementConsideredParameter mReqParameterType, int quantity, string[] rewards, string[] penalties, DayBitId targetDayId, PartOfDay targetPartOfDay)
         {
             _mRequesterSpeakerId = (DialogueSpeakerId)mRequesterSpeakerId;
             _mRequestId = mRequestId;
@@ -38,6 +48,8 @@ namespace DataUnits.GameRequests.RewardsPenalties
             _mReqLogic = mReqLogic;
             _mReqParameterType = mReqParameterType;
             _mReqQuantity = quantity;
+            _mTargetTime = new Tuple<DayBitId, PartOfDay>(targetDayId, targetPartOfDay);
+            _mStatus = RequestStatus.Inactive;
             ProcessRewards(rewards);
             ProcessPenalties(penalties);
         }
@@ -86,8 +98,7 @@ namespace DataUnits.GameRequests.RewardsPenalties
                 case RewardTypes.Seniority:
                     return new SeniorityRewardData(rewType, rewards);
                 case RewardTypes.Trust:
-                    return new TrustRewardData(rewType, rewards);
-                
+                    return new TrustRewardData(rewType, rewards, _mRequesterSpeakerId);
                 //For now only the first three are used. The rest are placeholders.
                 case RewardTypes.ItemSupplier:
                     return new ItemSupplierRewardData(rewType, rewards);
@@ -108,7 +119,7 @@ namespace DataUnits.GameRequests.RewardsPenalties
                 case RewardTypes.Seniority:
                     return new SeniorityRewardData(penaltyType, penalties);
                 case RewardTypes.Trust:
-                    return new TrustRewardData(penaltyType, penalties);
+                    return new TrustRewardData(penaltyType, penalties,_mRequesterSpeakerId);
                 
                 //For now only the first three are used. The rest are placeholders.
                 case RewardTypes.ItemSupplier:
@@ -135,10 +146,15 @@ namespace DataUnits.GameRequests.RewardsPenalties
         public Dictionary<RewardTypes,IRewardData> Rewards => _mRewards;
         public Dictionary<RewardTypes,IRewardData> Penalties => _mPenalties;
 
-        public bool IsCompleted => _mIsCompleted;
+        public RequestStatus Status => _mStatus;
         public void CompleteChallenge()
         {
-            _mIsCompleted = true;
+            _mStatus = RequestStatus.Completed;
+        }
+
+        public void FailChallenge()
+        {
+            _mStatus = RequestStatus.Failed;
         }
     }
 }

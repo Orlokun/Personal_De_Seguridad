@@ -1,4 +1,5 @@
-﻿using GamePlayManagement.BitDescriptions.RequestParameters;
+﻿using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace DataUnits.GameRequests
@@ -10,9 +11,9 @@ namespace DataUnits.GameRequests
         public HireGameRequest(
             int requesterSpeakId, int reqId, string reqTitle, string reqDescription, RequirementActionType mChallengeType,
             RequirementObjectType objectTypeRequired, RequirementLogicEvaluator mReqLogic, RequirementConsideredParameter mReqParameterType, 
-            JobSupplierBitId mSupplierRequired, int quantity, string[] rewards, string[] penalties) 
+            JobSupplierBitId mSupplierRequired, int quantity, string[] rewards, string[] penalties, DayBitId targetDayId, PartOfDay targetPartOfday) 
             : base(requesterSpeakId, reqId, reqTitle, reqDescription, mChallengeType, objectTypeRequired, mReqLogic, 
-                mReqParameterType, quantity, rewards, penalties)
+                mReqParameterType, quantity, rewards, penalties, targetDayId, targetPartOfday)
         {
             _mSupplierRequired = mSupplierRequired;
         }

@@ -9,5 +9,6 @@ namespace GameDirection.TimeOfDayManagement
         public IWorkDayObject GetCurrentWorkDayObject();
         public IWorkDayObject GetNextWorkDayObject();
         public PartOfDay GetCurrentPartOfDay { get; }
+        public DayBitId CurrentDayBitId { get; }
     }
 }

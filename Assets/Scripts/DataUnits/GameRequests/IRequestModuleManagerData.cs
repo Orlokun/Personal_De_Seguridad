@@ -12,6 +12,7 @@ namespace DataUnits.GameRequests
         public bool RequestExistsInData(DialogueSpeakerId requesterSpeakerId, int requestId);
         public void ActivateRequestInData(IGameRequest request);
         public void AddCompletedRequestInData(DialogueSpeakerId requester, IGameRequest request);
+        public void AddFailedRequestInData(DialogueSpeakerId requester, IGameRequest request);
         
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests { get; }
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests { get; }

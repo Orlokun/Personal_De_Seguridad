@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using DataUnits.GameCatalogues;
 using DataUnits.GameRequests;
-using DataUnits.ItemScriptableObjects;
+using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
-using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UnityEngine;
@@ -134,7 +133,7 @@ namespace GamePlayManagement
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])
                 {
-                    if (suppliersItem.UnlockPoints <= _gameStatusModule.MPlayerStatus)
+                    if (suppliersItem.UnlockPoints <= _gameStatusModule.MPlayerSeniority)
                     {
                         GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier.Key, suppliersItem.BitId);
                         Debug.Log($"Added Item {suppliersItem.ItemName} to Supplier {itemSupplier.Value.GetSupplierData.StoreName}");
@@ -163,6 +162,16 @@ namespace GamePlayManagement
         {
             _gameStatusModule.PlayerLostGame(organSale);
             PlayerLostResetData();
+        }
+
+        public void AddFondnessToActiveSupplier(ITrustRewardData trustRewardData)
+        {
+            if(_jobsSourcesModule.ActiveJobObjects.Any(x=> x.Value.SpeakerIndex == trustRewardData.TrustGiverSpeakerId))
+            {
+                var supplier = _jobsSourcesModule.ActiveJobObjects.SingleOrDefault(x =>
+                    x.Value.SpeakerIndex == trustRewardData.TrustGiverSpeakerId).Value;
+                supplier.ReceiveFondness(trustRewardData.TrustAmount);
+            }
         }
     }
 }

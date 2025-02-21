@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem.Units;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
+using UnityEditor.PackageManager.Requests;
 
 namespace DataUnits.GameRequests
 {
@@ -11,10 +13,14 @@ namespace DataUnits.GameRequests
         public int RequestId { get; }
         public string ReqTitle { get; }
         public string ReqDescription { get; }
-        public bool IsCompleted { get; }
+        public RequestStatus RequestStatus { get; }
         public void MarkAsCompleted();
+        public void MarkAsFailed();
         public RequirementActionType ChallengeActionType { get; }
         public Dictionary<RewardTypes,IRewardData> Rewards { get; }
         public Dictionary<RewardTypes,IRewardData> Penalties { get; }
+        public DayBitId ExpirationDayId { get; }
+        public PartOfDay ExpirationPartOfDay { get; }
+        
     }
 }

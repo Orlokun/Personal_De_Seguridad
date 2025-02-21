@@ -5,6 +5,7 @@ using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem.Units;
 using GameDirection;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -46,6 +47,26 @@ namespace DataUnits.GameRequests
                 return;
             }
             _mCompletedRequests[requester].Add(request);
+        }
+        
+        public void AddFailedRequestInData(DialogueSpeakerId requester, IGameRequest request)
+        {
+            if(FailedRequests == null)
+            {
+                _mFailedRequests = new Dictionary<DialogueSpeakerId, List<IGameRequest>>();
+            }
+            if (!_mFailedRequests.TryGetValue(requester, out var failedRequests))
+            {
+                _mFailedRequests.Add(requester, new List<IGameRequest>());
+                _mFailedRequests[requester].Add(request);
+                return;
+            }
+            if(failedRequests.Any(x=>x.RequestId == request.RequestId))
+            {
+                Debug.LogWarning($"Request for {requester} with Id {request.RequestId} is already failed.");
+                return;
+            }
+            _mFailedRequests[requester].Add(request);
         }
 
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mActiveRequests;
@@ -132,8 +153,17 @@ namespace DataUnits.GameRequests
                 var rewardValues = _mRequestsCatalogue.values[i][10].Split('|');
                 var punishmentValues = _mRequestsCatalogue.values[i][11].Split('|');
                 
+                var hasTargetDay = Enum.TryParse(_mRequestsCatalogue.values[i][12], out DayBitId targetDayId);
+                var hasTargetHour = Enum.TryParse(_mRequestsCatalogue.values[i][13], out PartOfDay targetHourId);
+                
+                if(!hasTargetDay || !hasTargetHour)
+                {
+                    Debug.LogError("[LoadRentDataFromJson] Request Must have Day Target values available");
+                    return;
+                }
+                
                 var finalRequest = Factory.CreateGameRequest(speakerId, requestId, requestTitle, requestDescription, requestType, 
-                    requestObject, requestLogic, requestParameter, requirementValues, quantity, rewardValues, punishmentValues);
+                    requestObject, requestLogic, requestParameter, requirementValues, quantity, rewardValues, punishmentValues, targetDayId, targetHourId);
                 _mBaseRequestsData[(DialogueSpeakerId)speakerId].Add(finalRequest);
             }
             Debug.Log($"[LoadRentDataFromJson]Finished parsing process for LoadRequestsCatalogue. Number of Requests is {requestCount}");

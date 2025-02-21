@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using DialogueSystem;
+using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem.Units;
+using GameDirection;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
-using NUnit.Framework;
 using UnityEngine;
 using Utils;
 
@@ -26,12 +28,25 @@ namespace DataUnits.GameRequests
     {
         private IRequestModuleManagerData _mRequestModuleData;
         
+        private IPlayerGameProfile _mActivePlayerProfile;
         private IJobSourcesModuleData _mJobsSourcesModule;
         private IItemSuppliersModuleData _mItemSuppliersModule;
-
+        
+        
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mRequestModuleData.ActiveRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mRequestModuleData.CompletedRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mRequestModuleData.FailedRequests;
+        
+        public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId)
+        {
+            //Confirm request exists in base data.
+            if (!_mRequestModuleData.RequestExistsInData(speaker, requestId))
+            {
+                return;
+            }
+            var request = _mRequestModuleData.BaseRequestsData[speaker].Find(r => r.RequestId == requestId);
+            _mRequestModuleData.ActivateRequestInData(request);
+        }
 
         //Completed Hire Challenge assume only one challenge is completed in the event. 
         public void CheckHireChallenges(JobSupplierBitId newJobSupplier)
@@ -62,7 +77,6 @@ namespace DataUnits.GameRequests
             }
             RemoveCompletedChallengesFromActive(completedHireChallenges);
         }
-
         private void RemoveCompletedChallengesFromActive(List<int[]> completedHireChallenges)
         {
             if(ActiveRequests == null || ActiveRequests.Count == 0)
@@ -76,7 +90,9 @@ namespace DataUnits.GameRequests
                 {
                     continue;
                 }
+                //Get the requests from one supplier
                 var supplierRequests = ActiveRequests[(DialogueSpeakerId)completedHireChallenges[i][0]];
+                
                 if (supplierRequests.All(x => x.RequestId != completedHireChallenges[i][1]))
                 {
                     return;
@@ -85,13 +101,17 @@ namespace DataUnits.GameRequests
             }
             Debug.Log("Cleared Completed Active Challenges");
         }
+        
+
 
         #region Init
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)
         {
+            _mActivePlayerProfile = currentPlayerProfile;
             _mJobsSourcesModule = currentPlayerProfile.GetActiveJobsModule();
             _mItemSuppliersModule = currentPlayerProfile.GetActiveItemSuppliersModule();
             _mRequestModuleData = new RequestModuleManagerData();
+            GameDirector.Instance.GetClockInDayManagement.OnPassTimeOfDay += CheckRequirementExpirationDate;            
             var url = DataSheetUrls.BaseGameRequests;
             _mRequestModuleData.LoadRequestsData(url);
         }
@@ -105,15 +125,112 @@ namespace DataUnits.GameRequests
 
         #endregion
 
-        public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId)
+        private void CheckRequirementExpirationDate(PartOfDay dayTime)
         {
-            //Confirm request exists in base data.
-            if (!_mRequestModuleData.RequestExistsInData(speaker, requestId))
+            if (dayTime == PartOfDay.EndOfDay)
+            {
+                ProcessEndOfDay();
+                return;
+            }
+            ProcessActiveRequests(dayTime);
+        }
+
+        private void ProcessEndOfDay()
+        {
+            var failedRequests = new List<Tuple<DialogueSpeakerId, int>>();
+            var currentDay = GameDirector.Instance.GetActiveGameProfile.GetProfileCalendar().CurrentDayBitId;
+            foreach (var activeRequest in ActiveRequests)
+            {
+                foreach (var request in activeRequest.Value)
+                {
+                    if(request.ExpirationDayId <= currentDay)
+                    {
+                        FailRequest(request);
+                        failedRequests.Add(new Tuple<DialogueSpeakerId,int>(activeRequest.Key, request.RequestId));
+                        _mRequestModuleData.AddFailedRequestInData(activeRequest.Key, request);
+                    }
+                }
+            }
+            RemoveFailedRequestsFromActive(failedRequests);
+        }
+
+        private void FailRequest(IGameRequest request)
+        {
+            if(request.RequestStatus == RequestStatus.Failed)
             {
                 return;
             }
-            var request = _mRequestModuleData.BaseRequestsData[speaker].Find(r => r.RequestId == requestId);
-            _mRequestModuleData.ActivateRequestInData(request);
+            ProcessRewardsAndPenalties(request.Penalties);
+            request.MarkAsFailed();
         }
+
+        private void ProcessRewardsAndPenalties(Dictionary<RewardTypes, IRewardData> incomingData)
+        {
+            foreach (var rewardData in incomingData)
+            {
+                switch (rewardData.Key)
+                {
+                    case RewardTypes.OmniCredits:
+                        var omniCreditRewardData = (IOmniCreditRewardData)rewardData.Value;
+                        _mActivePlayerProfile.GetStatusModule().ReceiveOmniCredits(omniCreditRewardData.OmniCreditsAmount);
+                        break;
+                    case RewardTypes.Seniority:
+                        var seniorityRewardData = (ISeniorityRewardData)rewardData.Value;
+                        _mActivePlayerProfile.GetStatusModule().ReceiveSeniority(seniorityRewardData.SeniorityRewardAmount);
+                        break;
+                    case RewardTypes.Trust:
+                        var trustRewardData = (ITrustRewardData)rewardData.Value;
+                        _mActivePlayerProfile.AddFondnessToActiveSupplier(trustRewardData);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            GameDirector.Instance.GetUIController.UpdateInfoUI();
+        }
+        
+        private void RemoveFailedRequestsFromActive(List<Tuple<DialogueSpeakerId, int>> failedRequests)
+        {            
+            if(ActiveRequests == null || ActiveRequests.Count == 0)
+            {
+                return;
+            }
+            for (var i = 0; i<failedRequests.Count;i++)
+            {
+                if (!ActiveRequests.ContainsKey(failedRequests[i].Item1))
+                {
+                    continue;
+                }
+                //Get the requests from one supplier
+                var supplierRequests = ActiveRequests[failedRequests[i].Item1];
+                if (supplierRequests.All(x => x.RequestId != failedRequests[i].Item2))
+                {
+                    return;
+                }
+                supplierRequests.Remove(supplierRequests.Find(x => x.RequestId == failedRequests[i].Item2));
+            }
+            Debug.Log("Cleared Failed Challenges from Active");
+        }
+
+        private void ProcessActiveRequests(PartOfDay dayTime)
+        {
+            var failedRequests = new List<Tuple<DialogueSpeakerId, int>>();
+            var currentDay = GameDirector.Instance.GetActiveGameProfile.GetProfileCalendar().CurrentDayBitId;
+            foreach (var activeRequest in ActiveRequests)
+            {
+                foreach (var request in activeRequest.Value)
+                {
+                    if(request.ExpirationPartOfDay < dayTime && request.ExpirationDayId <= currentDay)
+                    {
+                        request.MarkAsFailed();
+                        failedRequests.Add(new Tuple<DialogueSpeakerId,int>(activeRequest.Key, request.RequestId));
+                        _mRequestModuleData.AddFailedRequestInData(activeRequest.Key, request);
+                    }
+                }
+            }
+            RemoveFailedRequestsFromActive(failedRequests);
+        }
+
+
     }
 }

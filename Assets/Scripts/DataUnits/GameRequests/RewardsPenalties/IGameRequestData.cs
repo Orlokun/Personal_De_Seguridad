@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DialogueSystem.Units;
+using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 
 namespace DataUnits.GameRequests.RewardsPenalties
@@ -17,7 +19,10 @@ namespace DataUnits.GameRequests.RewardsPenalties
         public RequirementConsideredParameter ReqParameterType  { get; }
         public Dictionary<RewardTypes,IRewardData> Rewards { get; }
         public Dictionary<RewardTypes,IRewardData> Penalties { get; }
-        bool IsCompleted { get; }
+        public Tuple<DayBitId, PartOfDay> TargetTime { get; }
+
+        RequestStatus Status { get; }
         void CompleteChallenge();
+        void FailChallenge();
     }
 }

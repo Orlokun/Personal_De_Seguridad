@@ -1,14 +1,10 @@
-using DataUnits.GameRequests;
-using DialogueSystem;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.Players_NPC;
-
 namespace DataUnits.JobSources
 {
-    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier, IRequestModuleFunctions
+    public interface IJobSupplierObject : ISupplierBaseObject, ICallableSupplier
     {
-
+        public void AddFondness(int amount);
         public void CheckCallingTime(int hour, int minute);
         public int DaysAsEmployer { get; set; }
         
@@ -26,7 +22,6 @@ namespace DataUnits.JobSources
         
         //Modules
         public IJobSupplierProductsModule JobProductsModule { get; }
-        public IRequestModule JobRequestsModule { get; }
         
         public void LoadDeflectionDialoguesData();
         public void StartUnlockData();
@@ -34,14 +29,9 @@ namespace DataUnits.JobSources
         void LocalInitialize(JobSupplierBitId jobId, DialogueSpeakerId speakerId);
         void PlayerHired();
     }
-    public interface IBaseRequesterModule
+
+    public interface IFondnessCharacter
     {
-        void ActivateChallenge(IGameRequest requestIdInt);
-    }
-
-
-    public interface IRequestModuleFunctions
-    {
-
+        void ReceiveFondness(int amount);
     }
 }

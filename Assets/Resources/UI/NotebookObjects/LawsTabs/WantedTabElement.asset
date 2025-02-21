@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tabType: 2
   icon: {fileID: 21300000, guid: 3c7d58b594e8c2e43a82aadc7b6a8f00, type: 3}
-  tabElementName: Sospechosos
+  tabElementName: Suspects
