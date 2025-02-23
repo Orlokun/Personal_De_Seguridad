@@ -48,7 +48,7 @@ namespace GameDirection.TimeOfDayManagement
         //Must change depending oon meta game directions
         private void ResetBaseData()
         {
-            _totalOmniCredits = 20000;
+            _totalOmniCredits = 35;
             _mPlayerSeniority = 1;
             _health = 20;
             _mGameDifficulty = 1;

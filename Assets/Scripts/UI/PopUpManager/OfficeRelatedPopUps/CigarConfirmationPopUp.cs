@@ -37,7 +37,7 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
         private Tuple<int, int> GetSmokeCost(PartOfDay newPartOfDay)
         {
             var diff = newPartOfDay - currentPartOfDay;
-            var price = diff * 1000;
+            var price = diff * 2;
             var health = (int)(diff * 1.5);
             if (health == 0)
                 health++;
