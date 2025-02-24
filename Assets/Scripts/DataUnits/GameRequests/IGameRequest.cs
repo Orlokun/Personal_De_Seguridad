@@ -3,7 +3,6 @@ using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
-using UnityEditor.PackageManager.Requests;
 
 namespace DataUnits.GameRequests
 {
@@ -21,6 +20,5 @@ namespace DataUnits.GameRequests
         public Dictionary<RewardTypes,IRewardData> Penalties { get; }
         public DayBitId ExpirationDayId { get; }
         public PartOfDay ExpirationPartOfDay { get; }
-        
     }
 }
