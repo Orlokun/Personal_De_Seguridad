@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DataUnits.GameRequests;
-using DataUnits.GameRequests.RewardsPenalties;
 using GameDirection;
+using GamePlayManagement.GameRequests;
+using GamePlayManagement.GameRequests.RewardsPenalties;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

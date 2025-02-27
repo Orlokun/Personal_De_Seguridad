@@ -35,4 +35,5 @@ namespace UI.PopUpManager.InfoPanelPopUp
             newsContent.text = newsObject.NewsContent;
         }
     }
+    
 }

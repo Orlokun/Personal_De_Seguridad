@@ -26,7 +26,7 @@ namespace GameDirection.DayLevelSceneManagers
         protected override IEnumerator StartIntroductionReading()
         {
             yield return new WaitForSeconds(2f);
-            MGameDirector.GetDialogueOperator.StartNewDialogue(DayBaseDialogues[DialogueIndex]);
+            MGameDirector.GetDialogueOperator.StartNewDialogue(DayBaseDialogues[IntroDialogueIndex]);
         }
         protected override void FinishIntroductionText()
         {

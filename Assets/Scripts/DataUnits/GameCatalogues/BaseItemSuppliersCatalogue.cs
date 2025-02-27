@@ -26,7 +26,7 @@ namespace DataUnits.GameCatalogues
         private void Awake()
         {
             DontDestroyOnLoad(this);
-            if (_instance != null)
+            if (_instance != null && _instance != this)
             {
                 Destroy(this);
             }

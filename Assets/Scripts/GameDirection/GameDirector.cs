@@ -8,6 +8,7 @@ using DataUnits.JobSources;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GameDirection.ComplianceDataManagement;
 using GameDirection.DayLevelSceneManagers;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
@@ -59,6 +60,7 @@ namespace GameDirection
         private IModularDialogueDataController _mModularDialogues;
         private ICustomersInSceneManager _mCustomerInstantiationManager;
         private INewsNarrativeDirector _mNarrativeNewsDirector;
+        private IComplianceManager _mComplianceManager;
         private IMetaGameDirector _mMetaGameDirector;
         private IBaseTutorialDialogueData _mTutorialDialogueData;
         
@@ -98,6 +100,7 @@ namespace GameDirection
         public IModularDialogueDataController GetModularDialogueManager => _mModularDialogues;
         public ICustomersInSceneManager GetCustomerInstantiationManager => _mCustomerInstantiationManager;
         public INewsNarrativeDirector GetNarrativeNewsDirector=> _mNarrativeNewsDirector;
+        public IComplianceManager GetComplianceManager => _mComplianceManager;
         public IMetaGameDirector GetMetaGameDirector => _mMetaGameDirector;
         #endregion
 
@@ -154,6 +157,8 @@ namespace GameDirection
             
             _mCustomerInstantiationManager = CustomersInSceneManager.Instance;
             _mNarrativeNewsDirector = Factory.CreateNewsNarrativeDirector();
+            _mComplianceManager = Factory.CreateComplianceManager();
+            _mComplianceManager.LoadComplianceData();
             _mMetaGameDirector = Factory.CreateMetaGameDirectory();
             
             WaitAndLoadDeflectionInitialDialogues();
@@ -174,7 +179,19 @@ namespace GameDirection
         /// </summary>
         private async void WaitAndLoadDeflectionInitialDialogues()
         {
-            await Task.Delay(400);
+            var doSafeExit = false;
+            var waitAtempts = 0;
+            while (_mItemSuppliersData.GetItemSuppliersInData == null && doSafeExit == false)
+            {
+                await Task.Delay(200);
+                waitAtempts++;
+                if (waitAtempts >= 15)
+                {
+                    Debug.LogError("Item Suppliers must be available at some point in data for Defelection Dialogues Download");
+                    doSafeExit = true;
+                }
+            }
+            Debug.Log($"Deflections Downloaded after {waitAtempts}");
             LoadDialoguesForSuppliers();
         }
         private void LoadDialoguesForSuppliers()

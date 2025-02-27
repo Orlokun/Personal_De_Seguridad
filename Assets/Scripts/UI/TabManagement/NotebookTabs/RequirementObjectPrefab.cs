@@ -1,5 +1,5 @@
-﻿using DataUnits.GameRequests;
-using GameDirection;
+﻿using GameDirection;
+using GamePlayManagement.GameRequests;
 using TMPro;
 using UI.PopUpManager;
 using UI.PopUpManager.InfoPanelPopUp;
@@ -8,11 +8,6 @@ using UnityEngine.UI;
 
 namespace UI.TabManagement.NotebookTabs
 {
-    public interface IRequirementObjectPrefab
-    {
-        public void PopulateRequestPrefab(IGameRequest requestObject);
-
-    }
     public class RequirementObjectPrefab : MonoBehaviour, IRequirementObjectPrefab
     {
         private IGameRequest _mRequirementData;

@@ -62,7 +62,7 @@ namespace GameDirection.NewsManagement
         private void LoadTodaysNews(string sourceJson)
         {
             Debug.Log($"NewsNarrativeData.LoadTodaysNews");
-            var newsData = JsonConvert.DeserializeObject<DayNewsCatalogueData>(sourceJson);
+            var newsData = JsonConvert.DeserializeObject<NewsCatalogueData>(sourceJson);
             Debug.Log($"Finished parsing. Is newsData null?: {newsData == null}");
             var dayNewsList = new List<INewsObject>();
             for (var i = 1; i < newsData.values.Count;i++)

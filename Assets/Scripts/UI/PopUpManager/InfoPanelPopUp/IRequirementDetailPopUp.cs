@@ -1,4 +1,4 @@
-﻿using DataUnits.GameRequests;
+﻿using GamePlayManagement.GameRequests;
 
 namespace UI.PopUpManager.InfoPanelPopUp
 {

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataUnits.GameRequests;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Phone;
 using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.GameRequests;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

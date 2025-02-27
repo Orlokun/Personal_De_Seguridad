@@ -1,36 +1,36 @@
 using System;
 using DataUnits.GameCatalogues;
-using DataUnits.GameRequests;
 using DataUnits.ItemSources;
 using DialogueSystem;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection;
+using GameDirection.ComplianceDataManagement;
 using GameDirection.DayLevelSceneManagers;
-using GameDirection.GeneralLevelManager;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.ItemManagement;
+using GamePlayManagement.ComplianceSystem;
+using GamePlayManagement.GameRequests;
+using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
-using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Utils
 {
     public static class Factory
     {
+
         public static GuardRouteSystemModule CreateGuardSystemModule()
         {
             return new GuardRouteSystemModule();
@@ -251,7 +251,29 @@ namespace Utils
         
         
         #endregion
-
+        public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
+            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues)
+        {
+            switch (actionType)
+            {
+                case ComplianceActionType.Use:
+                    return new ComplianceUseObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues);
+                case ComplianceActionType.KickOut:
+                    return new ComplianceKickOut(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues);
+                case ComplianceActionType.Retain:
+                    return new ComplianceRetainObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues);
+                default:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues);
+            }
+        }
+        
         public static IBaseTutorialDialogueData CreateTutorialDialogueData()
         {
             return new BaseTutorialDialogueData();
@@ -262,9 +284,10 @@ namespace Utils
             return new RequestsModuleManager();
         }
 
-        public static IRequestModuleData CreateRequestModuleData()
+
+        public static IComplianceManager CreateComplianceManager()
         {
-            return new RequestModuleData();
+            return new ComplianceManager();
         }
     }
 }

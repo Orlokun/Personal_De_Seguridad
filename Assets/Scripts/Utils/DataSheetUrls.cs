@@ -250,6 +250,9 @@ namespace Utils
             }
         }
 
+        public static string GetBaseComplianceDataUrl =
+            "https://sheets.googleapis.com/v4/spreadsheets/1yJl8SzluPJmBwSM470_bXlD-PvI8SapP_nhHAEk53SA/values/BaseCompliance?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        
         public static string GetTutorialDialogueUrl()
         {
             return

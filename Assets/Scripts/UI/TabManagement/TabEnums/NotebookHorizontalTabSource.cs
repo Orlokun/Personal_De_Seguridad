@@ -4,7 +4,7 @@ namespace UI.TabManagement.TabEnums
     {
         Jobs = 1,
         Suppliers = 2,
-        Laws = 4,
+        Compliance = 4,
         CurrentRequirements = 8,
         OmniScroll = 16
     }

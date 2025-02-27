@@ -1,17 +1,52 @@
 ﻿namespace GamePlayManagement.BitDescriptions.RequestParameters
 {
+    public enum ComplianceMotivationalLevel
+    {
+        Forbidden, 
+        Discouraged,
+        Neutral,
+        Encouraged,
+        Mandatory
+    }
+    public enum ComplianceActionType
+    {
+        Use, 
+        Trap,
+        Retain,
+        Punish,
+        Torture,
+        Kill,   
+        Accept,
+        KickOut
+    }
+    
+    public enum ComplianceObjectType
+    {
+        Smoke,
+        DoorLock,
+        Phone,  
+        Bribe,
+        Client,
+        Guard,
+        Camera,
+        Weapon,
+        Traps,
+        Other,
+        AnyItem,
+    }
+    
     public enum RequirementActionType
     {
-        Hire = 1,
-        Use = 2,
-        NotUse = 4,
-        Buy = 8,
-        Capture = 16,
-        Punish = 32,
-        LetGo = 64,
-        Unlock = 128,
-        UseSync = 256,
-        Trap = 512
+        Hire = 1 << 1,
+        Use = 1<<2,
+        NotUse = 1<<3,
+        Buy = 1<<4,
+        Capture = 1<<5,
+        Punish = 1<<6,
+        LetGo = 1<<7,
+        Unlock = 1<<8,
+        UseSync = 1<<9,
+        Trap = 1<<10,
     }
 
     public enum RequirementLogicEvaluator
@@ -37,25 +72,26 @@
 
     public enum RequirementConsideredParameter
     {
-        Intelligence = 1,
-        Kindness = 2,
-        Proactivity = 4,
-        Aggressive = 8,
-        Strength = 16,
-        Agility = 32,
-        Persuasion = 64,
-        Speed = 128,
-        FoV = 256,
-        Origin = 512,
-        BaseType = 1024,
-        Quality = 2048,
-        Effectiveness = 4096,
-        Damage = 8192,
-        Range = 16384,
-        PeopleInSight = 32768,
-        Clarity = 65536,
-        JobSupplier = 131072,
-        ItemSupplier = 262144,
-        ItemValue = 5244288,
+        None = 1 << 0,
+        Intelligence = 1 << 1,
+        Kindness = 1 << 2,
+        Proactivity = 1 <<3,
+        Aggressive = 1 << 4,
+        Strength = 1 << 5,
+        Agility = 1 << 6,
+        Persuasion = 1 << 7,
+        Speed = 1 << 8,
+        FoV = 1 << 9,
+        Origin = 1 << 10,
+        BaseType = 1 << 11,
+        Quality = 1 << 12,
+        Effectiveness = 1 << 13,
+        Damage = 1 << 14,
+        Range = 1 << 15,
+        PeopleInSight = 1 << 16,
+        Clarity = 1 << 17,
+        JobSupplier = 1 << 18,
+        ItemSupplier = 1 << 19,
+        ItemValue = 1 << 20
     }
 }

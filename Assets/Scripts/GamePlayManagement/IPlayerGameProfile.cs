@@ -1,8 +1,8 @@
 using System;
-using DataUnits.GameRequests;
-using DataUnits.GameRequests.RewardsPenalties;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.GameRequests.RequestsManager;
+using GamePlayManagement.GameRequests.RewardsPenalties;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 

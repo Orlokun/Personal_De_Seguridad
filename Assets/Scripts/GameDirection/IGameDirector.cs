@@ -2,10 +2,10 @@ using System.Collections;
 using CameraManagement;
 using DataUnits;
 using DataUnits.GameCatalogues;
-using DataUnits.GameRequests;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GameDirection.ComplianceDataManagement;
 using GameDirection.NewsManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -34,6 +34,7 @@ namespace GameDirection
         public IModularDialogueDataController GetModularDialogueManager { get; }
         public ICustomersInSceneManager GetCustomerInstantiationManager { get; }
         public INewsNarrativeDirector GetNarrativeNewsDirector { get; }
+        public IComplianceManager GetComplianceManager {get;}
         public void LaunchTutorial();
         public void ReleaseFromDialogueStateToGame();
         public void FinishWorkday();

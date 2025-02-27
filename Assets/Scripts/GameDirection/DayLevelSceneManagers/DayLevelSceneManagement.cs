@@ -23,19 +23,16 @@ namespace GameDirection.DayLevelSceneManagers
         public event FinishCurrentDialogue OnFinishCurrentDialogue;
         protected DayBitId DayId;
         
-        protected bool mInitialized;
         protected IGameDirector MGameDirector;
-        
-        protected Dictionary<int, IDialogueObject> DayBaseDialogues = new Dictionary<int, IDialogueObject>();
         protected IDialogueObject ModularDialogue;
-        
-        protected int DialogueIndex;
-        
         protected ICustomersInSceneManager _customerSpawner;
+        protected DialogueObjectsFromData DialoguesBaseDataString;
+        protected Dictionary<int, IDialogueObject> DayBaseDialogues = new Dictionary<int, IDialogueObject>();
+
+        protected bool mInitialized;
+        protected int IntroDialogueIndex;
 
         
-        protected DialogueObjectsFromData DialoguesBaseDataString;
-
         public bool MInitialized => mInitialized;
         public void Initialize(IGameDirector injectionClass1, DayBitId injectionClass2)
         {

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using DataUnits.GameRequests;
 using DialogueSystem;
 using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement;
+using GamePlayManagement.ComplianceSystem;
+using GamePlayManagement.GameRequests;
 using UI.TabManagement.AbstractClasses;
+using UI.TabManagement.NotebookTabs.CompliancePrefab;
 using UI.TabManagement.NotebookTabs.HorizontalTabletTabs;
 using UI.TabManagement.TabEnums;
 using UnityEngine;
@@ -25,7 +27,7 @@ namespace UI.TabManagement.NotebookTabs
 
         [SerializeField] private GameObject JobPrefab;
         [SerializeField] private GameObject SupplierPrefab;
-        [SerializeField] private GameObject LawsPrefab;
+        [SerializeField] private GameObject CompliancePrefab;
         [SerializeField] private GameObject RequirementsPrefab;
         [SerializeField] private GameObject NewsPrefab;
 
@@ -62,6 +64,8 @@ namespace UI.TabManagement.NotebookTabs
 
 
         #region Private Utils
+
+        #region TabManagement
         private List<IVerticaTabElement> GetVerticalTabElements(INotebookHorizontalTabletTabGroup parentGroup)
         {
             var verticalTabElements = new List<IVerticaTabElement>();
@@ -73,7 +77,7 @@ namespace UI.TabManagement.NotebookTabs
                 case NotebookHorizontalTabSource.Suppliers:
                     verticalTabElements = parentGroup.SuppliersVerticalTabObjects;
                     break;
-                case NotebookHorizontalTabSource.Laws:
+                case NotebookHorizontalTabSource.Compliance:
                     verticalTabElements = parentGroup.ComplianceTabObjects;
                     break;
                 case NotebookHorizontalTabSource.CurrentRequirements:
@@ -109,6 +113,7 @@ namespace UI.TabManagement.NotebookTabs
                 Destroy(tabElement.gameObject);
             }
         }
+        #endregion
 
         private void ClearNotebookContent()
         {
@@ -121,7 +126,6 @@ namespace UI.TabManagement.NotebookTabs
                 Destroy(leftPageContent.gameObject);
             }
         }
-
         private GameObject InstantiatePrefabs(int i, GameObject prefab)
         {
             return i < 5 ? Instantiate(prefab, leftPage) : Instantiate(prefab, rightPage);
@@ -137,17 +141,49 @@ namespace UI.TabManagement.NotebookTabs
                 case NotebookHorizontalTabSource.Suppliers:
                     ManageSuppliersInstantiation(selectedTab);
                     break;
-                case NotebookHorizontalTabSource.Laws:
+                case NotebookHorizontalTabSource.Compliance:
+                    var complianceTabSource = (RequestTabSources)selectedTab;
+                    ManageComplianceInstantiation(complianceTabSource);
                     break;
                 case NotebookHorizontalTabSource.CurrentRequirements:
-                    var tabSource = (RequestTabSources)selectedTab;
-                    ManageRequestObjectsInstantiation(tabSource);
+                    var requirementsTabSource = (RequestTabSources)selectedTab;
+                    ManageRequestObjectsInstantiation(requirementsTabSource);
                     break;
                 case NotebookHorizontalTabSource.OmniScroll:
                     ManageNewsInstantiation();
                     break;
                 default:
                     return;
+            }
+        }
+
+        private void ManageComplianceInstantiation(RequestTabSources selectedTab)
+        {
+            var complianceManager = GameDirector.Instance.GetComplianceManager;
+            var currentDay = _playerProfile.GetProfileCalendar().CurrentDayBitId;
+            List<IComplianceObject> complianceObjectsToInstantiate;
+
+            switch (selectedTab)
+            {
+                case RequestTabSources.ActiveRequests:
+                    complianceObjectsToInstantiate = complianceManager.GetActiveComplianceObjects;
+                    break;
+                case RequestTabSources.CompletedRequests:
+                    complianceObjectsToInstantiate = complianceManager.GetCompletedComplianceObjects;
+                    break;
+                case RequestTabSources.FailedRequests:
+                    complianceObjectsToInstantiate = complianceManager.GetFailedComplianceObjects;
+                    break;
+                default:
+                    return;
+            }
+            
+            for (var i = 0; i < complianceObjectsToInstantiate.Count; i++)
+            {
+                var complianceObject = complianceObjectsToInstantiate[i];
+                var prefabObject = InstantiatePrefabs(i, CompliancePrefab);
+                var requirementObjectController = prefabObject.GetComponent<IComplianceObjectPrefab>();
+                requirementObjectController.PopulateCompliancePrefab(complianceObject);
             }
         }
 
@@ -188,11 +224,6 @@ namespace UI.TabManagement.NotebookTabs
             }
         }
 
-        private void UpdateACtiveRequests()
-        {
-            
-        }
-
         private void ManageJobObjectsInstantiation(int selectedTab)
         {
             var availableJobSources = _playerProfile.GetActiveJobsModule().ActiveJobObjects;
@@ -228,6 +259,8 @@ namespace UI.TabManagement.NotebookTabs
                 index++;
             }
         }
+        
+        //TODO: News should be managed with Day Range and should also check for special News Unlocked
         private void ManageNewsInstantiation()
         {
             var currentDay = _playerProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId;
