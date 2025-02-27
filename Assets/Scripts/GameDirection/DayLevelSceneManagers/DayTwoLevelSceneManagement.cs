@@ -7,6 +7,7 @@ namespace GameDirection.DayLevelSceneManagers
 {
     public class DayTwoLevelSceneManagement : DayLevelSceneManagement
     {
+        DayBitId _mDayId = DayBitId.Day_02;
         public override IEnumerator StartDayManagement()
         {
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
@@ -14,9 +15,10 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetSoundDirector.PlayAmbientSound();
-            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(DayBitId.Day_02);
+            MGameDirector.GetNarrativeNewsDirector.LoadDayNews(_mDayId);
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
+            MGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
             MGameDirector.GetUIController.ToggleBackground(true);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;

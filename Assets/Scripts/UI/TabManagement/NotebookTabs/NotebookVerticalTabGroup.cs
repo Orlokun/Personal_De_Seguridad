@@ -159,7 +159,7 @@ namespace UI.TabManagement.NotebookTabs
 
         private void ManageComplianceInstantiation(RequestTabSources selectedTab)
         {
-            var complianceManager = GameDirector.Instance.GetComplianceManager;
+            var complianceManager = GameDirector.Instance.GetActiveGameProfile.GetComplianceManager;
             var currentDay = _playerProfile.GetProfileCalendar().CurrentDayBitId;
             List<IComplianceObject> complianceObjectsToInstantiate;
 

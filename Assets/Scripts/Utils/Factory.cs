@@ -162,9 +162,9 @@ namespace Utils
         /// Player Profile Modules
         /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager)
         {
-            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule, requestModuleManager);
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule, requestModuleManager, complianceManager);
         }
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
@@ -253,24 +253,24 @@ namespace Utils
         #endregion
         public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues)
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string description)
         {
             switch (actionType)
             {
                 case ComplianceActionType.Use:
                     return new ComplianceUseObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues);
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, description);
                 case ComplianceActionType.KickOut:
                     return new ComplianceKickOut(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues);
+                        penaltyValues, title, description);
                 case ComplianceActionType.Retain:
                     return new ComplianceRetainObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues);
+                        penaltyValues, title, description);
                 default:
                     return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues);
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, description);
             }
         }
         

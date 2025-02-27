@@ -20,6 +20,8 @@ namespace GamePlayManagement.ComplianceSystem
         public Dictionary<RewardTypes,IRewardData> RewardValues { get; }
         public Dictionary<RewardTypes,IRewardData> PenaltyValues { get; }
         ComplianceStatus ComplianceStatus { get; }
+        string GetTitle { get; }
+        string GetDescription { get; }
         public void SetComplianceStatus(ComplianceStatus status);
     }
 

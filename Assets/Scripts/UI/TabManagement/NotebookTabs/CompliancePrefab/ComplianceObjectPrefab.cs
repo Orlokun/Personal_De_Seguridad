@@ -28,6 +28,8 @@ namespace UI.TabManagement.NotebookTabs.CompliancePrefab
         public void PopulateCompliancePrefab(IComplianceObject complianceObject)
         {
             _mComplianceData = complianceObject;
+            _mTitle.text = _mComplianceData.GetComplianceObjectData.GetTitle;
+            _mSubTitle.text = _mComplianceData.GetComplianceObjectData.GetDescription;
         }
     }
 }

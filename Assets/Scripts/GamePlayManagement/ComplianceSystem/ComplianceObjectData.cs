@@ -22,6 +22,10 @@ namespace GamePlayManagement.ComplianceSystem
         public Dictionary<RewardTypes,IRewardData> RewardValues => _mRewards;
         public Dictionary<RewardTypes,IRewardData> PenaltyValues => _mPenalties;
         public ComplianceStatus ComplianceStatus => _mComplianceStatus;
+        public string GetTitle => _mTitle;
+        public string GetDescription => _mDescription;
+        
+        
 
         private int _mComplianceId;
         private DayBitId _mStartDayId;
@@ -38,10 +42,14 @@ namespace GamePlayManagement.ComplianceSystem
         private ComplianceStatus _mComplianceStatus;
         private Dictionary<RewardTypes,IRewardData> _mRewards = new Dictionary<RewardTypes,IRewardData>();
         private Dictionary<RewardTypes,IRewardData>_mPenalties =  new Dictionary<RewardTypes,IRewardData>();
+
+        private string _mTitle;
+        private string _mDescription;
+        
         
         public ComplianceObjectData(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues)
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string description)
         {
             _mComplianceId = complianceId;
             _mStartDayId = startDayId;
@@ -58,6 +66,8 @@ namespace GamePlayManagement.ComplianceSystem
             _mComplianceStatus = ComplianceStatus.Locked;
             ProcessRewards(rewardValues);
             ProcessPenalties(penaltyValues);
+            _mTitle = title;
+            _mDescription = description;
         }
 
         public void SetComplianceStatus(ComplianceStatus status)

@@ -84,12 +84,13 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(_mDayId);
-            MGameDirector.GetComplianceManager.UpdateComplianceDay(_mDayId);
             MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
+
+            MGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
             MGameDirector.GetUIController.ToggleBackground(true);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;

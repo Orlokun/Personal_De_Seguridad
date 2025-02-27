@@ -7,6 +7,7 @@ namespace GameDirection.DayLevelSceneManagers
 {
     public class DayThreeLevelSceneManagement : DayLevelSceneManagement    
     {
+        private const DayBitId _mDayId = DayBitId.Day_03;
         public override IEnumerator StartDayManagement()
         {
             ModularDialogue = MGameDirector.GetModularDialogueManager.CreateInitialDayIntro(MGameDirector.GetActiveGameProfile);
@@ -18,6 +19,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetSoundDirector.PlayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
+            MGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
             MGameDirector.GetUIController.ToggleBackground(true);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;

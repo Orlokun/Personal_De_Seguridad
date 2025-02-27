@@ -1,5 +1,6 @@
 using System;
 using DialogueSystem;
+using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.GameRequests.RewardsPenalties;
@@ -11,6 +12,7 @@ namespace GamePlayManagement
     public interface IPlayerGameProfile : IGameBasedPlayerData
     {
         public IRequestsModuleManager GetRequestsModuleManager();
+        public IComplianceManager GetComplianceManager { get; }
         public IItemSuppliersModule GetActiveItemSuppliersModule();
         public IJobsSourcesModule GetActiveJobsModule();
         public ICalendarModule GetProfileCalendar();

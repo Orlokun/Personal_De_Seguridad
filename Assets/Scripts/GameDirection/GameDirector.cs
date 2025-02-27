@@ -248,8 +248,10 @@ namespace GameDirection
             var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
             var requestModuleManager = Factory.CreateRequestsModuleManager();
             var profileStatusModule = Factory.CreatePlayerStatusModule();
+            var complianceModule = Factory.CreateComplianceManager();            
+            complianceModule.LoadComplianceData();
             
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule, requestModuleManager);
+            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,lifestyleModule, profileStatusModule, requestModuleManager, complianceModule);
             _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
             //_mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
             _mActiveGameProfile.UpdateProfileData();

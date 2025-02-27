@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement;
 using GamePlayManagement.ComplianceSystem;
 
 namespace GameDirection.ComplianceDataManagement
@@ -9,16 +10,25 @@ namespace GameDirection.ComplianceDataManagement
     {
         private readonly IComplianceManagerData _mComplianceBaseData = new ComplianceManagerData();
 
+        
         public void LoadComplianceData()
         {
             _mComplianceBaseData.LoadComplianceData();
         }
+
+        public void EndDayComplianceObjects(DayBitId dayBitId)
+        {
+            _mComplianceBaseData.EndDayComplianceObjects(dayBitId);
+        }
+
         public List<IComplianceObject> GetCompletedComplianceObjects => _mComplianceBaseData.GetPassedComplianceObjects;
         public List<IComplianceObject> GetFailedComplianceObjects => _mComplianceBaseData.GetFailedComplianceObjects;
         public List<IComplianceObject> GetActiveComplianceObjects => _mComplianceBaseData.GetActiveComplianceObjects;
 
 
         private bool _mUpdateComplianceFunctionAvailable = true;
+        private IPlayerGameProfile _mActivePlayer;
+
         public void UpdateComplianceDay(DayBitId dayBitId)
         {
             if (!_mUpdateComplianceFunctionAvailable)
@@ -64,6 +74,16 @@ namespace GameDirection.ComplianceDataManagement
                 _mComplianceBaseData.GetActiveComplianceObjects.First(x => x.GetComplianceObjectData.ComplianceId == id).GetComplianceObjectData.SetComplianceStatus(ComplianceStatus.Failed);
                 _mComplianceBaseData.UpdateActiveCompliance();
             }        
+        }
+
+        public void SetProfile(IPlayerGameProfile currentPlayerProfile)
+        {
+            _mActivePlayer = currentPlayerProfile;
+        }
+
+        public void PlayerLostResetData()
+        {
+            
         }
     }
 }

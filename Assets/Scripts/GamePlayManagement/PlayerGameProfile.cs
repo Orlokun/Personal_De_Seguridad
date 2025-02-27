@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
+using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.GameRequests.RewardsPenalties;
@@ -16,7 +17,7 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager)
+            ICalendarModule mCalendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager)
         {
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
@@ -27,8 +28,8 @@ namespace GamePlayManagement
             _jobsSourcesModule = jobsSourcesModule;
             _jobsSourcesModule.SetProfile(this);
             
-            _calendarModule = calendarManager;
-            _calendarModule.SetProfile(this);
+            _mCalendarModule = mCalendarManager;
+            _mCalendarModule.SetProfile(this);
             
             _gameStatusModule = statusModule;
             _gameStatusModule.SetProfile(this);
@@ -38,13 +39,16 @@ namespace GamePlayManagement
             
             _mRequestModuleManager = requestModuleManager;
             _mRequestModuleManager.SetProfile(this);
+
+            _mComplianceManager = complianceManager;
+            _mComplianceManager.SetProfile(this);
             
         }
         private void PlayerLostResetData()
         {
             _itemSuppliersModule.PlayerLostResetData();
             _jobsSourcesModule.PlayerLostResetData();
-            _calendarModule.PlayerLostResetData();
+            _mCalendarModule.PlayerLostResetData();
             _lifeStyleModule.PlayerLostResetData();
             _gameStatusModule.PlayerLostResetData();
             _mRequestModuleManager.PlayerLostResetData();
@@ -52,7 +56,7 @@ namespace GamePlayManagement
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
         private IJobsSourcesModule _jobsSourcesModule;
-        private ICalendarModule _calendarModule;
+        private ICalendarModule _mCalendarModule;
         private ILifestyleModule _lifeStyleModule;
         private IPlayerGameStatusModule _gameStatusModule;
         
@@ -60,6 +64,7 @@ namespace GamePlayManagement
         private DateTime _mGameCreationDate;
         private Guid _mGameId;
         private readonly IRequestsModuleManager _mRequestModuleManager;
+        private readonly IComplianceManager _mComplianceManager;
 
 
         //Public Fields
@@ -77,7 +82,7 @@ namespace GamePlayManagement
         }
         public ICalendarModule GetProfileCalendar()
         {
-            return _calendarModule;
+            return _mCalendarModule;
         }
         public ILifestyleModule GetLifestyleModule()
         {
@@ -92,6 +97,9 @@ namespace GamePlayManagement
         {
             return _mRequestModuleManager;
         }
+
+        public IComplianceManager GetComplianceManager => _mComplianceManager;
+
         
         public int GameDifficulty => _gameStatusModule.GameDifficulty;
 
@@ -101,8 +109,8 @@ namespace GamePlayManagement
             UpdateJobSuppliersInProfile();
             UpdateItemSuppliersInProfile();
             UpdateItemsInProfile();
-
         }
+        
         private void UpdateJobSuppliersInProfile()
         {
             var jobSuppliersInData = BaseJobsCatalogue.Instance.JobSuppliersInData;
@@ -151,11 +159,12 @@ namespace GamePlayManagement
         public void UpdateDataEndOfDay()
         {
             _jobsSourcesModule.ProcessEndOfDay();
+            _mComplianceManager.EndDayComplianceObjects(_mCalendarModule.CurrentDayBitId);
         }
 
         public IWorkDayObject GetCurrentWorkday()
         {
-            return _calendarModule.GetCurrentWorkDayObject();
+            return _mCalendarModule.GetCurrentWorkDayObject();
         }
 
         public void PlayerLost(EndingTypes organSale)

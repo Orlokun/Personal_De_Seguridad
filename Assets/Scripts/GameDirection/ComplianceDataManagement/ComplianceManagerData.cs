@@ -70,7 +70,7 @@ namespace GameDirection.ComplianceDataManagement
             _mActiveComplianceList.Clear();
             //Step 1: Find all Objects Within the Day that are locked and have no unlock condition. 
             var lockedObjects = _mLoadedBaseCompliance.Values.Where(x=> 
-                x.GetComplianceObjectData.StartDayId >= dayBitId 
+                x.GetComplianceObjectData.StartDayId <= dayBitId 
                 && x.GetComplianceObjectData.EndDayId >= dayBitId 
                 && x.GetComplianceObjectData.NeedsUnlock == false).ToList();
             //Step 2: Unlock all objects that have no unlock condition.
@@ -82,7 +82,7 @@ namespace GameDirection.ComplianceDataManagement
                 }
             }
             _mActiveComplianceList = _mLoadedBaseCompliance.Values.Where(x=> 
-                x.GetComplianceObjectData.StartDayId >= dayBitId 
+                x.GetComplianceObjectData.StartDayId <= dayBitId 
                 && x.GetComplianceObjectData.EndDayId >= dayBitId 
                 && x.GetComplianceObjectData.ComplianceStatus == ComplianceStatus.Active).ToList();
         }
@@ -120,22 +120,25 @@ namespace GameDirection.ComplianceDataManagement
                 var hasStartDay = Enum.TryParse(complianceData.values[i][1], out DayBitId startDayId);
                 var hasEndDay = Enum.TryParse(complianceData.values[i][2], out DayBitId endDayId);
                 
-                var unlockIntValue = int.Parse(complianceData.values[i][3]);
+                var complianceTitle = complianceData.values[i][3];
+                var complianceDescription = complianceData.values[i][4];
+                
+                var unlockIntValue = int.Parse(complianceData.values[i][5]);
                 var needsUnlock = unlockIntValue > 0;
                 
-                var hasMotivationalLvl = Enum.TryParse(complianceData.values[i][4],
+                var hasMotivationalLvl = Enum.TryParse(complianceData.values[i][6],
                     out ComplianceMotivationalLevel motivationLvl);
-                var hasComplianceType = Enum.TryParse(complianceData.values[i][5],
+                var hasComplianceType = Enum.TryParse(complianceData.values[i][7],
                     out ComplianceActionType actionType);
-                var hasComplianceObjectType = Enum.TryParse(complianceData.values[i][6],
+                var hasComplianceObjectType = Enum.TryParse(complianceData.values[i][8],
                     out ComplianceObjectType objectType);
-                var hasConsideredParameter = Enum.TryParse(complianceData.values[i][7],
+                var hasConsideredParameter = Enum.TryParse(complianceData.values[i][9],
                     out RequirementConsideredParameter consideredParameter);
                 
-                var requirementRawValues = complianceData.values[i][8].Split(',');
-                var hasToleranceValue = int.TryParse(complianceData.values[i][9], out var toleranceValue);
-                var rewardValues = complianceData.values[i][10].Split('|');
-                var punishmentValues = complianceData.values[i][11].Split('|');
+                var requirementRawValues = complianceData.values[i][10].Split(',');
+                var hasToleranceValue = int.TryParse(complianceData.values[i][11], out var toleranceValue);
+                var rewardValues = complianceData.values[i][12].Split('|');
+                var punishmentValues = complianceData.values[i][13].Split('|');
                 
                 if (!hasId || !hasStartDay || !hasEndDay || !hasMotivationalLvl || !hasComplianceType || !hasComplianceObjectType || 
                     !hasConsideredParameter || !hasToleranceValue)
@@ -144,7 +147,7 @@ namespace GameDirection.ComplianceDataManagement
                     continue;
                 }
                 var complianceObject = Factory.CreateComplianceObject(complianceId, startDayId, endDayId, needsUnlock,
-                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues);                
+                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues, complianceTitle, complianceDescription);                
                 _mLoadedBaseCompliance.Add(complianceId, complianceObject);
             }
             Debug.Log("ComplianceManagerData.LoadComplianceBaseData: Finished request");
