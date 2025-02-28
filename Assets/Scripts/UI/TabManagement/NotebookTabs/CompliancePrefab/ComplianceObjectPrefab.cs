@@ -29,7 +29,7 @@ namespace UI.TabManagement.NotebookTabs.CompliancePrefab
         {
             _mComplianceData = complianceObject;
             _mTitle.text = _mComplianceData.GetComplianceObjectData.GetTitle;
-            _mSubTitle.text = _mComplianceData.GetComplianceObjectData.GetDescription;
+            _mSubTitle.text = _mComplianceData.GetComplianceObjectData.GetSubtitle ;
         }
     }
 }

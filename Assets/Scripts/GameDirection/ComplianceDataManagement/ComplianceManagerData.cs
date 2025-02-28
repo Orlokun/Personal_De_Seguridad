@@ -110,24 +110,25 @@ namespace GameDirection.ComplianceDataManagement
                 var hasEndDay = Enum.TryParse(complianceData.values[i][2], out DayBitId endDayId);
                 
                 var complianceTitle = complianceData.values[i][3];
-                var complianceDescription = complianceData.values[i][4];
+                var complianceSubtitle = complianceData.values[i][4];
+                var complianceDescription = complianceData.values[i][5];
                 
-                var unlockIntValue = int.Parse(complianceData.values[i][5]);
+                var unlockIntValue = int.Parse(complianceData.values[i][6]);
                 var needsUnlock = unlockIntValue > 0;
                 
-                var hasMotivationalLvl = Enum.TryParse(complianceData.values[i][6],
+                var hasMotivationalLvl = Enum.TryParse(complianceData.values[i][7],
                     out ComplianceMotivationalLevel motivationLvl);
-                var hasComplianceType = Enum.TryParse(complianceData.values[i][7],
+                var hasComplianceType = Enum.TryParse(complianceData.values[i][8],
                     out ComplianceActionType actionType);
-                var hasComplianceObjectType = Enum.TryParse(complianceData.values[i][8],
+                var hasComplianceObjectType = Enum.TryParse(complianceData.values[i][9],
                     out ComplianceObjectType objectType);
-                var hasConsideredParameter = Enum.TryParse(complianceData.values[i][9],
+                var hasConsideredParameter = Enum.TryParse(complianceData.values[i][10],
                     out RequirementConsideredParameter consideredParameter);
                 
-                var requirementRawValues = complianceData.values[i][10].Split(',');
-                var hasToleranceValue = int.TryParse(complianceData.values[i][11], out var toleranceValue);
-                var rewardValues = complianceData.values[i][12].Split('|');
-                var punishmentValues = complianceData.values[i][13].Split('|');
+                var requirementRawValues = complianceData.values[i][11].Split(',');
+                var hasToleranceValue = int.TryParse(complianceData.values[i][12], out var toleranceValue);
+                var rewardValues = complianceData.values[i][13].Split('|');
+                var punishmentValues = complianceData.values[i][14].Split('|');
                 
                 if (!hasId || !hasStartDay || !hasEndDay || !hasMotivationalLvl || !hasComplianceType || !hasComplianceObjectType || 
                     !hasConsideredParameter || !hasToleranceValue)
@@ -136,7 +137,7 @@ namespace GameDirection.ComplianceDataManagement
                     continue;
                 }
                 var complianceObject = Factory.CreateComplianceObject(complianceId, startDayId, endDayId, needsUnlock,
-                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues, complianceTitle, complianceDescription);                
+                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues, complianceTitle,complianceSubtitle ,complianceDescription);                
                 _mLoadedBaseCompliance.Add(complianceId, complianceObject);
             }
             Debug.Log("ComplianceManagerData.LoadComplianceBaseData: Finished request");

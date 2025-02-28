@@ -253,24 +253,24 @@ namespace Utils
         #endregion
         public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string description)
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description)
         {
             switch (actionType)
             {
                 case ComplianceActionType.Use:
                     return new ComplianceUseObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, description);
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
                 case ComplianceActionType.KickOut:
                     return new ComplianceKickOut(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues, title, description);
+                        penaltyValues, title, subtitle, description);
                 case ComplianceActionType.Retain:
                     return new ComplianceRetainObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues, title, description);
+                        penaltyValues, title,subtitle, description);
                 default:
                     return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, description);
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
             }
         }
         

@@ -16,6 +16,10 @@ namespace UI.PopUpManager.InfoPanelPopUp
         [SerializeField] protected Transform mPenaltiesParent;
         [SerializeField] protected TMP_Text mTitle;
         [SerializeField] protected TMP_Text mDescription;
+        [SerializeField] protected TMP_Text mEndDay;
+        [SerializeField] protected TMP_Text mTolerance;
+        
+        
         [SerializeField] protected Button closeButton;
 
         [SerializeField] private GameObject omniCreditRewardPrefab;
@@ -35,7 +39,10 @@ namespace UI.PopUpManager.InfoPanelPopUp
         public void SetAndDisplayComplianceObjectInfo(IComplianceObject complianceObjectData)
         {
             _mComplianceObject = complianceObjectData;
-
+            mTitle.text = complianceObjectData.GetComplianceObjectData.GetTitle;
+            mDescription.text = complianceObjectData.GetComplianceObjectData.GetDescription;
+            mEndDay.text = complianceObjectData.GetComplianceObjectData.EndDayId.ToString();
+            mTolerance.text = complianceObjectData.GetComplianceObjectData.ToleranceValue.ToString();
             UpdateRewardsContent();
             UpdatePenaltiesContent();
         }

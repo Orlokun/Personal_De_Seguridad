@@ -23,6 +23,7 @@ namespace GamePlayManagement.ComplianceSystem
         public Dictionary<RewardTypes,IRewardData> PenaltyValues => _mPenalties;
         public ComplianceStatus ComplianceStatus => _mComplianceStatus;
         public string GetTitle => _mTitle;
+        public string GetSubtitle => _mSubtitle;
         public string GetDescription => _mDescription;
         
         
@@ -44,12 +45,13 @@ namespace GamePlayManagement.ComplianceSystem
         private Dictionary<RewardTypes,IRewardData>_mPenalties =  new Dictionary<RewardTypes,IRewardData>();
 
         private string _mTitle;
+        private string _mSubtitle;
         private string _mDescription;
         
         
         public ComplianceObjectData(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string description)
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description)
         {
             _mComplianceId = complianceId;
             _mStartDayId = startDayId;
@@ -67,6 +69,7 @@ namespace GamePlayManagement.ComplianceSystem
             ProcessRewards(rewardValues);
             ProcessPenalties(penaltyValues);
             _mTitle = title;
+            _mSubtitle = subtitle;
             _mDescription = description;
         }
 

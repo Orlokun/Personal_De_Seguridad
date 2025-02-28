@@ -7,8 +7,8 @@ namespace GamePlayManagement.ComplianceSystem
     {
         public ComplianceTortureObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string description) :
-            base(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType, objectType, consideredParameter, complianceReqValues,toleranceValue,rewardValues, penaltyValues, title, description)
+            RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description) :
+            base(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType, objectType, consideredParameter, complianceReqValues,toleranceValue,rewardValues, penaltyValues, title, subtitle, description)
         {
             
         }
