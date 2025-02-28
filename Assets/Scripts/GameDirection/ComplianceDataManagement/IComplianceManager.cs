@@ -8,8 +8,7 @@ namespace GameDirection.ComplianceDataManagement
     public interface IComplianceManager : IProfileModule
     {
         public void LoadComplianceData();
-        public void EndDayComplianceObjects(DayBitId dayBitId);
-
+        public void StartComplianceEndOfDayProcess(DayBitId dayBitId);
         public void UpdateComplianceDay(DayBitId dayBitId);
         public void CompleteCompliance(int id);
         public void FailCompliance(int id);

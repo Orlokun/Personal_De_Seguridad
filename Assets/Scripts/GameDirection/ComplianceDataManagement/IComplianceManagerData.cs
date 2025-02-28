@@ -8,7 +8,6 @@ namespace GameDirection.ComplianceDataManagement
     {
         void LoadComplianceData();
         void StartDayComplianceObjects(DayBitId dayBitId);
-        void EndDayComplianceObjects(DayBitId dayBitId);
         List<IComplianceObject> GetActiveComplianceObjects { get; }
         List<IComplianceObject> GetPassedComplianceObjects { get; }
         List<IComplianceObject> GetFailedComplianceObjects { get; }

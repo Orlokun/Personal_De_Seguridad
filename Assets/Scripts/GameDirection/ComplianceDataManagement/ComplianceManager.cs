@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.ComplianceSystem;
+using GamePlayManagement.GameRequests.RewardsPenalties;
 
 namespace GameDirection.ComplianceDataManagement
 {
@@ -16,9 +18,27 @@ namespace GameDirection.ComplianceDataManagement
             _mComplianceBaseData.LoadComplianceData();
         }
 
-        public void EndDayComplianceObjects(DayBitId dayBitId)
+        public void StartComplianceEndOfDayProcess(DayBitId dayBitId)
         {
-            _mComplianceBaseData.EndDayComplianceObjects(dayBitId);
+            if(_mComplianceBaseData.GetActiveComplianceObjects.All(x=> x.GetComplianceObjectData.EndDayId != dayBitId))
+            {
+                return;
+            }
+            ProcessEndOfDayData(dayBitId);
+        }
+        
+        private void ProcessEndOfDayData(DayBitId dayBitId)
+        {
+            var finishedCompliance = _mComplianceBaseData.GetActiveComplianceObjects.Where(x => x.GetComplianceObjectData.EndDayId == dayBitId).ToList();
+            foreach (var complianceObject in finishedCompliance)
+            {
+                if (complianceObject.GetComplianceObjectData.ComplianceStatus == ComplianceStatus.Active)
+                {
+                    complianceObject.GetComplianceObjectData.SetComplianceStatus(ComplianceStatus.Failed);
+                    ActivateComplianceReward(complianceObject.GetComplianceObjectData.PenaltyValues);
+                }
+            }
+            _mComplianceBaseData.UpdateActiveCompliance();
         }
 
         public List<IComplianceObject> GetCompletedComplianceObjects => _mComplianceBaseData.GetPassedComplianceObjects;
@@ -63,17 +83,46 @@ namespace GameDirection.ComplianceDataManagement
             {
                 var passedCompliance = _mComplianceBaseData.GetActiveComplianceObjects.First(x => x.GetComplianceObjectData.ComplianceId == id).GetComplianceObjectData;
                 passedCompliance.SetComplianceStatus(ComplianceStatus.Passed);
+                ActivateComplianceReward(passedCompliance.RewardValues);
                 _mComplianceBaseData.UpdateActiveCompliance();
             }
         }
         
+        private void ActivateComplianceReward(Dictionary<RewardTypes, IRewardData> passedComplianceRewardValues)
+        {
+            foreach (var rewardData in passedComplianceRewardValues)
+            {
+                switch (rewardData.Key)
+                {
+                    case RewardTypes.OmniCredits:
+                        var omniCreditRewardData = (IOmniCreditRewardData)rewardData.Value;
+                        _mActivePlayer.GetStatusModule().ReceiveOmniCredits(omniCreditRewardData.OmniCreditsAmount);
+                        break;
+                    case RewardTypes.Seniority:
+                        var seniorityRewardData = (ISeniorityRewardData)rewardData.Value;
+                        _mActivePlayer.GetStatusModule().ReceiveSeniority(seniorityRewardData.SeniorityRewardAmount);
+                        break;
+                    case RewardTypes.Trust:
+                        var trustRewardData = (ITrustRewardData)rewardData.Value;
+                        _mActivePlayer.AddFondnessToActiveSupplier(trustRewardData);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            GameDirector.Instance.GetUIController.UpdateInfoUI();
+        }
+        
         public void FailCompliance(int id)
         {
-            if (_mComplianceBaseData.GetActiveComplianceObjects.Any(x => x.GetComplianceObjectData.ComplianceId == id))
+            if (!_mComplianceBaseData.GetActiveComplianceObjects.Any(x => x.GetComplianceObjectData.ComplianceId == id))
             {
-                _mComplianceBaseData.GetActiveComplianceObjects.First(x => x.GetComplianceObjectData.ComplianceId == id).GetComplianceObjectData.SetComplianceStatus(ComplianceStatus.Failed);
-                _mComplianceBaseData.UpdateActiveCompliance();
-            }        
+                return;
+            }
+            var passedCompliance = _mComplianceBaseData.GetActiveComplianceObjects.First(x => x.GetComplianceObjectData.ComplianceId == id).GetComplianceObjectData;
+            passedCompliance.SetComplianceStatus(ComplianceStatus.Failed);
+            ActivateComplianceReward(passedCompliance.RewardValues);
+            _mComplianceBaseData.UpdateActiveCompliance();
         }
 
         public void SetProfile(IPlayerGameProfile currentPlayerProfile)

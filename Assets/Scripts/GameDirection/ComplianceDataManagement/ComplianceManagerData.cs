@@ -48,18 +48,7 @@ namespace GameDirection.ComplianceDataManagement
             }
         }
 
-        public void EndDayComplianceObjects(DayBitId dayBitId)
-        {
-            var finishedCompliance = _mActiveComplianceList.Where(x => x.GetComplianceObjectData.EndDayId == dayBitId).ToList();
-            foreach (var complianceObject in finishedCompliance)
-            {
-                if (complianceObject.GetComplianceObjectData.ComplianceStatus == ComplianceStatus.Active)
-                {
-                    complianceObject.GetComplianceObjectData.SetComplianceStatus(ComplianceStatus.Failed);
-                }
-            }
-            UpdateActiveCompliance();
-        }
+
 
         public List<IComplianceObject> GetActiveComplianceObjects => _mActiveComplianceList;
         

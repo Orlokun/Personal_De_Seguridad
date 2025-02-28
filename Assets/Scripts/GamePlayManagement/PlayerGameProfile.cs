@@ -159,7 +159,7 @@ namespace GamePlayManagement
         public void UpdateDataEndOfDay()
         {
             _jobsSourcesModule.ProcessEndOfDay();
-            _mComplianceManager.EndDayComplianceObjects(_mCalendarModule.CurrentDayBitId);
+            _mComplianceManager.StartComplianceEndOfDayProcess(_mCalendarModule.CurrentDayBitId);
         }
 
         public IWorkDayObject GetCurrentWorkday()

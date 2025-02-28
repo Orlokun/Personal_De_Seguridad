@@ -57,6 +57,7 @@ namespace GamePlayManagement.GameRequests.RequestsManager
                         challenge.MarkAsCompleted();
                         completedHireChallenges.Add(new[] {supplierIndex, challenge.RequestId});
                         _mRequestModuleData.AddCompletedRequestInData((DialogueSpeakerId)supplierIndex, challenge);
+                        ProcessRewardsAndPenalties(challenge.Rewards);
                     }
                 }
             }
