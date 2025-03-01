@@ -5,7 +5,7 @@ using GamePlayManagement.ProfileDataModules;
 
 namespace GameDirection.ComplianceDataManagement
 {
-    public interface IComplianceManager : IProfileModule
+    public interface IComplianceManager : IProfileModule, IComplianceEvaluationEvents
     {
         public void LoadComplianceData();
         public void StartComplianceEndOfDayProcess(DayBitId dayBitId);
@@ -16,5 +16,10 @@ namespace GameDirection.ComplianceDataManagement
         public List<IComplianceObject>GetCompletedComplianceObjects { get; }
         public List<IComplianceObject>GetFailedComplianceObjects { get; }
         public List<IComplianceObject>GetActiveComplianceObjects { get; }
+    }
+
+    public interface IComplianceEvaluationEvents
+    {
+        void CheckRadioCompleted();
     }
 }

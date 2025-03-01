@@ -17,8 +17,9 @@ namespace UI.PopUpManager.InfoPanelPopUp
         [SerializeField] protected TMP_Text mTitle;
         [SerializeField] protected TMP_Text mDescription;
         [SerializeField] protected TMP_Text mEndDay;
-        [SerializeField] protected TMP_Text mTolerance;
         
+        [SerializeField] protected TMP_Text mCurrentActions;
+        [SerializeField] protected TMP_Text mTolerance;
         
         [SerializeField] protected Button closeButton;
 
@@ -43,6 +44,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
             mDescription.text = complianceObjectData.GetComplianceObjectData.GetDescription;
             mEndDay.text = complianceObjectData.GetComplianceObjectData.EndDayId.ToString();
             mTolerance.text = complianceObjectData.GetComplianceObjectData.ToleranceValue.ToString();
+            mCurrentActions.text = complianceObjectData.ComplianceCurrentCount.ToString();
             UpdateRewardsContent();
             UpdatePenaltiesContent();
         }

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
+using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.ComplianceSystem;
 using GamePlayManagement.GameRequests.RewardsPenalties;
+using UnityEngine;
 
 namespace GameDirection.ComplianceDataManagement
 {
@@ -134,5 +136,24 @@ namespace GameDirection.ComplianceDataManagement
         {
             
         }
+
+        #region Compliance Evaluation API
+        public void CheckRadioCompleted()
+        {
+            if(_mComplianceBaseData.GetActiveComplianceObjects.Any(x=> x.GetComplianceObjectData.ActionType == ComplianceActionType.Use && x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Radio))
+            {
+                var radioCompliance = _mComplianceBaseData.GetActiveComplianceObjects.First(x=> x.GetComplianceObjectData.ActionType == ComplianceActionType.Use && x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Radio);
+                radioCompliance.MarkOneAction();
+                if (radioCompliance.IsToleranceLevelReached)
+                {
+                    radioCompliance.GetComplianceObjectData.SetComplianceStatus(ComplianceStatus.Passed);
+                    ActivateComplianceReward(radioCompliance.GetComplianceObjectData.RewardValues);
+                    _mComplianceBaseData.UpdateActiveCompliance();
+                    Debug.Log("Completed Radio Compliance Full Target");
+                }
+                Debug.Log($"Completed Radio Compliance {radioCompliance.ComplianceCurrentCount} times");
+            }
+        }
+        #endregion
     }
 }

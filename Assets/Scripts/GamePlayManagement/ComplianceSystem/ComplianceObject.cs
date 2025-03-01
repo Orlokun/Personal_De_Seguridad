@@ -6,10 +6,17 @@ namespace GamePlayManagement.ComplianceSystem
     public class ComplianceObject : IComplianceObject
     {
         protected IComplianceObjectData MComplianceObjectData;
+        private int _mComplianceActionCount;
+        public int ComplianceCurrentCount => _mComplianceActionCount;
         public IComplianceObjectData GetComplianceObjectData => MComplianceObjectData;
         public void MarkAsActive()
         {
             MComplianceObjectData.SetComplianceStatus(ComplianceStatus.Active);
+        }
+
+        public void MarkOneAction()
+        {
+            _mComplianceActionCount++;
         }
 
         public ComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
@@ -18,6 +25,7 @@ namespace GamePlayManagement.ComplianceSystem
         {
             MComplianceObjectData = new ComplianceObjectData(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
         }
+        public bool IsToleranceLevelReached => _mComplianceActionCount >= MComplianceObjectData.ToleranceValue;
 
     }
 }

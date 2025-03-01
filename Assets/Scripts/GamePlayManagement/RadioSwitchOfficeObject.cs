@@ -1,6 +1,8 @@
-﻿using DialogueSystem.Interfaces;
+﻿using System.Collections;
+using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
+using GameDirection.ComplianceDataManagement;
 using InputManagement.MouseInput;
 using UnityEngine;
 
@@ -17,8 +19,12 @@ namespace GamePlayManagement
         private AudioSource _mAudioSource;
         public AudioSource GetAudioSource => _mAudioSource;
         
+        
+        private bool _mWasStoppedManually;
         private int clickCount = 0;
 
+        private Coroutine _mRadioCoroutine;
+        
         private void Start()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -31,10 +37,6 @@ namespace GamePlayManagement
         }
 
         #endregion
-        public void ReceiveActionClickedEvent()
-        {
-            throw new System.NotImplementedException();
-        }
 
         public void ReceiveActionClickedEvent(RaycastHit hitInfo)
         {
@@ -42,16 +44,51 @@ namespace GamePlayManagement
             {
                 if (_mAudioSource.isPlaying)
                 {
-                    _mAudioSource.Stop();
+                    _mWasStoppedManually = true;
+                    StopMusic();
                     return;
                 }
-                _mAudioSource.Play();    
+                StartPlayingMusic();
             }
         }
 
         public void ReceiveDeselectObjectEvent()
         {
-            throw new System.NotImplementedException();
+            
+        }
+        
+        private void StartPlayingMusic()
+        {
+            _mWasStoppedManually = false;
+            _mAudioSource.Play();
+            _mRadioCoroutine = StartCoroutine(CheckIfAudioFinished());
+        }
+
+        private void StopMusic()
+        {
+            _mAudioSource.Stop();
+            if (_mRadioCoroutine != null && _mWasStoppedManually)
+            {
+                StopCoroutine(_mRadioCoroutine);
+                _mRadioCoroutine = null;
+            }
+        }
+        private IEnumerator CheckIfAudioFinished()
+        {
+            yield return new WaitUntil(() => !_mAudioSource.isPlaying);
+            if (!_mWasStoppedManually)
+            {
+                CompleteFinishRadioClip();
+                _mRadioCoroutine = null;
+                yield break;
+            }
+            Debug.Log("Radio clip stopped Manually");
+        }
+        private void CompleteFinishRadioClip()
+        {
+            StopMusic();
+            var complianceManager = (IComplianceEvaluationEvents)GameDirector.Instance.GetActiveGameProfile.GetComplianceManager;
+            complianceManager.CheckRadioCompleted();
         }
 
         public void ReceiveClickEvent()
@@ -63,10 +100,11 @@ namespace GamePlayManagement
             }
             if (_mAudioSource.isPlaying)
             {
-                _mAudioSource.Stop();
+                _mWasStoppedManually = true;
+                StopMusic();
                 return;
             }
-            _mAudioSource.Play();
+            StartPlayingMusic();
         }
 
         private bool _mHasSnippet = false;

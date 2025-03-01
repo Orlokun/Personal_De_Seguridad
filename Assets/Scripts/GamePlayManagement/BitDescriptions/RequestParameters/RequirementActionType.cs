@@ -33,6 +33,7 @@
         Traps,
         Other,
         AnyItem,
+        Radio
     }
     
     public enum RequirementActionType
