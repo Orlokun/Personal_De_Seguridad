@@ -125,7 +125,5 @@ namespace UI.PopUpManager.InfoPanelPopUp
                 }
             }
         }
-
-
     }
 }
