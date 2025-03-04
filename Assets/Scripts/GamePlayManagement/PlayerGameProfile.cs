@@ -144,7 +144,7 @@ namespace GamePlayManagement
         private void UpdateItemsInProfile()
         {
             var itemsInCatalogue = ItemsDataController.Instance.ExistingBaseItemsInCatalogue;
-            var activeProviders = GetActiveItemSuppliersModule().ActiveProviderObjects;
+            var activeProviders = GetActiveItemSuppliersModule().ActiveItemStores;
             foreach (var itemSupplier in activeProviders)
             {
                 foreach (var suppliersItem in itemsInCatalogue[itemSupplier.Value.BitSupplierId])

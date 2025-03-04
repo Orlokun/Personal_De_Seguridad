@@ -28,7 +28,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
             _mItemObject = itemToDisplay;
             itemName.text = _mItemObject.ItemName;
             itemCost.text = _mItemObject.Cost.ToString(CultureInfo.InvariantCulture);
-            itemActions.text = _mItemObject.ItemActions.ToString(CultureInfo.InvariantCulture);
+            itemActions.text = _mItemObject.ItemAmount.ToString(CultureInfo.InvariantCulture);
             itemDescription.text = _mItemObject.ItemDescription;
             itemImage.sprite = itemToDisplay.ItemIcon;
             mCloseInfoPopUpButton.onClick.AddListener(ClosePanel);

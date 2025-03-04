@@ -38,7 +38,7 @@ namespace UI
         void ToggleBackground(bool toggleValue);
         IDialogueOperator DialogueOperator { get; }
         void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
-        void ItemUnlockedFeedback(BitItemSupplier itemSupplier);
+        void ElementUnlockedFeedback(BitItemSupplier itemSupplier);
         void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera);
         bool IsObjectActive(CanvasBitId canvasBitId, int panel);
     }
@@ -119,7 +119,7 @@ namespace UI
             var bannerText = $"New Job Found in: {jobSupplierName}";
             ShowFeedback(bannerText);
         }
-        public void ItemUnlockedFeedback(BitItemSupplier itemSupplier)
+        public void ElementUnlockedFeedback(BitItemSupplier itemSupplier)
         {
             var jobSupplierName = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(itemSupplier).StoreName;
             var bannerText = $"Item Supplier Unlocked: {jobSupplierName}";

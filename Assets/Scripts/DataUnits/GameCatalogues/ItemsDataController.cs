@@ -50,6 +50,12 @@ namespace DataUnits.GameCatalogues
         private Dictionary<BitItemSupplier, List<IItemObject>> _mBaseCatalogueBaseItemsFromData= new Dictionary<BitItemSupplier, List<IItemObject>>();
         private bool _mInjectedData;
 
+        public List<IItemObject> GetAllSupplierItems(BitItemSupplier suppliers)
+        {
+            return _mBaseCatalogueBaseItemsFromData[suppliers];
+        }
+
+        
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -812,8 +818,8 @@ namespace DataUnits.GameCatalogues
                 //Step 8: Get Item Sprite Icon name
                 var spriteName = _mItemCatalogueDataString.values[i][7];
                 //Step 9: Get Item Actions 
-                var gotActions = int.TryParse(_mItemCatalogueDataString.values[i][8], out var itemActions);
-                if (!gotActions)
+                var gotMaxAmount = int.TryParse(_mItemCatalogueDataString.values[i][8], out var itemStoreAmount);
+                if (!gotMaxAmount)
                 {
                     Debug.LogWarning("[LoadBaseItemDataFromJson] Item Actions must be available in data");
                 }
@@ -826,7 +832,7 @@ namespace DataUnits.GameCatalogues
                 //Step 9: Create Item Scriptable Object and add to List in Dictionary
                 IItemObject itemDataObject = ScriptableObject.CreateInstance<ItemObject>();
                 itemDataObject.SetItemObjectData(supplierBitId, bitItemType, itemId, itemName, unlockPoints, 
-                    itemPrice,itemDescription, spriteName, itemActions, gamePrefabName);
+                    itemPrice,itemDescription, spriteName, itemStoreAmount, gamePrefabName);
                 _mBaseCatalogueBaseItemsFromData[supplierBitId].Add(itemDataObject);
                 Debug.Log($"Added Item: {itemDataObject.ItemName}");
                 Debug.Log($"Current Item Supplier: {itemDataObject.ItemSupplier}");
@@ -874,6 +880,7 @@ namespace DataUnits.GameCatalogues
             _mInjectedData = true;
         }
         #endregion
+
 
         public IItemObject GetItemFromBaseCatalogue(BitItemSupplier itemSupplier, int itemBitId)
         {

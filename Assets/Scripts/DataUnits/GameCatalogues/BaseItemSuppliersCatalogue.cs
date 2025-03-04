@@ -118,13 +118,13 @@ namespace DataUnits.GameCatalogues
                     Debug.LogWarning("[LoadItemSuppliersFromJson] Reliance must be available");
                 }
                 
-                var gotOmniCredits = int.TryParse(_mItemSuppliersFromData.values[i][10], out var omniCredits);
-                if (!gotOmniCredits)
+                var gotStockRefill = int.TryParse(_mItemSuppliersFromData.values[i][10], out var stockRefillPeriod);
+                if (!gotStockRefill)
                 {
-                    Debug.LogWarning("[LoadItemSuppliersFromJson] OmniCredits must be available");
+                    Debug.LogWarning("[LoadItemSuppliersFromJson] StockRefillPeriod must be available");
                 }
                 var spriteName = _mItemSuppliersFromData.values[i][11];
-                itemSupplierDataObj.SetStats(reliance,quality,kindness,omniCredits, spriteName);
+                itemSupplierDataObj.SetStats(reliance,quality,kindness,stockRefillPeriod, spriteName);
                 _mIItemSuppliersInData.Add(itemSupplierDataObj);
             }
         }

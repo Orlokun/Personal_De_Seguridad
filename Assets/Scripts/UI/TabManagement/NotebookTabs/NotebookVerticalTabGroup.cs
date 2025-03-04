@@ -244,7 +244,7 @@ namespace UI.TabManagement.NotebookTabs
 
         private void ManageSuppliersInstantiation(int selectedTab)
         {
-            var availableItemSuppliers = _playerProfile.GetActiveItemSuppliersModule().ActiveProviderObjects;
+            var availableItemSuppliers = _playerProfile.GetActiveItemSuppliersModule().ActiveItemStores;
             var index = 0;
             foreach (var availableItemSupplier in availableItemSuppliers)
             {

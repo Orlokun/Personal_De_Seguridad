@@ -70,7 +70,7 @@ namespace UI.TabManagement.ItemTypeTab
         private void SetObjectValuesInUI()
         {
             costTextObject.text = MItemObject.Cost.ToString(CultureInfo.InvariantCulture);
-            otherCostTextObject.text = MItemObject.ItemActions.ToString(CultureInfo.InvariantCulture);
+            otherCostTextObject.text = MItemObject.ItemAmount.ToString(CultureInfo.InvariantCulture);
             itemNameTextObject.text = MItemObject.ItemName;
             iconImage.sprite = MItemObject.ItemIcon;
         }

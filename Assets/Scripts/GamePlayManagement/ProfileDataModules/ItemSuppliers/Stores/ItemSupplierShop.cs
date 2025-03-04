@@ -6,96 +6,71 @@ using DataUnits.ItemSources;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using UnityEngine;
+using Utils;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
 {
-    public interface IItemSupplierShop
-    {
-        void AddItemToSupplier(int item);
-        void RemoveItemFromSupplier(int item);
-        public bool IsItemManaged(int bitItemId);
-        public BitItemSupplier BitSupplierId { get; }
-        public IItemObject GetItemObject(int bitItemId);
-        public IItemSupplierDataObject GetSupplierData { get; }
-        public List<IItemObject> GetItemsOfType(BitItemType itemType);
-
-    }
-    
     public class ItemSupplierShop : IItemSupplierShop
     {
-        public BitItemSupplier BitSupplierId { get; }
+        public BitItemSupplier BitSupplierId => _mSupplierId;
+        private BitItemSupplier _mSupplierId;
 
+        private int _mUnlockedItems;
+        
         private IItemSupplierDataObject _mSupplierData;
-        private int _mActiveItems = 0;
-        private Dictionary<int, IItemObject> _activeItemsData = new Dictionary<int, IItemObject>();
-        
-        
         private IItemsDataController _mItemDataController;
-        private IBaseItemSuppliersCatalogue _mSuppliersCatalogue;
+        private List<IItemSupplierObjectInInventory> _mAllSupplierItems = new List<IItemSupplierObjectInInventory>();
+        public  List<IItemSupplierObjectInInventory> GetAllSupplierItems => _mAllSupplierItems;
+        
+        public IItemSupplierDataObject GetSupplierData => _mSupplierData;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bitSupplierId"></param>
-        /// <param name="itemDataController"></param>
-        /// <param name="suppliersCatalogue"></param>
         public ItemSupplierShop(BitItemSupplier bitSupplierId, IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
-            BitSupplierId = bitSupplierId;
-            _mItemDataController = itemDataController;
-            _mSuppliersCatalogue = suppliersCatalogue;
-            _mSupplierData = _mSuppliersCatalogue.GetItemSupplierData(BitSupplierId);
+            _mSupplierId = bitSupplierId;
+            var supplierItems = itemDataController.GetAllSupplierItems(bitSupplierId);
+            CreateObjectsInShop(supplierItems);
+            _mSupplierData = suppliersCatalogue.GetItemSupplierData(BitSupplierId);
         }
-        public IItemSupplierDataObject GetSupplierData => _mSupplierData;
+
+        private void CreateObjectsInShop(List<IItemObject> items)
+        {
+            foreach (var itemSupplierObjectInInventory in items)
+            {
+                var shopObject = new ItemSupplierObjectInInventory(itemSupplierObjectInInventory);
+                _mAllSupplierItems.Add(shopObject);
+            }
+        }
+
         public List<IItemObject> GetItemsOfType(BitItemType itemType)
         {
-            return (from activeItem in _activeItemsData where activeItem.Value.ItemType == itemType select activeItem.Value).ToList();
+            return _mAllSupplierItems.Where(item => item.GetItemType == itemType).Select(item => item.GetItemData).ToList();
         }
         public IItemObject GetItemObject(int bitItemId)
         {
-            return (_mActiveItems & bitItemId) == 0 ? null : _activeItemsData[bitItemId];
+            return BitOperator.IsActive(_mUnlockedItems, bitItemId) ? _mAllSupplierItems[bitItemId].GetItemData : null;
         }
         public bool IsItemManaged(int bitItemId)
         {
-            return (_mActiveItems & bitItemId) != 0;
+            return BitOperator.IsActive(_mUnlockedItems,bitItemId);
         }
-        public void AddItemToSupplier(int bitItemId)
+        public void UnlockItem(int bitItemId)
         {
-            if ((_mActiveItems & bitItemId) != 0)
+            if (BitOperator.IsActive(_mUnlockedItems, bitItemId))
             {
                 return;
             }
-            _mActiveItems |= bitItemId;
-            
-            if (_activeItemsData.ContainsKey(bitItemId))
-            {
-                return;
-            }
-
-            var getItem = _mItemDataController.GetItemFromBaseCatalogue(BitSupplierId, bitItemId);
-            if (getItem == null)
-            {
-                Debug.LogError("[AddItemToSupplier] Item Added must exist in Base Catalogue");
-                return;
-            }
-            _activeItemsData.Add(bitItemId,getItem);
+            _mUnlockedItems |= bitItemId;
+            var unlockedItem = _mAllSupplierItems.First(x=> x.GetItemData.BitId == bitItemId);
+            unlockedItem.Unlock();
         }
-        
-        public void RemoveItemFromSupplier(int item)
+        public void LockItem(int bitItemId)
         {
-            if ((_mActiveItems & item) == 0)
+            if (BitOperator.IsActive(_mUnlockedItems, bitItemId))
             {
                 return;
             }
-            _mActiveItems &= ~item;
-            
-            if (!_activeItemsData.ContainsKey(item))
-            {
-                Debug.LogError("[RemoveItemFromSupplier] Item removed must be managed in Data DICT");
-                return;
-            }
-            _activeItemsData.Remove(item);
+            _mUnlockedItems &= ~bitItemId;
+            _mAllSupplierItems[bitItemId].Lock();
         }
-
     }
 }

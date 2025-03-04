@@ -16,8 +16,9 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         private int _mActiveProviders;
         private IItemsDataController _mItemDataController;
         private IBaseItemSuppliersCatalogue _mItemSuppliersCatalogue;
+        
         private Dictionary<BitItemSupplier, IItemSupplierShop> _activeStores = new Dictionary<BitItemSupplier, IItemSupplierShop>();
-        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveProviderObjects => _activeStores;
+        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveItemStores => _activeStores;
 
         public int UnlockedItemSuppliers => _mActiveProviders;
 
@@ -49,21 +50,12 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         public void UnlockItemInSupplier(BitItemSupplier supplier, int itemBitId)
         {
             var castSupplier = (int) supplier;
-            if ((castSupplier & _mActiveProviders) == 0)
+            if (!BitOperator.IsActive(_mActiveProviders,castSupplier))
             {
                 Debug.LogWarning("[ItemSuppliersModule.AddItemToSupplier] Item supplier must be active in module");
                 return;
             }
-            _activeStores[supplier].AddItemToSupplier(itemBitId);
-        }
-
-        public void RemoveItemFromSupplier(BitItemSupplier supplier, int itemBitId)
-        {
-            if (!IsSupplierActive(supplier))
-            {
-                return;
-            }
-            _activeStores[supplier].RemoveItemFromSupplier(itemBitId);
+            _activeStores[supplier].UnlockItem(itemBitId);
         }
 
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId)
@@ -100,26 +92,21 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             var castSupplier = (int) provider;
             return (_mActiveProviders & castSupplier) != 0;
         }
-        public void UnlockSupplier(BitItemSupplier provider)
+        public async void UnlockSupplier(BitItemSupplier provider)
         {
             Debug.Log($"[ItemSuppliersModule.UnlockSupplier] Start Download Unlocked Dialogues. Item Provider: {provider}");
             var castProvider = (int) provider;
-            
-            if(!BitOperator.IsActive(_mActiveProviders, castProvider))
-            {
-                _mActiveProviders |= castProvider;
-            }
-
-            if (_activeStores.ContainsKey(provider))
+            if(BitOperator.IsActive(_mActiveProviders, castProvider) || _activeStores.ContainsKey(provider))
             {
                 return;
             }
+            _mActiveProviders |= castProvider;
             var itemSupplier = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(provider);
-            itemSupplier.StartUnlockedData();
+            await itemSupplier.StartUnlockedData();
             var itemSupplierShop = Factory.CreateItemStoreSupplier(provider, _mItemDataController, _mItemSuppliersCatalogue);
             itemSupplier.InitializeStore(itemSupplierShop);
             _activeStores.Add(provider, itemSupplierShop);
-            UIController.Instance.ItemUnlockedFeedback(provider);
+            UIController.Instance.ElementUnlockedFeedback(provider);
         }
 
         public void RemoveSupplier(BitItemSupplier provider)

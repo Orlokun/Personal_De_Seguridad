@@ -27,9 +27,11 @@ namespace DataUnits.ItemSources
         private int _mReliance;
         private int _mQuality;
         private int _mKindness;
-        private int _mOmniCredits;
+        private int _mRefillStockPeriod;
         private string _mSpriteName;
         private IItemSupplierShop _supplierShop;
+        
+        public IItemSupplierShop SupplierShop => _supplierShop;
         
         [SerializeField] protected Sprite supplierPortrait;
         public Sprite SupplierPortrait =>supplierPortrait;
@@ -53,27 +55,27 @@ namespace DataUnits.ItemSources
         private Dictionary<int, IDialogueObject> _mDeflectionDialoguesDict = new Dictionary<int, IDialogueObject>();
         private Dictionary<int, IDialogueObject> _mInsistenceDialoguesDict = new Dictionary<int, IDialogueObject>();
 
-        public void SetStats(int reliance, int quality, int kindness, int omniCredits, string spriteName)
+        public void SetStats(int reliance, int quality, int kindness, int stockRefillPeriod, string spriteName)
         {
             _mReliance = reliance;
             _mQuality = quality;
             _mKindness = kindness;
-            _mOmniCredits = omniCredits;
+            _mRefillStockPeriod = stockRefillPeriod;
             _mSpriteName = spriteName;
         }
 
         public int Reliance => _mReliance;
         public int Quality => _mQuality;
         public int Kindness => _mKindness;
-        public int OmniCredits => _mOmniCredits;
+        public int RefillStockPeriod => _mRefillStockPeriod;
         public string SpriteName
         {
             get => _mSpriteName;
         }
 
-        public void StartUnlockedData()
+        public async Task StartUnlockedData()
         {
-            GetImportantAndInsistenceDialogues();
+            await GetImportantAndInsistenceDialogues();
         }
         public void PlayerLostResetData()
         {
@@ -85,7 +87,7 @@ namespace DataUnits.ItemSources
             _supplierShop = shop;
         }
 
-        private async void GetImportantAndInsistenceDialogues()
+        private async Task GetImportantAndInsistenceDialogues()
         {
             var importantDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.ImportantDialogue);
             var insistenceDialoguesUrl = DataSheetUrls.SuppliersDialogueGameData(SpeakerIndex, DialogueType.InsistenceDialogue);
@@ -371,12 +373,13 @@ namespace DataUnits.ItemSources
         public int ItemTypesAvailable { get; set; }
         public string StoreDescription { get; set; }
         public void LoadDeflectionsDialogueData();
-        public void SetStats(int reliance, int quality, int kindness, int omniCredits, string spriteName);
+        public void SetStats(int reliance, int quality, int kindness, int stockRefillPeriod, string spriteName);
         public int Reliance { get; }
         public int Quality { get; }
         public int Kindness { get; }
-        public int OmniCredits { get; }
-        public void StartUnlockedData();
+        public int RefillStockPeriod { get; }
+        public Task StartUnlockedData();
         public void InitializeStore(IItemSupplierShop shop);
+        public IItemSupplierShop SupplierShop { get; }
     }
 }

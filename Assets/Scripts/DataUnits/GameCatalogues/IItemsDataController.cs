@@ -9,6 +9,7 @@ namespace DataUnits.GameCatalogues
     {
         public bool AreSpecialStatsReady { get; }
         public Dictionary<BitItemSupplier, List<IItemObject>> ExistingBaseItemsInCatalogue { get; }
+        public List<IItemObject> GetAllSupplierItems(BitItemSupplier suppliers);
         public IItemObject GetItemFromBaseCatalogue(BitItemSupplier itemSupplier, int itemBitId);
         public IItemTypeStats GetItemStats(BitItemSupplier itemSupplier, BitItemType itemType, int itemBitId);
         public IGuardBaseData GetStatsForGuard(BitItemSupplier itemSupplier, int itemBitId);
