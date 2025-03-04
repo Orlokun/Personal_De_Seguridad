@@ -2,6 +2,7 @@
 using System.Linq;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace GamePlayManagement
 {
@@ -28,6 +29,56 @@ namespace GamePlayManagement
             _mOtherItems.Clear();        
         }
 
+        #region AddItem
+
+        public int GetItemCount(BitItemSupplier itemSupplier, int itemId, BitItemType itemType)
+        {
+            switch (itemType)
+            {
+                case BitItemType.GUARD_ITEM_TYPE:
+                    return _mGuardItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ? 
+                        _mGuardItems.First(x => x.ItemId == itemId).AvailableCount : 0;
+                case BitItemType.CAMERA_ITEM_TYPE:
+                    return _mCameraItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
+                        _mCameraItems.First(x => x.ItemId == itemId).AvailableCount : 0;
+                case BitItemType.WEAPON_ITEM_TYPE:
+                    return _mWeaponItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
+                        _mWeaponItems.First(x => x.ItemId == itemId).AvailableCount : 0;
+                case BitItemType.TRAP_ITEM_TYPE:
+                    return _mTrapItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
+                        _mTrapItems.First(x => x.ItemId == itemId).AvailableCount : 0;
+                case BitItemType.OTHERS_ITEM_TYPE:
+                    return _mOtherItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
+                        _mOtherItems.First(x => x.ItemId == itemId).AvailableCount : 0;
+                default:
+                    return 0;
+            }
+        }
+
+        public int GetItemCount(BitItemSupplier itemSupplier, int itemId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool IsItemInInventory(BitItemSupplier itemSupplier, int itemId, BitItemType itemType)
+        {
+            switch (itemType)
+            {
+                case BitItemType.GUARD_ITEM_TYPE:
+                    return _mGuardItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
+                case BitItemType.CAMERA_ITEM_TYPE:
+                    return _mCameraItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
+                case BitItemType.WEAPON_ITEM_TYPE:
+                    return _mWeaponItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
+                case BitItemType.TRAP_ITEM_TYPE:
+                    return _mTrapItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
+                case BitItemType.OTHERS_ITEM_TYPE:
+                    return _mOtherItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
+                default:
+                    return false;
+            }
+        }
+
         public void AddItemToInventory(IItemObject incomingItem, int amount)
         {
             switch (incomingItem.ItemType)
@@ -49,7 +100,6 @@ namespace GamePlayManagement
                     break;
             }
         }
-
         private void ProcessAddedGuardItem(IItemObject incomingItem, int amount)
         {
             if (_mGuardItems.Any(x=> x.ItemId == incomingItem.BitId && x.ItemSupplier == incomingItem.ItemSupplier))
@@ -63,7 +113,6 @@ namespace GamePlayManagement
                 _mGuardItems.Add(newIGuard);
             }
         }
-        
         private void ProcessAddedCameraItem(IItemObject incomingItem, int amount)
         {
             if (_mCameraItems.Any(x=> x.ItemId == incomingItem.BitId && x.ItemSupplier == incomingItem.ItemSupplier))
@@ -77,7 +126,6 @@ namespace GamePlayManagement
                 _mCameraItems.Add(newCamera);
             }
         }
-
         private void ProcessAddedWeaponItem(IItemObject incomingItem, int amount)
         {
             if (_mWeaponItems.Any(x=> x.ItemId == incomingItem.BitId && x.ItemSupplier == incomingItem.ItemSupplier))
@@ -117,10 +165,6 @@ namespace GamePlayManagement
                 _mOtherItems.Add(newOtherItem);
             }
         }
-       
-        public void RemoveItemFromInventory(IItemObject removedItem, int amount)
-        {
-            
-        }
+        #endregion
     }
 }
