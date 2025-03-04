@@ -1,7 +1,10 @@
+using GamePlayManagement.BitDescriptions.Suppliers;
+
 namespace DataUnits.ItemScriptableObjects
 {
-    public interface ICameraStats : IItemTypeStats
+    public interface ICameraBaseData : IItemTypeStats
     {
+        public BitItemSupplier ItemSupplier { get; }
         public int Id { get; }
         public int Range { get; }
         public int PeopleInSight { get; }

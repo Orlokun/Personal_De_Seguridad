@@ -44,7 +44,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         [SerializeField] private ParticleSystem myParticleSystem;
         public Transform GunParentTransform => mGunPositionTransform;
         [SerializeField] private Transform mGunPositionTransform;
-        private IWeaponStats CurrentWeaponStats => (IWeaponStats)_currentWeaponItem?.ItemStats;
+        private IWeaponBaseData CurrentIWeaponBaseData => (IWeaponBaseData)_currentWeaponItem?.ItemStats;
         private IItemObject _currentWeaponItem;
         private GameObject _currentWeaponObject;
         
@@ -83,7 +83,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region GuardStats
-        public IGuardStats Stats => (IGuardStats)MyStats;
+        public IGuardBaseData BaseData => (IGuardBaseData)MyStats;
         #endregion
 
         #endregion
@@ -117,7 +117,7 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
-            var guardSpeed = (float)Stats.Speed / 10;
+            var guardSpeed = (float)BaseData.Speed / 10;
             switch (currentStatus)
             {
                 case BaseCharacterMovementStatus.Walking:
@@ -166,7 +166,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                 return;
             }
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
-            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
+            _fieldOfViewModule.Fov3D.SetupCharacterFoV(BaseData.FoVRadius);
         }
         
         private void SetupInspectionModule()
@@ -183,10 +183,10 @@ namespace GamePlayManagement.ItemManagement.Guards
         }
         private async void EvaluateStatsForInspection()
         {
-            var waitResultTime = BaseAwakeTime / Stats.Proactive;
+            var waitResultTime = BaseAwakeTime / BaseData.Proactive;
             await Task.Delay(waitResultTime);
             
-            var willWalkAround = RandomChanceDice(Stats.Proactive);
+            var willWalkAround = RandomChanceDice(BaseData.Proactive);
             if (willWalkAround)
             {
                 Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} will start inspecting areas");

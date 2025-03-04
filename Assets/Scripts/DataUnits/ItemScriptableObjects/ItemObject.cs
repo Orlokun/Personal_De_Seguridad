@@ -89,12 +89,12 @@ namespace DataUnits.ItemScriptableObjects
 
     public enum InfoItemType
     {
-        Regular = 1 << 1,
-        Ancient = 1 << 2,
-        Robotic = 1 << 3,
-        Magical = 1 << 4,
-        Human = 1 << 5,
-        Undead = 1 << 6,
+        Regular = 1 << 0,
+        Ancient = 1 << 1,
+        Robotic = 1 << 2,
+        Magical = 1 << 3,
+        Human = 1 << 4,
+        Undead = 1 << 5,
     }
     
     public enum ItemBaseQuality

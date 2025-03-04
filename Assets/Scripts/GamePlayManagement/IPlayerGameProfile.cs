@@ -1,4 +1,3 @@
-using System;
 using DialogueSystem;
 using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
@@ -18,18 +17,12 @@ namespace GamePlayManagement
         public ICalendarModule GetProfileCalendar();
         public ILifestyleModule GetLifestyleModule();
         public IPlayerGameStatusModule GetStatusModule();
+        public IPlayerInventoryModule GetInventoryModule();
         public void UpdateProfileData();
         public int GeneralOmniCredits { get;}
         public void UpdateDataEndOfDay();
         public IWorkDayObject GetCurrentWorkday();
         void PlayerLost(EndingTypes organSale);
         void AddFondnessToActiveSupplier(ITrustRewardData trustRewardData);
-    }
-
-    public interface IGameBasedPlayerData
-    {
-        public int GameDifficulty { get; }
-        public DateTime GameCreationDate { get; }
-        public Guid GameId { get; }
     }
 }

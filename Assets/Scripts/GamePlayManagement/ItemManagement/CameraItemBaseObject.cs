@@ -25,7 +25,7 @@ namespace GamePlayManagement.ItemManagement
 
         #region CameraStats
         protected IItemTypeStats MyStats;
-        private ICameraStats Stats => (ICameraStats) MyStats;
+        private ICameraBaseData BaseData => (ICameraBaseData) MyStats;
         private IItemObject _myCameraData;
         public IItemObject CameraBaseData => _myCameraData;
 
@@ -78,7 +78,7 @@ namespace GamePlayManagement.ItemManagement
             _myDrawFieldOfView = GetComponent<DrawFoVLines>();
             _my3dFieldOfView = GetComponent<FieldOfView3D>();
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(_myDrawFieldOfView, _my3dFieldOfView); 
-            _fieldOfViewModule.Fov3D.SetupCharacterFoV(Stats.FoVRadius);
+            _fieldOfViewModule.Fov3D.SetupCharacterFoV(BaseData.FoVRadius);
         }
         #region Interactive Object Interface
         public override void ReceiveClickEvent()

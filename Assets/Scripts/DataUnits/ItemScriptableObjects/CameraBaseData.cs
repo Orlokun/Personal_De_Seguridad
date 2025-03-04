@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace DataUnits.ItemScriptableObjects
 {
-    public class CameraStats : ICameraStats
+    public class CameraBaseData : ICameraBaseData
     {
+        private readonly BitItemSupplier _mItemSupplier;
         private readonly int _bitId;
         private readonly int _mRange;
         private readonly int _mPeopleInSight;
@@ -30,8 +32,9 @@ namespace DataUnits.ItemScriptableObjects
         public ItemOrigin ItemOrigin { get; }
         public ItemBaseQuality ItemBaseQuality { get; }
 
-        public CameraStats(int bitId, int mRange,int peopleInSight, int mClarity, int persuasiveness, int fovRadius, ItemOrigin itemOrigin, int itemTypes, ItemBaseQuality itemBaseQuality)
+        public CameraBaseData(BitItemSupplier itemSupplier, int bitId, int mRange,int peopleInSight, int mClarity, int persuasiveness, int fovRadius, ItemOrigin itemOrigin, int itemTypes, ItemBaseQuality itemBaseQuality)
         {
+            _mItemSupplier = itemSupplier;
             _bitId = bitId;
             _mRange = mRange;
             _mPeopleInSight = peopleInSight;
@@ -42,6 +45,7 @@ namespace DataUnits.ItemScriptableObjects
             _mItemTypes = itemTypes;
             _mItemBaseQuality = itemBaseQuality;
         }
+        public BitItemSupplier ItemSupplier => _mItemSupplier;
         public int Id => _bitId;
         public int Range => _mRange;
         public int PeopleInSight => _mPeopleInSight;

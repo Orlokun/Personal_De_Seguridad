@@ -52,6 +52,7 @@ namespace GamePlayManagement
             _lifeStyleModule.PlayerLostResetData();
             _gameStatusModule.PlayerLostResetData();
             _mRequestModuleManager.PlayerLostResetData();
+            _mInventoryModule.PlayerLostResetData();
         }
         //Main Data Modules
         private IItemSuppliersModule _itemSuppliersModule;
@@ -59,6 +60,7 @@ namespace GamePlayManagement
         private ICalendarModule _mCalendarModule;
         private ILifestyleModule _lifeStyleModule;
         private IPlayerGameStatusModule _gameStatusModule;
+        private IPlayerInventoryModule _mInventoryModule;
         
         //Members
         private DateTime _mGameCreationDate;
@@ -93,6 +95,12 @@ namespace GamePlayManagement
         {
             return _gameStatusModule;
         }
+
+        public IPlayerInventoryModule GetInventoryModule()
+        {
+            return _mInventoryModule;
+        }
+
         public IRequestsModuleManager GetRequestsModuleManager()
         {
             return _mRequestModuleManager;

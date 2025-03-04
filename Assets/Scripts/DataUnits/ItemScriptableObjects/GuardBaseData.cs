@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace DataUnits.ItemScriptableObjects
 {
-    public class GuardStats : IGuardStats
+    public class GuardBaseData : IGuardBaseData
     {
+        private readonly BitItemSupplier _mItemSupplier;
         private readonly int _bitId;
         private readonly int _mIntelligence;
         private readonly int _mKindness;
@@ -17,9 +19,11 @@ namespace DataUnits.ItemScriptableObjects
         private readonly ItemOrigin _mItemOrigin;
         private readonly int _mItemTypes;
         private readonly ItemBaseQuality _mItemBaseQuality;
-        public GuardStats(int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, 
+        public GuardBaseData(BitItemSupplier itemSupplier, int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, 
             int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius, ItemOrigin itemOrigin, int itemTypes, ItemBaseQuality itemBaseQuality)
         {
+            //Unique only inside the Supplier
+            _mItemSupplier = itemSupplier;
             _bitId = bitId;
             _mIntelligence = mIntelligence;
             _mKindness = mKindness;
@@ -35,6 +39,7 @@ namespace DataUnits.ItemScriptableObjects
             _mItemBaseQuality = itemBaseQuality;
         }
 
+        public BitItemSupplier ItemSupplier => _mItemSupplier;
         public int Id => _bitId;
         public int Intelligence => _mIntelligence;
         public int Kindness => _mKindness;
