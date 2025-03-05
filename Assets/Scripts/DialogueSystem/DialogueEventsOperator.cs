@@ -53,6 +53,7 @@ namespace DialogueSystem
                 case "PlayerFired":
                     break;
                 case "ItemUnlocked":
+                    LaunchUnlockedItemEvent(eventCodes[1], eventCodes[2]);
                     break;
                 case "OrganSale":
                     LaunchPlayerOrganSaleEvent();
@@ -68,6 +69,16 @@ namespace DialogueSystem
                 case "LaunchTutorial":
                     LaunchTutorialProcessEvent(eventCodes[1]);
                     break;
+            }
+        }
+
+        private void LaunchUnlockedItemEvent(string supplierId, string itemId)
+        {
+            var supplierIdBit = int.TryParse(supplierId, out var supplierIdInt);
+            if(supplierIdBit)
+            {
+                var supplierBitId = (BitItemSupplier) supplierIdInt;
+                GameDirector.Instance.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(supplierBitId, int.Parse(itemId));
             }
         }
 
