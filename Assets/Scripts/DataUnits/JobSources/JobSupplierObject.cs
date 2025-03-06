@@ -62,12 +62,7 @@ namespace DataUnits.JobSources
             _mDaysAsEmployer = 0;
         }
 
-        public int Budget { get; set; }
-        public int StoreUnlockPoints{ get; set; }
-        public string StoreDescription{ get; set; }
-        public int[] StoreMinMaxClients { get; set; }
         public int StorePhoneNumber{ get; set; }
-        public int StoreOwnerAge{ get; set; }
         public DialogueSpeakerId SpeakerIndex { get; set; }
         public string SpriteName => _mSupplierData.SpriteName;
 
@@ -99,7 +94,11 @@ namespace DataUnits.JobSources
 
         public void ExpendMoney(int amount)
         {
-            Budget -= amount;
+            _mSupplierData.Budget -= amount;
+            if(_mSupplierData.Budget<0)
+            {
+                _mSupplierData.Budget = 0;
+            }
         }
 
         #endregion

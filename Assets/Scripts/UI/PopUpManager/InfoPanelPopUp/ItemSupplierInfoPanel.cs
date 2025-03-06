@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataUnits.ItemScriptableObjects;
@@ -98,15 +99,60 @@ namespace UI.PopUpManager.InfoPanelPopUp
         private void DoPurchaseProcess()
         {
             _mSupplierShop.ConfirmPurchase();
-            var inventoryModule = GameDirector.Instance.GetActiveGameProfile.GetInventoryModule();
-            var statusModule = GameDirector.Instance.GetActiveGameProfile.GetStatusModule();
+            if (GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployer != 0)
+            {
+                ProcessPurchaseWithEmployerBudget();
+                RestartCart();         
+                UIController.Instance.UpdateInfoUI();
+                return;
+            }
+            ProcessNoJobPurchase();
+            RestartCart();         
+            UIController.Instance.UpdateInfoUI();
+        }
+
+        private void ProcessNoJobPurchase()
+        {
+            var playerProfile = GameDirector.Instance.GetActiveGameProfile;
+            var inventoryModule = playerProfile.GetInventoryModule();
+            var statusModule = playerProfile.GetStatusModule();
             foreach (var itemObject in _mItemCart)
             {
                 inventoryModule.AddItemToInventory(itemObject, 1);
                 statusModule.ReceiveOmniCredits(-itemObject.Cost);
             }
-            RestartCart();         
-            UIController.Instance.UpdateInfoUI();
+        }
+
+        private void ProcessPurchaseWithEmployerBudget()
+        {
+            var playerProfile = GameDirector.Instance.GetActiveGameProfile;
+            var inventoryModule = playerProfile.GetInventoryModule();
+            var statusModule = playerProfile.GetStatusModule();
+            var employerData = playerProfile.GetActiveJobsModule().CurrentEmployerData();
+            
+            var purchaseDelta = 0;
+            var isUsingPlayerBudget = false;
+            foreach (var itemObject in _mItemCart)
+            {
+                if (!isUsingPlayerBudget)
+                {
+                    var currentBudget = employerData.JobSupplierData.Budget;
+                    if(currentBudget - itemObject.Cost < 0)
+                    {
+                        purchaseDelta = Math.Abs(currentBudget - itemObject.Cost);
+                        employerData.JobSupplierData.Budget = 0;
+                        statusModule.ReceiveOmniCredits(-purchaseDelta);
+                        isUsingPlayerBudget = true;
+                        inventoryModule.AddItemToInventory(itemObject, 1);
+                        continue;   
+                    }
+                    inventoryModule.AddItemToInventory(itemObject, 1);
+                    employerData.ExpendMoney(itemObject.Cost);
+                    continue;
+                }
+                inventoryModule.AddItemToInventory(itemObject, 1);
+                statusModule.ReceiveOmniCredits(-itemObject.Cost);
+            }
         }
 
         void ProcessUnemployedPurchase()
