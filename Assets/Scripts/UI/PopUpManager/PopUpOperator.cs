@@ -168,7 +168,12 @@ namespace UI.PopUpManager
                 case BitPopUpId.COMPLIANCE_DETAIL_POPUP:
                     var complianceDetailPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/ComplianceDetailPopUp"), transform);
                     return complianceDetailPopUp.GetComponent<ComplianceDetailPopUp>();   
-                
+                case BitPopUpId.USE_PERSONAL_BUDGET:
+                    var personalBudgetPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/PopUp_UsePersonalBudget"), transform);
+                    return personalBudgetPopUp.GetComponent<IConfirmPersonalPurchasePopUp>();   
+                case BitPopUpId.NOT_ENOUGH_CREDIT:
+                    var notEnoughCreditPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/PopUp_NotEnoughCredits"), transform);
+                    return notEnoughCreditPopUp.GetComponent<NotEnoughCreditsPopUp>();   
                 default:
                     return null;
             }

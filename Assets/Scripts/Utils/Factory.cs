@@ -162,9 +162,11 @@ namespace Utils
         /// Player Profile Modules
         /// </summary>
         public static PlayerGameProfile CreatePlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsModule, 
-            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager)
+            ICalendarModule calendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, 
+            IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager, IPlayerInventoryModule inventoryModule)
         {
-            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule, requestModuleManager, complianceManager);
+            return new PlayerGameProfile(itemSuppliersModule, jobsModule, calendarManager, lifeStyleModule, statusModule,
+                requestModuleManager, complianceManager, inventoryModule);
         }
         public static IItemSuppliersModule CreateItemSuppliersModule(IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
         {
@@ -186,6 +188,11 @@ namespace Utils
         public static PlayerGameStatusModule CreatePlayerStatusModule()
         {
             return new PlayerGameStatusModule();
+        }
+        
+        public static IPlayerInventoryModule CreateInventoryModule()
+        {
+            return new PlayerInventoryModule();
         }
 
         public static INewsNarrativeDirector CreateNewsNarrativeDirector()
@@ -289,5 +296,7 @@ namespace Utils
         {
             return new ComplianceManager();
         }
+
+
     }
 }

@@ -66,34 +66,61 @@ namespace UI.PopUpManager.InfoPanelPopUp
             var isEmployed = GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployer != 0;
             if (!isEmployed)
             {
-                var playerBudget = GameDirector.Instance.GetActiveGameProfile.GetStatusModule().PlayerOmniCredits;
-                if (_mAccumulatedCartPrice <= playerBudget)
-                {
-                    PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
-                    return;
-                }
+                ProcessUnemployedPurchase();
                 return;
             }
+            ProcessHiredPurchase();
+        }
+
+        private void ProcessHiredPurchase()
+        {
             var currentBudget = GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule()
                 .CurrentEmployerData().JobSupplierData.Budget;
             var currentPlayerCredits = GameDirector.Instance.GetActiveGameProfile.GetStatusModule().PlayerOmniCredits;
             if (_mAccumulatedCartPrice > currentBudget)
             {
-                if ((_mAccumulatedCartPrice - currentBudget) <= currentPlayerCredits)
+                if (_mAccumulatedCartPrice - currentBudget <= currentPlayerCredits)
                 {
-                    PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
+                    var personalChoicePopUp = (IConfirmPersonalPurchasePopUp)PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
+                    personalChoicePopUp.OnPurchaseConfirmed += ReceivePurchaseConfirmation;
                     return;
                 }
+                PopUpOperator.ActivatePopUp(BitPopUpId.NOT_ENOUGH_CREDIT);
                 return;
             }
+            DoPurchaseProcess();
+        }
+        public void ReceivePurchaseConfirmation()
+        {
+            DoPurchaseProcess();
+        }
+
+        private void DoPurchaseProcess()
+        {
             _mSupplierShop.ConfirmPurchase();
             var inventoryModule = GameDirector.Instance.GetActiveGameProfile.GetInventoryModule();
+            var statusModule = GameDirector.Instance.GetActiveGameProfile.GetStatusModule();
             foreach (var itemObject in _mItemCart)
             {
                 inventoryModule.AddItemToInventory(itemObject, 1);
+                statusModule.ReceiveOmniCredits(-itemObject.Cost);
             }
+            RestartCart();         
+            UIController.Instance.UpdateInfoUI();
         }
 
+        void ProcessUnemployedPurchase()
+        {
+            var playerBudget = GameDirector.Instance.GetActiveGameProfile.GetStatusModule().PlayerOmniCredits;
+            if (_mAccumulatedCartPrice > playerBudget)
+            {
+                PopUpOperator.ActivatePopUp(BitPopUpId.NOT_ENOUGH_CREDIT);
+                return;
+            }
+            var personalChoicePopUp = (IConfirmPersonalPurchasePopUp)PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
+            personalChoicePopUp.OnPurchaseConfirmed += ReceivePurchaseConfirmation;
+        }
+        
         private void ProcessItemsPanel(IItemSupplierShop supplierShop)
         {
             foreach (var item in supplierShop.GetAllSupplierItems)

@@ -17,7 +17,8 @@ namespace GamePlayManagement
     {
         //Profile constructor
         public PlayerGameProfile(IItemSuppliersModule itemSuppliersModule, IJobsSourcesModule jobsSourcesModule, 
-            ICalendarModule mCalendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule, IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager)
+            ICalendarModule mCalendarManager, ILifestyleModule lifeStyleModule, IPlayerGameStatusModule statusModule,
+            IRequestsModuleManager requestModuleManager, IComplianceManager complianceManager, IPlayerInventoryModule inventoryModule)
         {
             _mGameCreationDate = DateTime.Now;
             _mGameId = Guid.NewGuid();
@@ -42,7 +43,9 @@ namespace GamePlayManagement
 
             _mComplianceManager = complianceManager;
             _mComplianceManager.SetProfile(this);
-            
+
+            _mInventoryModule = inventoryModule;
+            _mInventoryModule.SetProfile(this);
         }
         private void PlayerLostResetData()
         {
