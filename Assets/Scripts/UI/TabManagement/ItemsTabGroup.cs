@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using DataUnits.ItemScriptableObjects;
 using GameDirection;
+using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
-using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 using UI.TabManagement.AbstractClasses;
 using UI.TabManagement.Interfaces;
 using UI.TabManagement.ItemTypeTab;
@@ -24,8 +23,8 @@ namespace UI.TabManagement
         
         
         
-        private IItemSuppliersModule _suppliersModule;
-        private List<IItemObject> _activeItems = new List<IItemObject>();
+        private IPlayerInventoryModule _mPlayerInventory;
+        private List<IItemInInventory> _activeItems = new List<IItemInInventory>();
 
         public bool IsBarActive => MuiController.IsObjectActive(CanvasBitId.GamePlayCanvas,GameplayPanelsBitStates.ITEM_DETAILED_SIDEBAR);
         public void ActivateItemsBarInUI()
@@ -79,10 +78,13 @@ namespace UI.TabManagement
             }
         }
 
-        private List<IItemObject> GetItemsOfType(BitItemType itemType)
+        private List<IItemInInventory> GetItemsOfType(BitItemType itemType)
         {
-            _suppliersModule = GameDirector.Instance.GetActiveGameProfile.GetActiveItemSuppliersModule();
-            var itemsOfType = _suppliersModule.GetItemsOfType(itemType);
+            if (_mPlayerInventory == null)
+            {
+                _mPlayerInventory = GameDirector.Instance.GetActiveGameProfile.GetInventoryModule();
+            }
+            var itemsOfType = _mPlayerInventory.GetItemsOfType(itemType);
             return itemsOfType;
         }
         private void ClearGrid()

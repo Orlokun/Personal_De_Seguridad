@@ -1,8 +1,6 @@
-using System.Globalization;
-using DataUnits.ItemScriptableObjects;
 using GameDirection;
+using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
-using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using TMPro;
 using UI.PopUpManager;
@@ -13,30 +11,26 @@ using Utils;
 
 namespace UI.TabManagement.ItemTypeTab
 {
-    public class BaseItemIconUIObject : MonoBehaviour, IInitializeWithArg1<IItemObject>
+    public class BaseItemIconUIObject : MonoBehaviour, IInitializeWithArg1<IItemInInventory>
     {
-        [SerializeField] protected TMP_Text costTextObject;
-        [SerializeField] protected TMP_Text otherCostTextObject;
+        [SerializeField] protected TMP_Text countAvailable;
         [SerializeField] protected TMP_Text itemNameTextObject;
         [SerializeField] protected Image iconImage;
         [SerializeField] private Button MInfoPanelButton;
 
         private BaseItemPlacement _mPlacement;
 
-        protected IItemObject MItemObject;
+        protected IItemInInventory MItemObject;
         protected bool MInitialized;
+        public bool IsInitialized => MInitialized;
 
-
-        public bool IsInitialized { get; }
-
-        public virtual void Initialize(IItemObject injectionClass)
+        public virtual void Initialize(IItemInInventory injectionClass)
         {
             if (MInitialized)
             {
                 return;
             }
             MItemObject = injectionClass;
-        
             SetObjectValuesInUI();
             MInfoPanelButton.onClick.AddListener(OpenItemInfoPanel);
             GetItemPlacementComponent();
@@ -59,20 +53,19 @@ namespace UI.TabManagement.ItemTypeTab
             var currentBudget = GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployerData().JobSupplierData
                 .Budget;
             Debug.Log($"[BaseItemIconUIObject.OnItemClicked] Item named {MItemObject.ItemName} was clicked. " +
-                      $"Current budget = {currentBudget}. Item Cost is: {MItemObject.Cost}");
-            if (currentBudget >= MItemObject.Cost)
+                      $"Current budget = {currentBudget}. Item Cost is: {MItemObject.ItemData.Cost}");
+            if (currentBudget >= MItemObject.ItemData.Cost)
             {
-                _mPlacement.OnItemClicked(MItemObject);
+                _mPlacement.OnItemClicked(MItemObject.ItemData);
             }
         }
 
         
         private void SetObjectValuesInUI()
         {
-            costTextObject.text = MItemObject.Cost.ToString(CultureInfo.InvariantCulture);
-            otherCostTextObject.text = MItemObject.ItemAmount.ToString(CultureInfo.InvariantCulture);
+            countAvailable.text = MItemObject.AvailableCount.ToString();
             itemNameTextObject.text = MItemObject.ItemName;
-            iconImage.sprite = MItemObject.ItemIcon;
+            iconImage.sprite = MItemObject.ItemData.ItemIcon;
         }
     
         public void OpenItemInfoPanel()
@@ -80,12 +73,12 @@ namespace UI.TabManagement.ItemTypeTab
             Debug.Log("[OpenItemInfoPanel]");
             var panelType = GetItemInfoPanel();
             var infoPanelPopUp = (IItemInfoPanel)PopUpOperator.Instance.ActivatePopUp(panelType);
-            infoPanelPopUp.SetAndDisplayInfoPanelData(MItemObject);
+            infoPanelPopUp.SetAndDisplayInfoPanelData(MItemObject.ItemData);
         }
 
         private BitPopUpId GetItemInfoPanel()
         {
-            switch (MItemObject.ItemType)
+            switch (MItemObject.ItemData.ItemType)
             {
                 case BitItemType.GUARD_ITEM_TYPE:
                     return BitPopUpId.GUARD_ITEM_INFO_PANEL;

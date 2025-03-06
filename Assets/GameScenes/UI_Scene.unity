@@ -1084,6 +1084,10 @@ PrefabInstance:
       propertyPath: mTabButton
       value: 
       objectReference: {fileID: 110563086704650190}
+    - target: {fileID: 110563087086402262, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 110563087575028930, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
       propertyPath: mTabButton
       value: 

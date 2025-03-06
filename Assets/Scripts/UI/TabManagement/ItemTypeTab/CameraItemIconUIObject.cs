@@ -1,12 +1,9 @@
-using DataUnits.ItemScriptableObjects;
+using GamePlayManagement;
 
 namespace UI.TabManagement.ItemTypeTab
 {
     public class CameraItemIconUIObject : BaseItemIconUIObject
     {
-        public override void Initialize(IItemObject injectionClass)
-        {
-            base.Initialize(injectionClass);
-        }
+
     }
 }

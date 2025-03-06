@@ -1,4 +1,5 @@
 ﻿using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace GamePlayManagement
@@ -8,8 +9,11 @@ namespace GamePlayManagement
         private int _mAvailableCount;
         public int AvailableCount => _mAvailableCount;
 
-        
-        public int ItemId => _mBaseItemData.Id;
+        public CameraInInventory(IItemObject itemObject)
+        {
+            _mBaseItemData = itemObject;
+        }
+        public int ItemId => _mBaseItemData.BitId;
         public BitItemSupplier ItemSupplier => _mBaseItemData.ItemSupplier;
         public string ItemName { get; }
         
@@ -17,7 +21,19 @@ namespace GamePlayManagement
         {
             _mAvailableCount += amountAdded;
         }
+        
+        public void RemoveFromInventory(int amountRemoved)
+        {
+            if (_mAvailableCount == 0)
+            {
+                return;
+            }
+            _mAvailableCount -= amountRemoved;
+        }
 
-        private ICameraBaseData _mBaseItemData;
+        public BitItemType ItemType => BitItemType.CAMERA_ITEM_TYPE;
+        public IItemObject ItemData => _mBaseItemData;
+
+        private IItemObject _mBaseItemData;
     }
 }

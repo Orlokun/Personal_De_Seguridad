@@ -1,4 +1,6 @@
-﻿using GamePlayManagement.BitDescriptions.Suppliers;
+﻿using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace GamePlayManagement
 {
@@ -8,7 +10,8 @@ namespace GamePlayManagement
         public BitItemSupplier ItemSupplier { get; }
         public string ItemName { get; }
         public int AvailableCount { get; }
-        
         public void AddToInventory(int amountAdded);
+        public BitItemType ItemType { get; }
+        public IItemObject ItemData { get; }
     }
 }

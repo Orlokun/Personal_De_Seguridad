@@ -100,6 +100,32 @@ namespace GamePlayManagement
                     break;
             }
         }
+
+        public List<IItemInInventory> GetItemsOfType(BitItemType itemType)
+        {
+            switch (itemType)
+            {   
+                case BitItemType.GUARD_ITEM_TYPE:
+                    return _mGuardItems.Cast<IItemInInventory>().ToList();
+                case BitItemType.CAMERA_ITEM_TYPE:
+                    return _mCameraItems.Cast<IItemInInventory>().ToList();
+                case BitItemType.WEAPON_ITEM_TYPE:
+                    return _mWeaponItems.Cast<IItemInInventory>().ToList();
+                case BitItemType.TRAP_ITEM_TYPE:
+                    return _mTrapItems.Cast<IItemInInventory>().ToList();
+                case BitItemType.OTHERS_ITEM_TYPE:
+                    return _mOtherItems.Cast<IItemInInventory>().ToList();
+                default:
+                    return null;
+            }
+        }
+
+        public List<IGuardInInventory> GetGuardItems => _mGuardItems;
+        public List<ICameraInInventory> GetCameraItems => _mCameraItems;
+        public List<IWeaponInInventory> GetWeaponItems => _mWeaponItems;
+        public List<ITrapInInventory> GetTrapItems => _mTrapItems;
+        public List<IOtherItemInInventory> GetOtherItems => _mOtherItems;
+
         private void ProcessAddedGuardItem(IItemObject incomingItem, int amount)
         {
             if (_mGuardItems.Any(x=> x.ItemId == incomingItem.BitId && x.ItemSupplier == incomingItem.ItemSupplier))
@@ -108,7 +134,7 @@ namespace GamePlayManagement
             }
             else
             {
-                GuardInInventory newIGuard = new GuardInInventory();
+                GuardInInventory newIGuard = new GuardInInventory(incomingItem);
                 newIGuard.AddToInventory(amount);
                 _mGuardItems.Add(newIGuard);
             }
@@ -121,7 +147,7 @@ namespace GamePlayManagement
             }
             else
             {
-                ICameraInInventory newCamera = new CameraInInventory();
+                ICameraInInventory newCamera = new CameraInInventory(incomingItem);
                 newCamera.AddToInventory(amount);
                 _mCameraItems.Add(newCamera);
             }
@@ -134,7 +160,7 @@ namespace GamePlayManagement
             }
             else
             {
-                IWeaponInInventory newWeapon = new WeaponInInventory();
+                IWeaponInInventory newWeapon = new WeaponInInventory(incomingItem);
                 newWeapon.AddToInventory(amount);
                 _mWeaponItems.Add(newWeapon);
             }
@@ -147,7 +173,7 @@ namespace GamePlayManagement
             }
             else
             {
-                ITrapInInventory newTrap = new TrapInInventory();
+                ITrapInInventory newTrap = new TrapInInventory(incomingItem);
                 newTrap.AddToInventory(amount);
                 _mTrapItems.Add(newTrap);
             }

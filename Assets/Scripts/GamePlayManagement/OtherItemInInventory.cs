@@ -1,4 +1,5 @@
 ﻿using DataUnits.ItemScriptableObjects;
+using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
 namespace GamePlayManagement
@@ -10,6 +11,7 @@ namespace GamePlayManagement
         public int ItemId => _mBaseItemData.BitId;
         public BitItemSupplier ItemSupplier => _mBaseItemData.ItemSupplier;
         public string ItemName => _mBaseItemData.ItemName;
+        public BitItemType ItemType => BitItemType.OTHERS_ITEM_TYPE;
 
         public OtherItemInInventory(IItemObject itemObject)
         {
@@ -20,7 +22,7 @@ namespace GamePlayManagement
         {
             _mAvailableCount += amountAdded;
         }
-
+        public IItemObject ItemData => _mBaseItemData;
         private IItemObject _mBaseItemData;
     }
 }
