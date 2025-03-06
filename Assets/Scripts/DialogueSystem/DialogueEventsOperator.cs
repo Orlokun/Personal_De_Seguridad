@@ -79,6 +79,7 @@ namespace DialogueSystem
             {
                 var supplierBitId = (BitItemSupplier) supplierIdInt;
                 GameDirector.Instance.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(supplierBitId, int.Parse(itemId));
+                GameDirector.Instance.GetActiveGameProfile.UpdateProfileData();
             }
         }
 

@@ -20,7 +20,9 @@ namespace UI.PopUpManager
         NEWS_DETAIL_POPUP = 1 << 10,
         FEEDBACK_MASK = 1 << 11,
         REQUEST_DETAIL_POPUP = 1 << 12,
-        COMPLIANCE_DETAIL_POPUP = 1 << 13
+        COMPLIANCE_DETAIL_POPUP = 1 << 13,
+        USE_PERSONAL_BUDGET = 1 << 14,
+        NOT_ENOUGH_CREDIT = 1 << 15
     }
 
     public class PopUpOperator : MonoBehaviour,IPopUpOperator

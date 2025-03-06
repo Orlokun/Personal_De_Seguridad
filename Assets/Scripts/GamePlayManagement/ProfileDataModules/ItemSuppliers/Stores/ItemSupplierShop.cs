@@ -22,6 +22,47 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         private List<IItemSupplierObjectInInventory> _mAllSupplierItems = new List<IItemSupplierObjectInInventory>();
         public  List<IItemSupplierObjectInInventory> GetAllSupplierItems => _mAllSupplierItems;
         
+        private Dictionary<int,int> _mTempLastStock;
+
+        public void SaveTempLastStock()
+        {
+            _mTempLastStock = new Dictionary<int, int>();
+            foreach (var item in _mAllSupplierItems)
+            {
+                _mTempLastStock.Add(item.GetItemData.BitId, item.GetCurrentAmount);
+            }
+        }
+
+        public int GetItemTempLiveStock(int itemId)
+        {
+            if (!_mTempLastStock.ContainsKey(itemId))
+            {
+                return 0;
+            }
+            return _mTempLastStock[itemId];
+        }
+
+        public IItemSupplierObjectInInventory GetSupplierItemInStore(int itemId)
+        {
+            if(!BitOperator.IsActive(_mUnlockedItems,itemId))
+            {
+                Debug.LogWarning($"[ItemSupplierShop.GetSupplierItemInStore] Item '{itemId}' must be managed in store");
+                return null;
+            }
+            return _mAllSupplierItems.First(x => x.GetItemData.BitId == itemId);
+        }
+
+        public void AddItemToCart(int id)
+        {
+            var itemInStore = GetSupplierItemInStore(id);
+            itemInStore.ReduceStock(1);
+        }
+
+        public void ConfirmPurchase()
+        {
+            SaveTempLastStock();
+        }
+
         public IItemSupplierDataObject GetSupplierData => _mSupplierData;
 
         public ItemSupplierShop(BitItemSupplier bitSupplierId, IItemsDataController itemDataController, IBaseItemSuppliersCatalogue suppliersCatalogue)
@@ -47,7 +88,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         }
         public IItemObject GetItemObject(int bitItemId)
         {
-            return BitOperator.IsActive(_mUnlockedItems, bitItemId) ? _mAllSupplierItems[bitItemId].GetItemData : null;
+            return BitOperator.IsActive(_mUnlockedItems, bitItemId) ? _mAllSupplierItems.First(x=>x.GetItemData.BitId == bitItemId).GetItemData : null;
         }
         public bool IsItemManaged(int bitItemId)
         {

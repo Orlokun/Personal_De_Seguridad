@@ -14,7 +14,13 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
 
         public BitItemType GetItemType => _mItemObjectBaseData.ItemType;
         public IItemObject GetItemData => _mItemObjectBaseData;
-        public int GetCurrentAmount { get; }
+        public int GetCurrentAmount => _mItemAmount;
+        
+        public void SetStock(int amount)
+        {
+            _mItemAmount = amount;
+        }
+
         public bool IsLocked => _mIsLocked;
         public void ReplenishStock()
         {
@@ -24,6 +30,15 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
         public void ReduceStock(int amount)
         {
             _mItemAmount -= amount;
+        }
+
+        public void AddStock(int amount)
+        {
+            _mItemAmount += amount;
+            if (_mItemAmount > _mMaxItemAmount)
+            {
+                _mItemAmount = _mMaxItemAmount;
+            }
         }
         public void Unlock()
         {
@@ -35,10 +50,6 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores
             _mIsLocked = true;
         }
 
-        public void AddToStock()
-        {
-            
-        }
 
         public ItemSupplierObjectInInventory(IItemObject itemData)
         {
