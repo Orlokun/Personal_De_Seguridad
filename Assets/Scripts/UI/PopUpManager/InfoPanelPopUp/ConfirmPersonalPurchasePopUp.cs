@@ -1,4 +1,5 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,14 @@ namespace UI.PopUpManager.InfoPanelPopUp
         [SerializeField] private Button mCloseButton;
         [SerializeField] private Button mCancelButton;
         
+        [SerializeField] private TMP_Text mPersonalExpense;
+        
         public delegate void ConfirmPurchaseButtonPressed();
         public event ConfirmPurchaseButtonPressed OnPurchaseConfirmed;
+        public void SetLostValue(int lostValue)
+        {
+            mPersonalExpense.text = lostValue.ToString();
+        }
 
         private void Awake()
         {

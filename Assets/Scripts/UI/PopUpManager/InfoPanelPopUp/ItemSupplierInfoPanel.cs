@@ -83,6 +83,8 @@ namespace UI.PopUpManager.InfoPanelPopUp
                 if (_mAccumulatedCartPrice - currentBudget <= currentPlayerCredits)
                 {
                     var personalChoicePopUp = (IConfirmPersonalPurchasePopUp)PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
+                    var personalExpense = _mAccumulatedCartPrice - currentBudget;
+                    personalChoicePopUp.SetLostValue(personalExpense);
                     personalChoicePopUp.OnPurchaseConfirmed += ReceivePurchaseConfirmation;
                     return;
                 }
@@ -164,6 +166,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
                 return;
             }
             var personalChoicePopUp = (IConfirmPersonalPurchasePopUp)PopUpOperator.ActivatePopUp(BitPopUpId.USE_PERSONAL_BUDGET);
+            personalChoicePopUp.SetLostValue(_mAccumulatedCartPrice);
             personalChoicePopUp.OnPurchaseConfirmed += ReceivePurchaseConfirmation;
         }
         
