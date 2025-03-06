@@ -160,7 +160,7 @@ namespace GamePlayManagement
             }
             else
             {
-                IOtherItemInInventory newOtherItem = new OtherItemInInventory();
+                IOtherItemInInventory newOtherItem = new OtherItemInInventory(incomingItem);
                 newOtherItem.AddToInventory(amount);
                 _mOtherItems.Add(newOtherItem);
             }
