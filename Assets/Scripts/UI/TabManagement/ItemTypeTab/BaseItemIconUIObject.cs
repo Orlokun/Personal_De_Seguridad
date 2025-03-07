@@ -50,14 +50,9 @@ namespace UI.TabManagement.ItemTypeTab
 
         private void OnItemClicked()
         {
-            var currentBudget = GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployerData().JobSupplierData
-                .Budget;
-            Debug.Log($"[BaseItemIconUIObject.OnItemClicked] Item named {MItemObject.ItemName} was clicked. " +
-                      $"Current budget = {currentBudget}. Item Cost is: {MItemObject.ItemData.Cost}");
-            if (currentBudget >= MItemObject.ItemData.Cost)
-            {
-                _mPlacement.OnItemClicked(MItemObject.ItemData);
-            }
+
+            Debug.Log($"[BaseItemIconUIObject.OnItemClicked] Item named {MItemObject.ItemName} was clicked");
+            _mPlacement.OnItemClicked(MItemObject.ItemData);
         }
 
         

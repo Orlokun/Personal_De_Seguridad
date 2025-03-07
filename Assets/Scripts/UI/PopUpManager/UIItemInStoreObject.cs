@@ -55,7 +55,7 @@ namespace UI.PopUpManager
             _mShopPanel = injectionClass1;
             _mItemObject = injectionClass2;
             mItemName.text = _mItemObject.ItemName;
-            mItemAmount.text = _mItemObject.ItemAmount.ToString();
+            mItemAmount.text = _mShopPanel.GetCurrentItemStock(_mItemObject.BitId).ToString();
             mItemMaxAmount.text = _mItemObject.ItemAmount.ToString();
             mItemIcon.sprite = _mItemObject.ItemIcon;
         }

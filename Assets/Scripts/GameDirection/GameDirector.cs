@@ -255,7 +255,7 @@ namespace GameDirection
             _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,
                             lifestyleModule, profileStatusModule, requestModuleManager, complianceModule, inventoryModule);
             _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
-            //_mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
+            _mActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(BitItemSupplier.D1TV);
             _mActiveGameProfile.UpdateProfileData();
             _mUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
             _mUIController.UpdateInfoUI();

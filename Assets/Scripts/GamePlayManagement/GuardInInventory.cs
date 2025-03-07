@@ -11,7 +11,7 @@ namespace GamePlayManagement
         
         public int ItemId => _mBaseItemData.BitId;
         public BitItemSupplier ItemSupplier => _mBaseItemData.ItemSupplier;
-        public string ItemName { get; }
+        public string ItemName => _mBaseItemData.ItemName;
 
         public GuardInInventory(IItemObject itemObject)
         {
