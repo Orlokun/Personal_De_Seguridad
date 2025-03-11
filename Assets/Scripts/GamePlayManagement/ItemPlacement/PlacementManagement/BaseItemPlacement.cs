@@ -37,6 +37,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         
         protected virtual GameObject GetItemPrefab(IItemObject itemData)
         {
+            MItemData = itemData;
             var itemPrefabPath = GetBaseItemPath(itemData.ItemType, itemData.PrefabName);
             var prefabObject = (GameObject) Instantiate(Resources.Load(itemPrefabPath));
             prefabObject.SetActive(false);

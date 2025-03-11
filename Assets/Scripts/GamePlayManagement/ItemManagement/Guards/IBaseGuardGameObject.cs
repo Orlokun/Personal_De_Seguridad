@@ -1,4 +1,5 @@
 using DataUnits.ItemScriptableObjects;
+using GameDirection.GeneralLevelManager.ShopPositions;
 using UnityEngine;
 
 namespace GamePlayManagement.ItemManagement.Guards
@@ -11,5 +12,9 @@ namespace GamePlayManagement.ItemManagement.Guards
         public void DestroyWeapon();
         public void Initialize(IItemObject itemObjectData);
         public void StartBehaviorTree();
+        
+        public IShopPositionsManager PositionsManager { get; }
+        
+        public IGuardRouteModule GetInspectionModule { get; }
     }
 }

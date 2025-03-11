@@ -16,9 +16,6 @@ using UnityEngine.Animations.Rigging;
 
 namespace GamePlayManagement.Players_NPC
 {
-    /// <summary>
-    /// THIS CLASS MUST BE TURNED INTO A PROPER STATE MACHINE
-    /// </summary>
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(BaseAnimatedAgent))]
@@ -30,25 +27,27 @@ namespace GamePlayManagement.Players_NPC
         protected const float BaseRunSpeed = 15f;
         protected const int BaseAwakeTime = 5000;
         
-        public const string SearchAround = "SearchAround";
         #endregion
 
         #region Protected Data, components and references
         
         protected IStoreEntrancePosition MEntranceData;
-        public IStoreEntrancePosition EntranceData => MEntranceData;
-        
         protected Guid MCharacterId;
         protected IItemTypeStats MyStats;
         protected BaseCharacterMovementStatus MCharacterMovementStatus = BaseCharacterMovementStatus.Idle;
         protected IBaseAnimatedAgent MBaseAnimator;
-        public IBaseAnimatedAgent BaseAnimator => MBaseAnimator;
         protected NavMeshAgent MyNavMeshAgent;
         protected Vector3 MInitialPosition;
-        public Vector3 InitialPosition => MInitialPosition;
-        public IShopPositionsManager PositionsManager;
         #endregion
 
+        public Vector3 InitialPosition => MInitialPosition;
+
+        public IShopPositionsManager GetPositionsManager => MPositionsManager; 
+        protected IShopPositionsManager MPositionsManager;
+        public IBaseAnimatedAgent BaseAnimator => MBaseAnimator;
+        public IStoreEntrancePosition EntranceData => MEntranceData;
+
+        
         #region StateMachine
         protected StateMachine<IMovementState> _mMovementStateMachine;
         protected StateMachine<IAttitudeState> _mAttitudeStateMachine;
@@ -76,11 +75,7 @@ namespace GamePlayManagement.Players_NPC
             MTempStoreProductOfInterest = null;
         }
         
-        public void SetTempProductOfInterest(Tuple<Transform, IStoreProductObjectData> productOfInterest)
-        {
-            MTempStoreProductOfInterest = productOfInterest;
-            MTempTargetOfInterest = MTempStoreProductOfInterest.Item1;
-        }
+
         
         #endregion
         
@@ -116,7 +111,7 @@ namespace GamePlayManagement.Players_NPC
             }
         }
 
-        public void ChangeMovementState<T>() where T : IMovementState
+        public virtual void ChangeMovementState<T>() where T : IMovementState
         {
             _mMovementStateMachine.ChangeState<T>();
         }
@@ -137,8 +132,8 @@ namespace GamePlayManagement.Players_NPC
         protected virtual void Awake()
         {
             CheckId();
-            InitiateStateMachines();
-            PositionsManager = FindFirstObjectByType<ShopPositionsManager>();    
+            InitiateBaseStateMachines();
+            MPositionsManager = FindFirstObjectByType<ShopPositionsManager>();    
             MBaseAnimator = GetComponent<BaseAnimatedAgent>();
             MyNavMeshAgent = GetComponent<NavMeshAgent>();
             BaseAnimator.Initialize(GetComponent<Animator>());
@@ -183,7 +178,7 @@ namespace GamePlayManagement.Players_NPC
             return false;
         }
         
-        private void InitiateStateMachines()
+        protected virtual void InitiateBaseStateMachines()
         {
             //Movement State Machine
             _mMovementStateMachine = new StateMachine<IMovementState>();
@@ -194,21 +189,12 @@ namespace GamePlayManagement.Players_NPC
             //Attitude State Machine
             _mAttitudeStateMachine = new StateMachine<IAttitudeState>();
             _mAttitudeStateMachine.AddState(new IdleAttitudeState(this));
-            _mAttitudeStateMachine.AddState(new AccessingBuildingState(this));
             _mAttitudeStateMachine.AddState(new TalkingState(this));
-            _mAttitudeStateMachine.AddState(new ShoppingState(this));
-            _mAttitudeStateMachine.AddState(new StealingState(this));
-            _mAttitudeStateMachine.AddState(new EvaluatingProductState(this));
+            
             _mAttitudeStateMachine.AddState(new ScreamingState(this));
             _mAttitudeStateMachine.AddState(new FightingState(this));
-            _mAttitudeStateMachine.AddState(new PayingState(this));
             _mAttitudeStateMachine.AddState(new ScaredCrouchState(this));
             _mAttitudeStateMachine.AddState(new ScaredRunningState(this));
-            _mAttitudeStateMachine.AddState(new LeavingBuildingState(this));
-            
-            //Guards Base AttitudeStates
-            _mAttitudeStateMachine.AddState(new GuardIdleState(this));
-            
             
         }
         
@@ -277,6 +263,7 @@ namespace GamePlayManagement.Players_NPC
             MyNavMeshAgent.isStopped = true;
             OnWalkingDestinationReached();
         }
+
         protected virtual void OnWalkingDestinationReached()
         {
             WalkingDestinationReached?.Invoke();

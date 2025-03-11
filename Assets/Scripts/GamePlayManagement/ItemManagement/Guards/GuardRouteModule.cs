@@ -1,6 +1,6 @@
 namespace GamePlayManagement.ItemManagement.Guards
 {
-    public class GuardRouteSystemModule : IGuardRouteSystemModule
+    public class GuardRouteModule : IGuardRouteModule
     {
         private IShopInspectionPosition _mInitialSpot;
         private IShopInspectionPosition _currentInspectionSpot;
@@ -24,6 +24,5 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             _currentInspectionSpot = newPosition;
         }
-
     }
 }

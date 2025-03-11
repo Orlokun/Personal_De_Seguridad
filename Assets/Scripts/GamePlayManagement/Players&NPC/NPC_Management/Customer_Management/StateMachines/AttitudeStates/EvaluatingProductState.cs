@@ -107,7 +107,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             _mCharacter.StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
             _mCharacter.GetCustomerStoreVisitData.PurchaseProduct(Guid.NewGuid(), _mCharacter.TempStoreProductOfInterest.Item2);
             ClearProductInterest();
-            _mCharacter.PoisPurchaseStatus[_mCharacter.CurrentPoiId] = true;
+            _mCharacter.PoisPurchaseStatus[_mCharacter.MCurrentPoiId] = true;
             _mCharacter.ChangeMovementState<WalkingState>();
             _mCharacter.ChangeAttitudeState<ShoppingState>();
             _mCharacter.ReleaseCurrentPoI();
@@ -129,7 +129,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             _mCharacter.StartCoroutine(UpdateInspectObjectRigWeight(1, 0, 1));
             _mCharacter.GetCustomerStoreVisitData.StealProduct(Guid.NewGuid(), _mCharacter.TempStoreProductOfInterest.Item2);
             ClearProductInterest();
-            _mCharacter.PoisPurchaseStatus[_mCharacter.CurrentPoiId] = true;
+            _mCharacter.PoisPurchaseStatus[_mCharacter.MCurrentPoiId] = true;
             _mCharacter.ChangeMovementState<WalkingState>();
             _mCharacter.ChangeAttitudeState<ShoppingState>();
             _mCharacter.ReleaseCurrentPoI();

@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using GameDirection.GeneralLevelManager.ShopPositions.WaitingPositions;
+using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
@@ -55,11 +54,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         public bool IsCustomerStealing => _mIsCustomerStealing;
         public GameObject CustomerGameObject => gameObject;
 
+
         private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
         public Dictionary<Guid, bool> PoisPurchaseStatus=> _mPoisPurchaseStatus;
 
-        private Guid _currentPoiId;
-        public Guid CurrentPoiId => _currentPoiId;
+        private Guid _mCurrentPoiId;
+        public Guid MCurrentPoiId => _mCurrentPoiId;
         private ISingleWaitingSpot _currentWaitingSpot;
         #endregion
 
@@ -71,12 +71,23 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             _mCustomerVisitData = new CustomerPurchaseStealData();
             _mNumberOfProductsLookingFor = Random.Range(1, 3);
             base.Awake();
+            InitiateCustomerStateMachines();
         }
-        
+
+        private void InitiateCustomerStateMachines()
+        {
+            _mAttitudeStateMachine.AddState(new AccessingBuildingState(this));
+            _mAttitudeStateMachine.AddState(new ShoppingState(this));
+            _mAttitudeStateMachine.AddState(new StealingState(this));
+            _mAttitudeStateMachine.AddState(new EvaluatingProductState(this));
+            _mAttitudeStateMachine.AddState(new PayingState(this));
+            _mAttitudeStateMachine.AddState(new LeavingBuildingState(this));
+        }
+
         protected override void Start()
         {
             base.Start();
-            _mPayingPosition = PositionsManager.PayingPosition();
+            _mPayingPosition = MPositionsManager.PayingPosition();
             PopulateShelvesOfInterestData();
             ChangeMovementState<IdleMovementState>();
             ChangeAttitudeState<AccessingBuildingState>();
@@ -86,13 +97,17 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void PopulateShelvesOfInterestData()
         {
-            _mShelvesOfInterest = PositionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
+            _mShelvesOfInterest = MPositionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
             foreach (var guid in _mShelvesOfInterest)
             {
                 _mPoisPurchaseStatus.Add(guid, false);
             }
         }
-
+        public void SetTempProductOfInterest(Tuple<Transform, IStoreProductObjectData> productOfInterest)
+        {
+            MTempStoreProductOfInterest = productOfInterest;
+            MTempTargetOfInterest = MTempStoreProductOfInterest.Item1;
+        }
         #endregion
         private void Update()
         {
@@ -128,12 +143,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         
         public void ReleaseCurrentPoI()
         {
-            var poi = PositionsManager.GetPoiData(_currentPoiId);
+            var poi = MPositionsManager.GetPoiData(_mCurrentPoiId);
             if (!poi.IsOccupied || poi.OccupierId != MCharacterId)
             {
                 return;
             }
-            PositionsManager.ReleasePoi(MCharacterId, _currentPoiId);
+            MPositionsManager.ReleasePoi(MCharacterId, _mCurrentPoiId);
         }
         public void GoToNextProduct()
         {
@@ -151,10 +166,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 Debug.Log($"[GoToNextProduct] No Pois are available for customer {gameObject.name} - ID: {MCharacterId}");
                 return;
             }
-            _currentPoiId = GetNotVisitedPoi(); 
-            var poiObject = PositionsManager.GetPoiData(_currentPoiId);
-            PositionsManager.OccupyPoi(MCharacterId, _currentPoiId);
-            Debug.Log($"[GoToNextPoint] Going to Poi: {_currentPoiId}.");
+            _mCurrentPoiId = GetNotVisitedPoi(); 
+            var poiObject = MPositionsManager.GetPoiData(_mCurrentPoiId);
+            MPositionsManager.OccupyPoi(MCharacterId, _mCurrentPoiId);
+            Debug.Log($"[GoToNextPoint] Going to Poi: {_mCurrentPoiId}.");
             SetMovementDestination(poiObject.GetPosition);
         }
 
@@ -178,12 +193,12 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             IShopPoiData poiObject = null;
             for (int i = 0; i < notVisitedPoisCount; i++)
             {
-                var isPoiOccupied = PositionsManager.GetPoiData(notVisitedPois[i]).IsOccupied;
+                var isPoiOccupied = MPositionsManager.GetPoiData(notVisitedPois[i]).IsOccupied;
                 if (isPoiOccupied)
                 {
                     continue;
                 }
-                poiObject = PositionsManager.GetPoiData(notVisitedPois[i]);
+                poiObject = MPositionsManager.GetPoiData(notVisitedPois[i]);
             }
             
             if (poiObject == null)
@@ -198,7 +213,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         {
             var unPurchasedPoiIds = _mPoisPurchaseStatus.Where(x => x.Value == false);
             var unPurchasedPoisKeys = unPurchasedPoiIds.Select(x => x.Key);
-            var availablePoisList = PositionsManager.GetPoisOfInterestData(unPurchasedPoisKeys.ToList());
+            var availablePoisList = MPositionsManager.GetPoisOfInterestData(unPurchasedPoisKeys.ToList());
             var anyPoiAvailable = availablePoisList.Any(x => x.IsOccupied==false);
             return anyPoiAvailable;
         }
@@ -216,7 +231,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         
         public void EvaluateStartShopping()
         {
-            var pois = PositionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
+            var pois = MPositionsManager.GetPoisOfInterestData(_mShelvesOfInterest);
             _mAnyPoiAvailable =  pois.Any(x=> x.IsOccupied == false);
             if (!_mAnyPoiAvailable)
             {
@@ -235,7 +250,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private void StartFreeClientInteraction()
         {
             Debug.Log("[StartFreeClientInteraction] Start Looking for chill place");
-            var occupiedWaitingSpot = PositionsManager.OccupyEmptyWaitingSpot(CharacterId);
+            var occupiedWaitingSpot = MPositionsManager.OccupyEmptyWaitingSpot(CharacterId);
             if (occupiedWaitingSpot.Result.Item2 == false)
             {
                 Debug.LogWarning("[StartFreeClientInteraction] No Empty waiting spot available. Making excuse and retiring back home");

@@ -31,9 +31,9 @@ namespace Utils
     public static class Factory
     {
 
-        public static GuardRouteSystemModule CreateGuardSystemModule()
+        public static IGuardRouteModule CreateGuardSystemModule()
         {
-            return new GuardRouteSystemModule();
+            return new GuardRouteModule();
         }
         
         public static IGuardStatusModule CreateGuardStatusModule(IBaseGuardGameObject baseGuard)

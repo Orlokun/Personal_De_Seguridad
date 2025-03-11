@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DataUnits.GameCatalogues;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection.GeneralLevelManager.ShopPositions;
@@ -11,6 +11,7 @@ using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using InputManagement.MouseInput;
 using Unity.Cinemachine;
@@ -22,19 +23,14 @@ namespace GamePlayManagement.ItemManagement.Guards
 {
     public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject, IInitializeWithArg1<IItemObject>
     {
-
-        
-        #region Members
         private IItemObject _myGuardData;
         public IItemObject GuardBaseData => _myGuardData;
 
-        #region PlacementManagement
         public void SetInPlacementStatus(bool inPlacement)
         {
             _mInPlacement = inPlacement;
         }
         private bool _mInPlacement;
-        #endregion
 
         #region ClicakbleObjectMembers
         private bool _mIsClicked;
@@ -75,21 +71,11 @@ namespace GamePlayManagement.ItemManagement.Guards
         private BaseCustomer _currentCustomerTarget;
         #endregion
 
-        #region LevelInspectionData
-        private IGuardRouteSystemModule _mInspectionSystemModule;
-
-        #endregion
-
-        #region StateManagement
-        private IGuardStatusModule _mGuardStatusModule;
-        #endregion
-
-        #region GuardStats
-
+        private IGuardRouteModule _mInspectionModule;
+        public IGuardRouteModule GetInspectionModule => _mInspectionModule; 
+        
         public IGuardBaseData BaseData => (IGuardBaseData)MyStats;
-        #endregion
 
-        #endregion
         
         #region WeaponManagementApi
         public bool HasWeapon => _currentWeaponItem != null;
@@ -116,7 +102,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         }
 
         public IShopInspectionPosition CurrentInspectionPosition =>
-            _mInspectionSystemModule.GetCurrentPosition;
+            _mInspectionModule.GetCurrentPosition;
 
         protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
         {
@@ -138,6 +124,17 @@ namespace GamePlayManagement.ItemManagement.Guards
         #region Initialization
         private bool _mIsInitialized;
         public bool IsInitialized => _mIsInitialized;
+        protected override void Awake()
+        {
+            base.Awake();
+            InitiateGuardStateMachines();
+        }
+
+        private void InitiateGuardStateMachines()
+        {
+            _mAttitudeStateMachine.AddState(new GuardIdleState(this));
+            _mAttitudeStateMachine.AddState(new ShopInspectionState(this));
+        }
 
         public void Initialize(IItemObject itemObjectData)
         {
@@ -147,10 +144,9 @@ namespace GamePlayManagement.ItemManagement.Guards
             }
             try
             {
-                _mGuardStatusModule = Factory.CreateGuardStatusModule(this);
                 _myGuardData = itemObjectData;
-                MyStats = ItemsDataController.Instance.GetStatsForGuard(_myGuardData.ItemSupplier, _myGuardData.BitId);
-                PositionsManager = FindObjectOfType<ShopPositionsManager>();
+                MyStats = itemObjectData.ItemStats;
+                MPositionsManager = FindFirstObjectByType<ShopPositionsManager>();
                 PrepareFieldOfView();
                 SetupInspectionModule();
                 _mIsInitialized = true;
@@ -174,9 +170,9 @@ namespace GamePlayManagement.ItemManagement.Guards
         
         private void SetupInspectionModule()
         {
-            _mInspectionSystemModule = Factory.CreateGuardSystemModule();
+            _mInspectionModule = Factory.CreateGuardSystemModule();
             var getInspectionPositions = PositionsManager.GetClosestPosition(transform.position);
-            _mInspectionSystemModule.Initialize(getInspectionPositions);
+            _mInspectionModule.Initialize(getInspectionPositions);
         }
         #endregion
         
@@ -184,8 +180,18 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             EvaluateStatsForInspection();
         }
+
+        public void WalkingDestinationReached()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IShopPositionsManager PositionsManager => MPositionsManager;
+
+
         private async void EvaluateStatsForInspection()
         {
+            //TODO: Make formula for gradient progress
             var waitResultTime = BaseAwakeTime / BaseData.Proactive;
             await Task.Delay(waitResultTime);
             
@@ -199,18 +205,25 @@ namespace GamePlayManagement.ItemManagement.Guards
             Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} is lazy, don't feel like working");
             ChangeMovementState<IdleMovementState>();
             ChangeAttitudeState<IdleAttitudeState>();
+            StartCoroutine(WaitLazyness());
+            
         }
 
-        //Used to have Guards special Actions. Not anymore?
-        public override void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus newGuardStatus)
+        private IEnumerator WaitLazyness()
         {
-            _mGuardStatusModule.SetGuardAttitudeStatus(newGuardStatus);
+            Debug.Log("[BaseGuardGameObject.WaitLazyness] Guard is lazy. Waiting to evaluate again.");
+            //TODO: Make formula for time depending on guad stats
+            yield return new WaitForSeconds(3f);
+            if(_mMovementStateMachine.CurrentState is IdleMovementState && _mAttitudeStateMachine.CurrentState is IdleAttitudeState)
+            {
+                EvaluateStatsForInspection();
+            }
         }
 
-        public void StartInspecting()
+        private void StartInspecting()
         {
-            ChangeMovementState<WalkingState>();
-            _mGuardStatusModule.SetGuardAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
+            _mMovementStateMachine.ChangeState<WalkingState>();
+            _mAttitudeStateMachine.ChangeState<ShopInspectionState>();
         }
 
         #region TargetTrackingProcess
@@ -288,6 +301,10 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
         private void Update()
         {
+            _mAttitudeStateMachine.Update();
+            _mMovementStateMachine.Update();
+            
+            /*
             if(_mGuardStatusModule.CurrentAttitude != GuardSpecialAttitudeStatus.ManualInspecting)
             {
                 Debug.Log($"[BaseGuardGameObject.Update] Guard Named {gameObject.name} simple movement");
@@ -299,6 +316,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                 ManageManualMovementStatus();
             }
             Debug.Log($"[BaseGuardGameObject] is in nav mesh: {MyNavMeshAgent.isOnNavMesh}");
+            */
         }
         private void ManageMovementStatus()
         {
@@ -323,6 +341,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #region AttitudeStateManagement
         protected override void ReachWalkingDestination()
         {
+            /*
             switch (_mGuardStatusModule.CurrentAttitude)
             {
                 case GuardSpecialAttitudeStatus.ManualInspecting:
@@ -338,21 +357,9 @@ namespace GamePlayManagement.ItemManagement.Guards
                     break;
                 case GuardSpecialAttitudeStatus.Fighting:
                     break;
-            }
+            }*/
         }
 
-        private async void ReachManuallyInspectedZone()
-        {
-            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
-            ChangeMovementState<IdleMovementState>();
-
-            await Task.Delay(500);
-            BaseAnimator.ChangeAnimationState(SearchAround);
-            await Task.Delay(4000);
-            
-            BaseAnimator.ChangeAnimationState("Idle");
-        }
-        
         public void SetGuardDestination(Vector3 targetPosition)
         {
             SetMovementDestination(targetPosition);
@@ -384,19 +391,7 @@ namespace GamePlayManagement.ItemManagement.Guards
                 OnWalkingDestinationReached();
             }
         }
-        private async void ReachInspectedZone()
-        {
-            var nextPosition = PositionsManager.GetNextPosition(CurrentInspectionPosition.Id);
-            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Idle);
-            ChangeMovementState<IdleMovementState>();
-            await Task.Delay(500);
-            BaseAnimator.ChangeAnimationState(SearchAround);
-            await Task.Delay(4000);
-            _mInspectionSystemModule.SetNewCurrentPosition(nextPosition);
-            SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.Inspecting);
-            ChangeMovementState<WalkingState>();
-        }
-        
+
         private void AttemptDetention ()
         {
     

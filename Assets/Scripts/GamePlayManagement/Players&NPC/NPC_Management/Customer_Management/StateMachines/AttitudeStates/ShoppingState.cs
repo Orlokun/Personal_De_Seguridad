@@ -1,10 +1,11 @@
-﻿using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
+﻿using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates
 {
     public class ShoppingState : IAttitudeState
     {
-        private BaseCustomer _mCharacter;
+        private IBaseCustomer _mCharacter;
 
         public ShoppingState(BaseCharacterInScene character)
         {
@@ -25,7 +26,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
         public void WalkingDestinationReached()
         {
             _mCharacter.ChangeMovementState<IdleMovementState>();
-            var pointOfInterest =  _mCharacter.PositionsManager.GetPoiData(_mCharacter.CurrentPoiId);
+            var pointOfInterest =  _mCharacter.GetPositionsManager.GetPoiData(_mCharacter.MCurrentPoiId);
             _mCharacter.SetTempProductOfInterest(pointOfInterest.ChooseRandomProduct());
             _mCharacter.ChangeAttitudeState<EvaluatingProductState>();
         }

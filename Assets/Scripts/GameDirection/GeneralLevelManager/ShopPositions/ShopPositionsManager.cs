@@ -291,6 +291,7 @@ namespace GameDirection.GeneralLevelManager.ShopPositions
         public bool AnyUnoccupiedSpot => _mWaitingSpots.Any(x => x.Value.AnySpotAvailable);
         #endregion
 
+        //TODO: This should be first scoped by map zone. Considering next bigger maps.
         public IShopInspectionPosition GetClosestPosition(Vector3 originSpot)
         {
             float minorDistance = 9999;
