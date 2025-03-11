@@ -41,9 +41,4 @@ namespace UI.PopUpManager.OfficeRelatedPopUps
             FeedbackManager.Instance.DeactivatePhoneCallReceivedButton();
         }
     }
-
-    public interface IPhoneAnswerPopUp
-    {
-        public void SetAnswerData(ICallableSupplier caller);
-    }
 }

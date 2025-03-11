@@ -12,7 +12,7 @@ namespace DataUnits.JobSources
         {
             SpeakerIndex = DialogueSpeakerId.Omnicorp;
         }
-        public string SpeakerName => "Omnicorp";
+        public string SpeakerName => "CEO 9000";
         public DialogueSpeakerId SpeakerIndex { get; set; }
         public void ReceivePlayerCall(IPlayerGameProfile playerProfile)
         {

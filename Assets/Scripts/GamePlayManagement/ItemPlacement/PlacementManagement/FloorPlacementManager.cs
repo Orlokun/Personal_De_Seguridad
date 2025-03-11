@@ -1,4 +1,5 @@
 using DataUnits.ItemScriptableObjects;
+using GameDirection;
 using GamePlayManagement.ItemManagement.Guards;
 using UnityEngine;
 using Utils;
@@ -20,6 +21,11 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         {
             _instance = this;
             base.Awake();
+            
+            OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager()
+                .CheckItemPlacementChallenges;
+            OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetComplianceManager
+                .CheckItemPlacementCompliance;
         }
 
         new void Update()   

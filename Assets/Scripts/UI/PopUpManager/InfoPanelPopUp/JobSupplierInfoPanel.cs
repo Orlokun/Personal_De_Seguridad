@@ -20,7 +20,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
             kindnessObj.text = jobSupplierObject.Kindness.ToString();
             violenceObj.text = jobSupplierObject.Violence.ToString();
             intelligenceObj.text = jobSupplierObject.Intelligence.ToString();
-            moneyObj.text = jobSupplierObject.Money.ToString();
+            moneyObj.text = jobSupplierObject.Power.ToString();
             supplierDescription.text = jobSupplierObject.JobSupplierData.StoreDescription;
             supplierName.text = jobSupplierObject.StoreOwnerName;
             supplierImage.sprite = IconsSpriteData.GetSpriteForItemIcon(jobSupplierObject.JobSupplierData.SpriteName);

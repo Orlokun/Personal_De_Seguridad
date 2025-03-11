@@ -14,7 +14,7 @@ namespace Utils
             }
             return spriteObject;
         }
-        public static Sprite GetSpriteForJobSupplierIcon(string spriteName)
+        public static Sprite GetSpriteForSupplierIcon(string spriteName)
         {
             var iconPath = BASE_ITEMICONS_RESOURCE_PATH + $"{spriteName}";
             var spriteObject = Resources.Load<Sprite>(iconPath);

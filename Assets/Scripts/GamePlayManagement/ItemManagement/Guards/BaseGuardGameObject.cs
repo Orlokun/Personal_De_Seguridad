@@ -22,6 +22,8 @@ namespace GamePlayManagement.ItemManagement.Guards
 {
     public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject, IInitializeWithArg1<IItemObject>
     {
+
+        
         #region Members
         private IItemObject _myGuardData;
         public IItemObject GuardBaseData => _myGuardData;
@@ -83,6 +85,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region GuardStats
+
         public IGuardBaseData BaseData => (IGuardBaseData)MyStats;
         #endregion
 
@@ -198,7 +201,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             ChangeAttitudeState<IdleAttitudeState>();
         }
 
-        //Used to have Guards special Actions. Not any more?
+        //Used to have Guards special Actions. Not anymore?
         public override void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus newGuardStatus)
         {
             _mGuardStatusModule.SetGuardAttitudeStatus(newGuardStatus);

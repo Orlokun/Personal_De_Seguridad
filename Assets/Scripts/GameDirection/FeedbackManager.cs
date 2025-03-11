@@ -20,6 +20,8 @@ namespace GameDirection
 
         public void ActivatePhoneCallReceivedButton(ICallableSupplier caller);
         public void DeactivatePhoneCallReceivedButton();
+        
+        void StartTrustFeedback(ICallableSupplier supplierTrust, int trustValue);
     }
 
     public class FeedbackManager : MonoBehaviour, IInitialize, IFeedbackManager
@@ -38,6 +40,7 @@ namespace GameDirection
         private bool _mIsActive;
 
         [SerializeField] private PhoneAnswerPopUp mPhoneCallObject;
+        [SerializeField] private SupplierTrustEventPopUp mTrustEventPopUp;
         
         
         
@@ -144,7 +147,24 @@ namespace GameDirection
             mPhoneCallObject.CleanAnswerData();
             mPhoneCallObject.gameObject.SetActive(false);
         }
-        
+
+        public void StartTrustFeedback(ICallableSupplier supplierTrust, int trustValue)
+        {
+            var popUpController = (ISupplierTrustEventPopUp)mTrustEventPopUp;
+            
+            popUpController.ClearPreviousIcons();
+            popUpController.StartTrustEventPopUp(supplierTrust, trustValue);
+            mTrustEventPopUp.gameObject.SetActive(true);
+            StartCoroutine(WaitFeedbackForTime(3f));
+            
+        }
+
+        private IEnumerator WaitFeedbackForTime(float d)
+        {
+            yield return new WaitForSeconds(d);
+            mTrustEventPopUp.gameObject.SetActive(false);
+        }
+
         private void ReadFeedbackForTime(string feedbackText, int timeLength)
         {
             if (_mIsActive)

@@ -138,23 +138,23 @@ namespace DataUnits.GameCatalogues
                 var gotKindness = int.TryParse(_jobsData.values[i][11], out var kindness);
                 var gotViolence = int.TryParse(_jobsData.values[i][12], out var violence);
                 var gotIntelligence = int.TryParse(_jobsData.values[i][13], out var intelligence);
-                var gotMoney = int.TryParse(_jobsData.values[i][14], out var money);
+                var gotPower = int.TryParse(_jobsData.values[i][14], out var power);
                 var spriteName = _jobsData.values[i][15];
                 
-                if (!gotSanity || !gotKindness || !gotViolence || !gotIntelligence || !gotMoney)
+                if (!gotSanity || !gotKindness || !gotViolence || !gotIntelligence || !gotPower)
                 {
                     Debug.LogError("Job Supplier Stats must be available!");
                 }
                 else
                 {
-                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, money, spriteName);
+                    jobSupplier.SetStats(sanity, kindness, violence, intelligence, power, spriteName);
                 }
 
                 
                 var gotOwnerAge = int.TryParse(_jobsData.values[i][16], out var ownerAge);
                 jobSupplier.JobSupplierData.StoreOwnerAge = ownerAge;
 
-                var initialBudget = int.TryParse(_jobsData.values[i][17], out var initBudget);
+                var hasInitialBudget = int.TryParse(_jobsData.values[i][17], out var initBudget);
                 jobSupplier.JobSupplierData.Budget = initBudget;
                 _mIjobSuppliersInData.Add(jobSupplier);
             }

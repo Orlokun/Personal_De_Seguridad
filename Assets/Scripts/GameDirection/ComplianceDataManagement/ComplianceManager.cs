@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataUnits.ItemScriptableObjects;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
@@ -65,7 +66,12 @@ namespace GameDirection.ComplianceDataManagement
             _mComplianceBaseData.StartDayComplianceObjects(dayBitId);
             _mUpdateComplianceFunctionAvailable = true;
         }
-        
+
+        public void CheckItemPlacementCompliance(IItemObject itemObject)
+        {
+            Debug.LogError("Item placement compliance event must be evaluated");
+        }
+
         public void UnlockCompliance(int id)
         {
             if (_mComplianceBaseData.GetActiveComplianceObjects.Any(x => x.GetComplianceObjectData.ComplianceId == id))

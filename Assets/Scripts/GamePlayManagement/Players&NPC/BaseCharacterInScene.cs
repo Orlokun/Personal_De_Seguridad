@@ -8,6 +8,7 @@ using GamePlayManagement.Players_NPC.Animations.Interfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using UnityEngine;
 using UnityEngine.AI;
@@ -184,11 +185,13 @@ namespace GamePlayManagement.Players_NPC
         
         private void InitiateStateMachines()
         {
+            //Movement State Machine
             _mMovementStateMachine = new StateMachine<IMovementState>();
             _mMovementStateMachine.AddState(new IdleMovementState(this));
             _mMovementStateMachine.AddState(new WalkingState(this));
             _mMovementStateMachine.AddState(new RunningState(this));
             
+            //Attitude State Machine
             _mAttitudeStateMachine = new StateMachine<IAttitudeState>();
             _mAttitudeStateMachine.AddState(new IdleAttitudeState(this));
             _mAttitudeStateMachine.AddState(new AccessingBuildingState(this));
@@ -202,6 +205,11 @@ namespace GamePlayManagement.Players_NPC
             _mAttitudeStateMachine.AddState(new ScaredCrouchState(this));
             _mAttitudeStateMachine.AddState(new ScaredRunningState(this));
             _mAttitudeStateMachine.AddState(new LeavingBuildingState(this));
+            
+            //Guards Base AttitudeStates
+            _mAttitudeStateMachine.AddState(new GuardIdleState(this));
+            
+            
         }
         
         protected virtual void Start()
@@ -241,7 +249,6 @@ namespace GamePlayManagement.Players_NPC
             
         }
 
-        public BaseCharacterMovementStatus CharacterMovementStatus { get; }
 
         protected virtual void ProcessInViewTargets()
         {

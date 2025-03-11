@@ -70,7 +70,7 @@ namespace DataUnits.JobSources
         public int Kindness => _mKindness;
         public int Violence => _mViolence;
         public int Intelligence => _mIntelligence;
-        public int Money => _mMoney;
+        public int Power => _mPower;
 
 
         public int DaysAsEmployer
@@ -108,16 +108,16 @@ namespace DataUnits.JobSources
         private int _mKindness;
         private int _mViolence;
         private int _mIntelligence;
-        private int _mMoney;
+        private int _mPower;
 
         ///Store Stats
-        public void SetStats(int sanity, int kindness, int violence, int intelligence, int money, string spriteName)
+        public void SetStats(int sanity, int kindness, int violence, int intelligence, int power, string spriteName)
         {
             _mSanity = sanity;
             _mKindness = kindness;
             _mViolence = violence;
             _mIntelligence = intelligence;
-            _mMoney = money;
+            _mPower = power;
             _mSupplierData.SpriteName = spriteName;
         }
         #endregion

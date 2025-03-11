@@ -83,7 +83,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
             trustPenaltyObject.SetRewardAmount(trustPenalty.TrustAmount);
             var trustPanel = (ITrustRewardObjectPrefab)trustPenaltyObject;
             var requesterData = GameDirector.Instance.GetSpeakerData(0);
-            var icon = IconsSpriteData.GetSpriteForJobSupplierIcon(requesterData.SpriteName);
+            var icon = IconsSpriteData.GetSpriteForSupplierIcon(requesterData.SpriteName);
             trustPanel.SetTrusteeName(requesterData.SpeakerName);
             trustPanel.SetImageIcon(icon);
         }
@@ -95,7 +95,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
             trustRewardObject.SetRewardAmount(trustReward.TrustAmount);
             var trustPanel = (ITrustRewardObjectPrefab)trustRewardObject;
             var requesterData = GameDirector.Instance.GetSpeakerData(0);
-            var icon = IconsSpriteData.GetSpriteForJobSupplierIcon(requesterData.SpriteName);
+            var icon = IconsSpriteData.GetSpriteForSupplierIcon(requesterData.SpriteName);
             trustPanel.SetTrusteeName(requesterData.SpeakerName);
             trustPanel.SetImageIcon(icon);
         }

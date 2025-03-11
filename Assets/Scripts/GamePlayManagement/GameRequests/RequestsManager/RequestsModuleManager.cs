@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataUnits.ItemScriptableObjects;
 using DialogueSystem.Units;
 using GameDirection;
 using GameDirection.TimeOfDayManagement;
@@ -63,6 +64,12 @@ namespace GamePlayManagement.GameRequests.RequestsManager
             }
             RemoveCompletedChallengesFromActive(completedHireChallenges);
         }
+
+        public void CheckItemPlacementChallenges(IItemObject itemObject)
+        {
+            Debug.LogError("[RequestsModuleManager.CheckItemPlacementChallenges] Not Implemented");
+        }
+
         #endregion
 
         #region Init

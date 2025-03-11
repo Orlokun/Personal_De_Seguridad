@@ -1,3 +1,4 @@
+using System;
 using DataUnits.ItemScriptableObjects;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
@@ -22,6 +23,9 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         protected bool IsPlaceSuccess = false;
         protected bool IsAttemptingPlacement;
         protected bool IsInsideAllowedZone;
+
+        public delegate void PlacedItem(IItemObject itemObject);
+        public event PlacedItem OnItemPlaced;
 
         
         
@@ -88,15 +92,10 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         
         private void AttemptItemPlacement()
         {
-            ProcessItemExpense(CurrentItemData);
             CreateObjectInPlace();
             ResetSelectedObject();
         }
-        private void ProcessItemExpense(IItemObject itemObject)
-        {
-            GameDirector.Instance.GetActiveGameProfile.GetActiveJobsModule().CurrentEmployerData().ExpendMoney(itemObject.Cost);
-            GameDirector.Instance.GetUIController.UpdateInfoUI();
-        }
+
         protected virtual void SetCurrentMousePosition()
         {
             MousePosition = Input.mousePosition;
@@ -140,14 +139,23 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
 
         protected virtual void CreateObjectInPlace()
         {
-            var obj = Instantiate(CurrentPlacedObject);
-            SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
-            LastInstantiatedGameObject = obj;
-            SetNewObjectPosition(obj);
-            IsAttemptingPlacement = false;
-            var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
-            objectData.SetInPlacementStatus(false);
-            objectData.InitializeItem(CurrentItemData);
+            try
+            {
+                var obj = Instantiate(CurrentPlacedObject);
+                SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
+                LastInstantiatedGameObject = obj;
+                SetNewObjectPosition(obj);
+                IsAttemptingPlacement = false;
+                var objectData = (IBaseItemObject) obj.GetComponent<BaseItemGameObject>();
+                objectData.SetInPlacementStatus(false);
+                objectData.InitializeItem(CurrentItemData);
+                OnItemPlaced?.Invoke(CurrentItemData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         protected virtual void SetNewObjectPosition(GameObject gObject)

@@ -1,4 +1,6 @@
 using System;
+using DataUnits;
+using DataUnits.JobSources;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
@@ -58,7 +60,6 @@ namespace DialogueSystem
                 case "OrganSale":
                     LaunchPlayerOrganSaleEvent();
                     break;
-                
                 //Argument One is speaker Id, Argument two is request Id
                 case "Request":
                     LaunchSupplierRequestEvent(eventCodes[1], eventCodes[2]);
@@ -69,6 +70,25 @@ namespace DialogueSystem
                 case "LaunchTutorial":
                     LaunchTutorialProcessEvent(eventCodes[1]);
                     break;
+                case "Trust": 
+                    LaunchTrustChangeEvent(eventCodes[1], eventCodes[2]);
+                    break;
+                default:
+                    Debug.LogWarning($"Event Type: {eventCodes[0]} not recognized. Confirm writing.");
+                    break;
+            }
+        }
+
+        private void LaunchTrustChangeEvent(string speakerId, string trustAmount)
+        {
+            var supplierHasSpeakerId = int.TryParse(speakerId, out var supplierIdInt);
+            if (supplierHasSpeakerId)
+            {
+                var supplierSpeakerId = (DialogueSpeakerId)supplierIdInt;
+                var speakerData = (IFondnessCharacter)GameDirector.Instance.GetSpeakerData(supplierSpeakerId);
+                speakerData.ReceiveFondness(int.Parse(trustAmount));
+                var speakerCallableData = (ICallableSupplier)speakerData;
+                FeedbackManager.Instance.StartTrustFeedback(speakerCallableData, int.Parse(trustAmount));
             }
         }
 

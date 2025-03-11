@@ -1,13 +1,17 @@
 using System;
 using System.Linq;
 using DataUnits.GameCatalogues;
+using DataUnits.JobSources;
 using DialogueSystem;
+using DialogueSystem.Units;
+using GameDirection;
 using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.GameRequests.RewardsPenalties;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -191,6 +195,23 @@ namespace GamePlayManagement
                 var supplier = _jobsSourcesModule.ActiveJobObjects.SingleOrDefault(x =>
                     x.Value.SpeakerIndex == trustRewardData.TrustGiverSpeakerId).Value;
                 supplier.ReceiveFondness(trustRewardData.TrustAmount);
+            }
+        }
+
+        public void UpdateSupplierTrustLevel(DialogueSpeakerId supplierId, int trustLevel)
+        {
+            if(_jobsSourcesModule.ActiveJobObjects.Any(x=> x.Value.SpeakerIndex == supplierId))
+            {
+                var supplier = (IFondnessCharacter)_jobsSourcesModule.ActiveJobObjects.First(x =>
+                    x.Value.SpeakerIndex == supplierId).Value;
+                supplier.ReceiveFondness(trustLevel);
+                return;
+            }
+            if(_itemSuppliersModule.ActiveItemStores.Any(x=> x.Value.GetSupplierData.SpeakerIndex == supplierId))
+            {
+                var supplier = (IFondnessCharacter)_itemSuppliersModule.ActiveItemStores.First(x =>
+                    x.Value.GetSupplierData.SpeakerIndex == supplierId).Value.GetSupplierData;
+                supplier.ReceiveFondness(trustLevel);
             }
         }
     }

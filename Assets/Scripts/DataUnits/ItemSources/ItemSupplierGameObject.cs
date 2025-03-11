@@ -30,7 +30,8 @@ namespace DataUnits.ItemSources
         private int _mRefillStockPeriod;
         private string _mSpriteName;
         private IItemSupplierShop _supplierShop;
-        
+        private int _mFondness = 0;
+
         public IItemSupplierShop SupplierShop => _supplierShop;
         
         [SerializeField] protected Sprite supplierPortrait;
@@ -362,8 +363,6 @@ namespace DataUnits.ItemSources
         {
             _mFondness += amount;
         }
-
-        private int _mFondness = 0;
     }
 
     public interface IItemSupplierDataObject : ISupplierBaseObject, ICallableSupplier

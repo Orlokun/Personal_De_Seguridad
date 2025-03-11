@@ -1,4 +1,5 @@
 using DialogueSystem;
+using DialogueSystem.Units;
 using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.GameRequests.RequestsManager;
@@ -24,5 +25,6 @@ namespace GamePlayManagement
         public IWorkDayObject GetCurrentWorkday();
         void PlayerLost(EndingTypes organSale);
         void AddFondnessToActiveSupplier(ITrustRewardData trustRewardData);
+        void UpdateSupplierTrustLevel(DialogueSpeakerId supplierId, int trustLevel);
     }
 }
