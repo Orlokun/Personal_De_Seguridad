@@ -35,7 +35,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
             }
         }
         
-        protected virtual GameObject GetItemPrefab(IItemObject itemData)
+        private GameObject GetItemPrefab(IItemObject itemData)
         {
             MItemData = itemData;
             var itemPrefabPath = GetBaseItemPath(itemData.ItemType, itemData.PrefabName);

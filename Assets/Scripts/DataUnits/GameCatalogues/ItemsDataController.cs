@@ -21,12 +21,14 @@ namespace DataUnits.GameCatalogues
 
         #region Special Stats Load Flags
         private bool MAreSpecialStatsReady => _mGotGuardsData && _mGotCamerasData && _mGotWeaponsData &&
-                                              _mGotTrapsData && _mGotOtherItemsData;
+                                              _mGotTrapsData && _mGotOtherItemsData && _mBaseDataIsReady;
         private bool _mGotGuardsData;
         private bool _mGotCamerasData;
         private bool _mGotWeaponsData;
         private bool _mGotTrapsData;
         private bool _mGotOtherItemsData;
+        private bool _mBaseDataIsReady;
+
         #endregion
 
         #region Special Stats Members
@@ -55,7 +57,12 @@ namespace DataUnits.GameCatalogues
             return _mBaseCatalogueBaseItemsFromData[suppliers];
         }
 
-        
+        public IItemObject GetItemFromBaseCatalogue(BitItemSupplier itemSupplier, int itemBitId)
+        {
+            return _mBaseCatalogueBaseItemsFromData[itemSupplier].First(x => x.BitId == itemBitId);
+        }
+
+
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -64,6 +71,8 @@ namespace DataUnits.GameCatalogues
                 Destroy(this);
             }
             _instance = this;
+            var generalDataUrl = DataSheetUrls.ItemsCatalogueGameData;
+            StartCoroutine(LoadItemsCatalogueData(generalDataUrl));
             GetItemsCatalogueData();
         }
         private void GetItemsCatalogueData()
@@ -82,21 +91,19 @@ namespace DataUnits.GameCatalogues
             StartCoroutine(GetTrapSpecialData(trapsSpecialDataUrl));
             StartCoroutine(GetOtherItemsSpecialData(otherItemsSpecialDataUrl));
             StartCoroutine(UpdateSpecialData());
-
             //
         }
 
         private IEnumerator UpdateSpecialData()
         {
             yield return new WaitUntil(() => MAreSpecialStatsReady);
-            Debug.Log($"[ItemsDataController.UpdateSpecialData] All Special Stats are ready");
+            Debug.Log($"[ItemsDataController.UpdateSpecialData] Base data and Special Stats are ready. Injecting Stats to data.");
             InjectItemSpecialStats();
         }
 
         private void Start()
         {
-            var generalDataUrl = DataSheetUrls.ItemsCatalogueGameData;
-            StartCoroutine(LoadItemsCatalogueData(generalDataUrl));
+
         }
 
         #region GetDataFromSheet
@@ -837,6 +844,8 @@ namespace DataUnits.GameCatalogues
                 Debug.Log($"Added Item: {itemDataObject.ItemName}");
                 Debug.Log($"Current Item Supplier: {itemDataObject.ItemSupplier}");
             }
+
+            _mBaseDataIsReady = true;
         }
 
         public IItemTypeStats GetItemStats(BitItemSupplier supplier, BitItemType itemType, int itemId)
@@ -882,18 +891,6 @@ namespace DataUnits.GameCatalogues
         #endregion
 
 
-        public IItemObject GetItemFromBaseCatalogue(BitItemSupplier itemSupplier, int itemBitId)
-        {
-            try
-            {
-                return _mBaseCatalogueBaseItemsFromData[itemSupplier].SingleOrDefault(x => x.BitId == itemBitId);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
         public IGuardBaseData GetStatsForGuard(BitItemSupplier itemSupplier, int itemBitId)
         {
             Debug.Log("[GetStatsForGuard]");

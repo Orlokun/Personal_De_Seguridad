@@ -23,6 +23,8 @@ namespace GamePlayManagement.ItemManagement.Guards
 {
     public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject, IInitializeWithArg1<IItemObject>
     {
+
+        private Coroutine _mCurrentRoutine;
         private IItemObject _myGuardData;
         public IItemObject GuardBaseData => _myGuardData;
 
@@ -205,8 +207,7 @@ namespace GamePlayManagement.ItemManagement.Guards
             Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} is lazy, don't feel like working");
             ChangeMovementState<IdleMovementState>();
             ChangeAttitudeState<IdleAttitudeState>();
-            StartCoroutine(WaitLazyness());
-            
+            _mCurrentRoutine = StartCoroutine(WaitLazyness());
         }
 
         private IEnumerator WaitLazyness()

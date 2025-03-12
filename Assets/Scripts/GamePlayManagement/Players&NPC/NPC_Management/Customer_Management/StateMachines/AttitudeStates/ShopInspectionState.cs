@@ -43,6 +43,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             _mGuard.BaseAnimator.ChangeAnimationState(SearchAround);
             await Task.Delay(4000); 
             _mGuard.GetInspectionModule.SetNewCurrentPosition(nextPosition);
+            _mGuard.SetGuardDestination(_mGuard.GetInspectionModule.GetCurrentPosition.Position);
             _mGuard.ChangeMovementState<WalkingState>();
         }
     }
