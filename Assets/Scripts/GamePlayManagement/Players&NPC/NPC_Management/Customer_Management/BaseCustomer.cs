@@ -114,21 +114,24 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             _mMovementStateMachine.Update();
             _mAttitudeStateMachine.Update();
         }
-        protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        
+        //TODO: Create Proper Formula for this
+        protected float GetStatusSpeed(IMovementState currentStatus)
         {
             var guardSpeed = (float)_mCustomerTypeData.Speed / 10;
             switch (currentStatus)
             {
-                case BaseCharacterMovementStatus.Walking:
+                case WalkingState:
                     // ReSharper disable once PossibleLossOfFraction
-                    return BaseWalkSpeed * guardSpeed;
-                case BaseCharacterMovementStatus.Running:
+                    return BaseWalkSpeed * 1;
+                case RunningState:
                     // ReSharper disable once PossibleLossOfFraction
-                    return BaseRunSpeed * guardSpeed;
+                    return BaseRunSpeed * 1;
                 default:
                     return 1;
             }
         }
+
         #region UpdateManageAttitude
 
 

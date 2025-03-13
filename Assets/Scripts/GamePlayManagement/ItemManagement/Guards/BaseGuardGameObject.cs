@@ -106,15 +106,15 @@ namespace GamePlayManagement.ItemManagement.Guards
         public IShopInspectionPosition CurrentInspectionPosition =>
             _mInspectionModule.GetCurrentPosition;
 
-        protected float GetStatusSpeed(BaseCharacterMovementStatus currentStatus)
+        protected float GetStatusSpeed(IMovementState currentStatus)
         {
-            var guardSpeed = (float)BaseData.Speed / 10;
+            var guardSpeed = (float)BaseData.Speed / 3;
             switch (currentStatus)
             {
-                case BaseCharacterMovementStatus.Walking:
+                case WalkingState:
                     // ReSharper disable once PossibleLossOfFraction
                     return BaseWalkSpeed * guardSpeed;
-                case BaseCharacterMovementStatus.Running:
+                case RunningState:
                     // ReSharper disable once PossibleLossOfFraction
                     return BaseRunSpeed * guardSpeed;
                 default:
