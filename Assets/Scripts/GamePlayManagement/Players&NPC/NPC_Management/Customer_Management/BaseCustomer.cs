@@ -49,17 +49,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #endregion
 
         #region CurrentCustomerStatus
-        private BaseCharacterAttitudeStatus _mCharacterAttitudeStatus = 0;
+
         private bool _mIsCustomerStealing;
         public bool IsCustomerStealing => _mIsCustomerStealing;
         public GameObject CustomerGameObject => gameObject;
 
 
-        private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
-        public Dictionary<Guid, bool> PoisPurchaseStatus=> _mPoisPurchaseStatus;
 
-        private Guid _mCurrentPoiId;
-        public Guid MCurrentPoiId => _mCurrentPoiId;
+        
         private ISingleWaitingSpot _currentWaitingSpot;
         #endregion
 
@@ -95,6 +92,35 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             Debug.Log($"[Awake] Initial Position: {MInitialPosition}. ");
         }
 
+        #endregion
+        private void Update()
+        {
+            _mMovementStateMachine.Update();
+            _mAttitudeStateMachine.Update();
+        }
+        
+        //TODO: Create Proper Formula for this
+
+        
+        #region UpdateManageAttitude
+
+        private void CheckRunningAwayChances()
+        {
+            //TODO: Elaborate logic for this. For now they simply run. 
+            if (Vector3.Distance(GetNavMeshAgent.destination, transform.position) < 3f)
+            {
+                ChangeMovementState<RunningState>();
+            }
+        }
+        
+        
+        
+        private Dictionary<Guid, bool> _mPoisPurchaseStatus = new Dictionary<Guid, bool>();
+        public Dictionary<Guid, bool> PoisPurchaseStatus=> _mPoisPurchaseStatus;
+
+        private Guid _mCurrentPoiId;
+        public Guid MCurrentPoiId => _mCurrentPoiId;
+        
         private void PopulateShelvesOfInterestData()
         {
             _mShelvesOfInterest = MPositionsManager.GetFirstPoiOfInterestIds(_mNumberOfProductsLookingFor);
@@ -108,41 +134,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MTempStoreProductOfInterest = productOfInterest;
             MTempTargetOfInterest = MTempStoreProductOfInterest.Item1;
         }
-        #endregion
-        private void Update()
-        {
-            _mMovementStateMachine.Update();
-            _mAttitudeStateMachine.Update();
-        }
-        
-        //TODO: Create Proper Formula for this
-        protected float GetStatusSpeed(IMovementState currentStatus)
-        {
-            var guardSpeed = (float)_mCustomerTypeData.Speed / 10;
-            switch (currentStatus)
-            {
-                case WalkingState:
-                    // ReSharper disable once PossibleLossOfFraction
-                    return BaseWalkSpeed * 1;
-                case RunningState:
-                    // ReSharper disable once PossibleLossOfFraction
-                    return BaseRunSpeed * 1;
-                default:
-                    return 1;
-            }
-        }
 
-        #region UpdateManageAttitude
-
-
-        private void CheckRunningAwayChances()
-        {
-            //TODO: Elaborate logic for this. For now they simply run. 
-            if (Vector3.Distance(GetNavMeshAgent.destination, transform.position) < 3f)
-            {
-                ChangeMovementState<RunningState>();
-            }
-        }
         
         public void ReleaseCurrentPoI()
         {
@@ -322,6 +314,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MEntranceData = injectionClass.EntrancePositions;
             MInitialPosition = MEntranceData.StartPosition;
             _mCustomerTypeData = injectionClass.CustomerTypeData;
+            MCharacterSpeedLevel = _mCustomerTypeData.Speed;
+            UpdateCharacterSpeed(MCharacterSpeedLevel);
             _mInitialized = true;
         }
 

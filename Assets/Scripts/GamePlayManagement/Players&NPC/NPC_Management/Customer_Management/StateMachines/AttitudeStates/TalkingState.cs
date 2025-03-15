@@ -13,7 +13,6 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
 
         public void Enter()
         {
-            character.ChangeCharacterAttitudeState(BaseCharacterAttitudeStatus.Talking);
         }
 
         public void Exit() { }

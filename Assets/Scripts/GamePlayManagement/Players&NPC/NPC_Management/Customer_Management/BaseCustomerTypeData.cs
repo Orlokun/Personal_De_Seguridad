@@ -24,8 +24,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         
         //Physical params
         protected float MAgility;
-        protected float MSpeed;
+        protected int MSpeed;
         protected float MStrength;
+        protected int MCharm;
         #endregion
 
         public int Cleanness => MCleanness;
@@ -41,8 +42,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         public int Aggressive => MAggressive;
     
         public float Agility => MAgility;
-        public float Speed => MSpeed;
+        public int Speed => MSpeed;
         public float Strength => MStrength;
+        public int Charm => MCharm;
 
         public BaseCustomerTypeData()
         {
@@ -66,12 +68,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MAggressive = Random.Range(1, 10);
             
             MAgility = Random.Range(1, 10);
-            MSpeed = Random.Range(5, 15);
+            MSpeed = Random.Range(1, 15);
             MStrength = Random.Range(1, 10);
+            MCharm = Random.Range(1, 10);
             
             Debug.Log($"Cleanness: {Cleanness} ---SocialStatus: {SocialStatus} ---Age: {Age} " +
                       $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Fearful} " +
                       $"---Aggressive: {Aggressive} ---Agility: {Agility} ---Speed: {Speed} ---Strength: {Strength}");
         }
+
     }
 }

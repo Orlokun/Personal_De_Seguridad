@@ -189,7 +189,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 var instantiationRange = _customerManagementRawData.values[i][5].Split(',');
                 var castedRange = RangeProcessor.ProcessLinksStrings(instantiationRange);
 
-                //TODO: GAME DIFFICULTY SHOUOLD BE SET SOMEWHERE ELSE
+                //TODO: GAME DIFFICULTY SHOULD BE SET SOMEWHERE ELSE
                 var gameDifficulty = 1;
                 var customerManagementData = Factory.CreateCustomersInSceneManagerData(supplierBitId, gameDifficulty, maxClients, storePrefabsPath, castedRange);
                 _mClientManagementData.Add(supplierBitId, customerManagementData);
@@ -262,7 +262,6 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 var randomRange = Random.Range(_mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[0], _mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[1]);
                 //var randomRange = Random.Range(3, 5);
                 var randomPrefabInstantiated = InstantiateRandomClient();
-                StartMovingClientAgent(randomPrefabInstantiated);
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
                 //Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
                 yield return new WaitForSeconds(randomRange);
@@ -277,12 +276,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             }
             _mCustomersInScene.Add(customer.CustomerId, customer);
         }
-        private void StartMovingClientAgent(GameObject clientPrefab)
-        {
-            var navMesh = clientPrefab.GetComponent<NavMeshAgent>();
-            navMesh.speed = 3.5f;
-            navMesh.avoidancePriority = 50;
-        }
+
         private void Update()
         {
             NavMesh.avoidancePredictionTime = avoidancePredictionTime;

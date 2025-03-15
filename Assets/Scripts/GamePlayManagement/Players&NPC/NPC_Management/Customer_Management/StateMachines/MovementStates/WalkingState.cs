@@ -12,6 +12,7 @@
 
         public void Enter()
         {
+            character.UpdateNavMeshSpeed(character.GetCharacterSpeedLevel);
             character.BaseAnimator.ChangeAnimationState(Walk);
         }
 

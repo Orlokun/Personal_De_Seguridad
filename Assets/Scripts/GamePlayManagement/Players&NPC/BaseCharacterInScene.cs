@@ -23,8 +23,11 @@ namespace GamePlayManagement.Players_NPC
     {
         //Many of these should eventually be managed through code: speeds, etc.
         #region Constants
-        protected const float BaseWalkSpeed = 3.5f;
-        protected const float BaseRunSpeed = 15f;
+        protected const float BaseWalkSpeedMin = 3f;
+        protected const float BaseWalkSpeedMax = 4.5f;
+        
+        protected const float BaseRunSpeedMin = 6.5f;
+        protected const float BaseRunSpeedMax= 8.5f;
         protected const int BaseAwakeTime = 5000;
         
         #endregion
@@ -46,6 +49,9 @@ namespace GamePlayManagement.Players_NPC
         protected IShopPositionsManager MPositionsManager;
         public IBaseAnimatedAgent BaseAnimator => MBaseAnimator;
         public IStoreEntrancePosition EntranceData => MEntranceData;
+
+        protected int MCharacterSpeedLevel;
+        public int GetCharacterSpeedLevel => MCharacterSpeedLevel;
 
         
         #region StateMachine
@@ -215,27 +221,39 @@ namespace GamePlayManagement.Players_NPC
             
         }
 
-        protected void NavAgentUpdateStatusStats()
+        protected void UpdateCharacterSpeed(int speedLevel)
         {
-            MyNavMeshAgent.speed = GetStatusSpeed();
+            switch (_mMovementStateMachine.CurrentState)
+            {
+                case IdleMovementState:
+                    MyNavMeshAgent.speed = 0;
+                    break;
+                case WalkingState:
+                    MyNavMeshAgent.speed =  CalculateWalkSpeed(speedLevel);
+                    break;
+                case RunningState:
+                    MyNavMeshAgent.speed =  CalculateRunSpeed(speedLevel);
+                    break;
+                default:
+                    return;
+            }
+            return;
         }
-        protected virtual float GetStatusSpeed()
+        
+        //TODO: Eventually change to range depending on character, not rigid ranges.
+        private float CalculateWalkSpeed(int speedLevel)
         {
-            return 1;
+            var speedRange = (BaseWalkSpeedMax - BaseWalkSpeedMin)/10;
+            return BaseWalkSpeedMin + (speedRange * speedLevel);
         }
-
-
-
-        public virtual void ChangeCharacterAttitudeState(BaseCharacterAttitudeStatus characterAttitudeStatus)
+        
+        private float CalculateRunSpeed(int speedLevel)
         {
-            
-        }
-        public virtual void SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus guardAttitudeStatus)
-        {
-            
+            var speedRange = (BaseRunSpeedMax - BaseRunSpeedMin)/10;
+            return BaseRunSpeedMin + (speedRange * speedLevel);
         }
 
-
+        
         protected virtual void ProcessInViewTargets()
         {
             //Must be implemented by inheritor if used     
@@ -272,6 +290,11 @@ namespace GamePlayManagement.Players_NPC
         public void DestroyCharacter()
         {
             Destroy(gameObject);
+        }
+
+        public void UpdateNavMeshSpeed(int speedLevel)
+        {
+            UpdateCharacterSpeed(speedLevel);
         }
     }
 }

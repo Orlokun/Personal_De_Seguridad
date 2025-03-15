@@ -106,21 +106,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         public IShopInspectionPosition CurrentInspectionPosition =>
             _mInspectionModule.GetCurrentPosition;
 
-        protected float GetStatusSpeed(IMovementState currentStatus)
-        {
-            var guardSpeed = (float)BaseData.Speed / 3;
-            switch (currentStatus)
-            {
-                case WalkingState:
-                    // ReSharper disable once PossibleLossOfFraction
-                    return BaseWalkSpeed * guardSpeed;
-                case RunningState:
-                    // ReSharper disable once PossibleLossOfFraction
-                    return BaseRunSpeed * guardSpeed;
-                default:
-                    return 1;
-            }
-        }
+
         #endregion
 
         #region Initialization
@@ -151,6 +137,9 @@ namespace GamePlayManagement.ItemManagement.Guards
                 MPositionsManager = FindFirstObjectByType<ShopPositionsManager>();
                 PrepareFieldOfView();
                 SetupInspectionModule();
+                var guardStats = (IGuardBaseData)MyStats;
+                MCharacterSpeedLevel = guardStats.Speed;
+                UpdateCharacterSpeed(MCharacterSpeedLevel);
                 _mIsInitialized = true;
             }
             catch (Exception e)
@@ -420,8 +409,6 @@ namespace GamePlayManagement.ItemManagement.Guards
                 var inspectionPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
                 CurrentManualInspectionPosition = inspectionPosition;
                 ChangeMovementState<WalkingState>();
-                SetCharacterAttitudeStatus(GuardSpecialAttitudeStatus.ManualInspecting);
-
             }
             _fieldOfViewModule.ToggleInGameFoV(!my3dFieldOfView.IsDrawActive);
             _mIsClicked = false;
