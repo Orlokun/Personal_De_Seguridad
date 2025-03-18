@@ -76,6 +76,5 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                       $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Fearful} " +
                       $"---Aggressive: {Aggressive} ---Agility: {Agility} ---Speed: {Speed} ---Strength: {Strength}");
         }
-
     }
 }
