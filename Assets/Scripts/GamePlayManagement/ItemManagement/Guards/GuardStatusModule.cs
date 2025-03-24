@@ -1,5 +1,5 @@
-using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.GuardStates;
 
 namespace GamePlayManagement.ItemManagement.Guards
 {

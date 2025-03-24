@@ -11,6 +11,7 @@ using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using InputManagement.MouseInput;
@@ -121,7 +122,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         private void InitiateGuardStateMachines()
         {
             _mAttitudeStateMachine.AddState(new GuardIdleState(this));
-            _mAttitudeStateMachine.AddState(new ShopInspectionState(this));
+            _mAttitudeStateMachine.AddState(new GuardAutoInspectionState(this));
         }
 
         public void Initialize(IItemObject itemObjectData)
@@ -182,10 +183,13 @@ namespace GamePlayManagement.ItemManagement.Guards
 
         private async void EvaluateStatsForInspection()
         {
+            ChangeMovementState<IdleMovementState>();
+            ChangeAttitudeState<IdleAttitudeState>();
+            
             //TODO: Make formula for gradient progress
             var waitResultTime = BaseAwakeTime / BaseData.Proactive;
             await Task.Delay(waitResultTime);
-            
+
             var willWalkAround = RandomChanceDice(BaseData.Proactive);
             if (willWalkAround)
             {
@@ -194,16 +198,14 @@ namespace GamePlayManagement.ItemManagement.Guards
                 return;
             }
             Debug.Log($"[EvaluateStatsForInspecting] Guard {gameObject.name} is lazy, don't feel like working");
-            ChangeMovementState<IdleMovementState>();
-            ChangeAttitudeState<IdleAttitudeState>();
             _mCurrentRoutine = StartCoroutine(WaitLazyness());
         }
 
         private IEnumerator WaitLazyness()
         {
             Debug.Log("[BaseGuardGameObject.WaitLazyness] Guard is lazy. Waiting to evaluate again.");
-            //TODO: Make formula for time depending on guad stats
-            yield return new WaitForSeconds(3f);
+            var waitResultTime = BaseAwakeTime / BaseData.Proactive;
+            yield return new WaitForSeconds(waitResultTime);
             if(_mMovementStateMachine.CurrentState is IdleMovementState && _mAttitudeStateMachine.CurrentState is IdleAttitudeState)
             {
                 EvaluateStatsForInspection();
@@ -213,7 +215,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         private void StartInspecting()
         {
             _mMovementStateMachine.ChangeState<WalkingState>();
-            _mAttitudeStateMachine.ChangeState<ShopInspectionState>();
+            _mAttitudeStateMachine.ChangeState<GuardAutoInspectionState>();
         }
 
         #region TargetTrackingProcess

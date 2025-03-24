@@ -57,10 +57,10 @@ namespace ExternalAssets._3DFOV.Scripts
         public List<GameObject> SeenTargetObjects => seenObjects;
         public void SetupCharacterFoV(int fovRange)
         {
-            // ReSharper disable once PossibleLossOfFraction
-            float fovResult = fovRange / 10;
-            _viewRadius = BaseViewRadius * fovResult;
-            _viewAngle = BaseViewAngle * fovResult;
+            var fovRangeFloat = fovRange / 10f;
+            
+            _viewRadius = fovRange;
+            _viewAngle = BaseViewAngle * fovRangeFloat;
         }
         public bool IsDrawActive => _isDrawFoVActive;
         

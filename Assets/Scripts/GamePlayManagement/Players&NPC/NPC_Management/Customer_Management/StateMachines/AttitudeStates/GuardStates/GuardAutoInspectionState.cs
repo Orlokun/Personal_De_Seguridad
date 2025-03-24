@@ -1,15 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 
-namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates
+namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.GuardStates
 {
-    public class ShopInspectionState : IAttitudeState
+    public class GuardAutoInspectionState : IAttitudeState
     {
         private IBaseGuardGameObject _mGuard;
         public const string SearchAround = "SearchAround";
 
-        public ShopInspectionState(IBaseGuardGameObject mGuard)
+        public GuardAutoInspectionState(IBaseGuardGameObject mGuard)
         {
             this._mGuard = mGuard;
         }
@@ -46,5 +47,19 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             _mGuard.SetGuardDestination(_mGuard.GetInspectionModule.GetCurrentPosition.Position);
             _mGuard.ChangeMovementState<WalkingState>();
         }
+    }
+    
+    [Flags]
+    public enum GuardSpecialAttitudeStatus
+    {
+        Idle,
+        Slacking,
+        ManualInspecting,
+        Inspecting, 
+        Communicating,
+        Following,
+        Chasing,
+        Tackling,
+        Fighting,
     }
 }

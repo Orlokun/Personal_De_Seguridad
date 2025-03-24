@@ -28,7 +28,7 @@ namespace GamePlayManagement.Players_NPC
         
         protected const float BaseRunSpeedMin = 6.5f;
         protected const float BaseRunSpeedMax= 8.5f;
-        protected const int BaseAwakeTime = 5000;
+        protected const int BaseAwakeTime = 8000;
         
         #endregion
 
