@@ -18,7 +18,7 @@ namespace ExternalAssets._3DFOV.Scripts
         #region Variables
         [Range(0f, 50f)] private float _viewRadius;
         [Range(0f, 180f)] private float _viewAngle;
-        [Range(1f, 2500f)] private const int MViewResolution = 150;
+        [Range(1f, 2500f)] private const int MViewResolution = 100;
 
         public LayerMask layerMask;
         public enum DetectionType

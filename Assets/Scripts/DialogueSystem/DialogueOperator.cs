@@ -16,6 +16,7 @@ using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Utils;
 using Random = UnityEngine.Random;
 
 namespace DialogueSystem
@@ -243,6 +244,7 @@ namespace DialogueSystem
         {
             var speakerData = dialogueNodeSpeakerId == 0 ? _mOmnicorpDialogueInfo : GameDirector.Instance.GetSpeakerData(dialogueNodeSpeakerId);
             mSpeakerName.text = speakerData.SpeakerName;
+            var iconSprite = IconsSpriteData.GetSpriteForItemIcon(speakerData.SpriteName);
         }
 
         private void CheckDialogueLineCameraBehavior(IDialogueNode dialogueNode)

@@ -1378,6 +1378,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 110563087419134311, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563087419134311, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 110563087419134311, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 110563087423849657, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
       propertyPath: m_fontSize
       value: 18.85
@@ -1398,6 +1410,18 @@ PrefabInstance:
       propertyPath: mTabButton
       value: 
       objectReference: {fileID: 2108824920}
+    - target: {fileID: 3767628157253660284, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.625
+      objectReference: {fileID: 0}
+    - target: {fileID: 3767628157253660284, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3767628157253660284, guid: e38adb24c178e3c459bfb406b75a357e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1923,7 +1947,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7995237166614400569, guid: 926d898fea631ae4a9dbd5c9d323c579, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7995237166614400574, guid: 926d898fea631ae4a9dbd5c9d323c579, type: 3}
       propertyPath: m_Pivot.x
