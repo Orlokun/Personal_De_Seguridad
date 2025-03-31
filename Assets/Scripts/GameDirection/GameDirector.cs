@@ -80,6 +80,7 @@ namespace GameDirection
         /// Initial Scene Manager
         /// </summary>
         private ILevelDayManager _dayLevelManager;
+        private IIntroSceneOperator _introSceneOperator;
         #endregion
 
         #region Public Fields
@@ -228,8 +229,12 @@ namespace GameDirection
             CreateNewProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             _mGameState = HighLevelGameStates.InCutScene;
+            //PlayGameIntro();
+            
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
+        
+        
 
         public void ContinueGameWithProfile()
         {

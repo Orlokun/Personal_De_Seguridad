@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates
+namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.BaseCharacter
 {
     [Flags]
     public enum BaseCharacterAttitudeStatus
