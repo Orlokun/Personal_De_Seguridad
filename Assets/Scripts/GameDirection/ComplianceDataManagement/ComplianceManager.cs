@@ -7,6 +7,7 @@ using GamePlayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.ComplianceSystem;
 using GamePlayManagement.GameRequests.RewardsPenalties;
+using UI;
 using UnityEngine;
 
 namespace GameDirection.ComplianceDataManagement
@@ -14,8 +15,9 @@ namespace GameDirection.ComplianceDataManagement
     public class ComplianceManager : IComplianceManager
     {
         private readonly IComplianceManagerData _mComplianceBaseData = new ComplianceManagerData();
+        private List<IComplianceObject> _mTempCompletedComplianceObjects = new List<IComplianceObject>();
+        private IPlayerGameProfile _mActivePlayerProfile;
 
-        
         public void LoadComplianceData()
         {
             _mComplianceBaseData.LoadComplianceData();
@@ -67,10 +69,187 @@ namespace GameDirection.ComplianceDataManagement
             _mUpdateComplianceFunctionAvailable = true;
         }
 
+        #region UseItemComplianceEvaluation
+
+        
+
         public void CheckItemPlacementCompliance(IItemObject itemObject)
         {
-            Debug.LogError("Item placement compliance event must be evaluated");
+            if (GetActiveComplianceObjects == null || GetActiveComplianceObjects.Count == 0)
+            {
+                return;
+            }
+
+            //Confirm any Compliance objects make sense with this actions
+            if (GetActiveComplianceObjects.All(x => x.GetComplianceObjectData.ActionType != ComplianceActionType.Use) &&
+                GetActiveComplianceObjects.All(x =>
+                    x.GetComplianceObjectData.ActionType != ComplianceActionType.NotUse))
+            {
+                Debug.Log("Speaker has no request considering the <b>use action</b>. Continue.");
+                return;
+            }
+            
+            //Filter compliance where using an item is considered
+            var requests = GetActiveComplianceObjects.Where(x =>
+                x.GetComplianceObjectData.ActionType == ComplianceActionType.Use ||
+                x.GetComplianceObjectData.ActionType == ComplianceActionType.NotUse).ToList();
+            if(!HasItemUseRequirements(requests))
+            {
+                return;
+            }
+            var useItemsRequests = requests.Where(x => x.GetComplianceObjectData.ObjectType == ComplianceObjectType.AnyItem || 
+                                                       x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Guard ||
+                                                       x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Camera ||
+                                                       x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Weapon ||
+                                                       x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Traps ||
+                                                       x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Other).ToList();            
+            //Evaluate filtered compliance objects
+            CheckUseItemCompliance(useItemsRequests, itemObject);
+            if(_mTempCompletedComplianceObjects.Count > 0)
+            {
+                ProcessCompletedCompliance();
+            }
         }
+
+        private void ProcessCompletedCompliance()
+        {
+            if (_mTempCompletedComplianceObjects.Count == 0)
+            {
+                return;
+            }
+            if (_mActivePlayerProfile == null)
+            {
+                _mActivePlayer = GameDirector.Instance.GetActiveGameProfile;
+            }
+            foreach (var finalizedRequest in _mTempCompletedComplianceObjects)
+            {
+                finalizedRequest.ProcessEndCompliance();
+
+                if (finalizedRequest.GetComplianceObjectData.ComplianceStatus == ComplianceStatus.Passed)
+                {
+                    ProcessRewardsAndPenalties(finalizedRequest.GetComplianceObjectData.RewardValues);
+                }
+                
+                if (finalizedRequest.GetComplianceObjectData.ComplianceStatus == ComplianceStatus.Failed)
+                {
+                    ProcessRewardsAndPenalties(finalizedRequest.GetComplianceObjectData.PenaltyValues);
+                }
+            }
+            _mComplianceBaseData.UpdateActiveCompliance();
+            GameDirector.Instance.GetActiveGameProfile.UpdateProfileData();
+            UIController.Instance.UpdateInfoUI();
+            _mTempCompletedComplianceObjects.Clear();        
+        }
+
+        private void ProcessRewardsAndPenalties(Dictionary<RewardTypes, IRewardData> incomingData)
+        {
+            foreach (var rewardData in incomingData)
+            {
+                switch (rewardData.Key)
+                {
+                    case RewardTypes.OmniCredits:
+                        var omniCreditRewardData = (IOmniCreditRewardData)rewardData.Value;
+                        _mActivePlayerProfile.GetStatusModule().ReceiveOmniCredits(omniCreditRewardData.OmniCreditsAmount);
+                        break;
+                    case RewardTypes.Seniority:
+                        var seniorityRewardData = (ISeniorityRewardData)rewardData.Value;
+                        _mActivePlayerProfile.GetStatusModule().ReceiveSeniority(seniorityRewardData.SeniorityRewardAmount);
+                        break;
+                    case RewardTypes.Trust:
+                        var trustRewardData = (ITrustRewardData)rewardData.Value;
+                        _mActivePlayerProfile.AddFondnessToActiveSupplier(trustRewardData);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            GameDirector.Instance.GetUIController.UpdateInfoUI();
+        }
+
+        private void CheckUseItemCompliance(List<IComplianceObject> requests, IItemObject itemObject)
+        {
+            foreach (var request in requests)
+            {
+                switch (request.GetComplianceObjectData.ConsideredParameter)
+                {
+                    //Done
+                    case RequirementConsideredParameter.Origin:
+                        ProcessItemOriginRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.BaseType:
+                        ProcessItemBaseTypeRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.Quality:
+                        ProcessItemQualityRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.ItemSupplier:
+                        ProcessItemSupplierUseRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.ItemValue:
+                        ProcessItemValueRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.Variable:
+                        ProcessItemVariableRequest(request, itemObject);
+                        break;
+                    default: 
+                        continue;
+                }
+                if (request.IsToleranceLevelReached)
+                {
+                    _mTempCompletedComplianceObjects.Add(request);
+                }
+            }
+            
+        }
+
+        private void ProcessItemVariableRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemValueRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemSupplierUseRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemQualityRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemBaseTypeRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemOriginRequest(IComplianceObject request, IItemObject itemObject)
+        {
+            var originRequest = (IComplianceUseObjectByOrigin)request;
+            
+            if (originRequest.GetComplianceObjectData.LogicEvaluator == RequirementLogicEvaluator.Equal || originRequest.GetComplianceObjectData.LogicEvaluator == RequirementLogicEvaluator.NotEqual)
+            {
+                if(originRequest.ComplianceConsideredOrigins.Contains(itemObject.ItemStats.ItemOrigin))
+                {
+                    originRequest.MarkOneAction();
+                }
+            }
+        }
+
+        private bool HasItemUseRequirements(List<IComplianceObject> requests)
+        {
+            return requests.Any(x=> x.GetComplianceObjectData.ObjectType == ComplianceObjectType.AnyItem || 
+                                    x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Guard ||
+                                    x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Camera ||
+                                    x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Weapon ||
+                                    x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Traps ||
+                                    x.GetComplianceObjectData.ObjectType == ComplianceObjectType.Other);
+        }
+        #endregion
 
         public void UnlockCompliance(int id)
         {

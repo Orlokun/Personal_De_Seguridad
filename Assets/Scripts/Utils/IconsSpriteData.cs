@@ -10,7 +10,7 @@ namespace Utils
             var spriteObject = Resources.Load<Sprite>(iconPath);
             if (!spriteObject)
             {
-                Debug.LogError($"[GetSpriteForItemIcon]Sprite named: {spriteName} must be found!");
+                Debug.LogWarning($"[GetSpriteForItemIcon]Sprite named: {spriteName} must be found!");
             }
             return spriteObject;
         }

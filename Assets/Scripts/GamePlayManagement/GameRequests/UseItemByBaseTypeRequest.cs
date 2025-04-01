@@ -32,5 +32,22 @@ namespace GamePlayManagement.GameRequests
                 _mRequestConsideredBaseTypes.Add(itemBaseType);
             }
         }
+        
+        public override void ProcessCompletionInObjectData()
+        {
+            if (MRequestDevelopmentCount < MRequestData.RequirementQuantityTolerance)
+            {
+                return;
+            }
+            switch (MRequestData.ChallengeType)
+            {
+                case RequirementActionType.Use:
+                    MarkAsCompleted();
+                    break;
+                case RequirementActionType.NotUse:
+                    MarkAsFailed();
+                    break;
+            }
+        }
     }
 }

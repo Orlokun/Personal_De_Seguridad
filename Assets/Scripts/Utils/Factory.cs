@@ -294,29 +294,100 @@ namespace Utils
         }
         
         #endregion
-        public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
-            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description)
+        public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId,
+            bool needsUnlock,
+            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType,
+            RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue,
+            string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description,
+            RequirementLogicEvaluator complianceLogic)
         {
             switch (actionType)
             {
                 case ComplianceActionType.Use:
-                    return new ComplianceUseObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
+                    return CreateComplianceUseObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                case ComplianceActionType.NotUse:
+                    return new ComplianceUseObjectByOrigin(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
                 case ComplianceActionType.KickOut:
                     return new ComplianceKickOut(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues, title, subtitle, description);
+                        penaltyValues, title, subtitle, description, complianceLogic);
                 case ComplianceActionType.Retain:
                     return new ComplianceRetainObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
                         actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
-                        penaltyValues, title,subtitle, description);
+                        penaltyValues, title,subtitle, description, complianceLogic);
                 default:
                     return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, 
-                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
+                        actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
             }
         }
         
+        private static IComplianceObject CreateComplianceUseObject(int complianceId, DayBitId startDayId,
+            DayBitId endDayId, bool needsUnlock,
+            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType,
+            RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue,
+            string[] rewardValues, string[] penaltyValues,
+            string title, string subtitle, string description, RequirementLogicEvaluator complianceLogic)
+        {
+            switch (consideredParameter)
+            {
+                case RequirementConsideredParameter.None:
+                    return EvaluateComplianceType(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                case RequirementConsideredParameter.Origin:
+                    return new ComplianceUseObjectByOrigin(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                case RequirementConsideredParameter.BaseType:
+                    return new ComplianceUseObjectByBaseType(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                case RequirementConsideredParameter.Quality:
+                    return new ComplianceUseObjectByQuality(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                case RequirementConsideredParameter.ItemSupplier:
+
+                case RequirementConsideredParameter.ItemValue:
+
+                case RequirementConsideredParameter.Variable:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+                default:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, complianceLogic);
+            }
+        }
+
+        private static IComplianceObject EvaluateComplianceType(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
+            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, RequirementConsideredParameter consideredParameter,
+            string[] complianceReqValues, int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description, 
+            RequirementLogicEvaluator complianceLogic)
+        {
+            switch (objectType)
+            {
+                case ComplianceObjectType.Radio:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues, title, subtitle, description, complianceLogic);
+                case ComplianceObjectType.Smoke:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues, title, subtitle, description, complianceLogic);
+                case ComplianceObjectType.DoorLock:
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues, title, subtitle, description, complianceLogic);
+                default:
+                    Debug.LogWarning("[Factory.EvaluateComplianceType] Compliance object type must be valid");
+                    return new ComplianceObject(complianceId, startDayId, endDayId, needsUnlock, motivationLvl,
+                        actionType,
+                        objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues,
+                        penaltyValues, title, subtitle, description, complianceLogic);
+            }
+        }
+
         public static IBaseTutorialDialogueData CreateTutorialDialogueData()
         {
             return new BaseTutorialDialogueData();

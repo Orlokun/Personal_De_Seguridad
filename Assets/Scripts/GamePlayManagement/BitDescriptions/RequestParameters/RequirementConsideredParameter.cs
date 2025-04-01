@@ -9,6 +9,7 @@
         JobSupplier = 1 << 4,
         ItemSupplier = 1 << 5,
         ItemValue = 1 << 6,
-        Variable = 1 << 7
+        Variable = 1 << 7,
+        OmniCreditsAmount = 1 << 8,
     }
 }

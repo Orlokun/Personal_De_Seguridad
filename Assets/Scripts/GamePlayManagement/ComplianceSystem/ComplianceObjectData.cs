@@ -16,6 +16,7 @@ namespace GamePlayManagement.ComplianceSystem
         public ComplianceMotivationalLevel MotivationLvl => _mMotivationLvl;
         public ComplianceActionType ActionType => _mActionType;
         public ComplianceObjectType ObjectType => _mObjectType;
+        public RequirementLogicEvaluator LogicOperator { get; }
         public RequirementConsideredParameter ConsideredParameter => _mConsideredParameter;
         public string[] ComplianceReqValues => _mComplianceReqRawValues;
         public int ToleranceValue => _mToleranceValue;
@@ -26,7 +27,8 @@ namespace GamePlayManagement.ComplianceSystem
         public string GetSubtitle => _mSubtitle;
         public string GetDescription => _mDescription;
         
-        
+        public RequirementLogicEvaluator LogicEvaluator => _mLogicEvaluator;
+
 
         private int _mComplianceId;
         private DayBitId _mStartDayId;
@@ -47,11 +49,14 @@ namespace GamePlayManagement.ComplianceSystem
         private string _mTitle;
         private string _mSubtitle;
         private string _mDescription;
+        private RequirementLogicEvaluator _mLogicEvaluator;
         
         
-        public ComplianceObjectData(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
-            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description)
+        public ComplianceObjectData(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock,
+            ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType,
+            RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue,
+            string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description,
+            RequirementLogicEvaluator logicEvaluator)
         {
             _mComplianceId = complianceId;
             _mStartDayId = startDayId;
@@ -71,12 +76,14 @@ namespace GamePlayManagement.ComplianceSystem
             _mTitle = title;
             _mSubtitle = subtitle;
             _mDescription = description;
+            _mLogicEvaluator = logicEvaluator;
         }
 
         public void SetComplianceStatus(ComplianceStatus status)
         {
             _mComplianceStatus = status;
         }
+
 
         #region Penalties and Rewards Processing
         private void ProcessPenalties(string[] penalties)

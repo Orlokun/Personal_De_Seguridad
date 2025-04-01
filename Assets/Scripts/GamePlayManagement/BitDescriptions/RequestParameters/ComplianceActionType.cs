@@ -2,7 +2,8 @@
 {
     public enum ComplianceActionType
     {
-        Use, 
+        Use,
+        NotUse,
         Trap,
         Retain,
         Punish,

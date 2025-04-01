@@ -24,5 +24,6 @@ namespace GamePlayManagement.ComplianceSystem
         string GetSubtitle { get; }
         string GetDescription { get; }
         public void SetComplianceStatus(ComplianceStatus status);
+        public RequirementLogicEvaluator LogicEvaluator { get; }
     }
 }

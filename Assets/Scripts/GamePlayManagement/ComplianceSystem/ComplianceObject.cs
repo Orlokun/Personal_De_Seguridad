@@ -21,11 +21,22 @@ namespace GamePlayManagement.ComplianceSystem
 
         public ComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType, 
-            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description)
+            RequirementConsideredParameter consideredParameter,string[] complianceReqValues,int toleranceValue, string[] rewardValues, string[] penaltyValues, string title, string subtitle, string description, RequirementLogicEvaluator logicEvaluator)
         {
-            MComplianceObjectData = new ComplianceObjectData(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description);
+            MComplianceObjectData = new ComplianceObjectData(complianceId, startDayId, endDayId, needsUnlock, motivationLvl, actionType, objectType, consideredParameter, complianceReqValues, toleranceValue, rewardValues, penaltyValues, title, subtitle, description, logicEvaluator);
         }
         public bool IsToleranceLevelReached => _mComplianceActionCount >= MComplianceObjectData.ToleranceValue;
-
+        public void ProcessEndCompliance()
+        {
+            if(MComplianceObjectData.MotivationLvl == ComplianceMotivationalLevel.Forbidden || MComplianceObjectData.MotivationLvl == ComplianceMotivationalLevel.Discouraged || 
+               MComplianceObjectData.ActionType == ComplianceActionType.NotUse)
+            {
+                MComplianceObjectData.SetComplianceStatus(ComplianceStatus.Failed);
+            }
+            else
+            {
+                MComplianceObjectData.SetComplianceStatus(ComplianceStatus.Passed);
+            }
+        }
     }
 }

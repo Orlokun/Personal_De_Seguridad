@@ -44,7 +44,6 @@ namespace GamePlayManagement.GameRequests.RequestsManager
             {
                 return;
             }
-            var completedHireChallenges = new List<int[]>();
             for (var supplierIndex = 0; supplierIndex<ActiveRequests.Count;supplierIndex++) 
             {
                 var supplierRequests = ActiveRequests.ElementAt(supplierIndex);
@@ -59,13 +58,12 @@ namespace GamePlayManagement.GameRequests.RequestsManager
                     if (hireChallenge.JobHireObjective == newJobSupplier)
                     {
                         challenge.MarkAsCompleted();
-                        completedHireChallenges.Add(new[] {supplierIndex, challenge.RequestId});
                         _mRequestModuleData.AddCompletedRequestInData((DialogueSpeakerId)supplierIndex, challenge);
                         ProcessRewardsAndPenalties(challenge.Rewards);
                     }
                 }
             }
-            RemoveCompletedChallengesFromActive(completedHireChallenges);
+            CleanActiveRequests();
         }
 
         public void CheckItemUsedChallenges(IItemObject itemObject)
@@ -180,6 +178,7 @@ namespace GamePlayManagement.GameRequests.RequestsManager
             }
             GameDirector.Instance.GetActiveGameProfile.UpdateProfileData();
             UIController.Instance.UpdateInfoUI();
+            CleanActiveRequests();
             _mToleranceReachedRequests.Clear();
         }
 
@@ -316,6 +315,41 @@ namespace GamePlayManagement.GameRequests.RequestsManager
                     }
                 }
             }
+            CleanActiveRequests();
+            RemoveFailedRequestsFromActive(failedRequests);
+        }
+
+        private void CleanActiveRequests()
+        {
+            var failedRequests = new List<Tuple<DialogueSpeakerId, int>>();
+            var succeededRequests = new List<Tuple<DialogueSpeakerId, int>>();
+            if(ActiveRequests == null || ActiveRequests.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var activeRequest in ActiveRequests)
+            {
+                if (activeRequest.Value.Count == 0)
+                {
+                    continue;
+                }
+                var requests = activeRequest.Value;
+                for (var i = 0; i < requests.Count; i++)
+                {
+                    if (requests[i].RequestStatus == RequestStatus.Failed)
+                    {
+                        failedRequests.Add(new Tuple<DialogueSpeakerId, int>(activeRequest.Key, requests[i].RequestId));
+                        _mRequestModuleData.AddFailedRequestInData(activeRequest.Key, requests[i]);
+                    }
+                    if (requests[i].RequestStatus == RequestStatus.Completed)
+                    {
+                        succeededRequests.Add(new Tuple<DialogueSpeakerId, int>(activeRequest.Key, requests[i].RequestId));
+                        _mRequestModuleData.AddCompletedRequestInData(activeRequest.Key, requests[i]);
+                    }
+                }
+            }
+            RemoveCompletedChallengesFromActive(succeededRequests);
             RemoveFailedRequestsFromActive(failedRequests);
         }
 
@@ -379,7 +413,6 @@ namespace GamePlayManagement.GameRequests.RequestsManager
 
         private void ProcessActiveRequests(PartOfDay dayTime)
         {
-            var failedRequests = new List<Tuple<DialogueSpeakerId, int>>();
             var currentDay = GameDirector.Instance.GetActiveGameProfile.GetProfileCalendar().CurrentDayBitId;
             foreach (var activeRequest in ActiveRequests)
             {
@@ -388,34 +421,33 @@ namespace GamePlayManagement.GameRequests.RequestsManager
                     if(request.ExpirationPartOfDay < dayTime && request.ExpirationDayId <= currentDay)
                     {
                         request.MarkAsFailed();
-                        failedRequests.Add(new Tuple<DialogueSpeakerId,int>(activeRequest.Key, request.RequestId));
                         _mRequestModuleData.AddFailedRequestInData(activeRequest.Key, request);
                     }
                 }
             }
-            RemoveFailedRequestsFromActive(failedRequests);
+            CleanActiveRequests();
         }
-        private void RemoveCompletedChallengesFromActive(List<int[]> completedHireChallenges)
+        private void RemoveCompletedChallengesFromActive(List<Tuple<DialogueSpeakerId, int>> completedChallenges)
         {
             if(ActiveRequests == null || ActiveRequests.Count == 0)
             {
                 return;
             }
 
-            for (var i = 0; i<completedHireChallenges.Count;i++)
+            for (var i = 0; i<completedChallenges.Count;i++)
             {
-                if (!ActiveRequests.ContainsKey((DialogueSpeakerId)completedHireChallenges[i][0]))
+                if (!ActiveRequests.ContainsKey(completedChallenges[i].Item1))
                 {
                     continue;
                 }
                 //Get the requests from one supplier
-                var supplierRequests = ActiveRequests[(DialogueSpeakerId)completedHireChallenges[i][0]];
+                var supplierRequests = ActiveRequests[completedChallenges[i].Item1];
                 
-                if (supplierRequests.All(x => x.RequestId != completedHireChallenges[i][1]))
+                if (supplierRequests.All(x => x.RequestId != completedChallenges[i].Item2))
                 {
                     return;
                 }
-                supplierRequests.Remove(supplierRequests.Find(x => x.RequestId == completedHireChallenges[i][1]));
+                supplierRequests.Remove(supplierRequests.Find(x => x.RequestId == completedChallenges[i].Item2));
             }
             Debug.Log("Cleared Completed Active Challenges");
         }

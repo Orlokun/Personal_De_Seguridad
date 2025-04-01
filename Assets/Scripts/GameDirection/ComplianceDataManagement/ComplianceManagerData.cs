@@ -129,15 +129,17 @@ namespace GameDirection.ComplianceDataManagement
                 var hasToleranceValue = int.TryParse(complianceData.values[i][12], out var toleranceValue);
                 var rewardValues = complianceData.values[i][13].Split('|');
                 var punishmentValues = complianceData.values[i][14].Split('|');
+                var hasReqLogic = Enum.TryParse(complianceData.values[i][15], out RequirementLogicEvaluator complianceLogic);
+
                 
                 if (!hasId || !hasStartDay || !hasEndDay || !hasMotivationalLvl || !hasComplianceType || !hasComplianceObjectType || 
-                    !hasConsideredParameter || !hasToleranceValue)
+                    !hasConsideredParameter || !hasToleranceValue || !hasReqLogic)
                 {
                     Debug.LogWarning($"[LoadComplianceBaseData] Compliance Object with id {i} has missing values.");
                     continue;
                 }
                 var complianceObject = Factory.CreateComplianceObject(complianceId, startDayId, endDayId, needsUnlock,
-                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues, complianceTitle,complianceSubtitle ,complianceDescription);                
+                    motivationLvl, actionType, objectType, consideredParameter, requirementRawValues,toleranceValue, rewardValues, punishmentValues, complianceTitle,complianceSubtitle ,complianceDescription, complianceLogic);                
                 _mLoadedBaseCompliance.Add(complianceId, complianceObject);
             }
             Debug.Log("ComplianceManagerData.LoadComplianceBaseData: Finished request");

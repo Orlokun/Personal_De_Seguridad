@@ -19,6 +19,11 @@ namespace UI.PopUpManager.InfoPanelPopUp
         [SerializeField] protected TMP_Text reqDescription;
         [SerializeField] protected Button closeButton;
 
+
+        [SerializeField] protected TMP_Text currentCount;
+        [SerializeField] protected TMP_Text quantityTolerance;
+
+        
         [SerializeField] private GameObject omniCreditRewardPrefab;
         [SerializeField] private GameObject seniorityRewardPrefab;
         [SerializeField] private GameObject trustRewardPrefab;
@@ -41,6 +46,8 @@ namespace UI.PopUpManager.InfoPanelPopUp
             reqOwner.text = speakerData.SpeakerName;
             reqTitle.text = _mRequestData.ReqTitle;
             reqDescription.text = _mRequestData.ReqDescription;
+            currentCount.text = _mRequestData.CurrentDevelopmentCount.ToString();
+            quantityTolerance.text = _mRequestData.RequestQuantityTolerance.ToString();
             UpdateRewardsContent();
             UpdatePenaltiesContent();
         }

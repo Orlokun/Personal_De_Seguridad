@@ -7,5 +7,6 @@
         public void MarkOneAction();
         public int ComplianceCurrentCount { get; }
         public bool IsToleranceLevelReached { get; }
+        void ProcessEndCompliance();
     }
 }
