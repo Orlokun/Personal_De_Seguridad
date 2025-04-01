@@ -4,8 +4,4 @@
     public class NewsCatalogueData : CatalogueFromDataGeneric
     {
     }
-    
-    public class ComplianceCatalogueData : CatalogueFromDataGeneric
-    {
-    }
 }

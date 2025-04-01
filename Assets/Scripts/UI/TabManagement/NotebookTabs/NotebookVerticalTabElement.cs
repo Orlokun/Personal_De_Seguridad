@@ -1,8 +1,6 @@
-using System;
 using InputManagement;
 using TMPro;
 using UI.TabManagement.AbstractClasses;
-using UI.TabManagement.Interfaces;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

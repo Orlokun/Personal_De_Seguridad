@@ -1,8 +1,5 @@
 ﻿namespace GamePlayManagement.GameRequests.RewardsPenalties
 {
-    public interface IItemInSupplierRewardData
-    {
-    }
     public class ItemInSupplierRewardData : RewardData, IItemInSupplierRewardData
     {
         private int _mRewardValue;

@@ -1,7 +1,6 @@
 using System;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.ItemManagement;
 using UnityEngine;
 using Utils;
 
@@ -74,39 +73,5 @@ namespace DataUnits.ItemScriptableObjects
         public void Initialize()
         {
         }
-    }
-
-    public enum ItemOrigin
-    {
-        Unknown = 0,
-        Earth,
-        EarthPrime,
-        Uranus
-    }
-    
-
-    public enum InfoItemType
-    {
-        Regular = 1 << 0,
-        Ancient = 1 << 1,
-        Robotic = 1 << 2,
-        Magical = 1 << 3,
-        Human = 1 << 4,
-        Undead = 1 << 5,
-    }
-    
-    public enum ItemBaseQuality
-    {
-        NoApply = 0,
-        Low = 1,
-        Medium,
-        High,
-        Premium,
-        Luxury, 
-        Unique
-    }
-    
-    public interface IBaseItemInformation
-    {
     }
 }

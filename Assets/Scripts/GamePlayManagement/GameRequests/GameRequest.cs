@@ -17,6 +17,8 @@ namespace GamePlayManagement.GameRequests
                 mChallengeType, objectTypeRequired, mReqLogic, mReqParameterType, quantity, rewards, penalties, targetDayId, targetPartOfDay);
         }
 
+        protected int MRequestDevelopmentCount;
+        
         public DialogueSpeakerId RequesterSpeakerId => MRequestData.RequesterSpeakerId;
         public string ReqTitle => MRequestData.ReqTitle;
         public string ReqDescription => MRequestData.ReqDescription;
@@ -32,7 +34,22 @@ namespace GamePlayManagement.GameRequests
             MRequestData.FailChallenge();
         }
 
+        public void AdvanceRequestDevelopmentCount()
+        {
+            MRequestDevelopmentCount++;
+        }
+
+        public int CurrentDevelopmentCount => MRequestDevelopmentCount;
+        public int RequestQuantityTolerance => MRequestData.RequirementQuantityTolerance;
+        public virtual void ProcessCompletionInObjectData()
+        {
+
+        }
+
         public RequirementActionType ChallengeActionType => MRequestData.ChallengeType;
+        public RequirementObjectType ChallengeObjectType => MRequestData.ChallengeObjectType;
+        public RequirementLogicEvaluator ChallengeLogicOperator => MRequestData.ReqLogic;
+        public RequirementConsideredParameter ChallengeConsideredParameter => MRequestData.ReqParameterType;
         public Dictionary<RewardTypes, IRewardData> Rewards => MRequestData.Rewards;
         public Dictionary<RewardTypes, IRewardData> Penalties => MRequestData.Penalties;
         public DayBitId ExpirationDayId => MRequestData.TargetTime.Item1;

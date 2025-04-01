@@ -14,14 +14,6 @@ using Random = UnityEngine.Random;
 
 namespace DataUnits.JobSources
 {
-    public enum CountPetrolkDialogueStates
-    {
-        WaitingForHire = 1,
-        RequiresMindProtection = 2,
-        RequiresProductVigilance = 4,
-        RequiresPunishBloodless = 8
-    }
-
     [Serializable]
     [CreateAssetMenu(menuName = "Jobs/JobSource")]
     public class JobSupplierObject : ScriptableObject, IJobSupplierObject

@@ -3,7 +3,6 @@ using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
 using UI.TabManagement.AbstractClasses;
-using UI.TabManagement.Interfaces;
 using UI.TabManagement.ItemTypeTab;
 using UnityEngine;
 namespace UI.TabManagement
@@ -94,12 +93,5 @@ namespace UI.TabManagement
                 Destroy(itemObject.gameObject);
             }
         }
-    }
-
-    public interface IItemsTabGroup : ITabGroup
-    {
-        public void ActivateItemsBarInUI();
-        public void UpdateItemsContent(int verticalTabIndex);
-        public bool IsBarActive { get; }
     }
 }

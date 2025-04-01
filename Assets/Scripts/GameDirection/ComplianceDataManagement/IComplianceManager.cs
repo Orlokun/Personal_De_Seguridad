@@ -20,9 +20,4 @@ namespace GameDirection.ComplianceDataManagement
         public List<IComplianceObject>GetFailedComplianceObjects { get; }
         public List<IComplianceObject>GetActiveComplianceObjects { get; }
     }
-
-    public interface IComplianceEvaluationEvents
-    {
-        void CheckRadioCompleted();
-    }
 }

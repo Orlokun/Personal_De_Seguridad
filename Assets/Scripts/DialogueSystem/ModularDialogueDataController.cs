@@ -13,22 +13,6 @@ using Utils;
 
 namespace DialogueSystem
 {
-    public enum OmniIntroDialogues
-    {
-        NoJobIntro1 = 1,
-        NoJobIntro2,
-        NoJobIntro3,
-        JobIntro1,
-        JobIntro2,
-        FirstJob1,
-        PayNoRent1
-    }
-
-    public interface IModularDialogueDataController : IInitialize
-    {
-        public IDialogueObject CreateInitialDayIntro(IPlayerGameProfile currentPlayer);
-    }
-    
     public class ModularDialogueDataController : IModularDialogueDataController
     {
         private Dictionary<OmniIntroDialogues, IDialogueObject> _modularIntroDialogues = new Dictionary<OmniIntroDialogues, IDialogueObject>();

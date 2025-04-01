@@ -7,7 +7,6 @@ using DataUnits.JobSources;
 using GameDirection;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
-using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -273,12 +272,5 @@ namespace UI.PopUpManager.InfoPanelPopUp
             }
             return _mSupplierShop.GetSupplierItemInStore(itemId).GetCurrentAmount;
         }
-    }
-
-    public interface ISupplierShopPanel
-    {
-        void AttemptAddToCart(int itemId);
-        void AttemptRemoveFromCart(int itemId);
-        int GetCurrentItemStock(int itemId);
     }
 }

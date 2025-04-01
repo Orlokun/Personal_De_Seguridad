@@ -11,25 +11,4 @@ namespace DataUnits.ItemSources
         MASSIVE_HOOD_HOUSE,
         CLASSIC_PENTHOUSE,
     }
-
-    public enum FoodTypesId
-    {
-        FAST_FOOD = 1,
-        SIMPLE_HOME_COOK,
-        COFEE_SNACKS,
-        COMPLETE_HOME_COOK,
-        STREET_FOOD,
-        GOURMET_TAKEOUT,
-    }
-
-    public enum TransportTypesId
-    {
-        OmniBike = 1,
-        OmniCab,
-        OmniBus,
-        OmniHuber,
-        OmniDriver,
-        OmniCopter,
-        Walk,
-    }
 }

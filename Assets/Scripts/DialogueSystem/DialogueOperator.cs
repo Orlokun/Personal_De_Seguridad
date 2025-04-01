@@ -21,12 +21,6 @@ using Random = UnityEngine.Random;
 
 namespace DialogueSystem
 {
-    public enum UIDialogueState
-    {
-        NotDisplayed,
-        TypingText,
-        FinishedTypingLine,
-    }
     public class DialogueOperator : MonoBehaviour, IDialogueOperator
     {
         

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DialogueSystem.Interfaces;
@@ -7,30 +6,6 @@ using Utils;
 
 namespace DataUnits.JobSources
 {
-    public interface IJobSupplierDialogueModule
-    {
-        void LoadInitialDeflectionDialogues();
-        void StartUnlockDialogueData();
-        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues{ get; }
-        public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary { get; }
-    }
-
-    public interface IJobSupplierDialogueModuleData
-    {
-        public Dictionary<int, ISupplierDialogueObject> DeflectionDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> ImportantDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> InsistenceDialogues { get; }
-        public Dictionary<int, ISupplierDialogueObject> SupplierCallDialogues { get; }
-        public void LoadInitialDeflectionDialogues();
-        public Dictionary<int, ISupplierCallDialogueDataObject> SupplierCallDialoguesDataDictionary { get; }
-        public IEnumerator DownloadDialogueData(DialogueType dialogueType, string url);
-        public int NpcRequirementStatus { get; }
-
-    }
-
     public class JobSupplierDialogueModule : IJobSupplierDialogueModule
     {
         private IJobSupplierObject _supplierObject;

@@ -13,24 +13,6 @@ using Random = UnityEngine.Random;
 
 namespace DialogueSystem.Phone
 {
-    public enum PhoneState
-    {
-        HungUp,
-        Calling,
-        OnCall,
-        ReceivingCall,
-    }
-
-    public interface IPhoneCallOperator
-    {
-        void PressCall();
-        void GoToCall(ISupplierBaseObject callReceiver);
-        void FinishCallImmediately();
-        void DialNumber(int number);
-        void PlayAnswerSound();
-        void StartCallFromSupplier(IDialogueObject receivedCallDialogue);
-    }
-
     public class PhoneCallOperator : MonoBehaviour, IPhoneCallOperator
     {
         private static PhoneCallOperator mInstance;

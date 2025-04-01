@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 
@@ -47,19 +46,5 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             _mGuard.SetGuardDestination(_mGuard.GetInspectionModule.GetCurrentPosition.Position);
             _mGuard.ChangeMovementState<WalkingState>();
         }
-    }
-    
-    [Flags]
-    public enum GuardSpecialAttitudeStatus
-    {
-        Idle,
-        Slacking,
-        ManualInspecting,
-        Inspecting, 
-        Communicating,
-        Following,
-        Chasing,
-        Tackling,
-        Fighting,
     }
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.JobSources;
-using DialogueSystem;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
@@ -14,15 +13,6 @@ using Utils;
 
 namespace DataUnits.GameCatalogues
 {
-    public interface IBaseJobsCatalogue
-    {
-        bool JobSupplierExists(JobSupplierBitId jobSupplier);
-        IJobSupplierObject GetJobSupplierObject(JobSupplierBitId jobSupplier);
-        List<IJobSupplierObject> JobSuppliersInData { get; }
-        public Tuple<bool, int> JobSupplierPhoneNumberExists(int phoneDialed);
-        public IJobSupplierObject GetJobSupplierSpeakData(DialogueSpeakerId speakerId);
-    }
-
     public class BaseJobsCatalogue : MonoBehaviour, IBaseJobsCatalogue, IInitialize
     {
         //Singleton magament

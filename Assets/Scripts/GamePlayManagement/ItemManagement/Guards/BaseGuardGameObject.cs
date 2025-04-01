@@ -295,20 +295,6 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             _mAttitudeStateMachine.Update();
             _mMovementStateMachine.Update();
-            
-            /*
-            if(_mGuardStatusModule.CurrentAttitude != GuardSpecialAttitudeStatus.ManualInspecting)
-            {
-                Debug.Log($"[BaseGuardGameObject.Update] Guard Named {gameObject.name} simple movement");
-                ManageMovementStatus();
-            }
-            else
-            {
-                Debug.Log($"[Update: Guard Named {gameObject.name} manual movement]");
-                ManageManualMovementStatus();
-            }
-            Debug.Log($"[BaseGuardGameObject] is in nav mesh: {MyNavMeshAgent.isOnNavMesh}");
-            */
         }
         private void ManageMovementStatus()
         {

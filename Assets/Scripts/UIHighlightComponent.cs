@@ -8,8 +8,3 @@ public class UIHighlightComponent : MonoBehaviour, IUIHighlightComponent
     public RectTransform GetRectTransform => GetComponent<RectTransform>();
 
 }
-
-public interface IUIHighlightComponent
-{
-    public RectTransform GetRectTransform { get; }
-}

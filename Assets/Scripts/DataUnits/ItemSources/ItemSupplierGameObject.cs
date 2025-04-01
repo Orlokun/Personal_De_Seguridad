@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
-using DataUnits.JobSources;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Phone;
@@ -363,22 +362,5 @@ namespace DataUnits.ItemSources
         {
             _mFondness += amount;
         }
-    }
-
-    public interface IItemSupplierDataObject : ISupplierBaseObject, ICallableSupplier
-    {
-        public BitItemSupplier ItemSupplierId { get; set; }
-        public int StoreUnlockPoints { get; set; }
-        public int ItemTypesAvailable { get; set; }
-        public string StoreDescription { get; set; }
-        public void LoadDeflectionsDialogueData();
-        public void SetStats(int reliance, int quality, int kindness, int stockRefillPeriod, string spriteName);
-        public int Reliance { get; }
-        public int Quality { get; }
-        public int Kindness { get; }
-        public int RefillStockPeriod { get; }
-        public Task StartUnlockedData();
-        public void InitializeStore(IItemSupplierShop shop);
-        public IItemSupplierShop SupplierShop { get; }
     }
 }

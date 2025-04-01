@@ -4,9 +4,4 @@
     {
 
     }
-
-    public interface IAttitudeState : IState
-    {
-        public void WalkingDestinationReached();
-    }
 }

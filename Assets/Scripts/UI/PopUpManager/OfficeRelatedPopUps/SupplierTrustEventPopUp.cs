@@ -1,5 +1,4 @@
-﻿using System;
-using DataUnits;
+﻿using DataUnits;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,13 +6,6 @@ using Utils;
 
 namespace UI.PopUpManager.OfficeRelatedPopUps
 {
-    public interface ISupplierTrustEventPopUp
-    {
-        void StartTrustEventPopUp(ICallableSupplier supplier, int trustAmount);
-        public void ClearPreviousIcons();
-
-    }
-
     public class SupplierTrustEventPopUp : MonoBehaviour, ISupplierTrustEventPopUp
     {
         [SerializeField] private Image mSupplierImage;

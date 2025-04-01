@@ -20,9 +20,4 @@
 
         public void Update() { }
     }
-
-    public interface IIdleState : IMovementState
-    {
-        
-    }
 }

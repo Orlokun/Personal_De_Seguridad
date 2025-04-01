@@ -10,7 +10,7 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mDamage;
         private readonly int _mRange;
         private readonly int _mPersuasiveness;
-        private readonly int _mItemTypes;
+        private readonly List<ItemBaseType> _mItemTypes;
         private readonly ItemOrigin _mItemOrigin;
         private readonly ItemBaseQuality _mItemBaseQuality;
         private readonly BitItemSupplier _mItemSupplier;
@@ -43,7 +43,7 @@ namespace DataUnits.ItemScriptableObjects
         public int Range =>_mRange;
         public int Persuasiveness=>_mPersuasiveness;
         public ItemOrigin ItemOrigin => _mItemOrigin;
-        public int ItemTypes => _mItemTypes;
+        public List<ItemBaseType> ItemTypes => _mItemTypes;
         public ItemBaseQuality ItemBaseQuality => _mItemBaseQuality;
     }
 }

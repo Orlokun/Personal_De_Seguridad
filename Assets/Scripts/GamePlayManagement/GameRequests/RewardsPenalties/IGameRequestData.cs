@@ -20,7 +20,7 @@ namespace GamePlayManagement.GameRequests.RewardsPenalties
         public Dictionary<RewardTypes,IRewardData> Rewards { get; }
         public Dictionary<RewardTypes,IRewardData> Penalties { get; }
         public Tuple<DayBitId, PartOfDay> TargetTime { get; }
-
+        public int RequirementQuantityTolerance { get; }
         RequestStatus Status { get; }
         void CompleteChallenge();
         void FailChallenge();

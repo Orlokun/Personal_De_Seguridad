@@ -16,9 +16,4 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Cust
 
         void SetTempProductOfInterest(Tuple<Transform, IStoreProductObjectData> chooseRandomProduct);
     }
-
-    public interface IProductInterestManagement
-    {
-        public Tuple<Transform, IStoreProductObjectData> TempStoreProductOfInterest { get; }
-    }
 }

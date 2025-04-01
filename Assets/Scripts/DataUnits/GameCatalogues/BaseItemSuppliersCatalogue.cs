@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DataUnits.ItemSources;
-using DialogueSystem;
 using DialogueSystem.Units;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using Newtonsoft.Json;
@@ -171,16 +170,4 @@ namespace DataUnits.GameCatalogues
             return _mIItemSuppliersInData.SingleOrDefault(x => x.ItemSupplierId == jobSupplier);
         }
     }
-
-    public interface IBaseItemSuppliersCatalogue
-    {
-        public bool SupplierExists(BitItemSupplier itemSupplier);
-        public IItemSupplierDataObject GetSupplierFromId(BitItemSupplier itemId);
-        public Tuple<bool, int> ItemSupplierPhoneExists(int dialedPhone);
-        public IItemSupplierDataObject GetItemSupplierDataFromPhone(int supplierPhone);
-        public IItemSupplierDataObject GetItemSupplierData(BitItemSupplier jobSupplier);
-        public List<IItemSupplierDataObject> GetItemSuppliersInData { get; }
-    }
-    
-
 }

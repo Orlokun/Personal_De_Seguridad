@@ -1,21 +1,11 @@
 using System.Collections.Generic;
 using GamePlayManagement.BitDescriptions;
 using UI.TabManagement.AbstractClasses;
-using UI.TabManagement.Interfaces;
 using UI.TabManagement.TabEnums;
 using UnityEngine;
 
 namespace UI.TabManagement.NotebookTabs.HorizontalTabletTabs
 {
-    public interface INotebookHorizontalTabletTabGroup : ITabletTabGroup
-    {
-        public List<IVerticaTabElement> JobVerticalTabObjects { get; }
-        public List<IVerticaTabElement> SuppliersVerticalTabObjects { get; }
-        public List<IVerticaTabElement> ComplianceTabObjects { get; }
-        public List<IVerticaTabElement> RequirementsTabObjects { get; }
-        public List<IVerticaTabElement> ConfigVerticalTabObjects { get; }
-    }
-
     public class NotebookHorizontalTabGroup : TabGroup, INotebookHorizontalTabletTabGroup
     {
         #region Scriptable List Interface

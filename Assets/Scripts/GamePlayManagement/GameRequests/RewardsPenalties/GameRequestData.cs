@@ -7,13 +7,6 @@ using UnityEngine;
 
 namespace GamePlayManagement.GameRequests.RewardsPenalties
 {
-    public enum RequestStatus
-    {
-        Inactive = 0,
-        Active,
-        Completed,
-        Failed
-    }
     public class GameRequestData : IGameRequestData
     {
         private DialogueSpeakerId _mRequesterSpeakerId;
@@ -145,7 +138,7 @@ namespace GamePlayManagement.GameRequests.RewardsPenalties
         public RequirementConsideredParameter ReqParameterType => _mReqParameterType;
         public Dictionary<RewardTypes,IRewardData> Rewards => _mRewards;
         public Dictionary<RewardTypes,IRewardData> Penalties => _mPenalties;
-
+        public int RequirementQuantityTolerance => _mReqQuantity; 
         public RequestStatus Status => _mStatus;
         public void CompleteChallenge()
         {

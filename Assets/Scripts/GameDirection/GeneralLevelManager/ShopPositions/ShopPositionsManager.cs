@@ -12,28 +12,6 @@ using Random = UnityEngine.Random;
 
 namespace GameDirection.GeneralLevelManager.ShopPositions
 {
-    public interface IShopClientPoisManager
-    {
-        public List<Guid> GetFirstPoiOfInterestIds(int numberOfPois);
-        public List<IShopPoiData> GetPoisOfInterestData(List<Guid> poisId);
-        public void OccupyPoi(Guid occupier, Guid occupiedPoi);
-        public void ReleasePoi(Guid occupier, Guid occupiedPoi);
-        public IShopPoiData GetPoiData(Guid poiId);
-    }
-
-    public interface IShopInspectionSpots
-    {
-        public IShopInspectionPosition GetClosestPosition(Vector3 originSpot);
-        public IShopInspectionPosition GetNextPosition(Guid currentSpotId);
-    }
-
-    public interface IShopPositionsManager : IShopClientPoisManager, IShopGenericWaitingSpots, IShopInspectionSpots
-    {
-        public void Initialize();
-        public List<IStoreEntrancePosition> StartPositions { get; }
-        public Vector3 PayingPosition();
-    }
-
     /// <summary>
     /// This shop positions manager handles the places in which a Customer will stop to grab/steal products
     /// Requiremente: One object must have all the childrens so they can be tracked

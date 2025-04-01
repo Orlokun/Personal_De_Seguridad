@@ -3,14 +3,9 @@ using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using TMPro;
 using UnityEngine;
-using Utils;
 
 namespace UI
 {
-    public interface IInfoCanvasManager : IInitializeWithArg1<IPlayerGameProfile>
-    {
-        public void UpdateInfo();
-    }
     public class InfoCanvasManager : MonoBehaviour, IInfoCanvasManager, ICustomerManagementObserver
     {
         [SerializeField] private TMP_Text activeCustomers;

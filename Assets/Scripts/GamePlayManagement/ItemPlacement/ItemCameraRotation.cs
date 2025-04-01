@@ -2,14 +2,6 @@ using UnityEngine;
 
 namespace GamePlayManagement.ItemPlacement
 {
-    public interface IItemCameraRotation : IToggleComponent
-    {
-        public void SetNewPosition(Vector3 newPosition);
-    }
-    public interface IToggleComponent
-    {
-        public void ToggleComponentActive(bool isActive);
-    }
     public class ItemCameraRotation : MonoBehaviour, IItemCameraRotation
     {
         private Vector3 stablePosition;

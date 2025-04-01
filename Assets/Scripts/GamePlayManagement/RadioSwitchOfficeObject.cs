@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
 using GameDirection.ComplianceDataManagement;
@@ -8,11 +7,6 @@ using UnityEngine;
 
 namespace GamePlayManagement
 {
-    public interface IRadioOperator
-    {
-        void TurnRadioPower(bool value);
-    }
-    
     public class RadioSwitchOfficeObject : MonoBehaviour, IInteractiveClickableObject, IRadioOperator
     {
         #region Interactive Object Interface

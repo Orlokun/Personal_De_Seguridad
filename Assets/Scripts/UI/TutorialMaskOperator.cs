@@ -5,16 +5,6 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public enum HighlightObjectID
-    {
-        Tablet,
-        TabletVTab,
-        TabletHTab,
-        Clock, 
-        BaseInfo,
-        GamePlayVertical,
-    }
-    
     public class TutorialMaskOperator : PopUpObject, ITutorialMaskOperator
     {
         
@@ -96,11 +86,5 @@ namespace UI
             mFeedbackMask.gameObject.SetActive(isActive);
             mDialogueMaskObject.SetActive(isActive);
         }
-    }
-
-    public interface ITutorialMaskOperator
-    {
-        public string[] GetLastHighlight{get;}
-        public void SetHighlightState(string[] newHightlight);
     }
 }

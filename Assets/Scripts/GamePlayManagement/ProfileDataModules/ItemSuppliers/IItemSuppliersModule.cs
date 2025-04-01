@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
@@ -19,11 +18,5 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         public void UnlockItemInSupplier(BitItemSupplier supplier, int itemBitId);
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId);
         public List<IItemObject> GetItemsOfType(BitItemType itemType);
-    }
-
-    public interface IItemSuppliersModuleData
-    {
-        public int UnlockedItemSuppliers { get; }
-        public Dictionary<BitItemSupplier, IItemSupplierShop> ActiveItemStores { get; }
     }
 }

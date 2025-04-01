@@ -21,22 +21,11 @@ using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Customer
 using InputManagement;
 using UI;
 using UI.EndOfDay;
-using UI.PopUpManager;
 using UnityEngine;
 using Utils;
 
 namespace GameDirection
 {
-    public enum HighLevelGameStates
-    {
-        MainMenu = 1,
-        InGame = 2,
-        Loading = 4,
-        InCutScene = 8,
-        OfficeMidScene = 16,
-        EndOfDay = 32
-    }
-
     [RequireComponent(typeof(LevelLoadManager))]
     [RequireComponent(typeof(GeneralUIFader))]
     public class GameDirector : MonoBehaviour, IGameDirector
@@ -414,21 +403,5 @@ namespace GameDirection
         }
         #endregion
         #endregion
-    }
-
-    public interface IMetaGameDirector
-    {
-        public IPlayerGameProfile GetExistingProfile { get; }
-        public void AddNewProfile(IPlayerGameProfile profle);
-    }
-
-    public class MetaGameDirector : IMetaGameDirector
-    {
-        private IPlayerGameProfile _mExistingProfile;
-        public IPlayerGameProfile GetExistingProfile => _mExistingProfile;
-        public void AddNewProfile(IPlayerGameProfile profile)
-        {
-            _mExistingProfile = null;
-        }
     }
 }

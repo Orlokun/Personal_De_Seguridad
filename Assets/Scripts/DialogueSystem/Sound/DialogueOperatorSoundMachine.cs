@@ -3,11 +3,6 @@ using UnityEngine;
 
 namespace DialogueSystem.Sound
 {
-    public class DialogueVoices
-    {
-        
-    }
-    
     [RequireComponent(typeof(AudioSource))]
     public class DialogueOperatorSoundMachine : MonoBehaviour, IDialogueOperatorSoundMachine
     {

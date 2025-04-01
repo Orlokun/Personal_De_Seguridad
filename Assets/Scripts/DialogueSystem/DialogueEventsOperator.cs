@@ -154,10 +154,4 @@ namespace DialogueSystem
             OnHirePlayer?.Invoke(jobSupplier);
         }
     }
-    public enum EndingTypes
-    {
-        ORGAN_SALE
-    }
-
-
 }

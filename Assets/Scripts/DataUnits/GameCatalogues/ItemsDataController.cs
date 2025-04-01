@@ -313,15 +313,13 @@ namespace DataUnits.GameCatalogues
                 
                 //Step 12.2: Check ItemType
                 var itemTypes = itemType.Split(',');
-                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                if(itemTypes.Any(x=> Enum.TryParse<ItemBaseType>(x, out var itemTypeValue) == false))
                 {
                     Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
                     return;
                 }
-                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<ItemBaseType>(x)).ToList();
 
-                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
-                
                 //Step 12.3: Check Item Quality
                 var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
                 if (!isItemQualityValid)
@@ -332,7 +330,7 @@ namespace DataUnits.GameCatalogues
 
                 IGuardBaseData itemDataObject =
                     new GuardBaseData((BitItemSupplier)supplierId, itemId,intelligence, kindness, proactivity, aggressive, strength, agility, 
-                        persuasiveness, speed, fov, originValue, itemTypesFinal, itemQualityValue);
+                        persuasiveness, speed, fov, originValue, castItemTypes, itemQualityValue);
                 _mGuardsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotGuardsData = true;
@@ -424,15 +422,13 @@ namespace DataUnits.GameCatalogues
                 
                 //Step 8.2: Check ItemType
                 var itemTypes = itemType.Split(',');
-                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                if(itemTypes.Any(x=> Enum.TryParse<ItemBaseType>(x, out var itemTypeValue) == false))
                 {
                     Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
                     return;
                 }
-                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<ItemBaseType>(x)).ToList();
 
-                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
-                
                 //Step 8.3: Check Item Quality
                 var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
                 if (!isItemQualityValid)
@@ -442,7 +438,7 @@ namespace DataUnits.GameCatalogues
                 }
 
                 ICameraBaseData itemDataObject =
-                    new CameraBaseData(supplierBitId,itemId,range, peopleInSight, clarity, persuasiveness, fovRadius, originValue, itemTypesFinal, itemQualityValue);
+                    new CameraBaseData(supplierBitId,itemId,range, peopleInSight, clarity, persuasiveness, fovRadius, originValue, castItemTypes, itemQualityValue);
                 _mCamerasSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotCamerasData = true;
@@ -530,13 +526,13 @@ namespace DataUnits.GameCatalogues
                 
                 //Step 8.2: Check ItemType
                 var itemTypes = itemType.Split(',');
-                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                if(itemTypes.Any(x=> Enum.TryParse<ItemBaseType>(x, out var itemTypeValue) == false))
                 {
                     Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
                     return;
                 }
-                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
-                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<ItemBaseType>(x)).ToList();
+
                 
                 //Step 8.3: Check Item Quality
                 var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
@@ -546,7 +542,7 @@ namespace DataUnits.GameCatalogues
                     return;
                 }
                 IWeaponBaseData itemDataObject =
-                    new WeaponBaseData(supplierBitId, itemId,weaponQuality, damage, range, persuasiveness, precision, originValue, itemTypesFinal, itemQualityValue);
+                    new WeaponBaseData(supplierBitId, itemId,weaponQuality, damage, range, persuasiveness, precision, originValue, castItemTypes, itemQualityValue);
                 _mWeaponsSpecialData[supplierBitId].Add(itemDataObject);
             }
             _mGotWeaponsData = true;
@@ -628,12 +624,12 @@ namespace DataUnits.GameCatalogues
                 
                 //Step 8.2: Check ItemType
                 var itemTypes = itemType.Split(',');
-                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                if(itemTypes.Any(x=> Enum.TryParse<ItemBaseType>(x, out var itemTypeValue) == false))
                 {
                     Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
                     return;
                 }
-                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<ItemBaseType>(x)).ToArray();
                 var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
                 
                 //Step 8.3: Check Item Quality
@@ -726,13 +722,13 @@ namespace DataUnits.GameCatalogues
                 
                 //Step 8.2: Check ItemType
                 var itemTypes = itemType.Split(',');
-                if(itemTypes.Any(x=> Enum.TryParse<InfoItemType>(x, out var itemTypeValue) == false))
+                if(itemTypes.Any(x=> Enum.TryParse<ItemBaseType>(x, out var itemTypeValue) == false))
                 {
                     Debug.LogWarning($"[LoadGuardDataFromJson] All Item types set for Guard {supplierBitId} must be valid");
                     return;
                 }
-                var castItemTypes = itemTypes.Select(x => Enum.Parse<InfoItemType>(x)).ToArray();
-                var itemTypesFinal = BitOperator.TurnEnumsToInt(castItemTypes);
+                var castItemTypes = itemTypes.Select(x => Enum.Parse<ItemBaseType>(x)).ToList();
+
                 
                 //Step 8.3: Check Item Quality
                 var isItemQualityValid = Enum.TryParse<ItemBaseQuality>(quality, out var itemQualityValue);
@@ -742,7 +738,7 @@ namespace DataUnits.GameCatalogues
                     return;
                 }
                 IOtherItemBaseData iOtherItemsDataObject =
-                    new OtherItemBaseData(supplierBitId,itemId,effectiveness, damage, range, persuasiveness,  originValue, itemTypesFinal, itemQualityValue);
+                    new OtherItemBaseData(supplierBitId,itemId,effectiveness, damage, range, persuasiveness,  originValue, castItemTypes, itemQualityValue);
                 _mOthersSpecialData[supplierBitId].Add(iOtherItemsDataObject);
             }
             _mGotOtherItemsData = true;

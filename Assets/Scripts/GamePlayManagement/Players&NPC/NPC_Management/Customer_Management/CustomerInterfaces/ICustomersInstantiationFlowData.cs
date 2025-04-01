@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.BitDescriptions.Suppliers;
-using UnityEngine;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces
 {

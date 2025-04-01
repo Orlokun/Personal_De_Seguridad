@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using DataUnits.GameCatalogues.JsonCatalogueLoaders;
 using DialogueSystem;
 using GameDirection.TimeOfDayManagement;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -12,13 +11,6 @@ using Utils;
 
 namespace GameDirection.NewsManagement
 {
-    public interface INewsNarrativeData
-    {
-        void LoadDayNews(DayBitId dayBitId);
-        bool IsDayLoaded(DayBitId dayBitId);
-        [CanBeNull] List<INewsObject> GetDayNewsList(DayBitId dayBitId);
-    }
-    
     public class NewsNarrativeData : INewsNarrativeData
     {
         private readonly Dictionary<DayBitId, List<INewsObject>> _mLoadedNews;

@@ -5,11 +5,6 @@ using Utils;
 
 namespace UI.PopUpManager
 {
-    public interface IBannerObjectController : IPopUpObject
-    {
-        public void ToggleBannerForSeconds(string newText, float seconds);
-    }
-
     public class BannerObjectController : PopUpObject, IBannerObjectController
     {
         private Animator _mTextAnimator;

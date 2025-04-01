@@ -8,6 +8,7 @@ using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.GameRequests.RewardsPenalties;
+using UI;
 using UnityEngine;
 using Utils;
 
@@ -24,6 +25,8 @@ namespace GamePlayManagement.GameRequests.RequestsManager
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mRequestModuleData.CompletedRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mRequestModuleData.FailedRequests;
 
+        List<IGameRequest> _mToleranceReachedRequests = new List<IGameRequest>();
+        
         public void HandleIncomingRequestActivation(DialogueSpeakerId speaker, int requestId)
         {
             //Confirm request exists in base data.
@@ -65,9 +68,204 @@ namespace GamePlayManagement.GameRequests.RequestsManager
             RemoveCompletedChallengesFromActive(completedHireChallenges);
         }
 
-        public void CheckItemPlacementChallenges(IItemObject itemObject)
+        public void CheckItemUsedChallenges(IItemObject itemObject)
         {
-            Debug.LogError("[RequestsModuleManager.CheckItemPlacementChallenges] Not Implemented");
+            if (ActiveRequests == null || ActiveRequests.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var activeRequester in ActiveRequests)
+            {
+                var requesterId = activeRequester.Key;
+                var supplierHasRequests = ActiveRequests.TryGetValue(requesterId, out var requests);
+                if (!supplierHasRequests)
+                {
+                    continue;
+                }
+
+                if (activeRequester.Value.All(x => x.ChallengeActionType != RequirementActionType.Use) &&
+                    activeRequester.Value.All(x => x.ChallengeActionType != RequirementActionType.NotUse))
+                {
+                    Debug.Log("Speaker has no request considering the <b>use action</b>. Continue.");
+                    continue;
+                }
+                CheckRequests(requests, itemObject);
+            }
+            if(_mToleranceReachedRequests.Count > 0)
+            {
+                ProcessCompletedRequests();
+            }
+        }
+
+        private bool HasItemUseRequirements(List<IGameRequest> requests)
+        {
+            return requests.Any(x=> x.ChallengeObjectType == RequirementObjectType.AnyItem || 
+                                    x.ChallengeObjectType == RequirementObjectType.Guard ||
+                                    x.ChallengeObjectType == RequirementObjectType.Camera ||
+                                    x.ChallengeObjectType == RequirementObjectType.Weapon ||
+                                    x.ChallengeObjectType == RequirementObjectType.Traps ||
+                                    x.ChallengeObjectType == RequirementObjectType.Other);
+        }
+
+        private void CheckRequests(List<IGameRequest> supplierRequests, IItemObject itemObject)
+        {
+            var useRequests = supplierRequests.Where(x => x.ChallengeActionType == RequirementActionType.Use).ToList();
+            useRequests.AddRange(supplierRequests.Where(x=> x.ChallengeActionType == RequirementActionType.NotUse));
+            if(!HasItemUseRequirements(useRequests))
+            {
+                return;
+            }
+            var useItemsRequests = useRequests.Where(x => x.ChallengeObjectType == RequirementObjectType.AnyItem || 
+                                                          x.ChallengeObjectType == RequirementObjectType.Guard ||
+                                                          x.ChallengeObjectType == RequirementObjectType.Camera ||
+                                                          x.ChallengeObjectType == RequirementObjectType.Weapon ||
+                                                          x.ChallengeObjectType == RequirementObjectType.Traps ||
+                                                          x.ChallengeObjectType == RequirementObjectType.Other).ToList();
+            foreach (var request in useItemsRequests)
+            {
+                switch (request.ChallengeConsideredParameter)
+                {
+                    //Done
+                    case RequirementConsideredParameter.Origin:
+                        ProcessItemOriginRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.BaseType:
+                        ProcessItemBaseTypeRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.Quality:
+                        ProcessItemQualityRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.ItemSupplier:
+                        ProcessItemSupplierUseRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.ItemValue:
+                        ProcessItemValueRequest(request, itemObject);
+                        break;
+                    case RequirementConsideredParameter.Variable:
+                        ProcessItemVariableRequest(request, itemObject);
+                        break;
+                    default: 
+                        continue;
+                }
+                
+                if (request.CurrentDevelopmentCount >= request.RequestQuantityTolerance)
+                {
+                    _mToleranceReachedRequests.Add(request);
+                }
+            }
+        }
+
+        private void ProcessCompletedRequests()
+        {
+            if (_mToleranceReachedRequests.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var finalizedRequest in _mToleranceReachedRequests)
+            {
+                finalizedRequest.ProcessCompletionInObjectData();
+                _mRequestModuleData.ResolveFinishedRequest(finalizedRequest.RequesterSpeakerId, finalizedRequest);
+
+                if (finalizedRequest.RequestStatus == RequestStatus.Completed)
+                {
+                    ProcessRewardsAndPenalties(finalizedRequest.Rewards);
+                }
+                
+                if (finalizedRequest.RequestStatus == RequestStatus.Failed)
+                {
+                    ProcessRewardsAndPenalties(finalizedRequest.Penalties);
+                }
+            }
+            GameDirector.Instance.GetActiveGameProfile.UpdateProfileData();
+            UIController.Instance.UpdateInfoUI();
+            _mToleranceReachedRequests.Clear();
+        }
+
+        private void ProcessItemVariableRequest(IGameRequest request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemValueRequest(IGameRequest request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemSupplierUseRequest(IGameRequest request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemQualityRequest(IGameRequest request, IItemObject itemObject)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessItemBaseTypeRequest(IGameRequest request, IItemObject itemObject)
+        {
+            var useItemByBaseTypeRequest = request as IUseItemByBaseTypeRequest;
+            
+            if (useItemByBaseTypeRequest.ChallengeLogicOperator == RequirementLogicEvaluator.Equal)
+            {
+                if(itemObject.ItemStats.ItemTypes.Any(x=> useItemByBaseTypeRequest.RequestConsideredTypes.Contains(x)))
+                {
+                    useItemByBaseTypeRequest.AdvanceRequestDevelopmentCount();
+                }
+            }
+            if (useItemByBaseTypeRequest.ChallengeLogicOperator == RequirementLogicEvaluator.NotEqual)
+            {
+                if(itemObject.ItemStats.ItemTypes.Any(x=> useItemByBaseTypeRequest.RequestConsideredTypes.Contains(x)))
+                {
+                    useItemByBaseTypeRequest.AdvanceRequestDevelopmentCount();
+                }
+            }        
+        }
+
+        private void ProcessItemOriginRequest(IGameRequest request, IItemObject itemObject)
+        {
+            var originRequest = (IUseItemByOriginRequest)request;
+            
+            if (originRequest.ChallengeLogicOperator == RequirementLogicEvaluator.Equal)
+            {
+                if(originRequest.RequestConsideredOrigins.Contains(itemObject.ItemStats.ItemOrigin))
+                {
+                    originRequest.AdvanceRequestDevelopmentCount();
+                }
+            }
+            if (originRequest.ChallengeLogicOperator == RequirementLogicEvaluator.NotEqual)
+            {
+                if(!originRequest.RequestConsideredOrigins.Contains(itemObject.ItemStats.ItemOrigin))
+                {
+                    originRequest.AdvanceRequestDevelopmentCount();
+                }
+            }
+        }
+
+        private void CheckOtherItemsUseRequest(IItemObject itemObject, IGameRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CheckTrapUseRequest(IItemObject itemObject, IGameRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CheckWeaponUseRequest(IItemObject itemObject, IGameRequest request)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CheckCameraUseRequest(IItemObject itemObject, IGameRequest request)
+        {
+            
+        }
+
+        private void CheckGuardUseRequest(IItemObject itemObject, IGameRequest request)
+        {
+            
         }
 
         #endregion

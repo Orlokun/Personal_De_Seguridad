@@ -217,11 +217,11 @@ namespace Utils
                     return CreateHireGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
                         requestParameterType, requestParameterValue, quantity, rewards, punishment, targetDayId, targetPartOfDay);
                 case RequirementActionType.Use:
-                    return CreateUseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                    return CreateGameUseRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
                         requestParameterType, requestParameterValue, quantity, rewards, punishment, targetDayId, targetPartOfDay);
                 case RequirementActionType.NotUse:
-                    return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay);
+                    return CreateGameUseRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, requestParameterValue, quantity, rewards, punishment, targetDayId, targetPartOfDay);
                 case RequirementActionType.Trap:
                     return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
                         requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay);
@@ -242,20 +242,56 @@ namespace Utils
                 requestParameterType, jobSupplierBitId, quantity, rewards, punishment, targetDayId, targetPartOfDay);
         }
 
-        private static IUseGameRequest CreateUseGameRequest(int speakerId, int reqId, string reqTitle,
+        private static IGameRequest CreateGameUseRequest(int speakerId, 
+            int reqId, 
+            string reqTitle,
             string reqDescription,
-            RequirementActionType requestType, RequirementObjectType requiredObjectType,
+            RequirementActionType requestType, 
+            RequirementObjectType requiredObjectType,
             RequirementLogicEvaluator requirementLogicEvaluator,
-            RequirementConsideredParameter requestParameterType, string[] requestParameterValue, int quantity, string[] rewards, 
-            string[] punishment, DayBitId targetDayId, PartOfDay targetPartOfDay)
+            RequirementConsideredParameter requestParameterType, 
+            string[] requestParameterValue, 
+            int quantity, 
+            string[] rewards, 
+            string[] punishment, 
+            DayBitId targetDayId, 
+            PartOfDay targetPartOfDay)
         {
-            var itemSupplier = int.Parse(requestParameterValue[0]);
-            var itemId = int.Parse(requestParameterValue[1]);
-            var itemSupplierId = (BitItemSupplier)itemSupplier;
-            return new UseGameRequest(speakerId, reqId, reqTitle, reqDescription, requestType, requiredObjectType, requirementLogicEvaluator,
-                requestParameterType, itemSupplierId, itemId, quantity, rewards, punishment, targetDayId, targetPartOfDay);
+            switch (requestParameterType)
+            {
+                case RequirementConsideredParameter.Origin:
+                    return new UseItemByOriginRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay, requestParameterValue);
+                case RequirementConsideredParameter.BaseType:
+                    return new UseItemByBaseTypeRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay, requestParameterValue);
+                case RequirementConsideredParameter.Quality:
+                    return new UseItemByQualityRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay, requestParameterValue);
+                case RequirementConsideredParameter.ItemSupplier:
+                    return new UseItemBySupplier(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay,
+                        requestParameterValue);
+                case RequirementConsideredParameter.ItemValue:
+                    return new UseExactItemRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay,
+                        requestParameterValue);
+                case RequirementConsideredParameter.Variable:
+                    return new UseExactItemRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay,
+                        requestParameterValue);
+                default:
+                    return new GameRequest(speakerId, reqId, reqTitle, reqDescription, requestType,
+                        requiredObjectType, requirementLogicEvaluator,
+                        requestParameterType, quantity, rewards, punishment, targetDayId, targetPartOfDay);
+            }
         }
-        
         
         #endregion
         public static IComplianceObject CreateComplianceObject(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock, 
@@ -299,4 +335,6 @@ namespace Utils
 
 
     }
+
+
 }

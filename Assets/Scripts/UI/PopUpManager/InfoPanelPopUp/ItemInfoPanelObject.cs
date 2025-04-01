@@ -1,16 +1,11 @@
 using System.Globalization;
 using DataUnits.ItemScriptableObjects;
-using DataUnits.JobSources;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI.PopUpManager.InfoPanelPopUp
 {
-    public interface IItemInfoPanel : IPopUpObject
-    {
-        public void SetAndDisplayInfoPanelData(IItemObject itemToDisplay);
-    }
     public class ItemInfoPanelObject : PopUpObject, IItemInfoPanel
     {
         [SerializeField] private Image itemImage;
@@ -37,10 +32,5 @@ namespace UI.PopUpManager.InfoPanelPopUp
         {
             PopUpOperator.RemovePopUp(PopUpId);
         }
-    }
-
-    public interface ISupplierInfoPanel : IPopUpObject
-    {
-        public void SetAndDisplayInfoPanelData(ISupplierBaseObject supplierToDisplay);
     }
 }

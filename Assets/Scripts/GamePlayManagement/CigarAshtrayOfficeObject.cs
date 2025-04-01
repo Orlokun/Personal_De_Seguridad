@@ -1,4 +1,3 @@
-using InputManagement;
 using InputManagement.MouseInput;
 using UI.PopUpManager;
 using UnityEngine;

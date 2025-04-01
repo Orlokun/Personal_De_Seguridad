@@ -1,14 +1,12 @@
 using System;
 using DataUnits.ItemScriptableObjects;
 using GameDirection.GeneralLevelManager.ShopPositions;
-using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.Animations;
 using GamePlayManagement.Players_NPC.Animations.Interfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
-using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using UnityEngine;
 using UnityEngine.AI;

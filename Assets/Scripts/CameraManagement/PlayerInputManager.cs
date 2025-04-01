@@ -259,9 +259,4 @@ namespace CameraManagement
             _currentCameraIndex = incomingIndex;
         }
     }
-
-    public interface IPlayerInputManager
-    {
-        void CoordinateInputIndex(int incomingIndex);
-    }
 }

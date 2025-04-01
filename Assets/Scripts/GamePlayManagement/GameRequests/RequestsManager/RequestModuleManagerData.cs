@@ -7,6 +7,7 @@ using DialogueSystem.Units;
 using GameDirection;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.BitDescriptions.RequestParameters;
+using GamePlayManagement.GameRequests.RewardsPenalties;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -67,6 +68,18 @@ namespace GamePlayManagement.GameRequests.RequestsManager
                 return;
             }
             _mFailedRequests[requester].Add(request);
+        }
+
+        public void ResolveFinishedRequest(DialogueSpeakerId requester, IGameRequest request)
+        {
+            if (request.RequestStatus == RequestStatus.Completed)
+            {
+                AddCompletedRequestInData(requester, request);
+            }
+            else if (request.RequestStatus == RequestStatus.Failed)
+            {
+                AddFailedRequestInData(requester, request);
+            }
         }
 
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mActiveRequests;

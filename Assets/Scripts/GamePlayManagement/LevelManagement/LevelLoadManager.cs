@@ -4,23 +4,6 @@ using UnityEngine.SceneManagement;
 
 namespace GamePlayManagement.LevelManagement
 {
-    public interface ILevelManager
-    {
-        public void ActivateScene(LevelIndexId lvl);
-        public void DeactivateScene(LevelIndexId lvl);
-        public void ReturnToMainScreen();
-    }
-
-    public enum LevelIndexId
-    {
-        InitScene = 0,
-        UILvl = 1,
-        OfficeLvl = 2,
-        
-        //Gameplay levels threshold
-        EdenLvl = 3,
-    }
-    
     public class LevelLoadManager : MonoBehaviour, ILevelManager
     {
         private LevelIndexId _currentGameLevel;

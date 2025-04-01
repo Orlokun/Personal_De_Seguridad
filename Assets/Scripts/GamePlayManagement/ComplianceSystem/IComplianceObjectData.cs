@@ -25,12 +25,4 @@ namespace GamePlayManagement.ComplianceSystem
         string GetDescription { get; }
         public void SetComplianceStatus(ComplianceStatus status);
     }
-
-    public enum ComplianceStatus
-    {
-        Locked,
-        Active,
-        Failed,
-        Passed
-    }
 }

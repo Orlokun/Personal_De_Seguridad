@@ -9,9 +9,4 @@ namespace GameDirection.DayLevelSceneManagers
         public IEnumerator StartDayManagement();
         public event DayLevelSceneManagement.FinishCurrentDialogue OnFinishCurrentDialogue;
     }
-    
-    public interface IIntroSceneOperator : IInitializeWithArg1<IGameDirector>
-    {
-        public IEnumerator StartIntroScene();
-    }
 }

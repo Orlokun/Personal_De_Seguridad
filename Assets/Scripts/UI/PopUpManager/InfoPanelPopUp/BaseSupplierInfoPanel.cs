@@ -1,5 +1,4 @@
 using DataUnits.JobSources;
-using GameDirection.NewsManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

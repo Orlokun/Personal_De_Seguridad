@@ -23,7 +23,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
             base.Awake();
             
             OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager()
-                .CheckItemPlacementChallenges;
+                .CheckItemUsedChallenges;
             OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetComplianceManager
                 .CheckItemPlacementCompliance;
         }

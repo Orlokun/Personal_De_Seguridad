@@ -7,10 +7,6 @@ using UnityEngine.UI;
 
 namespace UI.TabManagement.NotebookTabs
 {
-    public interface INewsObjectPrefab
-    {
-        void PopulateNewsPrefab(INewsObject newsObject);
-    }
     public class NewsObjectPrefab : MonoBehaviour, INewsObjectPrefab
     {
         private INewsObject _mNewsData;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GameDirection.GeneralLevelManager;
-using GameDirection.GeneralLevelManager.ShopPositions;
 using GameDirection.GeneralLevelManager.ShopPositions.CustomerPois;
 using UnityEngine;
 using Random = UnityEngine.Random;

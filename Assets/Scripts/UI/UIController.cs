@@ -13,36 +13,6 @@ using Utils;
 
 namespace UI
 {
-    public enum CanvasBitId
-    {
-        None = 0,
-        BaseCanvas = 1<<0,
-        GamePlayCanvas = 1<<1,
-        Office = 1<< 2,
-        MainMenu = 1 <<3,
-        EndOfDay = 1<<4
-    }
-
-    public interface IUIController
-    {
-        void DeactivateAllObjects();
-        void StartMainMenuUI();
-        event UIController.ReturnToBaseCanvasState OnResetCanvas;
-        void ToggleDialogueObject(bool isActive);
-        void ReturnToBaseGamePlayCanvasState();
-        void InitializeBaseInfoCanvas(IPlayerGameProfile playerProfile);
-        void UpdateInfoUI();
-        void UpdateOfficeUIElement(int cameraState);
-        void ActivateObject(CanvasBitId canvasBitId, int panel);
-        void DeactivateObject(CanvasBitId canvasBitId, int panel);
-        void ToggleBackground(bool toggleValue);
-        IDialogueOperator DialogueOperator { get; }
-        void HiredInJobFoundFeedbackEvent(JobSupplierBitId newJobSupplier);
-        void ElementUnlockedFeedback(BitItemSupplier itemSupplier);
-        void SyncUIStatusWithCameraState(GameCameraState currentCameraState, int indexCamera);
-        bool IsObjectActive(CanvasBitId canvasBitId, int panel);
-    }
-
     [RequireComponent(typeof(DialogueOperator))]
     public class UIController : MonoBehaviour, IUIController
     {

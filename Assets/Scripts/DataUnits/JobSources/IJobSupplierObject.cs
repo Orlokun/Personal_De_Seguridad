@@ -29,9 +29,4 @@ namespace DataUnits.JobSources
         void LocalInitialize(JobSupplierBitId jobId, DialogueSpeakerId speakerId);
         void PlayerHired();
     }
-
-    public interface IFondnessCharacter
-    {
-        void ReceiveFondness(int amount);
-    }
 }
