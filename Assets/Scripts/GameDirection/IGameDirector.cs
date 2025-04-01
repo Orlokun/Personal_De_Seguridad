@@ -45,6 +45,5 @@ namespace GameDirection
         ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId);
         void PlayerLost(EndingTypes organSale);
         void StartTutorialProcess(int tutorialIndex);
-
     }
 }

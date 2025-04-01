@@ -3,7 +3,7 @@ using Utils;
 
 namespace GameDirection.DayLevelSceneManagers
 {
-    public interface IIntroSceneOperator : IInitializeWithArg1<IGameDirector>
+    public interface IIntroSceneOperator : IInitializeWithArg2<IGameDirector, IIntroSceneInGameManager>
     {
         public IEnumerator StartIntroScene();
     }

@@ -52,6 +52,7 @@ namespace GameDirection
         private IComplianceManager _mComplianceManager;
         private IMetaGameDirector _mMetaGameDirector;
         private IBaseTutorialDialogueData _mTutorialDialogueData;
+        private IIntroSceneOperator _mDayZeroIntroScene;
         
         //Scriptable Objects Catalogues
         private IItemsDataController _mItemDataController;
@@ -126,6 +127,7 @@ namespace GameDirection
         /// </summary>
         private void Start()
         {
+            
             _mSoundDirector = SoundDirector.Instance;
             _mUIController = UIController.Instance;
             _mDialogueOperator = _mUIController.DialogueOperator;
@@ -150,12 +152,21 @@ namespace GameDirection
             _mComplianceManager = Factory.CreateComplianceManager();
             _mComplianceManager.LoadComplianceData();
             _mMetaGameDirector = Factory.CreateMetaGameDirectory();
+            _mDayZeroIntroScene = Factory.CreateIntroSceneOperator();
+
+            var introScene = FindFirstObjectByType<IntroSceneInGameManager>(FindObjectsInactive.Include);
+            _mDayZeroIntroScene.Initialize(this, introScene);
             
             WaitAndLoadDeflectionInitialDialogues();
                 
             _mUIController.StartMainMenuUI();
             _gameInputManager.SetGamePlayState(InputGameState.MainMenu);
             _mGameState = HighLevelGameStates.MainMenu;
+        }
+
+        private void GetIntroSceneObjects()
+        {
+            
         }
 
         private void LoadDayManagement(DayBitId dayId)
@@ -218,9 +229,9 @@ namespace GameDirection
             CreateNewProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             _mGameState = HighLevelGameStates.InCutScene;
-            //PlayGameIntro();
+            StartCoroutine( _mDayZeroIntroScene.StartIntroScene());
             
-            StartCoroutine(_dayLevelManager.StartDayManagement());
+            //StartCoroutine(_dayLevelManager.StartDayManagement());
         }
         
         

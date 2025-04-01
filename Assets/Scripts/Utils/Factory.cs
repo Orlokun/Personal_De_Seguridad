@@ -405,6 +405,10 @@ namespace Utils
         }
 
 
+        public static IIntroSceneOperator CreateIntroSceneOperator()
+        {
+            return new DayZeroIntroScene();
+        }
     }
 
 

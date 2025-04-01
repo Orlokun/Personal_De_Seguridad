@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace GameDirection.DayLevelSceneManagers
+{
+    public class IntroSceneInGameManager : MonoBehaviour, IIntroSceneInGameManager
+    {
+        [SerializeField] private Camera mCeoCamera;
+        [SerializeField] private BeaconOperator mBeaconOperator;
+        [SerializeField] private List<GameObject> mScreenObjects;
+        [SerializeField] private GameObject mIntroScene;
+    
+        public void ToggleBeacon(bool state)
+        {
+            mBeaconOperator.gameObject.SetActive(state);
+        }
+
+        public void ToggleCeoCameras(bool state)
+        {
+            mCeoCamera.gameObject.SetActive(state);
+            foreach (var screenObject in mScreenObjects)
+            {
+                screenObject.SetActive(state);
+            }
+        }
+
+        public void ToggleIntroSceneLevelObjects(bool state)
+        {
+            mIntroScene.SetActive(state);
+        }
+
+        public void ToggleCompleteScene(bool state)
+        {
+            ToggleIntroSceneLevelObjects(state);
+            ToggleBeacon(state);
+            ToggleCeoCameras(state);
+        }
+    }
+
+    public interface IIntroSceneInGameManager
+    {
+        
+        public void ToggleBeacon(bool state);
+        public void ToggleCeoCameras(bool state);
+        public void ToggleIntroSceneLevelObjects(bool state);
+        public void ToggleCompleteScene(bool state);
+    }
+}

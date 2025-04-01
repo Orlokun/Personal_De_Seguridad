@@ -18,7 +18,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(_mDayId);
             MGameDirector.SubscribeCurrentWorkDayToCustomerManagement();
             
-            MGameDirector.GetSoundDirector.PlayAmbientSound();
+            MGameDirector.GetSoundDirector.PlayRegularDayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(2f);
 
