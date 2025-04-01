@@ -5,7 +5,9 @@ namespace CameraManagement
 {
     public interface IGameCameraOperator
     {
-        public void ActivateNewCamera(GameCameraState requestState, int indexCamera);
+        public void ActivateCameraWithIndex(GameCameraState requestState, int indexCamera);
+        public void ActivateCameraWithTarget(GameCameraState requestState, string targetName);
+        public void ActivateIsometricFollowCamera(GameCameraState requestState);
         public void ActivateCameraIndex(int indexCamera);
         public int MaxNumberOfCameras();
         public GameCameraState ActiveState();

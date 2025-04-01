@@ -216,6 +216,9 @@ namespace Utils
             }
         }
 
+        public static string GetIntroSceneDialogues =>  "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroScene?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+        
+
         public static string GetDaySceneDialogueDataUrl(DayBitId dayId)
         {
             switch (dayId)
@@ -228,6 +231,7 @@ namespace Utils
                     return "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_03?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
                 case DayBitId.Day_04:
                     return "https://sheets.googleapis.com/v4/spreadsheets/1uIxuYdSEPwiogcnTni-PLYJDXAsMST8-H9nKcDrTxTU/values/IntroDialogue_04?key=AIzaSyDkMJ4WemjaSx92OzN7YXs6Hy7RcgHvM4A";
+                
             }
             return "";
         }

@@ -249,10 +249,25 @@ namespace DialogueSystem
             }
             var viewType = dialogueNode.CameraEvent[0];
             Enum.TryParse(viewType, out GameCameraState cameraState);
-            
-            var cameraIndex = int.Parse(dialogueNode.CameraEvent[1]);
-            GameCameraOperator.Instance.ActivateNewCamera(cameraState, cameraIndex);
-            _mUIController.SyncUIStatusWithCameraState(cameraState, cameraIndex);
+
+            switch (cameraState)
+            {
+                case GameCameraState.Office:
+                    var cameraOfficeIndex = int.Parse(dialogueNode.CameraEvent[1]);
+                    GameCameraOperator.Instance.ActivateCameraWithIndex(cameraState, cameraOfficeIndex);
+                    _mUIController.SyncUIStatusWithCameraState(cameraState, cameraOfficeIndex);
+                    break;
+                case GameCameraState.Level:
+                    var cameraLevelIndex = int.Parse(dialogueNode.CameraEvent[1]);
+                    GameCameraOperator.Instance.ActivateCameraWithIndex(cameraState, cameraLevelIndex);
+                    _mUIController.SyncUIStatusWithCameraState(cameraState, cameraLevelIndex);
+                    break;
+                case GameCameraState.InDialogue:
+                    /*var targetName = dialogueNode.CameraEvent[1];
+                    GameCameraOperator.Instance.ActivateCameraWithIndex(cameraState, cameraLevelIndex);
+                    _mUIController.SyncUIStatusWithCameraState(cameraState, cameraLevelIndex);*/
+                    break;
+            }
         }
         private void CheckDialogueLineEventBehavior(IDialogueNode dialogueNode)
         {

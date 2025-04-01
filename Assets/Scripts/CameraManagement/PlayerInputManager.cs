@@ -95,7 +95,7 @@ namespace CameraManagement
         {
             Debug.Log($"Setting new camera state {newState}");
             _mGameCameraManager.ChangeCameraState(newState);
-            _mGameCameraManager.ActivateNewCamera(newState, 0);
+            _mGameCameraManager.ActivateCameraWithIndex(newState, 0);
             if (_mGameInputManager.CurrentInputGameState != InputGameState.InDialogue)
             {
                 _mUIController.ReturnToBaseGamePlayCanvasState();

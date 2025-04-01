@@ -233,8 +233,7 @@ namespace GameDirection
             
             //StartCoroutine(_dayLevelManager.StartDayManagement());
         }
-        
-        
+
 
         public void ContinueGameWithProfile()
         {
@@ -393,7 +392,7 @@ namespace GameDirection
             _mGeneralFader.GeneralCurtainAppear();
             UIFinishWorkday();
             _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
-            _mGameCameraManager.ActivateNewCamera(GameCameraState.Office, 0);
+            _mGameCameraManager.ActivateCameraWithIndex(GameCameraState.Office, 0);
             FadeInEndOfScene();
             Debug.Log("[ManageUIProcessEndOfDay] Finish");
         }

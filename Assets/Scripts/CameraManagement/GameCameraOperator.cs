@@ -69,9 +69,9 @@ namespace CameraManagement
             }
             
             ChangeCameraState(lastState.Item2);
-            ActivateNewCamera(lastState.Item2, lastState.Item1);
+            ActivateCameraWithIndex(lastState.Item2, lastState.Item1);
         }
-        public void ActivateNewCamera(GameCameraState requestState, int indexCamera)
+        public void ActivateCameraWithIndex(GameCameraState requestState, int indexCamera)
         {
             if(!IsValidRequest(requestState,indexCamera))
             {
@@ -87,6 +87,16 @@ namespace CameraManagement
                     ActivateOfficeCamera(indexCamera);
                     break;
             }
+        }
+
+        public void ActivateCameraWithTarget(GameCameraState requestState, string targetName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ActivateIsometricFollowCamera(GameCameraState requestState)
+        {
+            throw new NotImplementedException();
         }
 
         private void ActivateLevelCamera(int indexCamera)
@@ -131,7 +141,7 @@ namespace CameraManagement
 
         public void ActivateCameraIndex(int indexCamera)
         {
-            ActivateNewCamera(_mCurrentCameraState, indexCamera);
+            ActivateCameraWithIndex(_mCurrentCameraState, indexCamera);
             SyncUIStatusWithCameraState();
         }
         
@@ -296,10 +306,7 @@ namespace CameraManagement
 
         private void PopulateLevelCameraData(Transform levelCamerasParent)
         {
-            if (_mLevelCameras == null)
-            {
-                _mLevelCameras = new Dictionary<int, GameObject>();
-            }
+            _mLevelCameras = new Dictionary<int, GameObject>();
             for (var i = 0; i < levelCamerasParent.childCount; i++)
             {
                 var cameraObject = levelCamerasParent.GetChild(i).gameObject;

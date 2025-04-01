@@ -11,7 +11,7 @@ namespace GamePlayManagement.LevelManagement
         {
             _mGameCameraManager.SetOfficeCamerasParent(levelCamerasParent);
             _mGameCameraManager.ChangeCameraState(GameCameraState.Office);
-            _mGameCameraManager.ActivateNewCamera(GameCameraState.Office, (int)OfficeCameraStates.GeneralDesktop);
+            _mGameCameraManager.ActivateCameraWithIndex(GameCameraState.Office, (int)OfficeCameraStates.GeneralDesktop);
         }
     }
 }
