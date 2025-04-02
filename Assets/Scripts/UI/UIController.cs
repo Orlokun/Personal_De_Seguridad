@@ -145,7 +145,17 @@ namespace UI
                 Debug.LogWarning("[UIController.ToggleDialogueObject] active canvas must contain GamePlay canvas id.");
                 return;
             }
-            var levelViewElements = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+
+            var levelViewElements = new List<int>();
+            if(_mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].IsElementActive(GameplayPanelsBitStates.BOTTOM_DIALOGUE))
+            { 
+                levelViewElements = new List<int>()
+                    {GameplayPanelsBitStates.ITEM_SIDEBAR, GameplayPanelsBitStates.BOTTOM_DIALOGUE};
+            }
+            else
+            {
+                levelViewElements = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
+            }
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(levelViewElements);
             PopUpOperator.Instance.RemoveAllPopUpsExceptOne(BitPopUpId.LARGE_HORIZONTAL_BANNER);        }
 
