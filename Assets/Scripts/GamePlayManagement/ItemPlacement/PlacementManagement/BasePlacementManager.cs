@@ -142,7 +142,10 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
             try
             {
                 var obj = Instantiate(CurrentPlacedObject);
-                SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
+                if (GameDirector.Instance.GetCurrentHighLvlGameState != HighLevelGameStates.InCutScene)
+                {
+                    SceneManager.MoveGameObjectToScene(obj, SceneManager.GetSceneByName("Level_One"));          //TODO: Fix Hardcode
+                }
                 LastInstantiatedGameObject = obj;
                 SetNewObjectPosition(obj);
                 IsAttemptingPlacement = false;

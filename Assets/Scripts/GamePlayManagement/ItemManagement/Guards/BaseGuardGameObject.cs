@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
+using GameDirection;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
@@ -162,6 +163,10 @@ namespace GamePlayManagement.ItemManagement.Guards
         
         private void SetupInspectionModule()
         {
+            if (GameDirector.Instance.GetCurrentHighLvlGameState == HighLevelGameStates.InCutScene)
+            {
+                return;
+            }
             _mInspectionModule = Factory.CreateGuardSystemModule();
             var getInspectionPositions = PositionsManager.GetClosestPosition(transform.position);
             _mInspectionModule.Initialize(getInspectionPositions);
@@ -185,6 +190,11 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             ChangeMovementState<IdleMovementState>();
             ChangeAttitudeState<IdleAttitudeState>();
+
+            if (GameDirector.Instance.GetCurrentHighLvlGameState == HighLevelGameStates.InCutScene)
+            {
+                return;
+            }
             
             //TODO: Make formula for gradient progress
             var waitResultTime = BaseAwakeTime / BaseData.Proactive;
