@@ -3,6 +3,7 @@ using CameraManagement;
 using DataUnits.GameCatalogues;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
+using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -91,6 +92,10 @@ namespace UI
         }
         public void ElementUnlockedFeedback(BitItemSupplier itemSupplier)
         {
+            if (GameDirector.Instance.GetCurrentHighLvlGameState == HighLevelGameStates.InCutScene)
+            {
+                return;
+            }
             var jobSupplierName = BaseItemSuppliersCatalogue.Instance.GetItemSupplierData(itemSupplier).StoreName;
             var bannerText = $"Item Supplier Unlocked: {jobSupplierName}";
             ShowFeedback(bannerText);

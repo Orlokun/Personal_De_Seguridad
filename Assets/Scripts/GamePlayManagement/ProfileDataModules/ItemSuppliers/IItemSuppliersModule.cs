@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
@@ -10,7 +11,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 
         //Suppliers API
         public bool IsSupplierActive(BitItemSupplier provider);
-        public void UnlockSupplier(BitItemSupplier provider);
+        public Task UnlockSupplier(BitItemSupplier provider);
         public void RemoveSupplier(BitItemSupplier provider);
         
         //Items API

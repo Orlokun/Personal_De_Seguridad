@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
@@ -224,11 +225,11 @@ namespace GameDirection
         
         public void StartNewGame()
         {
+            _mGameState = HighLevelGameStates.InCutScene;
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCurtainAppear();
             CreateNewProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
-            _mGameState = HighLevelGameStates.InCutScene;
             StartCoroutine( _mDayZeroIntroScene.StartIntroScene());
             
             //StartCoroutine(_dayLevelManager.StartDayManagement());
@@ -243,26 +244,40 @@ namespace GameDirection
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
 
-        private void CreateNewProfile()
+        private async void CreateNewProfile()
         {
-            _mActiveGameProfile = null;
-            var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
-            var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
-            var calendarModule = Factory.CreateCalendarModule(_mClockManager);
-            var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
-            var requestModuleManager = Factory.CreateRequestsModuleManager();
-            var profileStatusModule = Factory.CreatePlayerStatusModule();
-            var complianceModule = Factory.CreateComplianceManager(); 
-            var inventoryModule = Factory.CreateInventoryModule();
-            complianceModule.LoadComplianceData();
+            try
+            {
+                _mActiveGameProfile = null;
+                var itemSuppliersModule = Factory.CreateItemSuppliersModule(_mItemDataController, _mItemSuppliersData);
+                var jobSourcesModule = Factory.CreateJobSourcesModule(_mJobsCatalogue);
+                var calendarModule = Factory.CreateCalendarModule(_mClockManager);
+                var lifestyleModule = Factory.CreateLifestyleModule(_mRentCatalogueData, _mFoodCatalogueData, _mTransportCatalogueData);
+                var requestModuleManager = Factory.CreateRequestsModuleManager();
+                var profileStatusModule = Factory.CreatePlayerStatusModule();
+                var complianceModule = Factory.CreateComplianceManager(); 
+                var inventoryModule = Factory.CreateInventoryModule();
+                complianceModule.LoadComplianceData();
+                _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,
+                    lifestyleModule, profileStatusModule, requestModuleManager, complianceModule, inventoryModule);
             
-            _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,
-                            lifestyleModule, profileStatusModule, requestModuleManager, complianceModule, inventoryModule);
-            _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
-            _mActiveGameProfile.UpdateProfileData();
-            _mUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
-            _mUIController.UpdateInfoUI();
-            OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
+            
+                _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
+                await ManageNewItemSupplierUnlockedEvent(BitItemSupplier.D1TV);
+            
+            
+                var itemObject = _mActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 1);
+                _mActiveGameProfile.GetInventoryModule().AddItemToInventory(itemObject, 1);
+                _mActiveGameProfile.UpdateProfileData();
+                _mUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
+                _mUIController.UpdateInfoUI();
+                OnFinishDay += _mActiveGameProfile.UpdateDataEndOfDay;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         public void ReleaseFromDialogueStateToGame()
@@ -355,9 +370,9 @@ namespace GameDirection
             GetActiveGameProfile.UpdateProfileData();
         }
 
-        public void ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier)
+        public async Task ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier)
         {
-            GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(itemsupplier);
+            await GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockSupplier(itemsupplier);
             GetActiveGameProfile.UpdateProfileData();
         }
 

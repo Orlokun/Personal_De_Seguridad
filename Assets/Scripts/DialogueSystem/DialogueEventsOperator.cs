@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using DataUnits;
 using DataUnits.JobSources;
 using DialogueSystem.Interfaces;
@@ -15,7 +16,7 @@ namespace DialogueSystem
         public event HirePlayer OnHirePlayer;
         
         
-        public delegate void UnlockItemSupplier(BitItemSupplier itemSupplier);
+        public delegate Task UnlockItemSupplier(BitItemSupplier itemSupplier);
         public event UnlockItemSupplier OnUnlockItemSupplier;
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading.Tasks;
 using CameraManagement;
 using DataUnits;
 using DataUnits.GameCatalogues;
@@ -40,7 +41,7 @@ namespace GameDirection
         public void FinishWorkday();
         public void ActCoroutine(IEnumerator coroutine);
         public void ManageNewJobHiredEvent(JobSupplierBitId newJobSupplier);
-        void ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier);
+        Task ManageNewItemSupplierUnlockedEvent(BitItemSupplier itemsupplier);
 
         public void BeginNewDayProcess();
 

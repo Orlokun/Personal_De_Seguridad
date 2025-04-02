@@ -5,8 +5,10 @@ using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers.Stores;
 using UI;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using Utils;
+using Task = System.Threading.Tasks.Task;
 
 namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
 {
@@ -92,7 +94,7 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             var castSupplier = (int) provider;
             return (_mActiveProviders & castSupplier) != 0;
         }
-        public async void UnlockSupplier(BitItemSupplier provider)
+        public async Task UnlockSupplier(BitItemSupplier provider)
         {
             Debug.Log($"[ItemSuppliersModule.UnlockSupplier] Start Download Unlocked Dialogues. Item Provider: {provider}");
             var castProvider = (int) provider;
