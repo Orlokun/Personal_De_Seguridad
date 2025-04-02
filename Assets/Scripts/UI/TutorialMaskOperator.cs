@@ -54,6 +54,10 @@ namespace UI
                     SetMaskType(false);
                     ProcessHighlightedObject(HighlightObjectID.BaseInfo);
                     break;
+                case "ItemTypeV":
+                    SetMaskType(false);
+                    ProcessHighlightedObject(HighlightObjectID.GamePlayVertical);
+                    break;
             }
         }
 
