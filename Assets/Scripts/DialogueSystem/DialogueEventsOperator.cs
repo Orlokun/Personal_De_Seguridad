@@ -48,6 +48,9 @@ namespace DialogueSystem
         {
             switch (eventCodes[0])
             {
+                case "ActivatePlacementManager":
+                    ActivatePlacementManager();
+                    break;
                 //Player hired only uses one event argument. The id of the job supplier. 
                 case "PlayerHired":
                     LaunchPlayerHiredEvent(eventCodes[1]);
@@ -77,6 +80,16 @@ namespace DialogueSystem
                     Debug.LogWarning($"Event Type: {eventCodes[0]} not recognized. Confirm writing.");
                     break;
             }
+        }
+
+        private void ActivatePlacementManager()
+        {
+            var placementManager = GameDirector.Instance.GetPlacementManager();
+            if (placementManager == null)
+            {
+                return;
+            }
+            placementManager.SetActive(true);
         }
 
         private void LaunchTrustChangeEvent(string speakerId, string trustAmount)

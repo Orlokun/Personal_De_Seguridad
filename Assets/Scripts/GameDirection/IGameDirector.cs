@@ -12,6 +12,8 @@ using GamePlayManagement.LevelManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement;
 using UI;
+using UnityEngine;
+
 namespace GameDirection
 {
     public interface IGameDirector : IHighLvlGameStateManager, IPlayerProfileManager
@@ -45,5 +47,6 @@ namespace GameDirection
         ICallableSupplier GetSpeakerData(DialogueSpeakerId dialogueNodeSpeakerId);
         void PlayerLost(EndingTypes organSale);
         void StartTutorialProcess(int tutorialIndex);
+        public GameObject GetPlacementManager();
     }
 }

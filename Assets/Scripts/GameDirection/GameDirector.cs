@@ -311,6 +311,17 @@ namespace GameDirection
             _mDialogueOperator.StartNewDialogue(tutorialDialogue);
         }
 
+        public GameObject GetPlacementManager()
+        {
+            var placementManager = GameObject.FindGameObjectsWithTag("PlacementManager");
+            if(placementManager.Length == 0)
+            {
+                Debug.LogError("Placement Manager not found");
+                return null;
+            }
+            return placementManager[0];
+        }
+
         private async Task WaitAndOpenCurtain()
         {
             await Task.Delay(2000);
