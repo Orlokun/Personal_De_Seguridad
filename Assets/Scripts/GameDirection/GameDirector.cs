@@ -328,13 +328,13 @@ namespace GameDirection
 
         public GameObject GetPlacementManager()
         {
-            var placementManager = GameObject.FindGameObjectsWithTag("PlacementManager");
-            if(placementManager.Length == 0)
+            var placementManager = GameObject.FindFirstObjectByType<GeneralItemPlacementManager>(FindObjectsInactive.Include);
+            if(placementManager == null)
             {
                 Debug.LogError("Placement Manager not found");
                 return null;
             }
-            return placementManager[0];
+            return placementManager.gameObject;
         }
 
         private async Task WaitAndOpenCurtain()
