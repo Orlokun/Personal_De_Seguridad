@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CameraManagement;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
@@ -36,6 +37,8 @@ namespace GameDirection.DayLevelSceneManagers
             _mSceneManager = injectionClass2;
             _mGameDirector.ActCoroutine(GetIntroSceneDialogueData());
             mInitialized = true;
+            
+            _mGameDirector.GetGameCameraManager.SetLevelCamerasParent(_mSceneManager.GetCamerasInLevelParent);
         }
 
         public IEnumerator StartIntroScene()

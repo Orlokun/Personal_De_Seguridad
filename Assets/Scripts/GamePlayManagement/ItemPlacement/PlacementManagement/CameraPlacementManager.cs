@@ -8,16 +8,16 @@ using Utils;
 
 namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
-    public class CameraPlacementManager : BasePlacementManager
+    public class CameraPlacementManager : BasePlacementManager, ICameraPlacementManager
     {
-        private static CameraPlacementManager _instance;
-        public static IBasePlacementManager Instance {
-            get { return _instance; }
+        private static CameraPlacementManager _mInstance;
+        public static IBasePlacementManager MInstance {
+            get { return _mInstance; }
         }
         
         #region Camera Positions In Scene
-        [SerializeField] private Transform cameraObjectsParent;
-        private Dictionary<Guid, ICameraPlacementPosition> m_cameraPositions = new Dictionary<Guid, ICameraPlacementPosition>();
+        [SerializeField]private Transform _mCurrentCameraItemsPositionsParent;
+        private Dictionary<Guid, ICameraPlacementPosition> _mCameraPositions = new Dictionary<Guid, ICameraPlacementPosition>();
         [SerializeField] private float zDistance;
 
         private ICameraPlacementPosition _currentPlacementPosition;
@@ -25,24 +25,34 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         
         protected override void Awake()
         {
-            _instance = this;
+            if(_mInstance != null && _mInstance != this)
+            {
+                Destroy(this);
+                return;
+            }
+            _mInstance = this;
             base.Awake();
-            CollectInitialCameraPositions();
+            UpdatePositionsForItemCameras(_mCurrentCameraItemsPositionsParent);
         }
 
+        public void UpdatePositionsForItemCameras(Transform cameraObjectsParent)
+        {
+            _mCameraPositions.Clear();
+            _mCurrentCameraItemsPositionsParent = cameraObjectsParent;
+            CollectInitialCameraPositions();
+        }
         private void CollectInitialCameraPositions()
         {
-            if (m_cameraPositions.Count != 0)
+            if (_mCameraPositions.Count != 0)
             {
                 Debug.LogWarning("Camera Positions are already set");
                 return;
             }
-
-            for (var i= 0; i<_instance.cameraObjectsParent.childCount;i++)
+            for (var i= 0; i<_mInstance._mCurrentCameraItemsPositionsParent.childCount;i++)
             {
-                var cameraObject = cameraObjectsParent.GetChild(i);
+                var cameraObject = _mCurrentCameraItemsPositionsParent.GetChild(i);
                 var cameraPositionData = Factory.CreateCameraPlacementPosition(Guid.NewGuid(), cameraObject.position, cameraObject.gameObject.name);
-                m_cameraPositions.Add(cameraPositionData.Id, cameraPositionData);
+                _mCameraPositions.Add(cameraPositionData.Id, cameraPositionData);
             }
         }
         
@@ -106,7 +116,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         {
             var closestCameraDistance = 100f;
             ICameraPlacementPosition closestCameraPosition;
-            foreach (var cameraPosition in m_cameraPositions)
+            foreach (var cameraPosition in _mCameraPositions)
             {
                 var positionData = cameraPosition.Value;
                 if (positionData.IsOccupied)
@@ -128,5 +138,10 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
             }
             return null;
         }
+    }
+
+    public interface ICameraPlacementManager
+    {
+        public void UpdatePositionsForItemCameras(Transform cameraObjectsParent);
     }
 }

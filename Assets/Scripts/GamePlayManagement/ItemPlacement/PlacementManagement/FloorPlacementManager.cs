@@ -19,13 +19,18 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         private float lastMouseXPos;
         protected override void Awake()
         {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(this);
+                return;
+            }
             _instance = this;
             base.Awake();
-            
             OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetRequestsModuleManager()
                 .CheckItemUsedChallenges;
             OnItemPlaced += GameDirector.Instance.GetActiveGameProfile.GetComplianceManager
                 .CheckItemPlacementCompliance;
+            DontDestroyOnLoad(this);
         }
 
         new void Update()   

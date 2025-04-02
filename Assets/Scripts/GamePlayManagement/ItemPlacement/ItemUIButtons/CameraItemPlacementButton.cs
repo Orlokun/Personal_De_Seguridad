@@ -12,8 +12,8 @@ namespace GamePlayManagement.ItemPlacement.ItemUIButtons
         public override void OnItemClicked(IItemObject itemData)
         {
             base.OnItemClicked(itemData);
-            CameraPlacementManager.Instance.AttachNewObject(itemData, MInstantiatedObject);    
-            CameraPlacementManager.Instance.ToggleRoofObject(true);    
+            CameraPlacementManager.MInstance.AttachNewObject(itemData, MInstantiatedObject);    
+            CameraPlacementManager.MInstance.ToggleRoofObject(true);    
         }
     }
 }

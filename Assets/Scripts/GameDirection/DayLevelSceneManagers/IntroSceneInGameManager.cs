@@ -10,6 +10,10 @@ namespace GameDirection.DayLevelSceneManagers
         [SerializeField] private List<GameObject> mScreenObjects;
         [SerializeField] private GameObject mIntroScene;
     
+        [SerializeField] private Transform mCamerasItemsParent;
+        [SerializeField] private Transform mCamerasInLevelParent;
+        
+        
         public void ToggleBeacon(bool state)
         {
             mBeaconOperator.gameObject.SetActive(state);
@@ -35,6 +39,9 @@ namespace GameDirection.DayLevelSceneManagers
             ToggleBeacon(state);
             ToggleCeoCameras(state);
         }
+
+        public Transform GetCamerasItemsParent => mCamerasItemsParent;
+        public Transform GetCamerasInLevelParent => mCamerasInLevelParent;
     }
 
     public interface IIntroSceneInGameManager
@@ -44,5 +51,7 @@ namespace GameDirection.DayLevelSceneManagers
         public void ToggleCeoCameras(bool state);
         public void ToggleIntroSceneLevelObjects(bool state);
         public void ToggleCompleteScene(bool state);
+        public Transform GetCamerasItemsParent { get; }
+        public Transform GetCamerasInLevelParent { get; }
     }
 }

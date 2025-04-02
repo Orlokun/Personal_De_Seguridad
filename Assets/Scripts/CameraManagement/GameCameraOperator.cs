@@ -47,7 +47,7 @@ namespace CameraManagement
                 return;
             }
             dialogueCamera.Follow = targetsInDialogue;
-            dialogueCamera.LookAt = targetsInDialogue;
+            dialogueCamera.LookAt = targetsInDialogue;  
         }*/
         public void SetLevelCamerasParent(Transform camerasParentObject)
         {
