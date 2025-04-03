@@ -102,7 +102,7 @@ namespace GameDirection
                 var generalFeedbackObject = new GeneralFeedbackObject(idCast,feedbackName, feedbackText, feedbackLength);
                 if (!_feedbackObjects.ContainsKey(idCast))
                 {
-                    _feedbackObjects.Add(generalFeedbackObject.FeedbackId, generalFeedbackObject);
+                      _feedbackObjects.Add(generalFeedbackObject.FeedbackId, generalFeedbackObject);
                 }
             }
         }

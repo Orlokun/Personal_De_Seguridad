@@ -49,5 +49,6 @@ namespace GameDirection
         void PlayerLost(EndingTypes organSale);
         void StartTutorialProcess(int tutorialIndex);
         public GameObject GetPlacementManager();
+        void StartIntroTimerEvent();
     }
 }

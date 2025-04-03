@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UI.PopUpManager.InfoPanelPopUp;
 using UI.PopUpManager.OfficeRelatedPopUps;
 using UnityEngine;
@@ -27,6 +28,32 @@ namespace UI.PopUpManager
         public bool IsPopupActive(BitPopUpId popUpId)
         {
             return ((int) popUpId & _mActiveBitPopUps) != 0;
+        }
+
+        public void RemoveAllPopUpsExceptList(List<BitPopUpId> exceptions)
+        {
+            var deletedObjects = new List<BitPopUpId>();
+            int lastingPopUps = 0;
+
+            foreach (var activePopUp in _activePopUps)
+            {
+                if (exceptions.All(x=> x != activePopUp.Key))
+                {
+                    _mActiveBitPopUps &= ~(int) activePopUp.Key; 
+                    activePopUp.Value.DeletePopUp();
+                    deletedObjects.Add(activePopUp.Key);
+                    continue;
+                }
+                lastingPopUps |= (int) activePopUp.Key;
+            }
+
+            foreach (var deletedObject in deletedObjects)
+            {
+                if (_activePopUps.ContainsKey(deletedObject))
+                {
+                    _activePopUps.Remove(deletedObject);
+                }
+            }
         }
 
         public IPopUpObject GetActivePopUp(BitPopUpId popUpId)
@@ -97,11 +124,6 @@ namespace UI.PopUpManager
             {
                 _mActiveBitPopUps = (int)exceptPopUp;
             }
-            /*
-            else
-            {
-                _mActiveBitPopUps = 0;
-            }*/
         }
 
         private IPopUpObject InstantiatePopUp(BitPopUpId newPopUp)
@@ -153,7 +175,10 @@ namespace UI.PopUpManager
                     return personalBudgetPopUp.GetComponent<IConfirmPersonalPurchasePopUp>();   
                 case BitPopUpId.NOT_ENOUGH_CREDIT:
                     var notEnoughCreditPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/PopUp_NotEnoughCredits"), transform);
-                    return notEnoughCreditPopUp.GetComponent<NotEnoughCreditsPopUp>();   
+                    return notEnoughCreditPopUp.GetComponent<NotEnoughCreditsPopUp>();  
+                case BitPopUpId.ACTION_TIMER_POPUP:
+                    var timerPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ActionTimer"), transform);
+                    return timerPopUp.GetComponent<IGamePlayActionTimer>();   
                 default:
                     return null;
             }

@@ -1,26 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using CameraManagement;
+using DataUnits.ItemScriptableObjects;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GamePlayManagement.ItemPlacement.PlacementManagement;
 using InputManagement;
 using Newtonsoft.Json;
+using UI.PopUpManager;
+using UI.PopUpManager.InfoPanelPopUp;
 using UnityEngine;
 using UnityEngine.Networking;
 using Utils;
 
 namespace GameDirection.DayLevelSceneManagers
 {
+    public enum IntroSceneTimerStates
+    {
+        AwaitGuard,
+        AwaitCamera
+    }
     public class DayZeroIntroScene : IIntroSceneOperator
     {
         public bool IsInitialized => mInitialized;
         private bool mInitialized;
         private IGameDirector _mGameDirector;
         private IIntroSceneInGameManager _mSceneManager;
-
+        private IntroSceneTimerStates _mIntroSceneState;
         protected DialogueObjectsFromData DialoguesBaseDataString;
-
+        
+        
         private Dictionary<int, IDialogueObject> _mIntroSceneDialogues;      
         public void Initialize(IGameDirector injectionClass, IIntroSceneInGameManager injectionClass2)
         {
@@ -33,6 +43,8 @@ namespace GameDirection.DayLevelSceneManagers
                 Debug.Log("[IntroSceneManager.InitializeWithArg] Injection must not be null");
                 return;
             }
+
+            _mIntroSceneState = IntroSceneTimerStates.AwaitGuard;
             _mGameDirector = injectionClass;
             _mSceneManager = injectionClass2;
             _mGameDirector.ActCoroutine(GetIntroSceneDialogueData());
@@ -56,12 +68,101 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(4f);
             _mSceneManager.ToggleCeoCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[0]);
+            ActivatePlacementManager();
+            
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += SubscribeToTimer;
+            FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
             //_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
             /*
             _mGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
             _mGameDirector.ActCoroutine(StartIntroductionReading());
             */
+        }
+        
+        private void ActivatePlacementManager()
+        {
+            var placementManager = _mGameDirector.GetPlacementManager();
+            if (placementManager == null)
+            {
+                return;
+            }
+            placementManager.SetActive(true);
+        }
+
+        private void SubscribeToTimer()
+        {
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= SubscribeToTimer;
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            if (timerPopUp == null)
+            {
+                return;
+            }
+
+            if (_mIntroSceneState == IntroSceneTimerStates.AwaitGuard)
+            {
+                timerPopUp.OnTimerEnd += OnGuardPlacementFailed;
+                return;
+            }
+            timerPopUp.OnTimerEnd += OnCameraPlacementFailed;
+        }
+
+        private void OnCameraPlacementFailed()
+        {
+            
+        }
+
+        private void OnGuardPlacementFailed()
+        {
+            Debug.LogWarning("Guard was NOT placed!");
+            
+        }
+        
+        private void OnGuardPlaced(IItemObject itemPlaced)
+        {
+            Debug.LogWarning("Guard was placed!");
+            StopTimer();
+            _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+            //Start Awaiting character to come dialogue.
+        }
+
+        private void StopTimer()
+        {
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            if (timerPopUp == null)
+            {
+                return;
+            }   
+            timerPopUp.OnTimerEnd -= TimerEnd;
+            PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+        }
+
+        public void StartTimer()
+        {
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            
+            timerPopUp.StartTimer(45);
+            timerPopUp.OnTimerEnd += TimerEnd;
+        }
+
+        private void TimerEnd()
+        {
+            switch (_mIntroSceneState)
+            {
+                case IntroSceneTimerStates.AwaitGuard:
+                    //Launch Failure Dialogue
+                    var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    timerPopUp.OnTimerEnd -= TimerEnd;
+                    PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+                    break;
+                case IntroSceneTimerStates.AwaitCamera:
+                    //Activate FailureDialogueCamera
+                    var cameraTimerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    cameraTimerPopUp.OnTimerEnd -= TimerEnd;
+                    PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    break;
+            }
         }
 
         private IEnumerator GetIntroSceneDialogueData()

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace UI.PopUpManager
 {
     public interface IPopUpOperator
@@ -9,6 +11,7 @@ namespace UI.PopUpManager
         public void TogglePopUpsActive(bool isActive);
 
         public void RemoveAllPopUpsExceptOne(BitPopUpId exception);
+        public void RemoveAllPopUpsExceptList(List<BitPopUpId> exceptions);
         public IPopUpObject GetActivePopUp(BitPopUpId popUpId);
 
     }

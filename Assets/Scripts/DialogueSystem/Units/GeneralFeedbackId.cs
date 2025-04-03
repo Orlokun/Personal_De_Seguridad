@@ -7,5 +7,6 @@
         MOUSE_OBJECTS = 3,
         STOREVIEW = 4,
         RADIO_FIRST_USE = 5,
+        GUARDS_USE = 6,
     }
 }

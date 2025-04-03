@@ -16,6 +16,7 @@
         REQUEST_DETAIL_POPUP = 1 << 12,
         COMPLIANCE_DETAIL_POPUP = 1 << 13,
         USE_PERSONAL_BUDGET = 1 << 14,
-        NOT_ENOUGH_CREDIT = 1 << 15
+        NOT_ENOUGH_CREDIT = 1 << 15,
+        ACTION_TIMER_POPUP = 1 << 16,
     }
 }

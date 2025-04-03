@@ -162,7 +162,8 @@ namespace UI
                 levelViewElements = new List<int>() {GameplayPanelsBitStates.ITEM_SIDEBAR};
             }
             _mActiveCanvasDict[(int)CanvasBitId.GamePlayCanvas].ActivateThisElementsOnly(levelViewElements);
-            PopUpOperator.Instance.RemoveAllPopUpsExceptOne(BitPopUpId.LARGE_HORIZONTAL_BANNER);        }
+            PopUpOperator.Instance.RemoveAllPopUpsExceptList(new List<BitPopUpId>{BitPopUpId.LARGE_HORIZONTAL_BANNER, BitPopUpId.ACTION_TIMER_POPUP});
+        }
 
         #endregion
 

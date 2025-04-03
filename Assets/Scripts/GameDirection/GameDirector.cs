@@ -16,12 +16,15 @@ using GameDirection.TimeOfDayManagement;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.LevelManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using InputManagement;
 using UI;
 using UI.EndOfDay;
+using UI.PopUpManager;
+using UI.PopUpManager.InfoPanelPopUp;
 using UnityEngine;
 using Utils;
 
@@ -328,13 +331,18 @@ namespace GameDirection
 
         public GameObject GetPlacementManager()
         {
-            var placementManager = GameObject.FindFirstObjectByType<GeneralItemPlacementManager>(FindObjectsInactive.Include);
+            var placementManager = FindFirstObjectByType<GeneralItemPlacementManager>(FindObjectsInactive.Include);
             if(placementManager == null)
             {
                 Debug.LogError("Placement Manager not found");
                 return null;
             }
             return placementManager.gameObject;
+        }
+
+        public void StartIntroTimerEvent()
+        {
+            _mDayZeroIntroScene.StartTimer();
         }
 
         private async Task WaitAndOpenCurtain()

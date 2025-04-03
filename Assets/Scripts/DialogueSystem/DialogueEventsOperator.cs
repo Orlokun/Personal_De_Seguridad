@@ -6,6 +6,7 @@ using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
 using GameDirection;
 using GamePlayManagement.BitDescriptions.Suppliers;
+using UI;
 using UnityEngine;
 
 namespace DialogueSystem
@@ -49,8 +50,15 @@ namespace DialogueSystem
         {
             switch (eventCodes[0])
             {
-                case "ActivatePlacementManager":
-                    ActivatePlacementManager();
+                    case "StartIntroTimer":
+                    GameDirector.Instance.StartIntroTimerEvent();
+                    break;
+                case "SimpleFeedback":
+                    var isFeedback = Enum.TryParse(eventCodes[1], out GeneralFeedbackId feedbackId);
+                    if (isFeedback)
+                    {
+                        FeedbackManager.Instance.StartReadingFeedback(feedbackId);
+                    }
                     break;
                 //Player hired only uses one event argument. The id of the job supplier. 
                 case "PlayerHired":
@@ -83,15 +91,7 @@ namespace DialogueSystem
             }
         }
 
-        private void ActivatePlacementManager()
-        {
-            var placementManager = GameDirector.Instance.GetPlacementManager();
-            if (placementManager == null)
-            {
-                return;
-            }
-            placementManager.SetActive(true);
-        }
+
 
         private void LaunchTrustChangeEvent(string speakerId, string trustAmount)
         {
