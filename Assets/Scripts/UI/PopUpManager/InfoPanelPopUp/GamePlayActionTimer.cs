@@ -30,6 +30,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
                 if (_mTimerSeconds <= 0)
                 {
                     _mIsTimerActive = false;
+                    _mTimerSeconds = 0;
                     OnTimerEnd?.Invoke();
                 }
             }

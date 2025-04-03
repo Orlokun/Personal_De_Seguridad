@@ -4087,6 +4087,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 742063899}
   m_LocalEulerAnglesHint: {x: -84.448, y: 0, z: 0}
+--- !u!1 &866707591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 866707592}
+  m_Layer: 0
+  m_Name: InitSceneCameraParent
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &866707592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866707591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.30000007, y: 1.5444465, z: -11.316208}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1648063329}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &876049836
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,6 +5156,7 @@ MonoBehaviour:
   mIntroScene: {fileID: 28102221}
   mCamerasItemsParent: {fileID: 168317250}
   mCamerasInLevelParent: {fileID: 1469752102}
+  mCamerasInOfficeParent: {fileID: 866707592}
 --- !u!1001 &1303121453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6780,12 +6813,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1648063326}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.30000007, y: 1.5444465, z: -11.316208}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 866707592}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1648063331
 MonoBehaviour:
@@ -8839,6 +8872,6 @@ SceneRoots:
   - {fileID: 440556443}
   - {fileID: 691644515}
   - {fileID: 1752877824}
-  - {fileID: 1648063329}
+  - {fileID: 866707592}
   - {fileID: 1280783155}
   - {fileID: 5443336506516354660}

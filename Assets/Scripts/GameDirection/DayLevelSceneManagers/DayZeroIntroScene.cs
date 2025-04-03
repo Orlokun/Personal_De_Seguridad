@@ -51,6 +51,7 @@ namespace GameDirection.DayLevelSceneManagers
             mInitialized = true;
             
             _mGameDirector.GetGameCameraManager.SetLevelCamerasParent(_mSceneManager.GetCamerasInLevelParent);
+            _mGameDirector.GetGameCameraManager.SetOfficeCamerasParent(_mSceneManager.GetCamerasInOfficeParent);
         }
 
         public IEnumerator StartIntroScene()
@@ -70,7 +71,6 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[0]);
             ActivatePlacementManager();
             
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += SubscribeToTimer;
             FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
             //_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
             /*
@@ -90,22 +90,6 @@ namespace GameDirection.DayLevelSceneManagers
             placementManager.SetActive(true);
         }
 
-        private void SubscribeToTimer()
-        {
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= SubscribeToTimer;
-            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-            if (timerPopUp == null)
-            {
-                return;
-            }
-
-            if (_mIntroSceneState == IntroSceneTimerStates.AwaitGuard)
-            {
-                timerPopUp.OnTimerEnd += OnGuardPlacementFailed;
-                return;
-            }
-            timerPopUp.OnTimerEnd += OnCameraPlacementFailed;
-        }
 
         private void OnCameraPlacementFailed()
         {
@@ -115,7 +99,8 @@ namespace GameDirection.DayLevelSceneManagers
         private void OnGuardPlacementFailed()
         {
             Debug.LogWarning("Guard was NOT placed!");
-            
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[3]);
+
         }
         
         private void OnGuardPlaced(IItemObject itemPlaced)
@@ -123,9 +108,31 @@ namespace GameDirection.DayLevelSceneManagers
             Debug.LogWarning("Guard was placed!");
             StopTimer();
             _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
-            //Start Awaiting character to come dialogue.
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[1]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDIalogue;
         }
 
+        private void GuardDiesDIalogue()
+        {
+            
+        }
+        private IEnumerator WaitAndAccessCharacterFirstZone()
+        {
+            Debug.Log("[Waiting for character to come]");
+
+
+            //Maybe play special sounds
+            yield return new WaitForSeconds(3f);
+            Debug.Log("[Character instantiated]");
+            Debug.Log("[Waiting for character to shoot guard]");
+            yield return new WaitForSeconds(2f);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += OnCameraPlacementFailed;
+            _mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
+            _mSceneManager.ToggleCeoCameras(false);
+            StartTimer();
+            
+        }
         private void StopTimer()
         {
             var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
@@ -155,12 +162,14 @@ namespace GameDirection.DayLevelSceneManagers
                     timerPopUp.OnTimerEnd -= TimerEnd;
                     PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
                     _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+                    OnGuardPlacementFailed();
                     break;
                 case IntroSceneTimerStates.AwaitCamera:
                     //Activate FailureDialogueCamera
                     var cameraTimerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
                     cameraTimerPopUp.OnTimerEnd -= TimerEnd;
                     PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    OnCameraPlacementFailed();
                     break;
             }
         }
