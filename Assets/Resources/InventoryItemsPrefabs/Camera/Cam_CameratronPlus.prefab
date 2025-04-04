@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 1717468885158706658}
   - component: {fileID: -1757512886496127603}
   m_Layer: 9
-  m_Name: Cam_WebCam 1
+  m_Name: Cam_CameratronPlus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

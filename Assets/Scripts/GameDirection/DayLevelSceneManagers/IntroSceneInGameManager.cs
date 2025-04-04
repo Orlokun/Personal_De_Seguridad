@@ -44,7 +44,7 @@ namespace GameDirection.DayLevelSceneManagers
         public Transform GetCamerasItemsParent => mCamerasItemsParent;
         public Transform GetCamerasInLevelParent => mCamerasInLevelParent;
         
-        public Transform GetCamerasInOfficeParent => mCamerasInLevelParent;
+        public Transform GetCamerasInOfficeParent => mCamerasInOfficeParent;
     }
     
 

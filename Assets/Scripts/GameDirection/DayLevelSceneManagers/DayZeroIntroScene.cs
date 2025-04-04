@@ -5,6 +5,7 @@ using DataUnits.ItemScriptableObjects;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
 using DialogueSystem.Units;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using InputManagement;
 using Newtonsoft.Json;
@@ -107,31 +108,36 @@ namespace GameDirection.DayLevelSceneManagers
         {
             Debug.LogWarning("Guard was placed!");
             StopTimer();
+            FloorPlacementManager.Instance.OnItemPlaced -= OnGuardPlaced;
             _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[1]);
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDIalogue;
         }
-
         private void GuardDiesDIalogue()
         {
-            
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= GuardDiesDIalogue;
+            _mGameDirector.ActCoroutine(WaitAndAccessCharacterFirstZone());    
         }
+        
         private IEnumerator WaitAndAccessCharacterFirstZone()
         {
+            _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(BitItemSupplier.D1TV, 8);
+            var cameraItemObject = _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 8);
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().AddItemToInventory(cameraItemObject, 1);
+            _mGameDirector.GetActiveGameProfile.UpdateProfileData();
             Debug.Log("[Waiting for character to come]");
-
-
             //Maybe play special sounds
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(2f);
             Debug.Log("[Character instantiated]");
             Debug.Log("[Waiting for character to shoot guard]");
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += OnCameraPlacementFailed;
-            _mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
-            _mSceneManager.ToggleCeoCameras(false);
-            StartTimer();
             
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += OnCameraPlacementFailed;
+            
+            /*_mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
+            _mSceneManager.ToggleCeoCameras(false);
+            */
         }
         private void StopTimer()
         {

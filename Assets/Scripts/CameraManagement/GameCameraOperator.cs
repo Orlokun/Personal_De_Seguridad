@@ -101,6 +101,7 @@ namespace CameraManagement
 
         private void ActivateLevelCamera(int indexCamera)
         {
+            DeactivateOfficeCameras();
             for (var i = 0; i < _mLevelCameras.Count; i++)
             {
                 var isSelectedCamera = i == indexCamera;
@@ -118,8 +119,26 @@ namespace CameraManagement
                 }
             }        
         }
+
+        private void DeactivateOfficeCameras()
+        {
+            for (var i = 0; i < _mOfficeCameras.Count; i++)
+            {
+                _mOfficeCameras[i].SetActive(false);
+            }
+        }
+        
+        private void DeactivateLevelCameras()
+        {
+            for (var i = 0; i < _mLevelCameras.Count; i++)
+            {
+                _mLevelCameras[i].SetActive(false);
+            }
+        }
+
         private void ActivateOfficeCamera(int indexCamera)
         {
+            DeactivateLevelCameras();
             for (var i = 0; i < _mOfficeCameras.Count; i++)
             {
                 var isSelectedCamera = i == indexCamera;

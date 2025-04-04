@@ -231,7 +231,7 @@ namespace GameDirection
             _mGameState = HighLevelGameStates.InCutScene;
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCurtainAppear();
-            CreateNewProfile();
+            CreateNewGameProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             StartCoroutine( _mDayZeroIntroScene.StartIntroScene());
             
@@ -247,7 +247,7 @@ namespace GameDirection
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
 
-        private async void CreateNewProfile()
+        private async void CreateNewGameProfile()
         {
             try
             {
@@ -264,13 +264,15 @@ namespace GameDirection
                 _mActiveGameProfile = Factory.CreatePlayerGameProfile(itemSuppliersModule,jobSourcesModule,calendarModule,
                     lifestyleModule, profileStatusModule, requestModuleManager, complianceModule, inventoryModule);
             
-            
+                //TODO: Make sure to clean this objects from profile later. 
                 _mActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
                 await ManageNewItemSupplierUnlockedEvent(BitItemSupplier.D1TV);
             
             
-                var itemObject = _mActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 1);
-                _mActiveGameProfile.GetInventoryModule().AddItemToInventory(itemObject, 1);
+                var guardItemObject = _mActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 1);
+
+
+                _mActiveGameProfile.GetInventoryModule().AddItemToInventory(guardItemObject, 1);
                 _mActiveGameProfile.UpdateProfileData();
                 _mUIController.InitializeBaseInfoCanvas(_mActiveGameProfile);
                 _mUIController.UpdateInfoUI();
