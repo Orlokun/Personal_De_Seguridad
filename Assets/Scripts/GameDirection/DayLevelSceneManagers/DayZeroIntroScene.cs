@@ -91,10 +91,20 @@ namespace GameDirection.DayLevelSceneManagers
             placementManager.SetActive(true);
         }
 
-
+        private void OnCameraPlaced(IItemObject itemPlaced)
+        {
+            Debug.LogWarning("Camera was placed!");
+            StopTimer();
+            FloorPlacementManager.Instance.OnItemPlaced -= OnCameraPlaced;
+            _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+            _mSceneManager.ToggleCameraPlacementCameras(true);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[4]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDIalogue;
+        }
         private void OnCameraPlacementFailed()
         {
-            
+            _mSceneManager.ToggleCeoCameras(true);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
         }
 
         private void OnGuardPlacementFailed()
@@ -121,6 +131,7 @@ namespace GameDirection.DayLevelSceneManagers
         
         private IEnumerator WaitAndAccessCharacterFirstZone()
         {
+            _mSceneManager.ToggleGuardPlacementCameras(true);
             _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(BitItemSupplier.D1TV, 8);
             var cameraItemObject = _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 8);
             _mGameDirector.GetActiveGameProfile.GetInventoryModule().AddItemToInventory(cameraItemObject, 1);
@@ -131,9 +142,11 @@ namespace GameDirection.DayLevelSceneManagers
             Debug.Log("[Character instantiated]");
             Debug.Log("[Waiting for character to shoot guard]");
             yield return new WaitForSeconds(2f);
+            _mSceneManager.ToggleCeoCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
-            
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted += OnCameraPlacementFailed;
+            FloorPlacementManager.Instance.OnItemPlaced += OnCameraPlaced;
+
             
             /*_mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
             _mSceneManager.ToggleCeoCameras(false);

@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 28102222}
   m_Layer: 0
-  m_Name: IntroSceneObjects
+  m_Name: CEORoomObjects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2927,6 +2927,89 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672013715}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &677782941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 677782942}
+  - component: {fileID: 677782943}
+  m_Layer: 0
+  m_Name: CameraPlacementZoneCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &677782942
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677782941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.24009636, y: 0.31113937, z: -0.057593122, w: 0.91773045}
+  m_LocalPosition: {x: -5.3, y: 2.0099998, z: 4.61}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1280783155}
+  m_LocalEulerAnglesHint: {x: 28.459, y: 38.179, z: 2.849}
+--- !u!20 &677782943
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677782941}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 44.986805
+  orthographic: 0
+  orthographic size: 1.41
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 1063be73cfa771f45a26279b1ef43859, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &691644513
 GameObject:
   m_ObjectHideFlags: 0
@@ -4130,7 +4213,7 @@ GameObject:
   - component: {fileID: 876049839}
   - component: {fileID: 876049838}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: CEOCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5132,6 +5215,8 @@ Transform:
   m_Children:
   - {fileID: 2081754326}
   - {fileID: 876049839}
+  - {fileID: 1313439393}
+  - {fileID: 677782942}
   - {fileID: 28102222}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5148,6 +5233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mCeoCamera: {fileID: 876049838}
+  mGuardPlacementZoneCam: {fileID: 1313439394}
+  mCameraPlacementZoneCam: {fileID: 677782943}
   mBeaconOperator: {fileID: 2081754327}
   mScreenObjects:
   - {fileID: 385173144}
@@ -5223,6 +5310,89 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4345197550711715204, guid: bf0ea4a7b2c279047a7d801bff445913, type: 3}
   m_PrefabInstance: {fileID: 1303121453}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1313439392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1313439393}
+  - component: {fileID: 1313439394}
+  m_Layer: 0
+  m_Name: GuardPlacementZoneCamera
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1313439393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313439392}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.25316417, y: 0.27812102, z: -0.07043094, w: 0.92390263}
+  m_LocalPosition: {x: -5.48, y: 1.9650002, z: 15.704}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1280783155}
+  m_LocalEulerAnglesHint: {x: 30.463, y: 33.7, z: 0.71}
+--- !u!20 &1313439394
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1313439392}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_Iso: 200
+  m_ShutterSpeed: 0.005
+  m_Aperture: 16
+  m_FocusDistance: 10
+  m_FocalLength: 50
+  m_BladeCount: 5
+  m_Curvature: {x: 2, y: 11}
+  m_BarrelClipping: 0.25
+  m_Anamorphism: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 44.986805
+  orthographic: 0
+  orthographic size: 1.41
+  m_Depth: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 8400000, guid: 1063be73cfa771f45a26279b1ef43859, type: 2}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &1321735320
 GameObject:
   m_ObjectHideFlags: 0
@@ -5549,13 +5719,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1380281642}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2684742, y: 0, z: 0, w: 0.9632869}
-  m_LocalPosition: {x: -0.262, y: -0.275, z: 0.087}
+  m_LocalRotation: {x: 0.2524085, y: 0.2683776, z: -0.07309265, w: 0.9267798}
+  m_LocalPosition: {x: -5.63, y: 1.21, z: -0.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1469752102}
-  m_LocalEulerAnglesHint: {x: 31.147, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 30.47, y: 32.3, z: 0}
 --- !u!114 &1380281644
 MonoBehaviour:
   m_ObjectHideFlags: 0

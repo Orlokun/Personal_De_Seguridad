@@ -6,6 +6,10 @@ namespace GameDirection.DayLevelSceneManagers
     public class IntroSceneInGameManager : MonoBehaviour, IIntroSceneInGameManager
     {
         [SerializeField] private Camera mCeoCamera;
+        [SerializeField] private Camera mGuardPlacementZoneCam;
+        [SerializeField] private Camera mCameraPlacementZoneCam;
+        
+        
         [SerializeField] private BeaconOperator mBeaconOperator;
         [SerializeField] private List<GameObject> mScreenObjects;
         [SerializeField] private GameObject mIntroScene;
@@ -22,7 +26,43 @@ namespace GameDirection.DayLevelSceneManagers
 
         public void ToggleCeoCameras(bool state)
         {
+            if (state)
+            {
+                mGuardPlacementZoneCam.gameObject.SetActive(false);
+                mCameraPlacementZoneCam.gameObject.SetActive(false);
+            }
+
             mCeoCamera.gameObject.SetActive(state);
+            foreach (var screenObject in mScreenObjects)
+            {
+                screenObject.SetActive(state);
+            }
+        }
+        
+        public void ToggleGuardPlacementCameras(bool state)
+        {
+            if(state)
+            {
+                mCeoCamera.gameObject.SetActive(false);
+                mCameraPlacementZoneCam.gameObject.SetActive(false);
+            }
+            mGuardPlacementZoneCam.gameObject.SetActive(state);
+            foreach (var screenObject in mScreenObjects)
+            {
+                screenObject.SetActive(state);
+            }
+        }
+        
+        public void ToggleCameraPlacementCameras(bool state)
+        {
+            if (state)
+            {
+                mGuardPlacementZoneCam.gameObject.SetActive(false);
+                mCeoCamera.gameObject.SetActive(false);
+            }
+
+            
+            mCameraPlacementZoneCam.gameObject.SetActive(state);
             foreach (var screenObject in mScreenObjects)
             {
                 screenObject.SetActive(state);
@@ -53,6 +93,8 @@ namespace GameDirection.DayLevelSceneManagers
         
         public void ToggleBeacon(bool state);
         public void ToggleCeoCameras(bool state);
+        public void ToggleGuardPlacementCameras(bool state);
+        public void ToggleCameraPlacementCameras(bool state);
         public void ToggleIntroSceneLevelObjects(bool state);
         public void ToggleCompleteScene(bool state);
         public Transform GetCamerasItemsParent { get; }
