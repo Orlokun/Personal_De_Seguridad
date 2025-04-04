@@ -18,6 +18,10 @@ namespace GameDirection.DayLevelSceneManagers
         [SerializeField] private Transform mCamerasInLevelParent;
         [SerializeField] private Transform mCamerasInOfficeParent;
         
+        [SerializeField] private GameObject introLight1;
+        [SerializeField] private GameObject introLight2;
+        
+        
         
         public void ToggleBeacon(bool state)
         {
@@ -74,6 +78,12 @@ namespace GameDirection.DayLevelSceneManagers
             mIntroScene.SetActive(state);
         }
 
+        public void ToggleIntroSceneLights(bool state)
+        {
+            introLight1.SetActive(state);
+            introLight2.SetActive(state);
+        }
+
         public void ToggleCompleteScene(bool state)
         {
             ToggleIntroSceneLevelObjects(state);
@@ -96,6 +106,7 @@ namespace GameDirection.DayLevelSceneManagers
         public void ToggleGuardPlacementCameras(bool state);
         public void ToggleCameraPlacementCameras(bool state);
         public void ToggleIntroSceneLevelObjects(bool state);
+        public void ToggleIntroSceneLights(bool state);
         public void ToggleCompleteScene(bool state);
         public Transform GetCamerasItemsParent { get; }
         public Transform GetCamerasInLevelParent { get; }

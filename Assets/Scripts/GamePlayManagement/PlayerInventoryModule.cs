@@ -120,6 +120,15 @@ namespace GamePlayManagement
             }
         }
 
+        public void ClearItemFromInventory(BitItemSupplier itemSupplier, int itemId)
+        {
+            _mGuardItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+            _mCameraItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+            _mWeaponItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+            _mTrapItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+            _mOtherItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+        }
+
         public List<IGuardInInventory> GetGuardItems => _mGuardItems;
         public List<ICameraInInventory> GetCameraItems => _mCameraItems;
         public List<IWeaponInInventory> GetWeaponItems => _mWeaponItems;

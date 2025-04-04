@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using CameraManagement;
 using DataUnits.ItemScriptableObjects;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
@@ -64,6 +63,7 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(4f);
             _mSceneManager.ToggleIntroSceneLevelObjects(true);
             _mSceneManager.ToggleBeacon(true);
+            _mSceneManager.ToggleIntroSceneLights(false);
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
 
@@ -73,22 +73,18 @@ namespace GameDirection.DayLevelSceneManagers
             ActivatePlacementManager();
             
             FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
-            //_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
-            /*
-            _mGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishIntroductionText;
-            _mGameDirector.ActCoroutine(StartIntroductionReading());
-            */
         }
-        
-        private void ActivatePlacementManager()
+
+        private void EndOfIntroScene()
         {
-            var placementManager = _mGameDirector.GetPlacementManager();
-            if (placementManager == null)
-            {
-                return;
-            }
-            placementManager.SetActive(true);
+            //Take Camera to first person. 
+            //Make door knockdown sound. 
+            //Instantiate character
+            //Make camera look at character
+            //Make character walk towards us, the player. 
+            //Make character instantiate gun
+            //Character says ending dialogue
+            //Character shoots, game begins. 
         }
 
         private void OnCameraPlaced(IItemObject itemPlaced)
@@ -96,14 +92,31 @@ namespace GameDirection.DayLevelSceneManagers
             Debug.LogWarning("Camera was placed!");
             StopTimer();
             FloorPlacementManager.Instance.OnItemPlaced -= OnCameraPlaced;
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
             _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
             _mSceneManager.ToggleCameraPlacementCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[4]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDIalogue;
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += CharacterAppearsOnCamera;
         }
         private void OnCameraPlacementFailed()
         {
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
             _mSceneManager.ToggleCeoCameras(true);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[6]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += EndOfIntroScene;
+        }
+
+        private void CharacterAppearsOnCamera()
+        {
+            //InstantiateObject and wait for him to reach a spot
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= CharacterAppearsOnCamera;
+            _mGameDirector.ActCoroutine(WaitForPlayerInCamera());
+        }
+
+        private IEnumerator WaitForPlayerInCamera()
+        {
+            //Instantiate character in scene
+            yield return new WaitForSeconds(2.5f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
         }
 
@@ -113,6 +126,7 @@ namespace GameDirection.DayLevelSceneManagers
             FloorPlacementManager.Instance.OnItemPlaced -= OnGuardPlaced;
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[3]);
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 1);
         }
         
         private void OnGuardPlaced(IItemObject itemPlaced)
@@ -122,11 +136,11 @@ namespace GameDirection.DayLevelSceneManagers
             FloorPlacementManager.Instance.OnItemPlaced -= OnGuardPlaced;
             _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[1]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDIalogue;
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += GuardDiesDialogue;
         }
-        private void GuardDiesDIalogue()
+        private void GuardDiesDialogue()
         {
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= GuardDiesDIalogue;
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= GuardDiesDialogue;
             _mGameDirector.ActCoroutine(WaitAndAccessCharacterFirstZone());    
         }
         
@@ -152,6 +166,14 @@ namespace GameDirection.DayLevelSceneManagers
             _mSceneManager.ToggleCeoCameras(false);
             */
         }
+
+        public void StartTimer()
+        {
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            
+            timerPopUp.StartTimer(45);
+            timerPopUp.OnTimerEnd += TimerEnd;
+        }
         private void StopTimer()
         {
             var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
@@ -163,36 +185,25 @@ namespace GameDirection.DayLevelSceneManagers
             PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
         }
 
-        public void StartTimer()
-        {
-            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-            
-            timerPopUp.StartTimer(45);
-            timerPopUp.OnTimerEnd += TimerEnd;
-        }
-
         private void TimerEnd()
         {
             switch (_mIntroSceneState)
             {
                 case IntroSceneTimerStates.AwaitGuard:
                     //Launch Failure Dialogue
-                    var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-                    timerPopUp.OnTimerEnd -= TimerEnd;
-                    PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    StopTimer();
                     _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
                     OnGuardPlacementFailed();
                     break;
                 case IntroSceneTimerStates.AwaitCamera:
                     //Activate FailureDialogueCamera
-                    var cameraTimerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-                    cameraTimerPopUp.OnTimerEnd -= TimerEnd;
-                    PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+                    StopTimer();
                     OnCameraPlacementFailed();
                     break;
             }
         }
 
+        #region DataManagement
         private IEnumerator GetIntroSceneDialogueData()
         {
             var introDialoguesUrl = DataSheetUrls.GetIntroSceneDialogues;    
@@ -267,6 +278,18 @@ namespace GameDirection.DayLevelSceneManagers
                     hasCameraTarget, cameraArgs, hasChoices, hasEventId, eventNameId, linksToInts, hasHighlightEvent, highlightEvent);
                 _mIntroSceneDialogues[currentDialogueObjectIndex].DialogueNodes.Add(dialogueNode);
             }
+        }
+        #endregion
+
+        
+        private void ActivatePlacementManager()
+        {
+            var placementManager = _mGameDirector.GetPlacementManager();
+            if (placementManager == null)
+            {
+                return;
+            }
+            placementManager.SetActive(true);
         }
     }
 }

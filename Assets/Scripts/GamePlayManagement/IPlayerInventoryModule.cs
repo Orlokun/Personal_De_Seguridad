@@ -13,5 +13,7 @@ namespace GamePlayManagement
         public void AddItemToInventory(IItemObject incomingItem, int amountAdded);
 
         public List<IItemInInventory> GetItemsOfType(BitItemType itemType);
+        public void ClearItemFromInventory(BitItemSupplier itemSupplier, int itemId);
+        
     }
 }

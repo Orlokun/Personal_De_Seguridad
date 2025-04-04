@@ -66,6 +66,10 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
             ICameraPlacementPosition cameraPosition;
             base.SetCurrentMousePosition();
             cameraPosition = (ICameraPlacementPosition)GetPlacementPoint(MousePosition);
+            if(cameraPosition == null)
+            {
+                return;
+            }
             var currentCameraRotationManager = (IItemCameraRotation)CurrentPlacedObject.GetComponent<ItemCameraRotation>();
             currentCameraRotationManager.SetNewPosition(cameraPosition.ItemPosition);
             CurrentPlacedObject.transform.position = new Vector3(cameraPosition.ItemPosition.x, cameraPosition.ItemPosition.y, cameraPosition.ItemPosition.z);
