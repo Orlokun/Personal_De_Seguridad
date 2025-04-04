@@ -110,8 +110,9 @@ namespace GameDirection.DayLevelSceneManagers
         private void OnGuardPlacementFailed()
         {
             Debug.LogWarning("Guard was NOT placed!");
+            FloorPlacementManager.Instance.OnItemPlaced -= OnGuardPlaced;
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[3]);
-
+            CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
         }
         
         private void OnGuardPlaced(IItemObject itemPlaced)
@@ -144,8 +145,7 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(2f);
             _mSceneManager.ToggleCeoCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += OnCameraPlacementFailed;
-            FloorPlacementManager.Instance.OnItemPlaced += OnCameraPlaced;
+            CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
 
             
             /*_mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
