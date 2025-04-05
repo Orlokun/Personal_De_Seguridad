@@ -53,7 +53,7 @@ namespace GameDirection.DayLevelSceneManagers
             mIntroShooterCharacter.SetActive(true);
             var characterController = mIntroShooterCharacter.GetComponent<IBaseCharacterInScene>();
             characterController.SetMovementDestination(guardObject.transform.position);
-            characterController.ChangeMovementState<WalkingState>();
+            characterController.ChangeMovementState<RunningState>();
             characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
 
             characterController.WalkingDestinationReached += ShootGuardCommand;
