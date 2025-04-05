@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines
 {
@@ -20,6 +21,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             currentState = states[typeof(U)];
             currentState.Enter();
         }
+        
 
         public void Update()
         {

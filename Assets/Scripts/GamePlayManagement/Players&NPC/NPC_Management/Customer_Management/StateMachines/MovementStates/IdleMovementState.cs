@@ -3,7 +3,6 @@
     public class IdleMovementState : IIdleState
     {
         private BaseCharacterInScene character;
-        private const string Idle = "Idle";
 
         public IdleMovementState(BaseCharacterInScene character)
         {
@@ -12,7 +11,6 @@
 
         public void Enter()
         {
-            character.BaseAnimator.ChangeAnimationState(Idle);
             character.ToggleNavMesh(false);
         }
 

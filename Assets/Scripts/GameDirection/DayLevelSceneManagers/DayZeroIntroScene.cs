@@ -154,11 +154,14 @@ namespace GameDirection.DayLevelSceneManagers
             Debug.Log("[Waiting for character to come]");
             //Maybe play special sounds
             yield return new WaitForSeconds(2f);
+            _mSceneManager.InstantiateCharacterFirstSection();
             Debug.Log("[Character instantiated]");
             Debug.Log("[Waiting for character to shoot guard]");
             yield return new WaitForSeconds(2f);
-            _mSceneManager.ToggleCeoCameras(true);
+            _mSceneManager.ShootGuard();
+            yield return new WaitForSeconds(.3f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
+            _mSceneManager.ToggleCeoCameras(true);
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
 
             

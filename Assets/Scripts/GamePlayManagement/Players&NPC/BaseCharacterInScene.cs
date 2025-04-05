@@ -7,6 +7,7 @@ using GamePlayManagement.Players_NPC.Animations.Interfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.BaseCharacter;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 using UnityEngine;
 using UnityEngine.AI;
@@ -35,7 +36,6 @@ namespace GamePlayManagement.Players_NPC
         protected IStoreEntrancePosition MEntranceData;
         protected Guid MCharacterId;
         protected IItemTypeStats MyStats;
-        protected BaseCharacterMovementStatus MCharacterMovementStatus = BaseCharacterMovementStatus.Idle;
         protected IBaseAnimatedAgent MBaseAnimator;
         protected NavMeshAgent MyNavMeshAgent;
         protected Vector3 MInitialPosition;
@@ -43,7 +43,7 @@ namespace GamePlayManagement.Players_NPC
 
         public Vector3 InitialPosition => MInitialPosition;
 
-        public IShopPositionsManager GetPositionsManager => MPositionsManager; 
+        public IShopPositionsManager GetPositionsManager => MPositionsManager;
         protected IShopPositionsManager MPositionsManager;
         public IBaseAnimatedAgent BaseAnimator => MBaseAnimator;
         public IStoreEntrancePosition EntranceData => MEntranceData;
@@ -52,6 +52,8 @@ namespace GamePlayManagement.Players_NPC
         public int GetCharacterSpeedLevel => MCharacterSpeedLevel;
 
         
+        public IMovementState CurrentMovementState => _mMovementStateMachine.CurrentState;
+        public IAttitudeState CurrentAttitudeState => _mAttitudeStateMachine.CurrentState;
         #region StateMachine
         protected StateMachine<IMovementState> _mMovementStateMachine;
         protected StateMachine<IAttitudeState> _mAttitudeStateMachine;
@@ -193,13 +195,15 @@ namespace GamePlayManagement.Players_NPC
             //Attitude State Machine
             _mAttitudeStateMachine = new StateMachine<IAttitudeState>();
             _mAttitudeStateMachine.AddState(new IdleAttitudeState(this));
+            _mAttitudeStateMachine.AddState(new WalkingTowardsPositionState(this));
             _mAttitudeStateMachine.AddState(new TalkingState(this));
             
             _mAttitudeStateMachine.AddState(new ScreamingState(this));
             _mAttitudeStateMachine.AddState(new FightingState(this));
             _mAttitudeStateMachine.AddState(new ScaredCrouchState(this));
             _mAttitudeStateMachine.AddState(new ScaredRunningState(this));
-            
+            _mAttitudeStateMachine.AddState(new DeathShotState(this));
+            _mAttitudeStateMachine.AddState(new ShootTargetState(this));
         }
         
         protected virtual void Start()
@@ -280,7 +284,7 @@ namespace GamePlayManagement.Players_NPC
             OnWalkingDestinationReached();
         }
 
-        protected virtual void OnWalkingDestinationReached()
+        public virtual void OnWalkingDestinationReached()
         {
             WalkingDestinationReached?.Invoke();
         }

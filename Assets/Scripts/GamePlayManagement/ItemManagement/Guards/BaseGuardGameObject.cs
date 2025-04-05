@@ -306,47 +306,8 @@ namespace GamePlayManagement.ItemManagement.Guards
             _mAttitudeStateMachine.Update();
             _mMovementStateMachine.Update();
         }
-        private void ManageMovementStatus()
-        {
-            switch (MCharacterMovementStatus)
-            {
-                case BaseCharacterMovementStatus.Idle:
-                    break;
-                case BaseCharacterMovementStatus.Walking:
-                    EvaluateWalkingDestination();
-                    break;
-                case BaseCharacterMovementStatus.Running:
-                    EvaluateWalkingDestination();
-                    break;
-            }
-        }
-
-        private void ManageManualMovementStatus()
-        {
-            EvaluateManualInspectionDestination();
-        }
 
         #region AttitudeStateManagement
-        protected override void ReachWalkingDestination()
-        {
-            /*
-            switch (_mGuardStatusModule.CurrentAttitude)
-            {
-                case GuardSpecialAttitudeStatus.ManualInspecting:
-                    ReachManuallyInspectedZone();
-                    break;
-                case GuardSpecialAttitudeStatus.Inspecting:
-                    ReachInspectedZone();
-                    break;
-                case GuardSpecialAttitudeStatus.Chasing:
-                    AttemptDetention();
-                    break;
-                case GuardSpecialAttitudeStatus.Following:
-                    break;
-                case GuardSpecialAttitudeStatus.Fighting:
-                    break;
-            }*/
-        }
 
         public void SetGuardDestination(Vector3 targetPosition)
         {
@@ -357,27 +318,6 @@ namespace GamePlayManagement.ItemManagement.Guards
         {
             MyNavMeshAgent.isStopped = true;
             MyNavMeshAgent.ResetPath();
-        }
-
-        protected void EvaluateManualInspectionDestination()
-        {
-            if (MyNavMeshAgent.destination.Equals(default(Vector3)))
-            {
-                Debug.LogWarning("Destination to walk to must be different than default");
-                return;
-            }
-
-            /*if (Math.Abs(MyNavMeshAgent.destination.x - CurrentManualInspectionPosition.x) > .01f || Math.Abs(MyNavMeshAgent.destination.z - CurrentManualInspectionPosition.z) > .01f)
-            {
-                Debug.LogWarning("[EvaluateManualInspectionDestination] Destination must be the Current Manual Target");
-                MyNavMeshAgent.SetDestination(CurrentManualInspectionPosition);
-            }*/
-
-            if (MyNavMeshAgent.remainingDistance < .2f && !MyNavMeshAgent.isStopped)
-            {
-                MyNavMeshAgent.isStopped = true;
-                OnWalkingDestinationReached();
-            }
         }
 
         private void AttemptDetention ()

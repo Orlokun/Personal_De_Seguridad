@@ -1,4 +1,6 @@
-﻿namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines
+﻿using System.Numerics;
+
+namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines
 {
     public interface IState
     {

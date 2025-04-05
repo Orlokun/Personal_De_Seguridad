@@ -36,10 +36,6 @@ namespace Utils
             return new GuardRouteModule();
         }
         
-        public static IGuardStatusModule CreateGuardStatusModule(IBaseGuardGameObject baseGuard)
-        {
-            return new GuardStatusModule(baseGuard);
-        }
         public static IFieldOfViewItemModule CreateFieldOfViewItemModule(DrawFoVLines myDrawFieldOfView, FieldOfView3D my3dFieldOfView)
         {
             return new FieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView);

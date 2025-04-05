@@ -4,6 +4,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
 {
     public class IdleAttitudeState : IAttitudeState
     {
+        private const string Idle = "Idle";
         private BaseCharacterInScene character;
 
         public IdleAttitudeState(BaseCharacterInScene character)
@@ -13,7 +14,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
 
         public void Enter()
         {
-            
+            character.BaseAnimator.ChangeAnimationState(Idle);
         }
         public void Exit() { }
 

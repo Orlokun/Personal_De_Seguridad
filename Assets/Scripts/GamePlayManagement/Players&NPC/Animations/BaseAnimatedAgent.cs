@@ -23,7 +23,9 @@ namespace GamePlayManagement.Players_NPC.Animations
             "Falling",
             "Sitting",
             "PanicRunning",
-            "SearchAround"
+            "SearchAround",
+            "DeathShot",
+            "TargetRifleShoot"
         };
         
         #region Initialization

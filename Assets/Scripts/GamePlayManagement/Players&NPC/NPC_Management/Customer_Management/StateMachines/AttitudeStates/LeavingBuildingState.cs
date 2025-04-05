@@ -1,4 +1,5 @@
-﻿using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
+﻿using System.Numerics;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.MovementStates;
 
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates
 {
@@ -34,5 +35,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             var customer = _mCharacter as BaseCustomer;
             customer.ClearCustomer();
         }
+
+        public Vector3 PositionTarget { get; set; }
+
     }
 }
