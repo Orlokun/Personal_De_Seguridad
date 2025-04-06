@@ -116,6 +116,7 @@ namespace GameDirection.DayLevelSceneManagers
         private IEnumerator WaitForPlayerInCamera()
         {
             //Instantiate character in scene
+            _mSceneManager.InstantiateCharacterSecondSections();
             yield return new WaitForSeconds(2.5f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
         }
@@ -162,12 +163,9 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(.3f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[2]);
             _mSceneManager.ToggleCeoCameras(true);
+            yield return new WaitForSeconds(.3f);
+            _mSceneManager.ToggleSceneCharacter(false);
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
-
-            
-            /*_mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
-            _mSceneManager.ToggleCeoCameras(false);
-            */
         }
 
         public void StartTimer()

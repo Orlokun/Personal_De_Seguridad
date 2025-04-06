@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.Players_NPC;
@@ -28,12 +27,11 @@ namespace GameDirection.DayLevelSceneManagers
         [SerializeField] private GameObject introLight2;
 
         [SerializeField] private GameObject mIntroShooterCharacter;
-        [SerializeField] private Transform _mStartPositionOne;
-        [SerializeField] private Transform _mStartPositionTwo;
-        [SerializeField] private Transform _mStartPositionThree;
-        [SerializeField] private Transform _mEndPositionOne;
-        [SerializeField] private Transform _mEndPositionTwo;
-        [SerializeField] private Transform _mEndPositionThree;
+        [SerializeField] private Transform mStartPositionOne;
+        [SerializeField] private Transform mStartPositionTwo;
+        [SerializeField] private Transform mStartPositionThree;
+        [SerializeField] private Transform mEndPositionTwo;
+        [SerializeField] private Transform mEndPositionThree;
 
         private void Awake()
         {
@@ -42,7 +40,7 @@ namespace GameDirection.DayLevelSceneManagers
 
         public void InstantiateCharacterFirstSection()
         {
-            mIntroShooterCharacter.transform.position = _mStartPositionOne.position;
+            mIntroShooterCharacter.transform.position = mStartPositionOne.position;
 
             var guardObject = FindFirstObjectByType<BaseGuardGameObject>(FindObjectsInactive.Exclude);
             if(!guardObject)
@@ -56,6 +54,17 @@ namespace GameDirection.DayLevelSceneManagers
             characterController.ChangeMovementState<RunningState>();
             characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
 
+            characterController.WalkingDestinationReached += ShootGuardCommand;
+        }
+
+        public void InstantiateCharacterSecondSections()
+        {
+            mIntroShooterCharacter.transform.position = mStartPositionTwo.position;
+            mIntroShooterCharacter.SetActive(true);
+            var characterController = mIntroShooterCharacter.GetComponent<IBaseCharacterInScene>();
+            characterController.SetMovementDestination(mEndPositionTwo.position);
+            characterController.ChangeMovementState<RunningState>();
+            characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
             characterController.WalkingDestinationReached += ShootGuardCommand;
         }
         
@@ -175,5 +184,6 @@ namespace GameDirection.DayLevelSceneManagers
         public Transform GetCamerasInOfficeParent { get; }
         void ShootGuard();
         void InstantiateCharacterFirstSection();
+        void InstantiateCharacterSecondSections();
     }
 }

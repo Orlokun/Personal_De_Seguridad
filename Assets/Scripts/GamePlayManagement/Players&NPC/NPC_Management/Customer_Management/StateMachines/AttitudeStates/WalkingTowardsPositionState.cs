@@ -20,7 +20,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
 
         public void Update()
         {
-            if(_mCharacter.GetNavMeshAgent.remainingDistance < 2f)
+            if(_mCharacter.GetNavMeshAgent.remainingDistance < 4f)
             {
                 _mCharacter.OnWalkingDestinationReached();
                 _mCharacter.ChangeMovementState<IdleMovementState>();
