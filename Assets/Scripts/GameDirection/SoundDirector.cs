@@ -10,6 +10,8 @@ namespace GameDirection
 
         [SerializeField] private AudioSource _mMainAmbientSource1;
         [SerializeField] private AudioSource _mMainAmbientSource2;
+        [SerializeField] private AudioSource _mMainAmbientSource3;
+        [SerializeField] private AudioSource _mMainAmbientSource4;
         
         [SerializeField] private AudioSource _mMusicSource1;
         [SerializeField] private AudioSource _mMusicSource2;

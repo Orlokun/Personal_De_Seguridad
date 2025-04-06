@@ -291,6 +291,7 @@ namespace GamePlayManagement.Players_NPC
             
             MyNavMeshAgent.isStopped = true;
             OnWalkingDestinationReached();
+            ChangeMovementState<IdleMovementState>();
         }
 
         public virtual void OnWalkingDestinationReached()

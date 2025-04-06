@@ -79,7 +79,8 @@ namespace GameDirection.DayLevelSceneManagers
         private void EndOfIntroScene()
         {
             _mGameDirector.ActCoroutine(EndSceneSequence());
-            
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= EndOfIntroScene;
+
             //Start making sounds in door
             //Take Camera to first person. 
             //Make door knockdown sound. 
@@ -120,6 +121,8 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(0.2f);
             _mGameDirector.GetUIController.DeactivateAllObjects();
             _mGameDirector.GetUIController.ToggleBackground(true);
+            _mSceneManager.ToggleSceneCharacter(false);
+            _mSceneManager.ToggleCompleteScene(false);
         }
 
         private void FinalDialogueSequence()
