@@ -31,8 +31,9 @@ namespace GameDirection.DayLevelSceneManagers
         private IntroSceneTimerStates _mIntroSceneState;
         protected DialogueObjectsFromData DialoguesBaseDataString;
         
-        
-        private Dictionary<int, IDialogueObject> _mIntroSceneDialogues;      
+        private Dictionary<int, IDialogueObject> _mIntroSceneDialogues;
+
+        #region Init
         public void Initialize(IGameDirector injectionClass, IIntroSceneInGameManager injectionClass2)
         {
             if (IsInitialized)
@@ -54,7 +55,6 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetGameCameraManager.SetLevelCamerasParent(_mSceneManager.GetCamerasInLevelParent);
             _mGameDirector.GetGameCameraManager.SetOfficeCamerasParent(_mSceneManager.GetCamerasInOfficeParent);
         }
-
         public IEnumerator StartIntroScene()
         {
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
@@ -78,102 +78,9 @@ namespace GameDirection.DayLevelSceneManagers
             
             FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
         }
+        #endregion
 
-        private void StartIntroMusic()
-        {
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= StartIntroMusic;
-            //0_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
-        }
-
-        private void EndOfIntroScene()
-        {
-            _mGameDirector.ActCoroutine(EndSceneSequence());
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= EndOfIntroScene;
-
-            //Start making sounds in door
-            //Take Camera to first person. 
-            //Make door knockdown sound. 
-            //Instantiate character
-            //Make camera look at character
-            //Make character walk towards us, the player. 
-            //Make character instantiate gun
-            //Character says ending dialogue
-            //Character shoots, game begins. 
-        }
-
-        private IEnumerator EndSceneSequence()
-        {
-            yield return new WaitForSeconds(.5f);
-            //Make destroy door sound and visual effect
-            _mSceneManager.ToggleSceneCharacter(false);
-            yield return new WaitForSeconds(1f);
-            //Make shots in door sound
-            Debug.Log("Making door noises");
-            _mSceneManager.MoveCharacterToHidePosition();
-            _mGameDirector.GetGameCameraManager.ActivateCameraWithIndex(GameCameraState.Office, 1);
-            _mSceneManager.ToggleCameraPlacementCameras(false);
-            yield return new WaitForSeconds(2f);
-            _mSceneManager.InstantiateCharacterThirdSections();
-            _mSceneManager.WalkingDestinationReached += FinalDialogueSequence;
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishSequenceAndStartGame;
-
-        }
-
-        private void FinishSequenceAndStartGame()
-        {
-            _mSceneManager.ShootTargetCommand();
-            _mGameDirector.ActCoroutine(WaitEndOfScene());
-        }
-
-        private IEnumerator WaitEndOfScene()
-        {
-            yield return new WaitForSeconds(0.2f);
-            _mGameDirector.GetUIController.DeactivateAllObjects();
-            _mGameDirector.GetUIController.ToggleBackground(true);
-            _mSceneManager.ToggleSceneCharacter(false);
-            _mSceneManager.ToggleCompleteScene(false);
-        }
-
-        private void FinalDialogueSequence()
-        {
-            _mSceneManager.WalkingDestinationReached -= FinalDialogueSequence;
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[7]);
-        }
-
-        private void OnCameraPlaced(IItemObject itemPlaced)
-        {
-            Debug.LogWarning("Camera was placed!");
-            StopTimer();
-            FloorPlacementManager.Instance.OnItemPlaced -= OnCameraPlaced;
-            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
-            _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
-            _mSceneManager.ToggleCameraPlacementCameras(true);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[4]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += CharacterAppearsOnCamera;
-        }
-        private void OnCameraPlacementFailed()
-        {
-            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
-            _mSceneManager.ToggleCeoCameras(true);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[6]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += EndOfIntroScene;
-        }
-
-        private void CharacterAppearsOnCamera()
-        {
-            //InstantiateObject and wait for him to reach a spot
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= CharacterAppearsOnCamera;
-            _mGameDirector.ActCoroutine(WaitForPlayerInCamera());
-        }
-
-        private IEnumerator WaitForPlayerInCamera()
-        {
-            //Instantiate character in scene
-            _mSceneManager.InstantiateCharacterSecondSections();
-            yield return new WaitForSeconds(2.5f);
-            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += EndOfIntroScene;
-        }
+        #region First Section (Guard Zone)
 
         private void OnGuardPlacementFailed()
         {
@@ -183,7 +90,6 @@ namespace GameDirection.DayLevelSceneManagers
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
             _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 1);
         }
-        
         private void OnGuardPlaced(IItemObject itemPlaced)
         {
             Debug.LogWarning("Guard was placed!");
@@ -198,7 +104,6 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= GuardDiesDialogue;
             _mGameDirector.ActCoroutine(WaitAndAccessCharacterFirstZone());    
         }
-        
         private IEnumerator WaitAndAccessCharacterFirstZone()
         {
             _mSceneManager.ToggleGuardPlacementCameras(true);
@@ -222,42 +127,90 @@ namespace GameDirection.DayLevelSceneManagers
             _mSceneManager.ToggleSceneCharacter(false);
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
         }
+        #endregion
 
-        public void StartTimer()
+        #region Second Section (Camera Zone)
+        private void OnCameraPlaced(IItemObject itemPlaced)
         {
-            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-            
-            timerPopUp.StartTimer(45);
-            timerPopUp.OnTimerEnd += TimerEnd;
+            Debug.LogWarning("Camera was placed!");
+            StopTimer();
+            FloorPlacementManager.Instance.OnItemPlaced -= OnCameraPlaced;
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
+            _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+            _mSceneManager.ToggleCameraPlacementCameras(true);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[4]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += CharacterAppearsOnCamera;
         }
-        private void StopTimer()
+        private void OnCameraPlacementFailed()
         {
-            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
-            if (timerPopUp == null)
-            {
-                return;
-            }   
-            timerPopUp.OnTimerEnd -= TimerEnd;
-            PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 8);
+            _mSceneManager.ToggleCeoCameras(true);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[6]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += LaunchEndOfIntroScene;
         }
 
-        private void TimerEnd()
+        private void CharacterAppearsOnCamera()
         {
-            switch (_mIntroSceneState)
-            {
-                case IntroSceneTimerStates.AwaitGuard:
-                    //Launch Failure Dialogue
-                    StopTimer();
-                    _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
-                    OnGuardPlacementFailed();
-                    break;
-                case IntroSceneTimerStates.AwaitCamera:
-                    //Activate FailureDialogueCamera
-                    StopTimer();
-                    OnCameraPlacementFailed();
-                    break;
-            }
+            //InstantiateObject and wait for him to reach a spot
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= CharacterAppearsOnCamera;
+            _mGameDirector.ActCoroutine(WaitForPlayerInCamera());
         }
+
+        private IEnumerator WaitForPlayerInCamera()
+        {
+            //Instantiate character in scene
+            _mSceneManager.InstantiateCharacterSecondSections();
+            yield return new WaitForSeconds(2.5f);
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += LaunchEndOfIntroScene;
+        }
+        #endregion
+
+        #region Final Section
+        private void LaunchEndOfIntroScene()
+        {
+            _mGameDirector.ActCoroutine(EndSceneSequence());
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= LaunchEndOfIntroScene;
+        }
+
+        private IEnumerator EndSceneSequence()
+        {
+            yield return new WaitForSeconds(.5f);
+            //Make destroy door sound and visual effect
+            _mSceneManager.ToggleSceneCharacter(false);
+            yield return new WaitForSeconds(1f);
+            //Make shots in door sound
+            Debug.Log("Making door noises");
+            _mSceneManager.MoveCharacterToHidePosition();
+            _mGameDirector.GetGameCameraManager.ActivateCameraWithIndex(GameCameraState.Office, 1);
+            _mSceneManager.ToggleCameraPlacementCameras(false);
+            yield return new WaitForSeconds(2f);
+            _mSceneManager.InstantiateCharacterThirdSections();
+            _mSceneManager.WalkingDestinationReached += FinalDialogueSequence;
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishSequenceAndStartGame;
+        }
+        private void FinalDialogueSequence()
+        {
+            _mSceneManager.WalkingDestinationReached -= FinalDialogueSequence;
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[7]);
+        }
+        private void FinishSequenceAndStartGame()
+        {
+            _mSceneManager.ShootTargetCommand();
+            _mGameDirector.ActCoroutine(WaitEndOfScene());
+        }
+
+        private IEnumerator WaitEndOfScene()
+        {
+            yield return new WaitForSeconds(0.2f);
+            _mGameDirector.GetUIController.DeactivateAllObjects();
+            _mGameDirector.GetUIController.ToggleBackground(true);
+            _mSceneManager.ToggleSceneCharacter(false);
+            _mSceneManager.ToggleCompleteScene(false);
+            _mGameDirector.GetSoundDirector.ToggleWarZoneSound(false);
+            _mGameDirector.GetSoundDirector.ToggleIntroSceneAlarmSound(false);
+        }
+        #endregion
 
         #region DataManagement
         private IEnumerator GetIntroSceneDialogueData()
@@ -337,7 +290,7 @@ namespace GameDirection.DayLevelSceneManagers
         }
         #endregion
 
-        
+        #region Utils
         private void ActivatePlacementManager()
         {
             var placementManager = _mGameDirector.GetPlacementManager();
@@ -347,5 +300,47 @@ namespace GameDirection.DayLevelSceneManagers
             }
             placementManager.SetActive(true);
         }
+        private void StartIntroMusic()
+        {
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= StartIntroMusic;
+            //0_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
+        }
+        
+        public void StartTimer()
+        {
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            
+            timerPopUp.StartTimer(45);
+            timerPopUp.OnTimerEnd += TimerEnd;
+        }
+        private void StopTimer()
+        {
+            var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.GetActivePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+            if (timerPopUp == null)
+            {
+                return;
+            }   
+            timerPopUp.OnTimerEnd -= TimerEnd;
+            PopUpOperator.Instance.RemovePopUp(BitPopUpId.ACTION_TIMER_POPUP);
+        }
+        
+        private void TimerEnd()
+        {
+            switch (_mIntroSceneState)
+            {
+                case IntroSceneTimerStates.AwaitGuard:
+                    //Launch Failure Dialogue
+                    StopTimer();
+                    _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
+                    OnGuardPlacementFailed();
+                    break;
+                case IntroSceneTimerStates.AwaitCamera:
+                    //Activate FailureDialogueCamera
+                    StopTimer();
+                    OnCameraPlacementFailed();
+                    break;
+            }
+        }
+        #endregion
     }
 }
