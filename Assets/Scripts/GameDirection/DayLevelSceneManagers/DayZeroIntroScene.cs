@@ -59,21 +59,30 @@ namespace GameDirection.DayLevelSceneManagers
         {
             _mGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             _mGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
-            _mGameDirector.GetSoundDirector.StartIntroSceneAlarmSound();
+            _mGameDirector.GetSoundDirector.ToggleIntroSceneAlarmSound(true);
             _mGameDirector.GetUIController.DeactivateAllObjects();
+            yield return new WaitForSeconds(1.5f);
+            _mGameDirector.GetSoundDirector.ToggleWarZoneSound(true);
+
             yield return new WaitForSeconds(4f);
             _mSceneManager.ToggleIntroSceneLevelObjects(true);
             _mSceneManager.ToggleBeacon(true);
             _mSceneManager.ToggleIntroSceneLights(false);
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
-
             yield return new WaitForSeconds(4f);
             _mSceneManager.ToggleCeoCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[0]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += StartIntroMusic;
             ActivatePlacementManager();
             
             FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
+        }
+
+        private void StartIntroMusic()
+        {
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= StartIntroMusic;
+            //0_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
         }
 
         private void EndOfIntroScene()
@@ -197,6 +206,7 @@ namespace GameDirection.DayLevelSceneManagers
             var cameraItemObject = _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 8);
             _mGameDirector.GetActiveGameProfile.GetInventoryModule().AddItemToInventory(cameraItemObject, 1);
             _mGameDirector.GetActiveGameProfile.UpdateProfileData();
+            _mGameDirector.GetSoundDirector.ToggleWarZoneSound(false);
             Debug.Log("[Waiting for character to come]");
             //Maybe play special sounds
             yield return new WaitForSeconds(2f);

@@ -3401,11 +3401,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mMainAmbientSource1: {fileID: 716534578}
   _mMainAmbientSource2: {fileID: 712169926}
+  _mMainAmbientSource3: {fileID: 0}
+  _mMainAmbientSource4: {fileID: 0}
   _mMusicSource1: {fileID: 1021260441}
   _mMusicSource2: {fileID: 1386847135}
   ambientWindClip: {fileID: 8300000, guid: f31e89b6d01cba44999c3a1268e5505a, type: 3}
   beastieBoysSong: {fileID: 8300000, guid: 52746fb786488be449e8a9e4749941ee, type: 3}
   alarmSound: {fileID: 8300000, guid: 743922bbc8c195248acf4d4a4e645027, type: 3}
+  warZoneEnvironmentSound: {fileID: 8300000, guid: c59c0800c3131ed46bcb5e033d1d97be, type: 3}
 --- !u!4 &691644515
 Transform:
   m_ObjectHideFlags: 0

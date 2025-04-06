@@ -20,6 +20,7 @@ namespace GameDirection
         [SerializeField] private AudioClip ambientWindClip;
         [SerializeField] private AudioClip beastieBoysSong;
         [SerializeField] private AudioClip alarmSound;
+        [SerializeField] private AudioClip warZoneEnvironmentSound;
 
         private void Awake()
         {
@@ -91,22 +92,47 @@ namespace GameDirection
 
         private float currentRadioVolume = 0f;
 
-        public void StartIntroSceneAlarmSound()
+        public void ToggleIntroSceneAlarmSound(bool state)
         {
-            if (_mMainAmbientSource1.clip != alarmSound)
+            if (state)
             {
-                _mMainAmbientSource1.clip = alarmSound;
+                if (_mMainAmbientSource1.clip != alarmSound)
+                {
+                    _mMainAmbientSource1.clip = alarmSound;
+                }
+
+                FadeIn(4f, .08f, _mMainAmbientSource1);
             }
-            FadeIn(4f, .08f, _mMainAmbientSource1);
+            else
+            {
+                _mMainAmbientSource1.Stop();
+                _mMainAmbientSource1.loop = false;
+            }
         }
-        
+
+        public void ToggleWarZoneSound(bool state)
+        {
+            if (state)
+            {
+                if (_mMainAmbientSource2.clip != warZoneEnvironmentSound)
+                {
+                    _mMainAmbientSource2.clip = warZoneEnvironmentSound;
+                    _mMainAmbientSource2.loop = true;
+                }
+                FadeIn(4f, .08f, _mMainAmbientSource2);
+                return;
+            }
+            _mMainAmbientSource2.Stop();
+            _mMainAmbientSource2.loop = false;
+        }
+
         public void StartIntroSceneMusic()
         {
             if (_mMusicSource1.clip != beastieBoysSong)
             {
                 _mMusicSource1.clip = beastieBoysSong;
             }
-            FadeIn(8f, .1f, _mMusicSource1);
+            FadeIn(1f, .05f, _mMusicSource1);
         }
 
         private void FadeIn(float time, float targetVolume, AudioSource audioSource)

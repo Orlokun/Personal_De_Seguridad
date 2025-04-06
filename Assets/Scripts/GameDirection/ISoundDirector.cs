@@ -9,7 +9,8 @@ namespace GameDirection
         void SetRadioSource(AudioSource radioSource);
         void LowerMusicVolume();
         public void RaiseMusicVolume();
-        public void StartIntroSceneAlarmSound();
+        public void ToggleIntroSceneAlarmSound(bool state);
+        public void ToggleWarZoneSound(bool state);
         public void StartIntroSceneMusic();
 
     }
