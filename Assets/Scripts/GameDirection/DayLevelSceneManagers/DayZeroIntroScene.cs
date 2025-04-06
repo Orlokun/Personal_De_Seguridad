@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CameraManagement;
 using DataUnits.ItemScriptableObjects;
 using DialogueSystem;
 using DialogueSystem.Interfaces;
@@ -77,6 +78,9 @@ namespace GameDirection.DayLevelSceneManagers
 
         private void EndOfIntroScene()
         {
+            _mGameDirector.ActCoroutine(EndSceneSequence());
+            
+            //Start making sounds in door
             //Take Camera to first person. 
             //Make door knockdown sound. 
             //Instantiate character
@@ -85,6 +89,43 @@ namespace GameDirection.DayLevelSceneManagers
             //Make character instantiate gun
             //Character says ending dialogue
             //Character shoots, game begins. 
+        }
+
+        private IEnumerator EndSceneSequence()
+        {
+            yield return new WaitForSeconds(.5f);
+            //Make destroy door sound and visual effect
+            _mSceneManager.ToggleSceneCharacter(false);
+            yield return new WaitForSeconds(1f);
+            //Make shots in door sound
+            Debug.Log("Making door noises");
+            _mSceneManager.MoveCharacterToHidePosition();
+            _mGameDirector.GetGameCameraManager.ActivateCameraWithIndex(GameCameraState.Office, 1);
+            _mSceneManager.ToggleCameraPlacementCameras(false);
+            yield return new WaitForSeconds(2f);
+            _mSceneManager.InstantiateCharacterThirdSections();
+            _mSceneManager.WalkingDestinationReached += FinalDialogueSequence;
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += FinishSequenceAndStartGame;
+
+        }
+
+        private void FinishSequenceAndStartGame()
+        {
+            _mSceneManager.ShootTargetCommand();
+            _mGameDirector.ActCoroutine(WaitEndOfScene());
+        }
+
+        private IEnumerator WaitEndOfScene()
+        {
+            yield return new WaitForSeconds(0.2f);
+            _mGameDirector.GetUIController.DeactivateAllObjects();
+            _mGameDirector.GetUIController.ToggleBackground(true);
+        }
+
+        private void FinalDialogueSequence()
+        {
+            _mSceneManager.WalkingDestinationReached -= FinalDialogueSequence;
+            _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[7]);
         }
 
         private void OnCameraPlaced(IItemObject itemPlaced)
@@ -119,6 +160,7 @@ namespace GameDirection.DayLevelSceneManagers
             _mSceneManager.InstantiateCharacterSecondSections();
             yield return new WaitForSeconds(2.5f);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[5]);
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += EndOfIntroScene;
         }
 
         private void OnGuardPlacementFailed()

@@ -217,6 +217,15 @@ namespace GamePlayManagement.Players_NPC
             // Smoothly rotate towards the target
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, MRotationSpeed * Time.deltaTime);
         }
+        
+        public void SetRotateTowardsYOnly(Vector3 facingTowards)
+        {
+            Vector3 targetDirection = facingTowards - transform.position;
+            targetDirection.y = 0; // Ignore height difference
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            // Smoothly rotate towards the target
+            transform.rotation = targetRotation;
+        }
 
         protected virtual void ReachWalkingDestination()
         {

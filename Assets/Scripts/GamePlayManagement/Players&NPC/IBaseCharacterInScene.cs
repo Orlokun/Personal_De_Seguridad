@@ -20,6 +20,7 @@ namespace GamePlayManagement.Players_NPC
 
         public void OnWalkingDestinationReached();
         public void RotateTowardsYOnly(Vector3 facingTowards);
+        public void SetRotateTowardsYOnly(Vector3 facingTowards);
 
 
     }

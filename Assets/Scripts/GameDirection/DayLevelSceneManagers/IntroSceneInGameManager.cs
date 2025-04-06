@@ -10,6 +10,10 @@ namespace GameDirection.DayLevelSceneManagers
 {
     public class IntroSceneInGameManager : MonoBehaviour, IIntroSceneInGameManager
     {
+        public delegate void IntroSceneReadDestination(); 
+        public event IntroSceneReadDestination WalkingDestinationReached;
+
+        
         [SerializeField] private Camera mCeoCamera;
         [SerializeField] private Camera mGuardPlacementZoneCam;
         [SerializeField] private Camera mCameraPlacementZoneCam;
@@ -29,10 +33,15 @@ namespace GameDirection.DayLevelSceneManagers
         [SerializeField] private GameObject mIntroShooterCharacter;
         [SerializeField] private Transform mStartPositionOne;
         [SerializeField] private Transform mStartPositionTwo;
+        [SerializeField] private Transform mHidePositionThree;
         [SerializeField] private Transform mStartPositionThree;
         [SerializeField] private Transform mEndPositionTwo;
         [SerializeField] private Transform mEndPositionThree;
+        
+        [SerializeField] private Transform mPlayerFinalTarget;
 
+        
+        
         private void Awake()
         {
             mIntroShooterCharacter.SetActive(false);
@@ -54,7 +63,7 @@ namespace GameDirection.DayLevelSceneManagers
             characterController.ChangeMovementState<RunningState>();
             characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
 
-            characterController.WalkingDestinationReached += ShootGuardCommand;
+            characterController.WalkingDestinationReached += ShootTargetCommand;
         }
 
         public void InstantiateCharacterSecondSections()
@@ -65,19 +74,43 @@ namespace GameDirection.DayLevelSceneManagers
             characterController.SetMovementDestination(mEndPositionTwo.position);
             characterController.ChangeMovementState<RunningState>();
             characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
-            characterController.WalkingDestinationReached += ShootGuardCommand;
+            characterController.WalkingDestinationReached += ShootTargetCommand;
         }
-        
+
+        public void InstantiateCharacterThirdSections()
+        {
+            mIntroShooterCharacter.transform.position = mStartPositionThree.position;
+            mIntroShooterCharacter.SetActive(true);
+            var characterController = mIntroShooterCharacter.GetComponent<IBaseCharacterInScene>();
+            characterController.SetRotateTowardsYOnly(mPlayerFinalTarget.position);
+            characterController.SetMovementDestination(mPlayerFinalTarget.position);
+            characterController.ChangeMovementState<WalkingState>();
+            characterController.ChangeAttitudeState<WalkingTowardsPositionState>();
+            characterController.WalkingDestinationReached += FinalDialogueSequence;
+        }
+
+        public void MoveCharacterToHidePosition()
+        {
+            mIntroShooterCharacter.transform.position = mHidePositionThree.position;
+        }
+
         public void ToggleSceneCharacter(bool state)
         {
             mIntroShooterCharacter.SetActive(state);
         }
         
-        private void ShootGuardCommand()
+        public void ShootTargetCommand()
         {
             var characterController = mIntroShooterCharacter.GetComponent<IBaseCharacterInScene>();
-            characterController.WalkingDestinationReached -= ShootGuardCommand;
+            characterController.WalkingDestinationReached -= ShootTargetCommand;
             characterController.ChangeAttitudeState<ShootTargetState>();
+        }
+
+        private void FinalDialogueSequence()
+        {
+            var characterController = mIntroShooterCharacter.GetComponent<IBaseCharacterInScene>();
+            characterController.ChangeAttitudeState<IdleAttitudeState>();
+            WalkingDestinationReached?.Invoke();
         }
 
         public void ToggleBeacon(bool state)
@@ -183,7 +216,13 @@ namespace GameDirection.DayLevelSceneManagers
         public Transform GetCamerasInLevelParent { get; }
         public Transform GetCamerasInOfficeParent { get; }
         void ShootGuard();
+        public void ShootTargetCommand();
+
         void InstantiateCharacterFirstSection();
         void InstantiateCharacterSecondSections();
+        void InstantiateCharacterThirdSections();
+        void MoveCharacterToHidePosition();
+        
+        public event IntroSceneInGameManager.IntroSceneReadDestination WalkingDestinationReached;
     }
 }
