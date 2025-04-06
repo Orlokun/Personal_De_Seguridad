@@ -19,6 +19,8 @@ namespace GamePlayManagement.Players_NPC
         public void SetMovementDestination(Vector3 targetPosition);
 
         public void OnWalkingDestinationReached();
+        public void RotateTowardsYOnly(Vector3 facingTowards);
+
 
     }
 }

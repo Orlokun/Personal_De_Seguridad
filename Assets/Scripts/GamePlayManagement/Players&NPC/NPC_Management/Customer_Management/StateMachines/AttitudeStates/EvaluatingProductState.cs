@@ -29,7 +29,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
             {
                 return;
             }
-            _mCharacter.RotateTowardsYOnly(_mCharacter.TempObjectTargetOfInterest);
+            _mCharacter.RotateTowardsYOnly(_mCharacter.TempObjectTargetOfInterest.position);
         }
         public void WalkingDestinationReached()
         {

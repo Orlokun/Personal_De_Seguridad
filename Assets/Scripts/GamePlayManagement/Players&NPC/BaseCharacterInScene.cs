@@ -209,9 +209,9 @@ namespace GamePlayManagement.Players_NPC
         protected virtual void Start()
         {
         }
-        public void RotateTowardsYOnly(Transform facingTowards)
+        public void RotateTowardsYOnly(Vector3 facingTowards)
         {
-            Vector3 targetDirection = facingTowards.position - transform.position;
+            Vector3 targetDirection = facingTowards - transform.position;
             targetDirection.y = 0; // Ignore height difference
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             // Smoothly rotate towards the target
