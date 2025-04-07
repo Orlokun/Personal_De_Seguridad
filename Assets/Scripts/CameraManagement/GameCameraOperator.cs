@@ -47,7 +47,7 @@ namespace CameraManagement
                 return;
             }
             dialogueCamera.Follow = targetsInDialogue;
-            dialogueCamera.LookAt = targetsInDialogue;  
+            dialogueCamera.LookAt = targetsInDialogue;
         }*/
         public void SetLevelCamerasParent(Transform camerasParentObject)
         {
@@ -222,6 +222,15 @@ namespace CameraManagement
         }
 
         public bool AreLevelCamerasActive => _mLevelCameras != null && _mLevelCameras.Count > 0;
+        public void LoadMainOfficeCameras()
+        {
+            var officeCamerasParent = FindFirstObjectByType<OfficeVCamerasParentObject>();
+            if (officeCamerasParent == null)
+            {
+                return;
+            }
+            SetOfficeCamerasParent(officeCamerasParent.transform);
+        }
 
         #endregion
 
@@ -312,10 +321,7 @@ namespace CameraManagement
 
         private void PopulateOfficeCamerasData(Transform officeCamerasParent)
         {
-            if (_mOfficeCameras == null)
-            {
-                _mOfficeCameras = new Dictionary<int, GameObject>();
-            }
+            _mOfficeCameras = new Dictionary<int, GameObject>();
             for (var i = 0; i < officeCamerasParent.childCount; i++)
             {
                 var cameraObject = officeCamerasParent.GetChild(i).gameObject;

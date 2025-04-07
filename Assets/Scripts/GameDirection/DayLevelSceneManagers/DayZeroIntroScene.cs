@@ -65,7 +65,7 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetSoundDirector.ToggleWarZoneSound(true);
             yield return new WaitForSeconds(9f);
             _mGameDirector.GetSoundDirector.StartIntroSceneMusic();
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(7f);
             _mSceneManager.ToggleIntroSceneLevelObjects(true);
             _mSceneManager.ToggleBeacon(true);
             _mSceneManager.ToggleIntroSceneLights(false);

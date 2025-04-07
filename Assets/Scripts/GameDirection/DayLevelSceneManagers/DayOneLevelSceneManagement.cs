@@ -3,6 +3,7 @@ using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
+using UnityEditor;
 using UnityEngine;
 
 namespace GameDirection.DayLevelSceneManagers
@@ -22,7 +23,6 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetUIController.DeactivateAllObjects();
             MGameDirector.GetUIController.ToggleBackground(true);
             yield return new WaitForSeconds(2f);
-
             MGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);
             MGameDirector.GetUIController.ToggleBackground(true);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
@@ -46,8 +46,8 @@ namespace GameDirection.DayLevelSceneManagers
             yield return new WaitForSeconds(1f);
             MGameDirector.GetLevelManager.ActivateScene(LevelIndexId.OfficeLvl);
             MGameDirector.GetLevelManager.DeactivateScene(LevelIndexId.InitScene);
-
             yield return new WaitForSeconds(2f);
+            MGameDirector.GetGameCameraManager.LoadMainOfficeCameras();
             MGameDirector.GetUIController.ToggleBackground(false);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;

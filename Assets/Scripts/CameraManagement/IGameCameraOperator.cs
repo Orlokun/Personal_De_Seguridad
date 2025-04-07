@@ -17,5 +17,6 @@ namespace CameraManagement
         public void ReturnToLastState();
         public Tuple<int, GameCameraState> GetCurrentCameraState();
         public bool AreLevelCamerasActive { get; }
+        void LoadMainOfficeCameras();
     }
 }
