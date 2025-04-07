@@ -32,6 +32,8 @@ namespace GameDirection
     [RequireComponent(typeof(GeneralUIFader))]
     public class GameDirector : MonoBehaviour, IGameDirector
     {
+        [SerializeField] private bool mDevMode;
+        
         private static GameDirector _mInstance;
         public static IGameDirector Instance => _mInstance;
         
@@ -231,6 +233,11 @@ namespace GameDirection
             _mGeneralFader.GeneralCurtainAppear();
             CreateNewGameProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
+            if (mDevMode)
+            {
+                StartNewDayManagement();
+                return;
+            }
             StartCoroutine( _mDayZeroIntroScene.StartIntroScene());
         }
 
