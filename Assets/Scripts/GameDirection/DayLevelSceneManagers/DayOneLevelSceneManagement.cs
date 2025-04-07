@@ -48,6 +48,7 @@ namespace GameDirection.DayLevelSceneManagers
             MGameDirector.GetLevelManager.DeactivateScene(LevelIndexId.InitScene);
             yield return new WaitForSeconds(2f);
             MGameDirector.GetGameCameraManager.LoadMainOfficeCameras();
+            MGameDirector.GetGameCameraManager.ClearLevelCameras();
             MGameDirector.GetUIController.ToggleBackground(false);
             MGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
             MGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishIntroductionText;
