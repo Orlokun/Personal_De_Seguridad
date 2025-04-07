@@ -50,5 +50,7 @@ namespace GameDirection
         void StartTutorialProcess(int tutorialIndex);
         public GameObject GetPlacementManager();
         void StartIntroTimerEvent();
+        public void StartNewDayManagement();
+
     }
 }

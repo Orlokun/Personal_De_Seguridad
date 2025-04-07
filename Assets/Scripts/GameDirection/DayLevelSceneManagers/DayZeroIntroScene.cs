@@ -63,17 +63,17 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetUIController.DeactivateAllObjects();
             yield return new WaitForSeconds(1.5f);
             _mGameDirector.GetSoundDirector.ToggleWarZoneSound(true);
-
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(9f);
+            _mGameDirector.GetSoundDirector.StartIntroSceneMusic();
+            yield return new WaitForSeconds(15f);
             _mSceneManager.ToggleIntroSceneLevelObjects(true);
             _mSceneManager.ToggleBeacon(true);
             _mSceneManager.ToggleIntroSceneLights(false);
             yield return new WaitForSeconds(2f);
             _mGameDirector.GetGeneralBackgroundFader.GeneralCurtainDisappear();
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(1.5f);
             _mSceneManager.ToggleCeoCameras(true);
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[0]);
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted += StartIntroMusic;
             ActivatePlacementManager();
             
             FloorPlacementManager.Instance.OnItemPlaced += OnGuardPlaced;
@@ -197,11 +197,12 @@ namespace GameDirection.DayLevelSceneManagers
         private void FinishSequenceAndStartGame()
         {
             _mSceneManager.ShootTargetCommand();
-            _mGameDirector.ActCoroutine(WaitEndOfScene());
+            _mGameDirector.ActCoroutine(ShootingEndOfScene());
         }
 
-        private IEnumerator WaitEndOfScene()
+        private IEnumerator ShootingEndOfScene()
         {
+            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= FinishSequenceAndStartGame;
             yield return new WaitForSeconds(0.2f);
             _mGameDirector.GetUIController.DeactivateAllObjects();
             _mGameDirector.GetUIController.ToggleBackground(true);
@@ -209,6 +210,10 @@ namespace GameDirection.DayLevelSceneManagers
             _mSceneManager.ToggleCompleteScene(false);
             _mGameDirector.GetSoundDirector.ToggleWarZoneSound(false);
             _mGameDirector.GetSoundDirector.ToggleIntroSceneAlarmSound(false);
+            _mGameDirector.GetSoundDirector.PlayShotSound();
+            _mGameDirector.GetSoundDirector.StartInterviewMusic();
+            yield return new WaitForSeconds(5f);
+            _mGameDirector.StartNewDayManagement();
         }
         #endregion
 
@@ -300,12 +305,7 @@ namespace GameDirection.DayLevelSceneManagers
             }
             placementManager.SetActive(true);
         }
-        private void StartIntroMusic()
-        {
-            _mGameDirector.GetDialogueOperator.OnDialogueCompleted -= StartIntroMusic;
-            //0_mGameDirector.GetSoundDirector.StartIntroSceneMusic();
-        }
-        
+
         public void StartTimer()
         {
             var timerPopUp = (IGamePlayActionTimer)PopUpOperator.Instance.ActivatePopUp(BitPopUpId.ACTION_TIMER_POPUP);

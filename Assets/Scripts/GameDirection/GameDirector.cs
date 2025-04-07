@@ -23,8 +23,6 @@ using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Customer
 using InputManagement;
 using UI;
 using UI.EndOfDay;
-using UI.PopUpManager;
-using UI.PopUpManager.InfoPanelPopUp;
 using UnityEngine;
 using Utils;
 
@@ -234,10 +232,12 @@ namespace GameDirection
             CreateNewGameProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             StartCoroutine( _mDayZeroIntroScene.StartIntroScene());
-            
-            //StartCoroutine(_dayLevelManager.StartDayManagement());
         }
 
+        public void StartNewDayManagement()
+        {
+            StartCoroutine(_dayLevelManager.StartDayManagement());
+        }
 
         public void ContinueGameWithProfile()
         {

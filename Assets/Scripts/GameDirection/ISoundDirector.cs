@@ -12,6 +12,7 @@ namespace GameDirection
         public void ToggleIntroSceneAlarmSound(bool state);
         public void ToggleWarZoneSound(bool state);
         public void StartIntroSceneMusic();
-
+        public void StartInterviewMusic();
+        public void PlayShotSound();
     }
 }

@@ -20,6 +20,7 @@ namespace GameDirection.DayLevelSceneManagers
             
             MGameDirector.GetSoundDirector.PlayRegularDayAmbientSound();
             MGameDirector.GetUIController.DeactivateAllObjects();
+            MGameDirector.GetUIController.ToggleBackground(true);
             yield return new WaitForSeconds(2f);
 
             MGameDirector.GetActiveGameProfile.GetComplianceManager.UpdateComplianceDay(_mDayId);

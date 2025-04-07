@@ -3409,6 +3409,8 @@ MonoBehaviour:
   beastieBoysSong: {fileID: 8300000, guid: 52746fb786488be449e8a9e4749941ee, type: 3}
   alarmSound: {fileID: 8300000, guid: 743922bbc8c195248acf4d4a4e645027, type: 3}
   warZoneEnvironmentSound: {fileID: 8300000, guid: c59c0800c3131ed46bcb5e033d1d97be, type: 3}
+  sambaVeraoSong: {fileID: 8300000, guid: d2f4999268ce79247aa705da188fb2f1, type: 3}
+  shotGunSound: {fileID: 8300000, guid: 3b19316ceb4bc0c41ace6b7b6dc763b9, type: 3}
 --- !u!4 &691644515
 Transform:
   m_ObjectHideFlags: 0

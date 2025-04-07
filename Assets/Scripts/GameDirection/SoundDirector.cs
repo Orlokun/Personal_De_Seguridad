@@ -21,6 +21,8 @@ namespace GameDirection
         [SerializeField] private AudioClip beastieBoysSong;
         [SerializeField] private AudioClip alarmSound;
         [SerializeField] private AudioClip warZoneEnvironmentSound;
+        [SerializeField] private AudioClip sambaVeraoSong;
+        [SerializeField] private AudioClip shotGunSound;
 
         private void Awake()
         {
@@ -47,6 +49,7 @@ namespace GameDirection
             }
 
             _mMainAmbientSource1.volume = .5f;
+            _mMainAmbientSource1.loop = true;
             _mMainAmbientSource1.Play();
         }
 
@@ -101,7 +104,7 @@ namespace GameDirection
                     _mMainAmbientSource1.clip = alarmSound;
                 }
 
-                FadeIn(4f, .08f, _mMainAmbientSource1);
+                FadeIn(8f, .0225f, _mMainAmbientSource1);
             }
             else
             {
@@ -132,7 +135,30 @@ namespace GameDirection
             {
                 _mMusicSource1.clip = beastieBoysSong;
             }
-            FadeIn(1f, .05f, _mMusicSource1);
+            FadeIn(.01f, .06f, _mMusicSource1);
+        }
+        public void StartInterviewMusic()
+        {
+            if (_mMusicSource1.clip != sambaVeraoSong)
+            {
+                _mMusicSource1.clip = sambaVeraoSong;
+            }
+            FadeIn(.01f, .06f, _mMusicSource1);
+        }
+
+        public void PlayShotSound()
+        {
+            if (_mMainAmbientSource1.isPlaying)
+            {
+                _mMainAmbientSource1.Stop();
+            }
+            if (_mMainAmbientSource1.clip != shotGunSound)
+            {
+                _mMainAmbientSource1.clip = shotGunSound;
+                _mMainAmbientSource1.volume = 0.3f;
+            }
+            _mMainAmbientSource1.loop = false;
+            _mMainAmbientSource1.Play();            
         }
 
         private void FadeIn(float time, float targetVolume, AudioSource audioSource)
@@ -154,5 +180,5 @@ namespace GameDirection
             audioSource.volume = targetVolume;
         }
 
-}
+    }
 }
