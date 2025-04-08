@@ -1,17 +1,20 @@
 using System.Diagnostics;
+using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.UI;
+using Whisper;
 using Whisper.Utils;
 using Button = UnityEngine.UI.Button;
 using Toggle = UnityEngine.UI.Toggle;
 
-namespace Whisper.Samples
+namespace GamePlayManagement.SpeechToText
 {
     /// <summary>
     /// Record audio clip from microphone and make a transcription.
     /// </summary>
-    public class MicrophoneDemo : MonoBehaviour
+    public class MicrophonePopUp : PopUpObject
     {
+        
         public WhisperManager whisper;
         public MicrophoneRecord microphoneRecord;
         public bool streamSegments = true;
@@ -19,7 +22,6 @@ namespace Whisper.Samples
 
         [Header("UI")] 
         public Button button;
-        public Text buttonText;
         public Text outputText;
         public Text timeText;
         public Dropdown languageDropdown;
@@ -58,18 +60,15 @@ namespace Whisper.Samples
             if (!microphoneRecord.IsRecording)
             {
                 microphoneRecord.StartRecord();
-                buttonText.text = "Stop";
             }
             else
             {
                 microphoneRecord.StopRecord();
-                buttonText.text = "Record";
             }
         }
         
         private async void OnRecordStop(AudioChunk recordedAudio)
         {
-            buttonText.text = "Record";
             _buffer = "";
 
             var sw = new Stopwatch();
@@ -86,9 +85,14 @@ namespace Whisper.Samples
             var text = res.Result;
             if (printLanguage)
                 text += $"\n\nLanguage: {res.Language}";
-            
+            ProcessVoiceMessageFromPlayer(text);
             outputText.text = text;
             UiUtils.ScrollDown(scroll);
+        }
+
+        private void ProcessVoiceMessageFromPlayer(string whisperResult)
+        {
+            
         }
         
         private void OnLanguageChanged(int ind)

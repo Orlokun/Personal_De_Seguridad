@@ -18,5 +18,6 @@
         USE_PERSONAL_BUDGET = 1 << 14,
         NOT_ENOUGH_CREDIT = 1 << 15,
         ACTION_TIMER_POPUP = 1 << 16,
+        VOICE_RECORD_POPUP = 1 << 17,
     }
 }

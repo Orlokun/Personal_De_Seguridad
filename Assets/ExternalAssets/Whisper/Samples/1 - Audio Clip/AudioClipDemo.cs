@@ -1,9 +1,10 @@
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UI;
+using Whisper;
 using Whisper.Utils;
 
-namespace Whisper.Samples
+namespace ExternalAssets.Whisper.Samples._1___Audio_Clip
 {
     /// <summary>
     /// Takes audio clip and make a transcription.

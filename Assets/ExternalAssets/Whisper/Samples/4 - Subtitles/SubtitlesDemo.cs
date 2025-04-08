@@ -4,9 +4,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Whisper;
 using Whisper.Utils;
 
-namespace Whisper.Samples
+namespace ExternalAssets.Whisper.Samples._4___Subtitles
 {
     /// <summary>
     /// Shows transcription in a subtitles style (synced with audio).

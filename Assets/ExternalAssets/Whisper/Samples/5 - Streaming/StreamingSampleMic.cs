@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Whisper;
 using Whisper.Utils;
 
-namespace Whisper.Samples
+namespace ExternalAssets.Whisper.Samples._5___Streaming
 {
     /// <summary>
     /// Stream transcription from microphone input.

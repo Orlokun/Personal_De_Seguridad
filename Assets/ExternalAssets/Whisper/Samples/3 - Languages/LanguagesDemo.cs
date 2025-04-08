@@ -1,8 +1,9 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using Whisper;
 
-namespace Whisper.Samples
+namespace ExternalAssets.Whisper.Samples._3___Languages
 {
     /// <summary>
     /// Check if whisper model is multilingual and print all languages.

@@ -178,7 +178,10 @@ namespace UI.PopUpManager
                     return notEnoughCreditPopUp.GetComponent<NotEnoughCreditsPopUp>();  
                 case BitPopUpId.ACTION_TIMER_POPUP:
                     var timerPopUp = (GameObject) Instantiate(Resources.Load("UI/PopUps/UI_ActionTimer"), transform);
-                    return timerPopUp.GetComponent<IGamePlayActionTimer>();   
+                    return timerPopUp.GetComponent<IGamePlayActionTimer>();                   
+                case BitPopUpId.VOICE_RECORD_POPUP:
+                    var speechRecordTimer = (GameObject) Instantiate(Resources.Load("UI/PopUps/VoiceRecordTimer"), transform);
+                    return speechRecordTimer.GetComponent<IGamePlayActionTimer>();   
                 default:
                     return null;
             }
