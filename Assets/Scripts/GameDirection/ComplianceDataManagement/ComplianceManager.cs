@@ -49,6 +49,11 @@ namespace GameDirection.ComplianceDataManagement
         public List<IComplianceObject> GetCompletedComplianceObjects => _mComplianceBaseData.GetPassedComplianceObjects;
         public List<IComplianceObject> GetFailedComplianceObjects => _mComplianceBaseData.GetFailedComplianceObjects;
         public List<IComplianceObject> GetActiveComplianceObjects => _mComplianceBaseData.GetActiveComplianceObjects;
+        public void CleanComplianceModule()
+        {
+            
+            _mComplianceBaseData.CleanComplianceData();
+        }
 
 
         private bool _mUpdateComplianceFunctionAvailable = true;

@@ -235,6 +235,7 @@ namespace GameDirection
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             if (mDevMode)
             {
+                
                 StartNewDayManagement();
                 return;
             }
@@ -290,6 +291,15 @@ namespace GameDirection
                 Console.WriteLine(e);
                 throw;
             }
+        }
+        
+        public void CleanGameProfile()
+        {
+            _mActiveGameProfile.GetActiveJobsModule().CleanJobSuppliersModule();
+            _mActiveGameProfile.GetActiveItemSuppliersModule().CleanItemSuppliers();
+            _mActiveGameProfile.GetInventoryModule().CleanInventory();
+            _mActiveGameProfile.GetRequestsModuleManager().CleanRequestModule();
+            _mActiveGameProfile.GetComplianceManager.CleanComplianceModule();
         }
         
         public void ReleaseFromDialogueStateToGame()

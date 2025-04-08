@@ -23,7 +23,7 @@ namespace GamePlayManagement
         public int GeneralOmniCredits { get;}
         public void UpdateDataEndOfDay();
         public IWorkDayObject GetCurrentWorkday();
-        void PlayerLost(EndingTypes organSale);
+        void PlayerLost(EndingTypes endingType);
         void AddFondnessToActiveSupplier(ITrustRewardData trustRewardData);
         void UpdateSupplierTrustLevel(DialogueSpeakerId supplierId, int trustLevel);
     }

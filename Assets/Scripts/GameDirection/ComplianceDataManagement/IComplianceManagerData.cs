@@ -13,5 +13,6 @@ namespace GameDirection.ComplianceDataManagement
         List<IComplianceObject> GetFailedComplianceObjects { get; }
         void ChangeComplianceStatus(ComplianceStatus newStatus, int id);
         void UpdateActiveCompliance();
+        void CleanComplianceData();
     }
 }

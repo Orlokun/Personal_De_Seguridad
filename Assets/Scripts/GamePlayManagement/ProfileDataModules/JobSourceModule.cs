@@ -73,6 +73,20 @@ namespace GamePlayManagement.ProfileDataModules
                 _mDaysUnemployedStreak = 0;
             }
         }
+
+        public void CleanJobSuppliersModule()
+        {
+            _mUnlockedJobSuppliers = 0;
+            _mActiveJobSuppliers.Clear();
+            _mArchivedJobs.Clear();
+            
+            _mTotalDaysEmployed = 0;
+            _mDaysEmployedStreak = 0;
+            _mTotalDaysUnemployed = 0;
+            _mDaysUnemployedStreak = 0;
+            _mStreakWithEmployer = 0;
+        }
+
         public void PlayerLostResetData()
         {
             _mStreakWithEmployer = 0;

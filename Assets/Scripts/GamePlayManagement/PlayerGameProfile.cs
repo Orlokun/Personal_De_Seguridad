@@ -57,6 +57,7 @@ namespace GamePlayManagement
             _lifeStyleModule.PlayerLostResetData();
             _gameStatusModule.PlayerLostResetData();
             _mRequestModuleManager.PlayerLostResetData();
+            _mComplianceManager.CleanComplianceModule();
             _mInventoryModule.PlayerLostResetData();
         }
         //Main Data Modules
@@ -180,9 +181,9 @@ namespace GamePlayManagement
             return _mCalendarModule.GetCurrentWorkDayObject();
         }
 
-        public void PlayerLost(EndingTypes organSale)
+        public void PlayerLost(EndingTypes endingType)
         {
-            _gameStatusModule.PlayerLostGame(organSale);
+            _gameStatusModule.PlayerLostGame(endingType);
             PlayerLostResetData();
         }
 

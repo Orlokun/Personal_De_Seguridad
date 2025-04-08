@@ -79,6 +79,12 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
             return itemsOfType;
         }
 
+        public void CleanItemSuppliers()
+        {
+            _mActiveProviders = 0;
+            _activeStores.Clear();
+        }
+
         #endregion
         
         

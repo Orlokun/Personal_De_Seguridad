@@ -167,7 +167,7 @@ namespace DialogueSystem
             CheckDialogueLineEventBehavior(dialogueNode);
             if (dialogueNode.LinkNodes[0] == 0)
             {
-                Debug.Log("[DialogueOperator.WriteDialogueNode] Finished going through dialogur");
+                Debug.Log("[DialogueOperator.WriteDialogueNode] Finished going through dialogue");
                 _currentState = UIDialogueState.NotDisplayed;
 
                 PopUpOperator.Instance.RemovePopUp(BitPopUpId.FEEDBACK_MASK);

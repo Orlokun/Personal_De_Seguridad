@@ -52,5 +52,6 @@ namespace GameDirection
         void StartIntroTimerEvent();
         public void StartNewDayManagement();
 
+        void CleanGameProfile();
     }
 }

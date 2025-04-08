@@ -22,11 +22,7 @@ namespace GamePlayManagement
 
         public void PlayerLostResetData()
         {
-            _mGuardItems.Clear(); 
-            _mCameraItems.Clear();
-            _mWeaponItems.Clear();
-            _mTrapItems.Clear(); 
-            _mOtherItems.Clear();        
+            CleanInventory(); 
         }
 
         #region AddItem
@@ -127,6 +123,15 @@ namespace GamePlayManagement
             _mWeaponItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
             _mTrapItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
             _mOtherItems.RemoveAll(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier);
+        }
+
+        public void CleanInventory()
+        {
+            _mGuardItems.Clear();
+            _mCameraItems.Clear();
+            _mWeaponItems.Clear();
+            _mTrapItems.Clear();
+            _mOtherItems.Clear();
         }
 
         public List<IGuardInInventory> GetGuardItems => _mGuardItems;

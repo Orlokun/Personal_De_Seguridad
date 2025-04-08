@@ -19,5 +19,6 @@ namespace GamePlayManagement.ProfileDataModules.ItemSuppliers
         public void UnlockItemInSupplier(BitItemSupplier supplier, int itemBitId);
         public IItemObject GetItemObject(BitItemSupplier supplier, int itemBitId);
         public List<IItemObject> GetItemsOfType(BitItemType itemType);
+        void CleanItemSuppliers();
     }
 }

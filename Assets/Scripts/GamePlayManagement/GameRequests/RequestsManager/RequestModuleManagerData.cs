@@ -85,7 +85,13 @@ namespace GamePlayManagement.GameRequests.RequestsManager
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> ActiveRequests => _mActiveRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> CompletedRequests => _mCompletedRequests;
         public Dictionary<DialogueSpeakerId, List<IGameRequest>> FailedRequests => _mFailedRequests;
-        
+        public void ClearRequestModule()
+        {
+            _mActiveRequests.Clear();
+            _mCompletedRequests.Clear();
+            _mFailedRequests.Clear();
+        }
+
         public void ActivateRequestInData(IGameRequest request)
         {
             if (_mActiveRequests == null)

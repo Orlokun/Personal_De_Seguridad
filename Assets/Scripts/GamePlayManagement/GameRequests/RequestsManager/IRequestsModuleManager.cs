@@ -16,5 +16,6 @@ namespace GamePlayManagement.GameRequests.RequestsManager
         
         void CheckHireChallenges(JobSupplierBitId newJobSupplier);
         void CheckItemUsedChallenges(IItemObject itemObject);
+        void CleanRequestModule();
     }
 }

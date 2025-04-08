@@ -212,6 +212,7 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetSoundDirector.PlayShotSound();
             _mGameDirector.GetSoundDirector.StartInterviewMusic();
             yield return new WaitForSeconds(5f);
+            _mGameDirector.CleanGameProfile();
             _mGameDirector.StartNewDayManagement();
         }
         #endregion

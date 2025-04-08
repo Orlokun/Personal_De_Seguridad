@@ -14,6 +14,7 @@ namespace GamePlayManagement
 
         public List<IItemInInventory> GetItemsOfType(BitItemType itemType);
         public void ClearItemFromInventory(BitItemSupplier itemSupplier, int itemId);
-        
+
+        void CleanInventory();
     }
 }

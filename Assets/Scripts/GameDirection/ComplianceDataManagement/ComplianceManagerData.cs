@@ -48,6 +48,12 @@ namespace GameDirection.ComplianceDataManagement
             }
         }
 
+        public void CleanComplianceData()
+        {
+            _mActiveComplianceList.Clear();
+            _mPassedCompliance.Clear();
+            _mFailedComplianceList.Clear();
+        }
 
 
         public List<IComplianceObject> GetActiveComplianceObjects => _mActiveComplianceList;

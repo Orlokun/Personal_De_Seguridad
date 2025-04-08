@@ -19,5 +19,6 @@ namespace GameDirection.ComplianceDataManagement
         public List<IComplianceObject>GetCompletedComplianceObjects { get; }
         public List<IComplianceObject>GetFailedComplianceObjects { get; }
         public List<IComplianceObject>GetActiveComplianceObjects { get; }
+        void CleanComplianceModule();
     }
 }

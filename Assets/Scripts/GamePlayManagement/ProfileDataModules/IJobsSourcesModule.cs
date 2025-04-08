@@ -7,5 +7,6 @@ namespace GamePlayManagement.ProfileDataModules
         void UnlockJobSupplier(JobSupplierBitId gainedJobSupplier);
         public void SetNewEmployer(JobSupplierBitId newEmployer);
         public void ProcessEndOfDay();
+        void CleanJobSuppliersModule();
     }
 }
