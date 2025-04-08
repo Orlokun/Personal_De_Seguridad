@@ -89,11 +89,13 @@ namespace GameDirection.DayLevelSceneManagers
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[3]);
             CameraPlacementManager.MInstance.OnItemPlaced += OnCameraPlaced;
             _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 1);
+            AddItemToInventory(BitItemSupplier.D1TV, 8);
         }
         private void OnGuardPlaced(IItemObject itemPlaced)
         {
             Debug.LogWarning("Guard was placed!");
             StopTimer();
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().ClearItemFromInventory(BitItemSupplier.D1TV, 1);
             FloorPlacementManager.Instance.OnItemPlaced -= OnGuardPlaced;
             _mIntroSceneState = IntroSceneTimerStates.AwaitCamera;
             _mGameDirector.GetDialogueOperator.StartNewDialogue(_mIntroSceneDialogues[1]);
@@ -107,10 +109,7 @@ namespace GameDirection.DayLevelSceneManagers
         private IEnumerator WaitAndAccessCharacterFirstZone()
         {
             _mSceneManager.ToggleGuardPlacementCameras(true);
-            _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(BitItemSupplier.D1TV, 8);
-            var cameraItemObject = _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(BitItemSupplier.D1TV, 8);
-            _mGameDirector.GetActiveGameProfile.GetInventoryModule().AddItemToInventory(cameraItemObject, 1);
-            _mGameDirector.GetActiveGameProfile.UpdateProfileData();
+            AddItemToInventory(BitItemSupplier.D1TV, 8);
             _mGameDirector.GetSoundDirector.ToggleWarZoneSound(false);
             Debug.Log("[Waiting for character to come]");
             //Maybe play special sounds
@@ -296,6 +295,15 @@ namespace GameDirection.DayLevelSceneManagers
         #endregion
 
         #region Utils
+
+        private void AddItemToInventory(BitItemSupplier itemSupplier, int itemId)
+        {
+            _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().UnlockItemInSupplier(itemSupplier, itemId);
+            var cameraItemObject = _mGameDirector.GetActiveGameProfile.GetActiveItemSuppliersModule().GetItemObject(itemSupplier, itemId);
+            _mGameDirector.GetActiveGameProfile.GetInventoryModule().AddItemToInventory(cameraItemObject, 1);
+            _mGameDirector.GetActiveGameProfile.UpdateProfileData();
+        }
+        
         private void ActivatePlacementManager()
         {
             var placementManager = _mGameDirector.GetPlacementManager();
