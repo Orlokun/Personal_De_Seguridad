@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using GameDirection;
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.Inventory;
 using UI.TabManagement.AbstractClasses;
 using UI.TabManagement.ItemTypeTab;
 using UnityEngine;

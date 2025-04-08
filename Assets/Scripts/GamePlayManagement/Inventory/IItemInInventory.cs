@@ -2,7 +2,7 @@
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
-namespace GamePlayManagement
+namespace GamePlayManagement.Inventory
 {
     public interface IItemInInventory
     {

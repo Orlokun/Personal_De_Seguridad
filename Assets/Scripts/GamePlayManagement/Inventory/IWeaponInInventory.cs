@@ -1,4 +1,4 @@
-﻿namespace GamePlayManagement
+﻿namespace GamePlayManagement.Inventory
 {
     public interface IWeaponInInventory : IItemInInventory
     {

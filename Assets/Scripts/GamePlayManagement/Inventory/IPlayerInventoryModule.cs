@@ -4,7 +4,7 @@ using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ProfileDataModules;
 
-namespace GamePlayManagement
+namespace GamePlayManagement.Inventory
 {
     public interface IPlayerInventoryModule : IProfileModule
     {

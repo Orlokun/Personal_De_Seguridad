@@ -15,6 +15,7 @@ using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.ComplianceSystem;
 using GamePlayManagement.GameRequests;
 using GamePlayManagement.GameRequests.RequestsManager;
+using GamePlayManagement.Inventory;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;

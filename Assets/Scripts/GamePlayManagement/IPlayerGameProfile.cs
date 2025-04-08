@@ -4,6 +4,7 @@ using GameDirection.ComplianceDataManagement;
 using GameDirection.TimeOfDayManagement;
 using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.GameRequests.RewardsPenalties;
+using GamePlayManagement.Inventory;
 using GamePlayManagement.ProfileDataModules;
 using GamePlayManagement.ProfileDataModules.ItemSuppliers;
 

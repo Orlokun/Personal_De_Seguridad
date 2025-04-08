@@ -4,7 +4,7 @@ using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.BitDescriptions;
 using GamePlayManagement.BitDescriptions.Suppliers;
 
-namespace GamePlayManagement
+namespace GamePlayManagement.Inventory
 {
     public class PlayerInventoryModule : IPlayerInventoryModule
     {

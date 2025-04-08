@@ -1,5 +1,6 @@
 using GamePlayManagement;
 using GamePlayManagement.BitDescriptions;
+using GamePlayManagement.Inventory;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using TMPro;
 using UI.PopUpManager;
