@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using TMPro;
 using UI.PopUpManager;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +16,8 @@ namespace GamePlayManagement.SpeechToText
     /// </summary>
     public class MicrophonePopUp : PopUpObject
     {
+        private ISpeechToTextOperator mSpeechOperator;
+        
         
         public WhisperManager whisper;
         public MicrophoneRecord microphoneRecord;
@@ -22,29 +26,30 @@ namespace GamePlayManagement.SpeechToText
 
         [Header("UI")] 
         public Button button;
-        public Text outputText;
-        public Text timeText;
+        public TMP_Text buttonText;
+        public TMP_Text outputText;
+        public TMP_Text timeText;
         public Dropdown languageDropdown;
         public Toggle translateToggle;
         public Toggle vadToggle;
-        public ScrollRect scroll;
         
         private string _buffer;
 
         private void Awake()
         {
+            mSpeechOperator = new SpeechToTextOperator();
             whisper.OnNewSegment += OnNewSegment;
             whisper.OnProgress += OnProgressHandler;
             
             microphoneRecord.OnRecordStop += OnRecordStop;
             
             button.onClick.AddListener(OnButtonPressed);
-            languageDropdown.value = languageDropdown.options
+            /*languageDropdown.value = languageDropdown.options
                 .FindIndex(op => op.text == whisper.language);
             languageDropdown.onValueChanged.AddListener(OnLanguageChanged);
-
-            translateToggle.isOn = whisper.translateToEnglish;
-            translateToggle.onValueChanged.AddListener(OnTranslateChanged);
+            */
+            //translateToggle.isOn = whisper.translateToEnglish;
+            //translateToggle.onValueChanged.AddListener(OnTranslateChanged);
 
             vadToggle.isOn = microphoneRecord.vadStop;
             vadToggle.onValueChanged.AddListener(OnVadChanged);
@@ -59,6 +64,7 @@ namespace GamePlayManagement.SpeechToText
         {
             if (!microphoneRecord.IsRecording)
             {
+                buttonText.text = "Stop";
                 microphoneRecord.StartRecord();
             }
             else
@@ -81,18 +87,22 @@ namespace GamePlayManagement.SpeechToText
             var time = sw.ElapsedMilliseconds;
             var rate = recordedAudio.Length / (time * 0.001f);
             timeText.text = $"Time: {time} ms\nRate: {rate:F1}x";
-
+            var charsToTrimm = new[] { ',', '.', '?', '!', ' '};
             var text = res.Result;
+            var trimmedText = text.Trim(charsToTrimm);
+            var loweredCase = trimmedText.ToLower();
+            var cleanedText = Regex.Replace(loweredCase, @"[,.?!]", ""); // Removes all specified characters
+            
             if (printLanguage)
-                text += $"\n\nLanguage: {res.Language}";
-            ProcessVoiceMessageFromPlayer(text);
-            outputText.text = text;
-            UiUtils.ScrollDown(scroll);
+                cleanedText += $"\n\nLanguage: {res.Language}";
+            ProcessVoiceMessageFromPlayer(cleanedText);
+            outputText.text = cleanedText;
+            buttonText.text = "Record";
         }
 
         private void ProcessVoiceMessageFromPlayer(string whisperResult)
         {
-            
+            mSpeechOperator.ReceiveTextFromVoice(whisperResult);
         }
         
         private void OnLanguageChanged(int ind)
@@ -120,7 +130,6 @@ namespace GamePlayManagement.SpeechToText
 
             _buffer += segment.Text;
             outputText.text = _buffer + "...";
-            UiUtils.ScrollDown(scroll);
         }
     }
 }
