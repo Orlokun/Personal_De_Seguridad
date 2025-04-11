@@ -13,6 +13,7 @@ namespace GamePlayManagement.SpeechToText
         private bool _mInitialized;
 
         private ISpeechToTextData _mData;
+        private ISpeechCommandConstructor _mCommandConstructor;
         
         public SpeechToTextOperator()
         {
@@ -21,6 +22,7 @@ namespace GamePlayManagement.SpeechToText
                 mInstance = this;
             }
             _mData = new SpeechToTextData();
+            _mCommandConstructor = new SpeechCommandConstructor();
         }
         
         public void ReceiveTextFromVoice(string incomingText)
@@ -56,8 +58,62 @@ namespace GamePlayManagement.SpeechToText
                 return;
             }
             Debug.Log($"[ReceiveTextFromVoice] Third Utterance is valid! = {thirdUtterance.CodeWord}");
+
+            FourthUtteranceObject fourthUtterance = new FourthUtteranceObject(FourthUtteranceTypes.None, "", 0);
+            if (secondUtterance.UtteranceType == SecondUtteranceTypes.Quantifier)
+            {
+                fourthUtterance = EvaluateFourthUtterance(thirdUtterance.NextIndex, words);
+                if (fourthUtterance.UtteranceType == FourthUtteranceTypes.None)
+                {
+                    Debug.LogWarning("[ReceiveTextFromVoice] Not a valid Fourth Utterance");
+                    return;
+                }
+                Debug.Log($"[ReceiveTextFromVoice] Fourth Utterance is valid! = {thirdUtterance.CodeWord}");
+            }
+            _mCommandConstructor.BuildCommandObject(firstUtterance, secondUtterance, thirdUtterance, fourthUtterance);
+            
             Debug.Log($"[ReceiveTextFromVoice] All Utterances are valid! = {firstUtterance.CodeWord} - {secondUtterance.CodeWord} - {thirdUtterance.CodeWord}");
             
+        }
+        
+        private FourthUtteranceObject EvaluateFourthUtterance(int startIndex, string[] words)
+        {
+            var firstWord = words[startIndex];
+            var firstTwoWordsJoined = firstWord + words[startIndex + 1];
+            var firstTwoWordsSep = firstWord + " " + words[startIndex + 1];
+
+            //Step 2. Check if its an Unique Client in-game
+            if (_mData.GetUniqueClientId.Contains(firstWord))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetUniqueId, firstWord, startIndex + 1);
+            }
+
+            if (_mData.GetUniqueClientId.Contains(firstTwoWordsJoined))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetUniqueId, firstTwoWordsJoined,
+                    startIndex + 2);
+            }
+
+            //Step 3. Check if its an Item Origin
+            if (_mData.GetItemOriginCodes.Contains(firstWord))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetOrigin, firstWord, startIndex + 1);
+            }
+
+            if (_mData.GetItemOriginCodes.Contains(firstTwoWordsSep))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetOrigin, firstTwoWordsSep,  startIndex + 2);
+            }
+            
+            if (_mData.GetBaseClassCodes.Contains(firstWord))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetClass, firstWord, startIndex + 1);
+            }
+            if (_mData.GetItemOriginCodes.Contains(firstTwoWordsSep))
+            {
+                return new FourthUtteranceObject(FourthUtteranceTypes.TargetClass, firstTwoWordsSep, startIndex + 2);
+            }
+            return new FourthUtteranceObject(FourthUtteranceTypes.None, "",0);
         }
 
         private ThirdUtteranceObject EvaluateThirdUtterance(int startIndex, string[] words)
@@ -85,32 +141,30 @@ namespace GamePlayManagement.SpeechToText
 
             if (_mData.GetUniqueClientId.Contains(firstWord))
             {
-                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetUniqueId, firstTwoWordsJoined,
-                    startIndex + 1);
+                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetUniqueId, firstTwoWordsJoined, startIndex + 1);
             }
 
             //Step 3. Check if its an Item Origin
             if (_mData.GetItemOriginCodes.Contains(firstWord))
             {
-                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetOrigin, firstWord, 1);
+                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetOrigin, firstWord, startIndex +1);
             }
 
             if (_mData.GetItemOriginCodes.Contains(firstTwoWordsSep))
             {
-                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetOrigin, firstTwoWordsSep, 2);
+                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetOrigin, firstTwoWordsSep, startIndex +2);
             }
             
             if (_mData.GetBaseClassCodes.Contains(firstWord))
             {
-                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetClass, firstWord, 1);
+                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetClass, firstWord, startIndex + 1);
             }
             if (_mData.GetItemOriginCodes.Contains(firstTwoWordsSep))
             {
-                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetClass, firstTwoWordsSep, 2);
+                return new ThirdUtteranceObject(ThirdUtteranceTypes.TargetClass, firstTwoWordsSep, startIndex + 2);
             }
             return new ThirdUtteranceObject(ThirdUtteranceTypes.None, "",0);
         }
-
         private SecondUtteranceObject EvaluateSecondUtterance(int startIndex, string[] words)
         {
             var firstWord = words[startIndex];
@@ -131,12 +185,10 @@ namespace GamePlayManagement.SpeechToText
             }
             return new SecondUtteranceObject(SecondUtteranceTypes.None, "", 0);
         }
-
         private bool IsNumber(string firstWord)
         {
             return int.TryParse(firstWord, out var result);
         }
-
         private FirstUtteranceObject EvaluateFirstUtterance(string firstWord, string secondWord)
         {
             var firstTwoWords = firstWord + " " + secondWord;
