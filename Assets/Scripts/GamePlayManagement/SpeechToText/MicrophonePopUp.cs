@@ -30,8 +30,6 @@ namespace GamePlayManagement.SpeechToText
         public TMP_Text outputText;
         public TMP_Text timeText;
         public Dropdown languageDropdown;
-        public Toggle translateToggle;
-        public Toggle vadToggle;
         
         private string _buffer;
 
@@ -51,8 +49,6 @@ namespace GamePlayManagement.SpeechToText
             //translateToggle.isOn = whisper.translateToEnglish;
             //translateToggle.onValueChanged.AddListener(OnTranslateChanged);
 
-            vadToggle.isOn = microphoneRecord.vadStop;
-            vadToggle.onValueChanged.AddListener(OnVadChanged);
         }
 
         private void OnVadChanged(bool vadStop)

@@ -203,7 +203,7 @@ namespace UI.PopUpManager.InfoPanelPopUp
                         trapObjectController.Initialize(this, item.GetItemData);
                         _mUIItemsInShop.Add(trapObjectController);
                         break;
-                    case BitItemType.OTHERS_ITEM_TYPE:
+                    case BitItemType.SPECIAL_ITEM_TYPE:
                         var otherObject = item.IsLocked ? Instantiate(lockedItemInStorePrefab, othersPanel) : Instantiate(itemInStorePrefab, othersPanel);
                         if(item.IsLocked) break;
                         var otherObjectController = otherObject.GetComponent<UIItemInStoreObject>();

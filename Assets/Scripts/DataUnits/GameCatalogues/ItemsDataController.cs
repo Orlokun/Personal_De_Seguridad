@@ -858,7 +858,7 @@ namespace DataUnits.GameCatalogues
                         return GetStatsForWeapon(supplier, itemId);
                     case BitItemType.TRAP_ITEM_TYPE:
                         return GetStatsForTrap(supplier, itemId);
-                    case BitItemType.OTHERS_ITEM_TYPE:
+                    case BitItemType.SPECIAL_ITEM_TYPE:
                         return GetStatsForOtherItemsType(supplier, itemId);
                     default:
                         return null;

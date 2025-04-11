@@ -66,7 +66,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
                 case BitItemType.TRAP_ITEM_TYPE:
                     basePath = TrapsPath;
                     break;
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     basePath = OtherItemsPath;
                     break;
             }

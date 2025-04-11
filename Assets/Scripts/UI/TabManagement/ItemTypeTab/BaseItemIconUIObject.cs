@@ -83,7 +83,7 @@ namespace UI.TabManagement.ItemTypeTab
                     return BitPopUpId.WEAPON_ITEM_INFO_PANEL;
                 case BitItemType.TRAP_ITEM_TYPE:
                     return BitPopUpId.TRAP_ITEM_INFO_PANEL;
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     return BitPopUpId.OTHER_ITEM_INFO_PANEL;
             }
             return 0;

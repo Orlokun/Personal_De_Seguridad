@@ -43,7 +43,7 @@ namespace GamePlayManagement.Inventory
                 case BitItemType.TRAP_ITEM_TYPE:
                     return _mTrapItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
                         _mTrapItems.First(x => x.ItemId == itemId).AvailableCount : 0;
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     return _mOtherItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier) ?
                         _mOtherItems.First(x => x.ItemId == itemId).AvailableCount : 0;
                 default:
@@ -68,7 +68,7 @@ namespace GamePlayManagement.Inventory
                     return _mWeaponItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
                 case BitItemType.TRAP_ITEM_TYPE:
                     return _mTrapItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     return _mOtherItems.Any(x => x.ItemId == itemId && x.ItemSupplier == itemSupplier && x.AvailableCount > 0);
                 default:
                     return false;
@@ -91,7 +91,7 @@ namespace GamePlayManagement.Inventory
                 case BitItemType.TRAP_ITEM_TYPE:
                     ProcessAddedTrapItem(incomingItem, amount);
                     break;
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     ProcessAddedOtherTypeItem(incomingItem, amount);
                     break;
             }
@@ -109,7 +109,7 @@ namespace GamePlayManagement.Inventory
                     return _mWeaponItems.Cast<IItemInInventory>().ToList();
                 case BitItemType.TRAP_ITEM_TYPE:
                     return _mTrapItems.Cast<IItemInInventory>().ToList();
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     return _mOtherItems.Cast<IItemInInventory>().ToList();
                 default:
                     return null;

@@ -71,7 +71,7 @@ namespace UI.TabManagement
                     return weaponInGridPrefab;
                 case BitItemType.TRAP_ITEM_TYPE:
                     return trapInGridPrefab;
-                case BitItemType.OTHERS_ITEM_TYPE:
+                case BitItemType.SPECIAL_ITEM_TYPE:
                     return otherInGridPrefab;
                 default:
                     return null;

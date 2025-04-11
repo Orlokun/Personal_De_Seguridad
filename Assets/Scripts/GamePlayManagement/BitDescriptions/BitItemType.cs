@@ -6,6 +6,6 @@ namespace GamePlayManagement.BitDescriptions
         CAMERA_ITEM_TYPE = 1 << 1,
         WEAPON_ITEM_TYPE = 1 << 2,
         TRAP_ITEM_TYPE = 1 << 3,
-        OTHERS_ITEM_TYPE = 1 << 4
+        SPECIAL_ITEM_TYPE = 1 << 4
     }
 }
