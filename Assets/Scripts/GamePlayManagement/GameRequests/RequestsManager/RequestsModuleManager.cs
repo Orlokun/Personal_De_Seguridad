@@ -98,7 +98,6 @@ namespace GamePlayManagement.GameRequests.RequestsManager
 
         public void CleanRequestModule()
         {
-            throw new NotImplementedException();
         }
 
         private bool HasItemUseRequirements(List<IGameRequest> requests)

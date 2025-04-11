@@ -11,13 +11,14 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
     {
         //Eventually change into restricted interface so it can be used by any character, not only customers.
         private BaseCustomer _mCharacter;
-
+        private const string Idle = "Idle";
         public EvaluatingProductState(IBaseCharacterInScene mCharacter)
         {
             _mCharacter = (BaseCustomer)mCharacter;
         }
         public void Enter()
         {
+            _mCharacter.BaseAnimator.ChangeAnimationState(Idle);
             var wouldStealProduct = EvaluateProductStealingChances();
             StartProductExamination(wouldStealProduct);
         }

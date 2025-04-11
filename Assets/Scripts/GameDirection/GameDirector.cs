@@ -226,12 +226,12 @@ namespace GameDirection
             ContinueGameWithProfile();
         }
         
-        public void StartNewGame()
+        public async void StartNewGame()
         {
             _mGameState = HighLevelGameStates.InCutScene;
             //_gameStateManager.SetGamePlayState(InputGameState.Pause);
             _mGeneralFader.GeneralCurtainAppear();
-            CreateNewGameProfile();
+            await CreateNewGameProfile();
             LoadDayManagement(_mActiveGameProfile.GetProfileCalendar().GetCurrentWorkDayObject().BitId);
             if (mDevMode)
             {
@@ -255,7 +255,7 @@ namespace GameDirection
             StartCoroutine(_dayLevelManager.StartDayManagement());
         }
 
-        private async void CreateNewGameProfile()
+        private async Task CreateNewGameProfile()
         {
             try
             {

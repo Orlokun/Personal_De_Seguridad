@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using DialogueSystem.Units;
 using GameDirection.TimeOfDayManagement;
+using GamePlayManagement.BitDescriptions.Suppliers;
 using GamePlayManagement.LevelManagement;
 using InputManagement;
 using UnityEditor;
@@ -14,6 +15,7 @@ namespace GameDirection.DayLevelSceneManagers
         #region Introduction Region
         public override IEnumerator StartDayManagement()
         {
+            MGameDirector.GetActiveGameProfile.GetActiveJobsModule().UnlockJobSupplier(JobSupplierBitId.COPY_OF_EDEN);
             MGameDirector.ChangeHighLvlGameState(HighLevelGameStates.InCutScene);
             MGameDirector.GetGameInputManager.SetGamePlayState(InputGameState.InDialogue);
             MGameDirector.GetNarrativeNewsDirector.LoadDayNews(_mDayId);

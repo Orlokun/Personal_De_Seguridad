@@ -11,6 +11,7 @@ using GamePlayManagement.ItemPlacement;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
+using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.GuardStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.GuardStates;
@@ -68,7 +69,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #endregion
 
         #region CustomerTrackingData
-        private Dictionary<Guid, BaseCustomer> _mTrackedCustomers;
+        private Dictionary<Guid, IBaseCustomer> _mTrackedCustomers;
         private BaseCustomer _currentCustomerTarget;
         #endregion
 
@@ -160,23 +161,45 @@ namespace GamePlayManagement.ItemManagement.Guards
             _fieldOfViewModule.Fov3D.OnCharacterLostEvent += OnCharacterLost;
         }
 
-        private void OnCharacterLost(GameObject target)
+        private void OnCharacterLost(GameObject seenCharacter)
         {
-            if(!IsCharacterObject(target))
+            if(!IsCharacterObject(seenCharacter))
             {
                 return;
             }
-            
+            if (IsCustomer(seenCharacter))
+            {
+                seenCharacter.TryGetComponent<IBaseCustomer>(out var customer);
+                if(!_mTrackedCustomers.ContainsKey(customer.CustomerId))
+                {
+                    return;
+                }
+                _mTrackedCustomers.Remove(customer.CustomerId);
+            }
         }
 
-        private void OnCharacterSeen(GameObject target)
+        private void OnCharacterSeen(GameObject seenCharacter)
         {
-            if(!IsCharacterObject(target))
+            if(!IsCharacterObject(seenCharacter))
             {
                 return;
             }
+            if (IsCustomer(seenCharacter))
+            {
+                seenCharacter.TryGetComponent<IBaseCustomer>(out var customer);
+                if(_mTrackedCustomers.ContainsKey(customer.CustomerId))
+                {
+                    return;
+                }
+                _mTrackedCustomers.Add(customer.CustomerId, customer);
+            }
         }
-        
+
+        private bool IsCustomer(GameObject seenCharacter)
+        {
+            return seenCharacter.TryGetComponent<BaseCustomer>(out var customer);
+        }
+
         private bool IsCharacterObject(GameObject target)
         {
             return target.TryGetComponent<IBaseCharacterInScene>(out var customer);
@@ -249,79 +272,6 @@ namespace GamePlayManagement.ItemManagement.Guards
             _mAttitudeStateMachine.ChangeState<GuardAutoInspectionState>();
         }
 
-        #region TargetTrackingProcess
-        private void UpdateTargetsInViewData()
-        {
-            var seenObjects = _fieldOfViewModule.Fov3D.SeenTargetCharacters;
-            foreach (var seenObject in seenObjects)
-            {
-                var isCustomer = seenObject.TryGetComponent<BaseCustomer>(out var customerStatus);
-                if (!isCustomer)
-                {
-                    continue;
-                }
-                if(!_mTrackedCustomers.ContainsKey(customerStatus.CustomerId))
-                {
-                    _mTrackedCustomers.Add(customerStatus.CustomerId, customerStatus);
-                }
-            }
-
-            var removedCustomers = new List<Guid>();
-            foreach (var trackedCustomer in _mTrackedCustomers)
-            {
-                var customersSeen = seenObjects.Where(x=> x.TryGetComponent<BaseCustomer>(out _));
-                if (customersSeen.All(x => x.GetComponent<BaseCustomer>().CustomerId != trackedCustomer.Key))
-                {
-                    continue;
-                }
-                removedCustomers.Add(trackedCustomer.Key);
-            }
-
-            foreach (var removedCustomer in removedCustomers)
-            {
-                if (!_mTrackedCustomers.ContainsKey(removedCustomer))
-                {
-                    Debug.LogError("Tracked Customer must be tracked before being removed of tracking list");
-                    continue;
-                }
-                _mTrackedCustomers.Remove(removedCustomer);
-            }
-            removedCustomers.Clear();
-        }
-        
-        protected override void ProcessInViewTargets()
-        {
-            if (!_fieldOfViewModule.Fov3D.HasTargetsInRange /*|| !_mGuardStatusModule.IsGuardInspecting*/)
-            {
-                return;
-            }
-            UpdateTargetsInViewData();
-            ProcessCustomersSeen();
-        }
-        private void ProcessCustomersSeen()
-        {
-            foreach (var mTrackedCustomer in _mTrackedCustomers)
-            {
-                if (!mTrackedCustomer.Value.IsCustomerStealing)
-                {
-                    continue;
-                }
-                StartClientBustedProcess();
-                break;
-            }
-        }
-
-        /// <summary>
-        /// TODO: Steps for client busting:
-        /// 1. Surprise Time (Dependent of intelligence and agility)
-        /// 2. Check Weapons & Items Available
-        /// 3. MakeDecision
-        /// </summary>
-        private void StartClientBustedProcess()
-        {
-            
-        }
-        #endregion
         private void Update()
         {
             _mAttitudeStateMachine.Update();

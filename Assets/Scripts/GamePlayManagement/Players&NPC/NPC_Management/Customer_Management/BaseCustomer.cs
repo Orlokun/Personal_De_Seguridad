@@ -166,6 +166,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MPositionsManager.OccupyPoi(MCharacterId, _mCurrentPoiId);
             Debug.Log($"[GoToNextPoint] Going to Poi: {_mCurrentPoiId}.");
             SetMovementDestination(poiObject.GetPosition);
+            ChangeMovementState<WalkingState>();
         }
 
         private Guid GetNotVisitedPoi()
