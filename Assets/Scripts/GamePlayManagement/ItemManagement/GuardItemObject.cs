@@ -4,28 +4,28 @@ using UnityEngine;
 
 namespace GamePlayManagement.ItemManagement
 {
-    [RequireComponent(typeof(BaseGuardGameObject))]
+    [RequireComponent(typeof(BaseGuardGameController))]
     public class GuardItemObject : BaseItemGameObject, IGuardItemObject
     {
-        private IBaseGuardGameObject _guardGameObject;
-        public IBaseGuardGameObject GuardData => _guardGameObject;
+        private IBaseGuardGameController _guardGameController;
+        public IBaseGuardGameController GuardData => _guardGameController;
         
         private void Awake()
         {
-            _guardGameObject = GetComponent<BaseGuardGameObject>();
-            MItemId = _guardGameObject.CharacterId;
+            _guardGameController = GetComponent<BaseGuardGameController>();
+            MItemId = _guardGameController.CharacterId;
         }
         
         public override void SetInPlacementStatus(bool inPlacement)
         {
-            _guardGameObject.SetInPlacementStatus(inPlacement);
+            _guardGameController.SetInPlacementStatus(inPlacement);
         }
 
         public override void InitializeItem(IItemObject itemData)
         {
             base.InitializeItem(itemData);
-            _guardGameObject.Initialize(itemData);
-            _guardGameObject.StartBehaviorTree();
+            _guardGameController.Initialize(itemData);
+            _guardGameController.StartBehaviorTree();
         }
     }
 }

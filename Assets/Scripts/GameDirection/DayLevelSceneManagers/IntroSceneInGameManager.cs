@@ -51,7 +51,7 @@ namespace GameDirection.DayLevelSceneManagers
         {
             mIntroShooterCharacter.transform.position = mStartPositionOne.position;
 
-            var guardObject = FindFirstObjectByType<BaseGuardGameObject>(FindObjectsInactive.Exclude);
+            var guardObject = FindFirstObjectByType<BaseGuardGameController>(FindObjectsInactive.Exclude);
             if(!guardObject)
             {
                 Debug.LogError("No guard in scene");
@@ -187,7 +187,7 @@ namespace GameDirection.DayLevelSceneManagers
         public Transform GetCamerasInOfficeParent => mCamerasInOfficeParent;
         public void ShootGuard()
         {
-            var guardInScene = FindFirstObjectByType<BaseGuardGameObject>();
+            var guardInScene = FindFirstObjectByType<BaseGuardGameController>();
             if(guardInScene is null)
             {
                 Debug.LogError("No guard in scene");

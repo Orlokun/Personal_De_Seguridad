@@ -4,6 +4,6 @@ namespace GamePlayManagement.ItemManagement
 {
     public interface IGuardItemObject : IBaseItemObject
     {
-        public IBaseGuardGameObject GuardData { get; }
+        public IBaseGuardGameController GuardData { get; }
     }
 }

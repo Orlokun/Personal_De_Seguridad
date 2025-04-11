@@ -1,6 +1,6 @@
-﻿namespace GamePlayManagement.Players_NPC
+﻿namespace GamePlayManagement.Players_NPC.NPC_Management.SpecialNPC
 {
-    public class CutSceneCharacter : BaseCharacterInScene
+    public class CutSceneShooterCharacter : BaseCharacterInScene
     {
         private void Update()
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GamePlayManagement.Players_NPC;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace ExternalAssets._3DFOV.Scripts
 {
@@ -32,12 +32,16 @@ namespace ExternalAssets._3DFOV.Scripts
 
         #region Target Detection
 
-        public List<GameObject> seenObjects = new List<GameObject>();
+        [FormerlySerializedAs("seenObjects")] public List<GameObject> seenCharacters = new List<GameObject>();
         public List<GameObject> targetObjects = new List<GameObject>();
-        public UnityEvent onTargetSeen;
-        public UnityEvent onTargetLost;
+        
         public int ViewResolution => MViewResolution;
         public float ViewRadius => _viewRadius;
+        
+        public delegate void OnCharacterSeen(GameObject target);
+        public event OnCharacterSeen OnCharacterSeenEvent;
+        public delegate void OnCharacterLost(GameObject target);
+        public event OnCharacterLost OnCharacterLostEvent;
         public float ViewAngle => _viewAngle;
         [SerializeField] private bool detectionActive = true;
         #endregion
@@ -53,8 +57,8 @@ namespace ExternalAssets._3DFOV.Scripts
             _isDrawFoVActive = isActive;
         }
 
-        public bool HasTargetsInRange => seenObjects.Count > 0;
-        public List<GameObject> SeenTargetObjects => seenObjects;
+        public bool HasTargetsInRange => seenCharacters.Count > 0;
+        public List<GameObject> SeenTargetCharacters => seenCharacters;
         public void SetupCharacterFoV(int fovRange)
         {
             var fovRangeFloat = fovRange / 10f;
@@ -77,7 +81,7 @@ namespace ExternalAssets._3DFOV.Scripts
         private void Awake()
         {
             mDirections = new List<Vector3>(MViewResolution);
-            seenObjects = new List<GameObject>();
+            seenCharacters = new List<GameObject>();
             mPoint = new List<Vector3>();
             _tempbool = false;
             _isDrawFoVActive = false;
@@ -102,6 +106,8 @@ namespace ExternalAssets._3DFOV.Scripts
             _drawFoVLines.ClearAllLines();
             _drawFoVLines.ClearTargetLines();
             #endregion
+
+            #region CalculateDirections
             for (var i = 0; i < MViewResolution; i++)
             {
                 var t = (float)i / MViewResolution;
@@ -163,12 +169,14 @@ namespace ExternalAssets._3DFOV.Scripts
                 //if ((ValidateVisualizer()) && (_fovV.viewAllRaycastLines)) _fovV.DrawRaycastLines(i);
                 ProcessInGameVisualization(mDirections[i]);
             }
+            #endregion
+
             ProcessTargetsInSight();
         }
 
         private void ProcessTargetsInSight()
         {
-            if (seenObjects.Count > 0)
+            if (seenCharacters.Count > 0)
             {
                 
             }
@@ -189,7 +197,7 @@ namespace ExternalAssets._3DFOV.Scripts
         private Vector3 SphereCase(RaycastHit hit, int i)
         {
             var midPoint = new Vector3();
-            if (seenObjects != null)
+            if (seenCharacters != null)
             {
                 var myTransform = transform;
                 var position = myTransform.position;
@@ -217,16 +225,16 @@ namespace ExternalAssets._3DFOV.Scripts
             {
                 return;
             }
-            if (!seenObjects.Contains(viewObj))
+            if (!seenCharacters.Contains(viewObj))
             {
-                seenObjects.Add(viewObj);
+                seenCharacters.Add(viewObj);
                 mPoint.Add(hit.point);
             }
             else
             {
-                if (seenObjects.Count() > 0)
+                if (seenCharacters.Count() > 0)
                 {
-                    var index = seenObjects.IndexOf(viewObj);
+                    var index = seenCharacters.IndexOf(viewObj);
                     if (Vector3.Distance(transform.position, hit.point) < _viewRadius)
                         mPoint[index] = hit.point;
                 }
@@ -249,11 +257,11 @@ namespace ExternalAssets._3DFOV.Scripts
         }
         private void FixedUpdate()
         {
-            if (seenObjects.Count > 0)
+            if (seenCharacters.Count > 0)
             {
-                for (int j = 0; j < seenObjects.Count; j++)
+                for (int j = 0; j < seenCharacters.Count; j++)
                 {
-                    Collider myCollider = seenObjects[j].GetComponent<Collider>();
+                    Collider myCollider = seenCharacters[j].GetComponent<Collider>();
                     if (!CheckPointInsideCone(mPoint[j], transform.position, transform.forward, _viewAngle, _viewRadius))
                     {
                         RemoveFromSight(j);
@@ -268,15 +276,15 @@ namespace ExternalAssets._3DFOV.Scripts
                         }
                     }
 
-                    if (!CheckObstruction(seenObjects[j], mPoint[j]))
+                    if (!CheckObstruction(seenCharacters[j], mPoint[j]))
                         RemoveFromSight(j);
                 }
             }
         }
         private void RemoveFromSight(int j)
         {
-            if (j >= 0 && j < seenObjects.Count())
-                seenObjects.RemoveAt(j);
+            if (j >= 0 && j < seenCharacters.Count())
+                seenCharacters.RemoveAt(j);
             if (j >= 0 && j < mPoint.Count())
                 mPoint.RemoveAt(j);
             if (detectionType == DetectionType.Spherecast)
@@ -341,10 +349,10 @@ namespace ExternalAssets._3DFOV.Scripts
         }
         private IEnumerator OnTargetEventTrigger(GameObject target)
         {
-            onTargetSeen.Invoke();
-            yield return new WaitUntil(() => (!seenObjects.Contains(target)));
+            OnCharacterSeenEvent.Invoke(target);
+            yield return new WaitUntil(() => (!seenCharacters.Contains(target)));
             _tempbool = false;
-            onTargetLost.Invoke();
+            OnCharacterLostEvent.Invoke(target);
         }
     }
 }

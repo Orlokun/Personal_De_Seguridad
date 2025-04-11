@@ -4,7 +4,6 @@ using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.Animations;
 using GamePlayManagement.Players_NPC.Animations.Interfaces;
-using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.StateMachines.AttitudeStates.BaseCharacter;
@@ -32,8 +31,7 @@ namespace GamePlayManagement.Players_NPC
         #endregion
 
         #region Protected Data, components and references
-        
-        protected IStoreEntrancePosition MEntranceData;
+        protected IStoreEntrancePosition MEntranceData;                                     //TODO: Turn into list for eventual many entrances
         protected Guid MCharacterId;
         protected IItemTypeStats MyStats;
         protected IBaseAnimatedAgent MBaseAnimator;

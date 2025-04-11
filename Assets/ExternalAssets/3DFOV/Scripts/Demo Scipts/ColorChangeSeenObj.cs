@@ -12,9 +12,9 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts
         public List<Color> pastColor = new List<Color>();
         private void Update()
         {
-            currentObj = fov3D.seenObjects;
+            currentObj = fov3D.seenCharacters;
 
-            foreach (GameObject obj in fov3D.seenObjects)
+            foreach (GameObject obj in fov3D.seenCharacters)
             {
                 if (!memObj.Contains(obj))
                 {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GamePlayManagement.ItemManagement.Guards
 {
-    public interface IBaseGuardGameObject : IHasFieldOfView, IBaseInspectionObject
+    public interface IBaseGuardGameController : IHasFieldOfView, IBaseInspectionObject
     {
         public void SetInPlacementStatus(bool inPlacement);
         public Transform GunParentTransform { get; }
@@ -12,9 +12,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         public void DestroyWeapon();
         public void Initialize(IItemObject itemObjectData);
         public void StartBehaviorTree();
-        
         public IShopPositionsManager PositionsManager { get; }
-        
         public IGuardRouteModule GetInspectionModule { get; }
     }
 }

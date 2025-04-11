@@ -6,10 +6,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Stat
 {
     public class GuardAutoInspectionState : IAttitudeState
     {
-        private IBaseGuardGameObject _mGuard;
+        private IBaseGuardGameController _mGuard;
         public const string SearchAround = "SearchAround";
 
-        public GuardAutoInspectionState(IBaseGuardGameObject mGuard)
+        public GuardAutoInspectionState(IBaseGuardGameController mGuard)
         {
             this._mGuard = mGuard;
         }

@@ -23,9 +23,8 @@ using Random = UnityEngine.Random;
 
 namespace GamePlayManagement.ItemManagement.Guards
 {
-    public class BaseGuardGameObject : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameObject, IInitializeWithArg1<IItemObject>
+    public class BaseGuardGameController : BaseCharacterInScene, IInteractiveClickableObject, IBaseGuardGameController, IInitializeWithArg1<IItemObject>
     {
-
         private Coroutine _mCurrentRoutine;
         private IItemObject _myGuardData;
         public IItemObject GuardBaseData => _myGuardData;
@@ -63,8 +62,6 @@ namespace GamePlayManagement.ItemManagement.Guards
         #region FOV
         public bool HasFieldOfView => _fieldOfViewModule != null;
         public IFieldOfView3D FieldOfView3D => _fieldOfViewModule.Fov3D;
-
-
         private IFieldOfViewItemModule _fieldOfViewModule;
         [SerializeField] private DrawFoVLines myDrawFieldOfView;
         [SerializeField] private FieldOfView3D my3dFieldOfView;
@@ -159,8 +156,32 @@ namespace GamePlayManagement.ItemManagement.Guards
             }
             _fieldOfViewModule = Factory.CreateFieldOfViewItemModule(myDrawFieldOfView, my3dFieldOfView); 
             _fieldOfViewModule.Fov3D.SetupCharacterFoV(BaseData.FoVRadius);
+            _fieldOfViewModule.Fov3D.OnCharacterSeenEvent += OnCharacterSeen;
+            _fieldOfViewModule.Fov3D.OnCharacterLostEvent += OnCharacterLost;
+        }
+
+        private void OnCharacterLost(GameObject target)
+        {
+            if(!IsCharacterObject(target))
+            {
+                return;
+            }
+            
+        }
+
+        private void OnCharacterSeen(GameObject target)
+        {
+            if(!IsCharacterObject(target))
+            {
+                return;
+            }
         }
         
+        private bool IsCharacterObject(GameObject target)
+        {
+            return target.TryGetComponent<IBaseCharacterInScene>(out var customer);
+        }
+
         private void SetupInspectionModule()
         {
             if (GameDirector.Instance.GetCurrentHighLvlGameState == HighLevelGameStates.InCutScene)
@@ -231,7 +252,7 @@ namespace GamePlayManagement.ItemManagement.Guards
         #region TargetTrackingProcess
         private void UpdateTargetsInViewData()
         {
-            var seenObjects = _fieldOfViewModule.Fov3D.SeenTargetObjects;
+            var seenObjects = _fieldOfViewModule.Fov3D.SeenTargetCharacters;
             foreach (var seenObject in seenObjects)
             {
                 var isCustomer = seenObject.TryGetComponent<BaseCustomer>(out var customerStatus);

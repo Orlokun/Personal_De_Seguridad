@@ -25,7 +25,5 @@ namespace GamePlayManagement.ItemPlacement
         {
             _my3dFieldOfView.ToggleInGameFoV(isActive);
         }
-
-
     }
 }

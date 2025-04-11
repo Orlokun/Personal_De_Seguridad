@@ -53,7 +53,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
         {
             if (predators.Count == 0)
             {
-                if (fov3d.seenObjects.Contains(target))
+                if (fov3d.seenCharacters.Contains(target))
                 {
                     targets.Add(target);
                     GetComponentInChildren<MeshRenderer>().material.color = Color.magenta;
@@ -62,7 +62,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
         }
         public void TargetLost(GameObject target)
         {
-            if (!fov3d.seenObjects.Contains(target))
+            if (!fov3d.seenCharacters.Contains(target))
                 targets.Remove(target);
 
             GetComponentInChildren<MeshRenderer>().material.color = memColor;
@@ -70,7 +70,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
         }
         public void PredatorSpotted(GameObject target)
         {
-            if (fov3d.seenObjects.Contains(target))
+            if (fov3d.seenCharacters.Contains(target))
             {
                 predators.Add(target);
                 GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
@@ -78,7 +78,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
         }
         public void PredatorLost(GameObject target)
         {
-            if (!fov3d.seenObjects.Contains(target))
+            if (!fov3d.seenCharacters.Contains(target))
                 predators.Remove(target);
             GetComponentInChildren<MeshRenderer>().material.color = memColor;
         }
@@ -96,7 +96,7 @@ namespace ExternalAssets._3DFOV.Scripts.Demo_Scipts.AI_Demo_Scripts
                     if (targets[i].GetComponent<FieldOfView3D>() != null)
                     {
                         FieldOfView3D t_fov3d = targets[i].GetComponent<FieldOfView3D>();
-                        t_fov3d.seenObjects.Clear();
+                        t_fov3d.seenCharacters.Clear();
                     }
                     if (targets[i].transform.parent != null)
                         targets[i].transform.parent.position = new Vector3(Random.Range(-respawnRange, respawnRange), Random.Range(-respawnRange, respawnRange), Random.Range(-respawnRange, respawnRange));

@@ -90,7 +90,7 @@ namespace GamePlayManagement.ItemPlacement.PlacementManagement
         protected override void AttachObjectProcess(IItemObject itemData, GameObject newObject)
         {
             base.AttachObjectProcess(itemData, newObject);
-            var itemObject = (IBaseGuardGameObject)CurrentPlacedObject.GetComponent<BaseGuardGameObject>();
+            var itemObject = (IBaseGuardGameController)CurrentPlacedObject.GetComponent<BaseGuardGameController>();
             itemObject.Initialize(itemData);
             var fov = itemObject.FieldOfView3D;
             fov.ToggleInGameFoV(true);
