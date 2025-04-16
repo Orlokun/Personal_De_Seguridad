@@ -85,11 +85,11 @@ namespace UI
             _activeCustomers++;
             UpdateActiveClientsUI(_activeCustomers);
         }
-        public void UpdateCustomerRemoved(ICustomerPurchaseStealData customerData)
+        public void UpdateCustomerRemoved(IBaseCustomer customerData)
         {
             _activeCustomers--;
             UpdateActiveClientsUI(_activeCustomers);
-            UpdateEarningsData(customerData);
+            UpdateEarningsData(customerData.GetCustomerStoreVisitData);
         }
 
         private void UpdateEarningsData(ICustomerPurchaseStealData customerData)

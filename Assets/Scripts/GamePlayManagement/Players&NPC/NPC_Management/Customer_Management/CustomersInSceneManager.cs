@@ -50,7 +50,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private bool _mIsSpawning = false;
         private Coroutine _customersCoroutine;
 
-        private Dictionary<Guid, BaseCustomer> _mCustomersInScene = new Dictionary<Guid, BaseCustomer>();
+        private Dictionary<Guid, IBaseCustomer> _mCustomersInScene = new Dictionary<Guid, IBaseCustomer>();
         #endregion
 
 
@@ -98,10 +98,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
                 return;
             }
             _mCustomersInScene.Remove(removedCustomer.CustomerId);
-            ClientRemovedEvent(removedCustomer.GetCustomerStoreVisitData);
+            ClientRemovedEvent(removedCustomer);
             Destroy(removedCustomer.CustomerGameObject); 
         }
-        private void ClientRemovedEvent(ICustomerPurchaseStealData customerData)
+        private void ClientRemovedEvent(IBaseCustomer customerData)
         {
             foreach (var observer in _mObservers)
             {
@@ -260,15 +260,15 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             {
                 //Step1: 
                 Random.InitState(DateTime.Now.Millisecond);
-                var randomRange = Random.Range(_mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[0], _mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[1]);
+                var randomTimeLapse = Random.Range(_mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[0], _mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[1]);
                 var randomPrefabInstantiated = InstantiateRandomClient();
                 
                 //TODO: Change this hardcoded scene name
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
-                yield return new WaitForSeconds(randomRange);
+                yield return new WaitForSeconds(randomTimeLapse);
             }
         }
-        private void TrackCustomer(BaseCustomer customer)
+        private void TrackCustomer(IBaseCustomer customer)
         {
             if (_mCustomersInScene.ContainsKey(customer.CustomerId))
             {

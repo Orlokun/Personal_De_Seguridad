@@ -72,8 +72,9 @@ namespace GameDirection.TimeOfDayManagement
         {
             MClientsCompleted++;
         }
-        public void UpdateCustomerRemoved(ICustomerPurchaseStealData customerData)
+        public void UpdateCustomerRemoved(IBaseCustomer customerBaseData)
         {
+            var customerData = customerBaseData.GetCustomerStoreVisitData;
             if (customerData.StolenProductsValue > 0)
             {
                 AddThiefClientsCount();
