@@ -1,7 +1,7 @@
 using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.ItemUIButtons
 {
     public class WeaponItemPlacementButton : BaseItemPlacement
     {

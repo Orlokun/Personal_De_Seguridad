@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public interface IItemCameraRotation : IToggleComponent
     {

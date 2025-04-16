@@ -1,6 +1,6 @@
 using ExternalAssets._3DFOV.Scripts;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.FoV
 {
     public class FieldOfViewItemModule : IFieldOfViewItemModule
     {

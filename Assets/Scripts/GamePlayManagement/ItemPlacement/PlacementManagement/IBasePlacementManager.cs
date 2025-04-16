@@ -1,8 +1,7 @@
 using DataUnits.ItemScriptableObjects;
-using GamePlayManagement.ItemPlacement.PlacementManagement;
 using UnityEngine;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public interface IBasePlacementManager
     {

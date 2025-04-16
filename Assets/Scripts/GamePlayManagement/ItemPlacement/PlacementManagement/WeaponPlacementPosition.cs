@@ -1,7 +1,7 @@
 ﻿using GamePlayManagement.ItemManagement;
 using UnityEngine;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public class WeaponPlacementPosition : IWeaponPlacementPosition
     {

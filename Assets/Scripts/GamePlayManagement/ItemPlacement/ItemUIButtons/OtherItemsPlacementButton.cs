@@ -1,17 +1,17 @@
 ﻿using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.ItemUIButtons
 {
-    public class TrapItemPlacementButton : BaseItemPlacement
+    public class OtherItemsPlacementButton : BaseItemPlacement
     {
         //TODO: Each item type must have its own position finder algorithm. 
         //For now, floor placement logic will be shared between guards, traps. Other will use the weapon logic for now.  
         public override void OnItemClicked(IItemObject itemData)
         {
             base.OnItemClicked(itemData);
-            FloorPlacementManager.Instance.AttachNewObject(itemData, MInstantiatedObject);    
-            FloorPlacementManager.Instance.ToggleRoofObject(false);    
+            WeaponPlacementManager.Instance.AttachNewObject(itemData, MInstantiatedObject);    
+            WeaponPlacementManager.Instance.ToggleRoofObject(false);    
         }
     }
 }

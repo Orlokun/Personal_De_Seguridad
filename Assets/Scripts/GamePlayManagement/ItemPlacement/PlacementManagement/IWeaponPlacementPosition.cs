@@ -1,6 +1,6 @@
 using GamePlayManagement.ItemManagement;
 
-namespace GamePlayManagement.ItemPlacement
+namespace GamePlayManagement.ItemPlacement.PlacementManagement
 {
     public interface IWeaponPlacementPosition : IBasePlacementPosition
     {

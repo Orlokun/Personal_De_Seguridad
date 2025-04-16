@@ -8,6 +8,7 @@ using ExternalAssets._3DFOV.Scripts;
 using GameDirection;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemPlacement;
+using GamePlayManagement.ItemPlacement.FoV;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.Players_NPC;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;

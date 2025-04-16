@@ -4,6 +4,7 @@ using DataUnits.ItemScriptableObjects;
 using ExternalAssets._3DFOV.Scripts;
 using GameDirection.GeneralLevelManager.ShopPositions;
 using GamePlayManagement.ItemPlacement;
+using GamePlayManagement.ItemPlacement.FoV;
 using Unity.Cinemachine;
 using UnityEngine;
 using Utils;

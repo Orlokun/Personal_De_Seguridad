@@ -18,6 +18,7 @@ using GamePlayManagement.GameRequests.RequestsManager;
 using GamePlayManagement.Inventory;
 using GamePlayManagement.ItemManagement.Guards;
 using GamePlayManagement.ItemPlacement;
+using GamePlayManagement.ItemPlacement.FoV;
 using GamePlayManagement.ItemPlacement.PlacementManagement;
 using GamePlayManagement.LevelManagement.LevelObjectsManagement;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management;
