@@ -5,6 +5,6 @@ namespace GamePlayManagement.GameRequests
 {
     public interface IUseItemByBaseTypeRequest : IGameRequest
     {
-        public List<ItemBaseType> RequestConsideredTypes { get; }
+        public List<ItemBaseRace> RequestConsideredTypes { get; }
     }
 }

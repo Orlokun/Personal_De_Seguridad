@@ -20,8 +20,8 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
     public class CustomersInSceneManager : MonoBehaviour, ICustomersInSceneManager
     {
         #region Singelton&Initialize
-        public static ICustomersInSceneManager Instance => _mInstance;
-        private static CustomersInSceneManager _mInstance;
+        public static ICustomersInSceneManager Instance => mInstance;
+        private static CustomersInSceneManager mInstance;
 
 
         #endregion
@@ -30,10 +30,10 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         
 
         #region Private Members
-        private List<ICustomerManagementObserver> observers = new List<ICustomerManagementObserver>();
+        private List<ICustomerManagementObserver> _mObservers = new List<ICustomerManagementObserver>();
 
         //TODO: Get this string according to lvl
-        private string BaseCustomersPath = "ClientsPrefabs/EdenCharacters/BaseCostumer";
+        private const string BaseCustomersPath = "ClientsPrefabs/EdenCharacters/BaseCostumer";
 
         //Job suppliers Customer Management data
         private Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData> _mClientManagementData = new Dictionary<JobSupplierBitId, ICustomersInstantiationFlowData>();
@@ -41,7 +41,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         
         
         private ICustomersInstantiationFlowData _mCurrentCustomerInstantiatorData;
-        
+
         /// <summary>
         /// Turnis This into a class
         /// </summary>
@@ -65,16 +65,16 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         #region Observer
         public void RegisterObserver(ICustomerManagementObserver observer)
         {
-            observers.Add(observer);
+            _mObservers.Add(observer);
         }
 
         public void UnregisterObserver(ICustomerManagementObserver observer)
         {
-            if (!observers.Contains(observer))
+            if (!_mObservers.Contains(observer))
             {
                 return;
             }
-            observers.Remove(observer);
+            _mObservers.Remove(observer);
         }
 
         public void ClientReachedDestination(IBaseCustomer customerLeaving)
@@ -85,7 +85,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         private void ClientCreatedEvent(BaseCustomer customerData)
         {
             TrackCustomer(customerData);
-            foreach (var observer in observers)
+            foreach (var observer in _mObservers)
             {
                 observer.UpdateCustomerAdded(customerData);
             }
@@ -103,7 +103,7 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         }
         private void ClientRemovedEvent(ICustomerPurchaseStealData customerData)
         {
-            foreach (var observer in observers)
+            foreach (var observer in _mObservers)
             {
                 observer.UpdateCustomerRemoved(customerData);
             }
@@ -112,11 +112,11 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
 
         private void Awake()
         {
-            if (Instance != null && _mInstance != this)
+            if (Instance != null && mInstance != this)
             {
                 Destroy(gameObject);
             }
-            _mInstance = this;
+            mInstance = this;
             DontDestroyOnLoad(this);
         }
 
@@ -258,12 +258,13 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         {
             while (_mIsSpawning)
             {
+                //Step1: 
                 Random.InitState(DateTime.Now.Millisecond);
                 var randomRange = Random.Range(_mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[0], _mCurrentCustomerInstantiatorData.InstantiationFrequencyRange[1]);
-                //var randomRange = Random.Range(3, 5);
                 var randomPrefabInstantiated = InstantiateRandomClient();
+                
+                //TODO: Change this hardcoded scene name
                 SceneManager.MoveGameObjectToScene(randomPrefabInstantiated, SceneManager.GetSceneByName("Level_One"));
-                //Debug.Log($"Instantiated Object: {randomPrefabInstantiated.name}. Waiting {_mInstantiationFrequency}");
                 yield return new WaitForSeconds(randomRange);
             }
         }

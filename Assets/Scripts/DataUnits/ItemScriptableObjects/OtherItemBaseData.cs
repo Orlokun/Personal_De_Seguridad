@@ -10,13 +10,13 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mDamage;
         private readonly int _mRange;
         private readonly int _mPersuasiveness;
-        private readonly List<ItemBaseType> _mItemTypes;
+        private readonly List<ItemBaseRace> _mItemTypes;
         private readonly ItemOrigin _mItemOrigin;
         private readonly ItemBaseQuality _mItemBaseQuality;
         private readonly BitItemSupplier _mItemSupplier;
 
 
-        public OtherItemBaseData(BitItemSupplier itemSupplier, int bitId, int mEffectiveness, int mDamage, int mRange, int mPersuasiveness,  ItemOrigin itemOrigin, List<ItemBaseType> itemTypes, ItemBaseQuality itemBaseQuality)
+        public OtherItemBaseData(BitItemSupplier itemSupplier, int bitId, int mEffectiveness, int mDamage, int mRange, int mPersuasiveness,  ItemOrigin itemOrigin, List<ItemBaseRace> itemTypes, ItemBaseQuality itemBaseQuality)
         {
             _mItemSupplier = itemSupplier;
             _bitId = bitId;
@@ -46,7 +46,7 @@ namespace DataUnits.ItemScriptableObjects
         public int Range =>_mRange;
         public int Persuasiveness=>_mPersuasiveness;
         public ItemOrigin ItemOrigin => _mItemOrigin;
-        public List<ItemBaseType> ItemTypes => _mItemTypes;
+        public List<ItemBaseRace> ItemTypes => _mItemTypes;
         public ItemBaseQuality ItemBaseQuality => _mItemBaseQuality;
     }
 }

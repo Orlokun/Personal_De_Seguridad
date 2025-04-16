@@ -1,3 +1,5 @@
+using DataUnits.ItemScriptableObjects;
+
 namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces
 {
     public interface ICustomerTypeData
@@ -19,7 +21,11 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.Cust
         public int Speed { get; }
         public float Strength { get; }
         public int Charm { get; }
-
+        public ItemOrigin ClientOrigin { get; }
+        public ItemBaseRace ClientRace { get; }
+        
+        
+        
         //Functions
         public void InitializeData();
     }

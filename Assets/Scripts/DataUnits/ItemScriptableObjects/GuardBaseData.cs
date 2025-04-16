@@ -17,10 +17,10 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mSpeed;
         private readonly int _mFoVRadius;
         private readonly ItemOrigin _mItemOrigin;
-        private readonly List<ItemBaseType> _mItemTypes;
+        private readonly List<ItemBaseRace> _mItemTypes;
         private readonly ItemBaseQuality _mItemBaseQuality;
         public GuardBaseData(BitItemSupplier itemSupplier, int bitId, int mIntelligence,int mKindness, int mProactive, int mAggressive, int mStrength, 
-            int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius, ItemOrigin itemOrigin, List<ItemBaseType> itemTypes, ItemBaseQuality itemBaseQuality)
+            int mAgility, int mPersuasiveness, int mSpeed, int mFoVRadius, ItemOrigin itemOrigin, List<ItemBaseRace> itemTypes, ItemBaseQuality itemBaseQuality)
         {
             //Unique only inside the Supplier
             _mItemSupplier = itemSupplier;
@@ -52,7 +52,7 @@ namespace DataUnits.ItemScriptableObjects
         public int Speed => _mSpeed;
         public int FoVRadius => _mFoVRadius;
         public ItemOrigin ItemOrigin => _mItemOrigin;
-        public List<ItemBaseType> ItemTypes => _mItemTypes;
+        public List<ItemBaseRace> ItemTypes => _mItemTypes;
         public ItemBaseQuality ItemBaseQuality => _mItemBaseQuality;
         
 

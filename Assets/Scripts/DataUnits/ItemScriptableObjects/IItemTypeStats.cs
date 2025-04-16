@@ -5,7 +5,7 @@ namespace DataUnits.ItemScriptableObjects
     public interface IItemTypeStats
     {
         public List<int> GetStats();
-        public List<ItemBaseType> ItemTypes { get; }
+        public List<ItemBaseRace> ItemTypes { get; }
         public ItemOrigin ItemOrigin { get; }
         public ItemBaseQuality ItemBaseQuality { get; }
     }

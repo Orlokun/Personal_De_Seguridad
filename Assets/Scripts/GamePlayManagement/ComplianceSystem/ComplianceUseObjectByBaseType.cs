@@ -8,8 +8,8 @@ namespace GamePlayManagement.ComplianceSystem
 {
     public class ComplianceUseObjectByBaseType : ComplianceObject, IComplianceUseObjectByBaseType
     {
-        private List<ItemBaseType> _mConsideredBaseTypes;
-        public List<ItemBaseType> ComplianceConsideredBaseTypes => _mConsideredBaseTypes;
+        private List<ItemBaseRace> _mConsideredBaseTypes;
+        public List<ItemBaseRace> ComplianceConsideredBaseTypes => _mConsideredBaseTypes;
         public ComplianceUseObjectByBaseType(int complianceId, DayBitId startDayId, DayBitId endDayId, bool needsUnlock,
             ComplianceMotivationalLevel motivationLvl, ComplianceActionType actionType, ComplianceObjectType objectType,
             RequirementConsideredParameter consideredParameter, string[] complianceReqValues, int toleranceValue,
@@ -25,7 +25,7 @@ namespace GamePlayManagement.ComplianceSystem
         {
             foreach (var complianceReqValue in complianceReqValues)
             {
-                var isOrigin = Enum.TryParse(complianceReqValue, out ItemBaseType consideredBaseType);
+                var isOrigin = Enum.TryParse(complianceReqValue, out ItemBaseRace consideredBaseType);
                 if (!isOrigin)
                 {
                     continue;

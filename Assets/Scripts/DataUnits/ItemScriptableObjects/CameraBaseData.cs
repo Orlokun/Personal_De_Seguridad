@@ -12,7 +12,7 @@ namespace DataUnits.ItemScriptableObjects
         private readonly int _mClarity;
         private readonly int _mPersuasiveness;
         private readonly int _mFoVRadius;
-        private readonly List<ItemBaseType> _mItemTypes;
+        private readonly List<ItemBaseRace> _mItemTypes;
         private readonly ItemOrigin _mItemOrigin;
         private readonly ItemBaseQuality _mItemBaseQuality;
 
@@ -28,11 +28,11 @@ namespace DataUnits.ItemScriptableObjects
             };
         }
 
-        public List<ItemBaseType> ItemTypes => _mItemTypes;
+        public List<ItemBaseRace> ItemTypes => _mItemTypes;
         public ItemOrigin ItemOrigin { get; }
         public ItemBaseQuality ItemBaseQuality { get; }
 
-        public CameraBaseData(BitItemSupplier itemSupplier, int bitId, int mRange,int peopleInSight, int mClarity, int persuasiveness, int fovRadius, ItemOrigin itemOrigin, List<ItemBaseType> itemTypes, ItemBaseQuality itemBaseQuality)
+        public CameraBaseData(BitItemSupplier itemSupplier, int bitId, int mRange,int peopleInSight, int mClarity, int persuasiveness, int fovRadius, ItemOrigin itemOrigin, List<ItemBaseRace> itemTypes, ItemBaseQuality itemBaseQuality)
         {
             _mItemSupplier = itemSupplier;
             _bitId = bitId;

@@ -1,4 +1,5 @@
 using System;
+using DataUnits.ItemScriptableObjects;
 using GamePlayManagement.Players_NPC.NPC_Management.Customer_Management.CustomerInterfaces;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -27,6 +28,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         protected int MSpeed;
         protected float MStrength;
         protected int MCharm;
+
+        protected ItemOrigin MOrigin;
+        protected ItemBaseRace MClientRace;
         #endregion
 
         public int Cleanness => MCleanness;
@@ -45,6 +49,9 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
         public int Speed => MSpeed;
         public float Strength => MStrength;
         public int Charm => MCharm;
+        
+        public ItemOrigin ClientOrigin => MOrigin;
+        public ItemBaseRace ClientRace => MClientRace;
 
         public BaseCustomerTypeData()
         {
@@ -71,6 +78,13 @@ namespace GamePlayManagement.Players_NPC.NPC_Management.Customer_Management
             MSpeed = Random.Range(1, 15);
             MStrength = Random.Range(1, 10);
             MCharm = Random.Range(1, 10);
+
+            var randomRace = Random.Range(0, 5);
+            MClientRace = (ItemBaseRace)Mathf.Pow(2, randomRace);
+            
+            var randomOrigin = Random.Range(0, 3);
+            MOrigin = (ItemOrigin)Mathf.Pow(2, randomOrigin);
+
             
             Debug.Log($"Cleanness: {Cleanness} ---SocialStatus: {SocialStatus} ---Age: {Age} " +
                       $"---Corruptibility: {Corruptibility} ---Daring: {Daring} ---Lawfulness: {Fearful} " +

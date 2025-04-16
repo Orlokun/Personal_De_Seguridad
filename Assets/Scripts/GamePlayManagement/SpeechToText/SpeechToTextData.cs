@@ -38,14 +38,14 @@ namespace GamePlayManagement.SpeechToText
             {ItemOrigin.EarthPrime, "parking heaven"},
             {ItemOrigin.Uranus, "darkest itch"},
         };
-        private Dictionary<ItemBaseType, string> _mClassCodes = new Dictionary<ItemBaseType, string>
+        private Dictionary<ItemBaseRace, string> _mClassCodes = new Dictionary<ItemBaseRace, string>
         {
-            {ItemBaseType.Regular, "pasta"},
-            {ItemBaseType.Ancient, "coconut"},
-            {ItemBaseType.Robotic, "android muppet"},
-            {ItemBaseType.Magical, "ether"},
-            {ItemBaseType.Human, "jelly monster"},
-            {ItemBaseType.Undead, "kangaroo"},
+            {ItemBaseRace.Regular, "pasta"},
+            {ItemBaseRace.Ancient, "coconut"},
+            {ItemBaseRace.Robotic, "android muppet"},
+            {ItemBaseRace.Magical, "ether"},
+            {ItemBaseRace.Human, "jelly monster"},
+            {ItemBaseRace.Undead, "kangaroo"},
         };
 
 

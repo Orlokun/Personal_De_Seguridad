@@ -1,6 +1,6 @@
 ﻿namespace DataUnits.ItemScriptableObjects
 {
-    public enum ItemBaseType
+    public enum ItemBaseRace
     {
         Regular = 1 << 0,
         Ancient = 1 << 1,

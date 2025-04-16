@@ -5,7 +5,7 @@ namespace GamePlayManagement.ComplianceSystem
 {
     public interface IComplianceUseObjectByBaseType : IComplianceObject
     {
-        public List<ItemBaseType> ComplianceConsideredBaseTypes { get; }
+        public List<ItemBaseRace> ComplianceConsideredBaseTypes { get; }
     }
     public interface IComplianceUseObjectByQuality : IComplianceObject
     {

@@ -19,7 +19,7 @@ namespace GamePlayManagement.LevelManagement
             MJobSupplierId = JobSupplierBitId.COPY_OF_EDEN;
             _mGameCameraManager.SetLevelCamerasParent(levelCamerasParent);
             SetCamerasInactive();
-            _customerSpawner = FindFirstObjectByType<CustomersInSceneManager>(FindObjectsInactive.Include);
+            _customerSpawner = CustomersInSceneManager.Instance;
             _customerSpawner.ToggleSpawning(false, MJobSupplierId);
             _mPlayerProfile = GameDirector.Instance.GetActiveGameProfile;
         }
