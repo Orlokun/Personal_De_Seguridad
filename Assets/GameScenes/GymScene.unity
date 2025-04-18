@@ -1123,6 +1123,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1776230529761419431, guid: 1681adbcddea6ae4794ebfee7b5714ae, type: 3}
+      propertyPath: language
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4681083005407672405, guid: 1681adbcddea6ae4794ebfee7b5714ae, type: 3}
       propertyPath: m_Name
       value: VoiceRecordTimer
